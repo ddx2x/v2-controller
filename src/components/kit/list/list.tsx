@@ -1,11 +1,10 @@
-import { ProList, ProListMetas } from '@ant-design/pro-components';
-import { useMemo } from 'react';
+import { ProListMetas } from '@ant-design/pro-components';
+import { ReactText, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { VList } from 'virtuallist-antd';
+import ProList from './pro-list';
 
 interface ScrollListProps {
   intl?: IntlShape;
-  scrollHeight?: number;
   dataSource: any[];
   metas?: ProListMetas<any> | undefined;
 }
@@ -13,22 +12,18 @@ interface ScrollListProps {
 export interface List extends ScrollListProps {}
 
 export const ScrollList: React.FC<ScrollListProps> = (props) => {
-  const vComponents = useMemo(() => {
-    return VList({
-      height: props.scrollHeight || 500,
-      onReachEnd: () => {},
-    });
-  }, []);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys: ReactText[]) => setSelectedRowKeys(keys),
+  };
 
   return (
     <ProList
+      virtualList={true}
       dataSource={props.dataSource}
       metas={props.metas}
-      sticky
-      scroll={{
-        y: props.scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
-      }}
-      components={vComponents}
+      rowSelection={rowSelection}
     />
   );
 };

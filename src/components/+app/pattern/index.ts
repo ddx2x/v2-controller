@@ -1,2 +1,2 @@
-export * from './table-pattern';
-export * from './list-pattern'
+export * from './table';
+export * from './list';

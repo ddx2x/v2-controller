@@ -7,7 +7,7 @@ export const Table = (props: { columns?: ProColumns<any, 'text'>[] }) => {
   const intl = useIntl();
 
   return (
-    <Container >
+    <Container>
       <ScrollTable columns={props.columns || []} dataSource={[]} intl={intl} />
     </Container>
   );
