@@ -22,7 +22,7 @@ interface FormProps {
 }
 
 export const Form: React.FC<FormProps> = (props) => {
-  const trigger = (): any => {
+  const triggerDom = (): any => {
     if (props.trigger instanceof Object) {
       return props.trigger;
     }
@@ -35,7 +35,7 @@ export const Form: React.FC<FormProps> = (props) => {
       initialValue={props.initialValue}
       title={props.title}
       layoutType={props.modal}
-      trigger={trigger()}
+      trigger={triggerDom()}
       submitter={props.submitter}
       autoFocusFirstInput
       drawerProps={{
@@ -68,6 +68,8 @@ Form.defaultProps = {
   submitTimeout: 2000,
   columns: null,
 };
+
+export default Form;
 
 export const useForm = (props: FormProps): [any, { form: FormInstance<any> | undefined }] => {
   const [form] = AntdForm.useForm();

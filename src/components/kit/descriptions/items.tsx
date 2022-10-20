@@ -5,12 +5,7 @@ export interface DescriptionsItem extends ProDescriptionsItemProps {
   value?: React.ReactNode | null | undefined;
 }
 
-interface DescriptionsItemsProps {
-  items: DescriptionsItem[] | undefined;
-}
-
-export const DescriptionsItems: React.FC<DescriptionsItemsProps> = (props) => {
-  const { items } = props;
+export const descriptionsItems = (items: DescriptionsItem[] | undefined) => {
   if (!items) return null;
   return (
     <>

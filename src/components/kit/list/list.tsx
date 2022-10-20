@@ -3,15 +3,13 @@ import { ReactText, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import ProList from './pro-list';
 
-interface ScrollListProps {
+interface ListProps {
   intl?: IntlShape;
-  dataSource: any[];
+  dataSource?: any[];
   metas?: ProListMetas<any> | undefined;
 }
 
-export interface List extends ScrollListProps {}
-
-export const ScrollList: React.FC<ScrollListProps> = (props) => {
+export const List: React.FC<ListProps> = (props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
   const rowSelection = {
     selectedRowKeys,
@@ -26,4 +24,15 @@ export const ScrollList: React.FC<ScrollListProps> = (props) => {
       rowSelection={rowSelection}
     />
   );
+};
+
+export default List;
+
+List.defaultProps = {
+  dataSource: [],
+  metas: {},
+};
+
+export const useList = (props: ListProps) => {
+  return [<List {...props} />, {}];
 };

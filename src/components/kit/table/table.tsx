@@ -16,9 +16,7 @@ interface TableProps {
   intl?: IntlShape;
 }
 
-export interface Table extends TableProps {}
-
-export const ScrollTable: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableProps> = (props) => {
   const actionRef = useRef<ActionType>();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -105,6 +103,8 @@ export const ScrollTable: React.FC<TableProps> = (props) => {
   );
 };
 
-ScrollTable.defaultProps = {
+Table.defaultProps = {
   scrollHeight: 500,
 };
+
+export default Table;

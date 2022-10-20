@@ -5,13 +5,15 @@ import {
   ProDescriptionsProps,
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
-import { DescriptionsItem, DescriptionsItems } from './items';
+import { IntlShape } from 'react-intl';
+import { DescriptionsItem, descriptionsItems } from './items';
 
 interface DescriptionsProps extends ProDescriptionsProps {
   modal?: 'modal' | 'drawer' | 'page';
   title?: string;
   trigger?: string | React.ReactNode;
   items?: DescriptionsItem[];
+  intl?: IntlShape;
 }
 
 export const Descriptions: React.FC<DescriptionsProps> = (props) => {
@@ -27,8 +29,8 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   const Page = () => {
     return (
       <ProDescriptions {...rest}>
+        {descriptionsItems(items)}
         {props.children}
-        <DescriptionsItems items={items} />
       </ProDescriptions>
     );
   };
@@ -64,6 +66,7 @@ Descriptions.defaultProps = {
   modal: 'page',
   trigger: '查看',
   title: '详情',
+  column: 1,
 };
 
 export default Descriptions;
