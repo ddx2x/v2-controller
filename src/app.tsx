@@ -52,7 +52,7 @@ const menuRender = (
   canClear = isCachingNode(item.path);
 
   return (
-    <Space align="baseline" size={100}>
+    <Space align="baseline" size={150}>
       <Link to={item.path as string}>{dom}</Link>
       {!collapsed && canClear && (
         <Popconfirm
