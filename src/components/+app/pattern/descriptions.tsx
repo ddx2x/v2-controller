@@ -1,13 +1,13 @@
 import { useIntl } from '@umijs/max';
-import { Container } from '../../kit/container';
+import PageContainer from '../../kit/container';
 import PDescriptions from '../../kit/descriptions';
 
 export const Descriptions = (props: {}) => {
   const intl = useIntl();
 
   return (
-    <Container>
+    <PageContainer>
       <PDescriptions modal="page" intl={intl} />
-    </Container>
+    </PageContainer>
   );
 };

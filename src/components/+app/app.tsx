@@ -1,7 +1,7 @@
 import { ProListMetas } from '@ant-design/pro-components';
 import { useParams } from '@umijs/max';
 import { Space, Tag } from 'antd';
-import { Container } from '../kit/container';
+import PageContainer from '../kit/container';
 import { Descriptions, itemsExample } from '../kit/descriptions';
 import { List, Table } from './pattern';
 
@@ -269,9 +269,9 @@ export default () => {
   pattern = params['pattern'];
 
   return (
-    <Container>
+    <PageContainer>
       <Descriptions modal="page" items={itemsExample} />
-    </Container>
+    </PageContainer>
   );
 
   switch (pattern) {
