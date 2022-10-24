@@ -10,6 +10,11 @@
  */
 export default [
   {
+    path: '*',
+    layout: false,
+    component: './404',
+  },
+  {
     path: '/user',
     layout: false,
     routes: [
@@ -21,23 +26,49 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './welcome',
+    path: '/',
+    redirect: '/app/commodity/table',
   },
   {
     path: '/',
-    redirect: '/welcome',
+    name: '商品',
+    routes: [
+      {
+        path: '/app/commodity/table',
+        name: '商品列表',
+        component: './app',
+      },
+      {
+        path: '/app/commodity-sale/table',
+        name: '商品标签',
+        component: './app',
+      },
+      {
+        path: '/app/goods-sale/table',
+        name: '在售商品',
+        component: './app',
+      },
+    ],
   },
   {
-    path: '*',
-    layout: false,
-    component: './404',
+    path: '/',
+    name: '门店',
+    routes: [
+      {
+        path: '/app/store/table',
+        name: '门店列表',
+        component: './app',
+      },
+    ],
   },
   {
-    path: '/app',
-    name: 'App',
-    component: './app',
+    name: '订单',
+    routes: [
+      {
+        path: '/app/order/table',
+        name: '全部订单',
+        component: './app',
+      },
+    ],
   },
 ];

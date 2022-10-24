@@ -51,8 +51,10 @@ const menuRender = (
   let canClear = false;
   canClear = isCachingNode(item.path);
 
+  console.log('menuRender...', location.pathname, item.path, canClear, collapsed);
+
   return (
-    <Space align="baseline" size={150}>
+    <Space align="baseline">
       <Link to={item.path as string}>{dom}</Link>
       {!collapsed && canClear && (
         <Popconfirm
@@ -180,8 +182,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           }}
         />
       ),
+
     postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
+    // siderMenuType: 'group',
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
+    // subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

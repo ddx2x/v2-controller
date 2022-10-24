@@ -10,11 +10,13 @@ interface TableProps {
   scrollHeight?: number;
   useBatchDelete?: boolean;
   batchDelete?: (selectedRowKeys: React.Key[]) => void;
-  columns: ProColumns<any>[];
-  dataSource: any[];
+  columns?: ProColumns<any>[];
+  dataSource?: any[];
   headerTitle?: React.ReactNode;
   intl?: IntlShape;
 }
+
+export interface TableLayout extends TableProps {}
 
 export const Table: React.FC<TableProps> = (props) => {
   const actionRef = useRef<ActionType>();
@@ -105,6 +107,8 @@ export const Table: React.FC<TableProps> = (props) => {
 
 Table.defaultProps = {
   scrollHeight: 500,
+  columns: [],
+  dataSource: [],
 };
 
 export default Table;

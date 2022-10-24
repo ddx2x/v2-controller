@@ -1,5 +1,6 @@
 import { BetaSchemaForm, ProFormColumnsType, SubmitterProps } from '@ant-design/pro-components';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
+import { ButtonType } from 'antd/lib/button';
 import React from 'react';
 import { waitTime } from './tools';
 
@@ -16,32 +17,32 @@ interface FormProps {
   modal?: 'ModalForm' | 'DrawerForm' | 'Form' | 'StepForm' | 'StepsForm';
   trigger?: string | React.ReactNode;
   submitter?: SubmitterProps;
+  submitterButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   columns?: Columns;
   onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
 }
 
+export interface FormConfig extends FormProps {}
+
 export const Form: React.FC<FormProps> = (props) => {
+  const { trigger, submitterButtonType, onFinish, ...rest } = props;
+
   const triggerDom = (): any => {
-    if (props.trigger instanceof Object) {
-      return props.trigger;
+    if (trigger instanceof Object) {
+      return trigger;
     }
-    return <Button type="primary">{props.trigger}</Button>;
+    return <Button type={submitterButtonType}>{trigger}</Button>;
   };
 
   return (
     <BetaSchemaForm
-      form={props.form}
-      initialValue={props.initialValue}
-      title={props.title}
       layoutType={props.modal}
       trigger={triggerDom()}
-      submitter={props.submitter}
       autoFocusFirstInput
       drawerProps={{
         destroyOnClose: true,
       }}
-      submitTimeout={props.submitTimeout}
       // @ts-ignore
       columns={props.columns}
       onFinish={async (values) => {
@@ -50,6 +51,7 @@ export const Form: React.FC<FormProps> = (props) => {
         await waitTime(props.submitTimeout);
         return props.onFinish(props.form, values);
       }}
+      {...rest}
     />
   );
 };
@@ -65,13 +67,14 @@ Form.defaultProps = {
       resetText: '取消',
     },
   },
+  submitterButtonType: 'link',
   submitTimeout: 2000,
   columns: null,
 };
 
 export default Form;
 
-export const useForm = (props: FormProps): [any, { form: FormInstance<any> | undefined }] => {
+export const useForm = (props: FormConfig): [any, { form: FormInstance<any> | undefined }] => {
   const [form] = AntdForm.useForm();
   return [<Form form={form} {...props} />, { form }];
 };

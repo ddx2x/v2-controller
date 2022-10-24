@@ -6,8 +6,7 @@ export interface KeepAliveProps {
 }
 
 export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
-  const location = useLocation();
-  let path = props.path ? props.path : location.pathname;
+  let path = props.path ? props.path : useLocation().pathname;
 
   return (
     // @ts-ignore
@@ -26,5 +25,6 @@ export const cachingNodes = (): CachingNode[] => {
 // 节点是否缓存
 export const isCachingNode = (path: string | undefined): boolean => {
   const nodes = cachingNodes();
+  console.log('cachingNodes', nodes);
   return nodes.filter((node) => node.name == path).length > 0;
 };

@@ -123,7 +123,4 @@ export default defineConfig({
    * umi 插件
    */
   plugins: ['umi-plugin-keep-alive'],
-  mfsu: {
-    strategy: 'normal',
-  },
 });

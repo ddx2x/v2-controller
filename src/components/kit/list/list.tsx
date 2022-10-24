@@ -9,6 +9,8 @@ interface ListProps {
   metas?: ProListMetas<any> | undefined;
 }
 
+export interface ListLayout extends ListProps {}
+
 export const List: React.FC<ListProps> = (props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
   const rowSelection = {

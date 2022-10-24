@@ -16,6 +16,8 @@ interface DescriptionsProps extends ProDescriptionsProps {
   intl?: IntlShape;
 }
 
+export interface DescriptionsLayout extends DescriptionsProps {}
+
 export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   const { title, modal, trigger, items, ...rest } = props;
 

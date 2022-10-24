@@ -8,19 +8,19 @@ interface PageContainerProps extends KeepAliveProps, ContainerProps {
 }
 
 export const PageContainer: React.FC<PageContainerProps> = (props) => {
-  const { keepAlive, path, ...rest } = props;
+  const { keepAlive, path, children, ...rest } = props;
 
   const container = () => {
     // 获取 layout 上下文
     const context = useContext(RouteContext);
     return (
       <Container context={context} {...rest}>
-        {props.children}
+        {children}
       </Container>
     );
   };
 
-  if (!props.keepAlive) return container();
+  if (!keepAlive) return container();
   return <KeepAlive path={path}>{container()}</KeepAlive>;
 };
 
