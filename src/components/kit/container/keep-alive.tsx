@@ -25,6 +25,5 @@ export const cachingNodes = (): CachingNode[] => {
 // 节点是否缓存
 export const isCachingNode = (path: string | undefined): boolean => {
   const nodes = cachingNodes();
-  console.log('cachingNodes', nodes);
   return nodes.filter((node) => node.name == path).length > 0;
 };

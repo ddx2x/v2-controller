@@ -1,4 +1,9 @@
-import { BetaSchemaForm, ProFormColumnsType, SubmitterProps } from '@ant-design/pro-components';
+import {
+  BetaSchemaForm,
+  ProFormColumnsType,
+  StepFormProps,
+  SubmitterProps,
+} from '@ant-design/pro-components';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React from 'react';
@@ -11,10 +16,10 @@ type Columns =
   | undefined;
 
 interface FormProps {
-  form?: FormInstance<any> | undefined;
   initialValue?: any;
   title?: string;
   modal?: 'ModalForm' | 'DrawerForm' | 'Form' | 'StepForm' | 'StepsForm';
+  steps?: StepFormProps[];
   trigger?: string | React.ReactNode;
   submitter?: SubmitterProps;
   submitterButtonType?: ButtonType;
@@ -26,7 +31,8 @@ interface FormProps {
 export interface FormConfig extends FormProps {}
 
 export const Form: React.FC<FormProps> = (props) => {
-  const { trigger, submitterButtonType, onFinish, ...rest } = props;
+  const [form] = AntdForm.useForm();
+  const { modal, columns, trigger, submitterButtonType, submitTimeout, onFinish, ...rest } = props;
 
   const triggerDom = (): any => {
     if (trigger instanceof Object) {
@@ -37,19 +43,19 @@ export const Form: React.FC<FormProps> = (props) => {
 
   return (
     <BetaSchemaForm
-      layoutType={props.modal}
+      form={form}
+      layoutType={modal}
       trigger={triggerDom()}
       autoFocusFirstInput
       drawerProps={{
         destroyOnClose: true,
       }}
       // @ts-ignore
-      columns={props.columns}
+      columns={columns}
       onFinish={async (values) => {
-        console.log(values);
-        if (!props.onFinish) return false;
-        await waitTime(props.submitTimeout);
-        return props.onFinish(props.form, values);
+        if (!onFinish) return false;
+        await waitTime(submitTimeout);
+        return onFinish(form, values);
       }}
       {...rest}
     />
@@ -57,7 +63,6 @@ export const Form: React.FC<FormProps> = (props) => {
 };
 
 Form.defaultProps = {
-  form: undefined,
   title: '新建表单',
   modal: 'ModalForm',
   trigger: '新增',
@@ -74,7 +79,6 @@ Form.defaultProps = {
 
 export default Form;
 
-export const useForm = (props: FormConfig): [any, { form: FormInstance<any> | undefined }] => {
-  const [form] = AntdForm.useForm();
-  return [<Form form={form} {...props} />, { form }];
+export const useForm = (props: FormConfig): [any, {}] => {
+  return [<Form {...props} />, {}];
 };

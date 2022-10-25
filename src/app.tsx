@@ -51,10 +51,8 @@ const menuRender = (
   let canClear = false;
   canClear = isCachingNode(item.path);
 
-  console.log('menuRender...', location.pathname, item.path, canClear, collapsed);
-
   return (
-    <Space align="baseline">
+    <Space align="baseline" size={80}>
       <Link to={item.path as string}>{dom}</Link>
       {!collapsed && canClear && (
         <Popconfirm
@@ -117,6 +115,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [collapsed, setCollapsed] = useState(true);
 
   return {
+    // path: '/',
+    location: {
+      pathname: '/',
+    },
     rightContentRender: () => <RightContent />,
     // waterMarkProps: {
     //   content: initialState?.currentUser?.name,

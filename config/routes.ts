@@ -9,11 +9,11 @@
  * @doc https://umijs.org/docs/guides/routes
  */
 export default [
-  {
-    path: '*',
-    layout: false,
-    component: './404',
-  },
+  // {
+  //   path: '*',
+  //   layout: false,
+  //   component: './404',
+  // },
   {
     path: '/user',
     layout: false,
@@ -30,7 +30,6 @@ export default [
     redirect: '/app/commodity/table',
   },
   {
-    path: '/',
     name: '商品',
     routes: [
       {
@@ -51,7 +50,6 @@ export default [
     ],
   },
   {
-    path: '/',
     name: '门店',
     routes: [
       {

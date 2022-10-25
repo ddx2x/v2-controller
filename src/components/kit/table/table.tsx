@@ -1,7 +1,7 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, FooterToolbar, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { ExpandableConfig } from 'antd/lib/table/interface';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -13,12 +13,37 @@ interface TableProps {
   columns?: ProColumns<any>[];
   dataSource?: any[];
   headerTitle?: React.ReactNode;
+  expandable?: ExpandableConfig<any>;
+  toolBarRender?:
+    | false
+    | ((
+        action: ActionType | undefined,
+        rows: {
+          selectedRowKeys?: (string | number)[] | undefined;
+          selectedRows?: any[] | undefined;
+        },
+      ) => React.ReactNode[])
+    | undefined;
+  onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void;
   intl?: IntlShape;
 }
 
 export interface TableLayout extends TableProps {}
 
 export const Table: React.FC<TableProps> = (props) => {
+  const {
+    scrollHeight,
+    headerTitle,
+    intl,
+    columns,
+    dataSource,
+    useBatchDelete,
+    batchDelete,
+    expandable,
+    onLoading,
+    toolBarRender,
+  } = props;
+
   const actionRef = useRef<ActionType>();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -34,8 +59,8 @@ export const Table: React.FC<TableProps> = (props) => {
 
   const vComponents = useMemo(() => {
     return VList({
-      height: props.scrollHeight || 500,
-      onReachEnd: () => {},
+      height: scrollHeight || 500,
+      onReachEnd: () => onLoading && onLoading(actionRef),
     });
   }, []);
 
@@ -43,10 +68,10 @@ export const Table: React.FC<TableProps> = (props) => {
     <>
       <ProTable
         headerTitle={
-          props.headerTitle
-            ? props.headerTitle
-            : props.intl &&
-              props.intl.formatMessage({
+          headerTitle
+            ? headerTitle
+            : intl &&
+              intl.formatMessage({
                 id: 'pages.searchTable.title',
                 defaultMessage: 'Enquiry form',
               })
@@ -56,28 +81,19 @@ export const Table: React.FC<TableProps> = (props) => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              // handleModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
-          </Button>,
-        ]}
-        columns={props.columns}
-        dataSource={props.dataSource}
-        rowSelection={props.dataSource ? rowSelection : false}
+        toolBarRender={toolBarRender}
+        columns={columns}
+        dataSource={dataSource}
+        rowSelection={dataSource ? rowSelection : false}
+        expandable={expandable}
         pagination={false}
         sticky
         scroll={{
-          y: props.scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
+          y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
         }}
         components={vComponents}
       />
-      {props.useBatchDelete && selectedRowKeys?.length > 0 && (
+      {useBatchDelete && selectedRowKeys?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
@@ -89,7 +105,7 @@ export const Table: React.FC<TableProps> = (props) => {
         >
           <Button
             onClick={async () => {
-              props.batchDelete && props.batchDelete(selectedRowKeys);
+              batchDelete && batchDelete(selectedRowKeys);
               setSelectedRowKeys([]);
               actionRef.current?.reloadAndRest?.();
             }}
@@ -107,6 +123,7 @@ export const Table: React.FC<TableProps> = (props) => {
 
 Table.defaultProps = {
   scrollHeight: 500,
+  useBatchDelete: true,
   columns: [],
   dataSource: [],
 };
