@@ -3,9 +3,12 @@ import { useEffect } from 'react';
 import {
   Descriptions,
   DescriptionsLayout,
+  Form,
+  FormConfig,
   List,
   ListLayout,
   PageContainer,
+  StepForm,
   Table,
   TableLayout,
 } from '../kit';
@@ -22,18 +25,23 @@ export default () => {
 
   const children = () => {
     const layout = match?.params['layout'] as LayoutType; // 布局类型
-    const config = appManager.getLayout(route, layout); // 注册配置项
-    if (!config) return null;
+    const args = appManager.getLayout(route, layout) || null; // 注册配置项
+
+    if (!args) return null;
 
     const intl = useIntl(); // 国际化组件
 
     switch (layout) {
       case 'table':
-        return <Table {...(config as TableLayout)} intl={intl} />;
+        return <Table {...(args as TableLayout)} intl={intl} />;
       case 'list':
-        return <List {...(config as ListLayout)} intl={intl} />;
+        return <List {...(args as ListLayout)} intl={intl} />;
+      case 'form':
+        return <Form {...(args as FormConfig)} modal="Form" intl={intl} />;
+      case 'step-form':
+        return <StepForm {...(args as FormConfig)} modal="Form" intl={intl} />;
       case 'descriptions':
-        return <Descriptions modal="page" intl={intl} {...(config as DescriptionsLayout)} />;
+        return <Descriptions modal="page" intl={intl} {...(args as DescriptionsLayout)} />;
       default:
         return null;
     }

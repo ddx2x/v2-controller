@@ -1,5 +1,5 @@
-import type { TableColumnsType } from 'antd';
-import { Table } from 'antd';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { Table, TableColumnsType } from 'antd';
 import { ExpandableConfig } from 'antd/lib/table/interface';
 
 // 树型展示 https://ant.design/components/table-cn/#components-table-demo-tree-data
@@ -7,15 +7,31 @@ import { ExpandableConfig } from 'antd/lib/table/interface';
 // 表格 table
 
 interface ExpandedRowTableProps {
-  columns: TableColumnsType<any>;
-  dataSource: any[];
+  useProTable?: boolean;
+  columns?: TableColumnsType<any> | ProColumns<any>[];
+  dataSource?: any[];
 }
 
 export const ExpandedRowTable: React.FC<ExpandedRowTableProps> = (props) => {
-  return <Table pagination={false} {...props} />;
+  const { useProTable, columns, dataSource } = props;
+  return useProTable ? (
+    <ProTable
+      style={{ marginTop: 10, marginBottom: 10 }}
+      ghost
+      pagination={false}
+      headerTitle={false}
+      search={false}
+      options={false}
+      columns={columns as ProColumns<any>[]}
+      dataSource={dataSource}
+    />
+  ) : (
+    <Table pagination={false} columns={columns as TableColumnsType<any>} dataSource={dataSource} />
+  );
 };
 
 ExpandedRowTable.defaultProps = {
+  useProTable: false,
   columns: [],
   dataSource: [],
 };
@@ -23,8 +39,8 @@ ExpandedRowTable.defaultProps = {
 // 文本
 
 interface ExpandedRowAnyProps {
-  content: (record: any) => any | string | React.ReactNode;
-  record: any;
+  content?: (record: any) => any | string | React.ReactNode;
+  record?: any;
 }
 
 export const ExpandedRowAny: React.FC<ExpandedRowAnyProps> = (props) => {

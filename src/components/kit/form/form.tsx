@@ -2,6 +2,7 @@ import { BetaSchemaForm, SubmitterProps } from '@ant-design/pro-components';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React from 'react';
+import { IntlShape } from 'react-intl';
 import { Columns, waitTime } from './tools';
 
 export interface FormConfig {
@@ -9,22 +10,23 @@ export interface FormConfig {
   title?: string;
   modal?: 'ModalForm' | 'DrawerForm' | 'Form';
   trigger?: string | React.ReactNode;
+  triggerButtonType?: ButtonType;
   submitter?: SubmitterProps;
-  submitterButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   columns?: Columns;
   onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
+  intl?: IntlShape; // 国际化
 }
 
 export const Form: React.FC<FormConfig> = (props) => {
   const [form] = AntdForm.useForm();
-  const { modal, columns, trigger, submitterButtonType, submitTimeout, onFinish, ...rest } = props;
+  const { modal, columns, trigger, triggerButtonType, submitTimeout, onFinish, ...rest } = props;
 
   const triggerDom = (): any => {
     if (trigger instanceof Object) {
       return trigger;
     }
-    return <Button type={submitterButtonType}>{trigger}</Button>;
+    return <Button type={triggerButtonType}>{trigger}</Button>;
   };
 
   return (
@@ -52,13 +54,13 @@ Form.defaultProps = {
   title: '新建表单',
   modal: 'ModalForm',
   trigger: '新增',
+  triggerButtonType: 'link',
   submitter: {
     searchConfig: {
       submitText: '确认',
       resetText: '取消',
     },
   },
-  submitterButtonType: 'link',
   submitTimeout: 2000,
   columns: null,
 };

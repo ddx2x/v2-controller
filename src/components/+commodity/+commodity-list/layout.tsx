@@ -1,5 +1,6 @@
-import { useForm } from '@/components/kit/form';
-import { TableLayout } from '@/components/kit/table';
+import { useForm, useStepsForm } from '@/components/kit/form';
+import { expanded, TableLayout } from '@/components/kit/table';
+import { Badge, message, TableColumnsType } from 'antd';
 import { commodityEdit } from './dialog';
 
 let data = [];
@@ -12,6 +13,32 @@ for (let i = 0; i < 300; i += 1) {
     channel: '线上+线下',
     sort: 0,
     availableStatus: true,
+  });
+}
+
+const ecolumns: TableColumnsType<any> = [
+  { title: 'Date', dataIndex: 'date', key: 'date' },
+  { title: 'Name', dataIndex: 'name', key: 'name' },
+  {
+    title: 'Status',
+    key: 'state',
+    render: () => (
+      <span>
+        <Badge status="success" />
+        Finished
+      </span>
+    ),
+  },
+  { title: 'Upgrade Status', dataIndex: 'upgradeNum', key: 'upgradeNum' },
+];
+
+const edata = [];
+for (let i = 0; i < 3; ++i) {
+  edata.push({
+    key: i.toString(),
+    date: '2014-12-24 23:12:00',
+    name: 'This is production name',
+    upgradeNum: 'Upgraded: 56',
   });
 }
 
@@ -29,10 +56,14 @@ export const commodityTableLayout: TableLayout = {
       valueType: 'option',
       title: '操作',
       render: (text, record, _, action) => {
-        const [editForm] = useForm(commodityEdit);
+        const [editForm] = useStepsForm(commodityEdit);
         return [editForm];
       },
     },
   ],
   dataSource: data,
+  expandable: expanded({ content: (r) => r.name, rowRender: 'any' }),
+  onLoading: () => {
+    message.info('数据加载中.....');
+  },
 };

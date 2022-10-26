@@ -38,6 +38,11 @@ export default [
         component: './app',
       },
       {
+        path: '/app/commodity-add/step-form',
+        name: '新增商品',
+        component: './app',
+      },
+      {
         path: '/app/commodity-sale/table',
         name: '商品标签',
         component: './app',

@@ -7,7 +7,8 @@ import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 
 export interface TableLayout {
-  columns?: ProColumns<any>[];
+  edit?: boolean;
+  columns?: ProColumns<any>[]; // https://procomponents.ant.design/components/table/#columns-%E5%88%97%E5%AE%9A%E4%B9%89
   rowKey?: string;
   dataSource?: any[];
   scrollHeight?: number; // 表格高度
@@ -126,6 +127,7 @@ export const Table: React.FC<TableLayout> = (props) => {
 };
 
 Table.defaultProps = {
+  edit: false,
   rowKey: 'key',
   scrollHeight: 600,
   useBatchDelete: true,
