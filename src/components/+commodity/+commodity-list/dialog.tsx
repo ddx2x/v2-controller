@@ -175,4 +175,5 @@ export const commodityEdit: StepFormConfig = {
     },
   ],
   columns: columns,
+  width: '50%'
 };

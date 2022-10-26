@@ -1,4 +1,4 @@
-import { useForm, useStepsForm } from '@/components/kit/form';
+import { useStepsForm } from '@/components/kit/form';
 import { expanded, TableLayout } from '@/components/kit/table';
 import { Badge, message, TableColumnsType } from 'antd';
 import { commodityEdit } from './dialog';
@@ -62,7 +62,7 @@ export const commodityTableLayout: TableLayout = {
     },
   ],
   dataSource: data,
-  expandable: expanded({ content: (r) => r.name, rowRender: 'any' }),
+  expandable: expanded({ columns: ecolumns, dataSource: edata, rowRender: 'any' }),
   onLoading: () => {
     message.info('数据加载中.....');
   },

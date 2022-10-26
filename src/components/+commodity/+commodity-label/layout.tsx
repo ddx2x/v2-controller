@@ -1,6 +1,5 @@
-import { TableLayout, useForm } from '@/components/kit';
+import { TableLayout } from '@/components/kit';
 import { TableDropdown } from '@ant-design/pro-components';
-import { commodityEdit } from '../+commodity-list/dialog';
 
 export const commodityLabelLayout: TableLayout = {
   columns: [

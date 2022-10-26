@@ -10,6 +10,7 @@ export interface StepFormConfig {
   title?: string;
   modal: 'Modal' | 'Drawer' | 'Form';
   layoutType?: 'StepForm' | 'StepsForm';
+  width?: string | number;
   steps?: StepFormProps[];
   trigger?: string | React.ReactNode;
   triggerButtonType?: ButtonType;
@@ -31,6 +32,7 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
     triggerButtonType,
     submitTimeout,
     onFinish,
+    width,
     ...rest
   } = props;
 
@@ -80,7 +82,13 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
       return (
         <>
           {triggerDom()}
-          <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal
+            title="Basic Modal"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width={width}
+          >
             {stepsForm()}
           </Modal>
         </>
@@ -89,7 +97,13 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
       return (
         <>
           {triggerDom()}
-          <Drawer title="Basic Drawer" placement="right" onClose={handleCancel} open={isModalOpen}>
+          <Drawer
+            title="Basic Drawer"
+            placement="right"
+            onClose={handleCancel}
+            open={isModalOpen}
+            width={width}
+          >
             {stepsForm()}
           </Drawer>
         </>
@@ -103,7 +117,7 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
 StepForm.defaultProps = {
   title: '新建',
   modal: 'Form',
-  layoutType: 'StepForm',
+  layoutType: 'StepsForm',
   steps: [],
   columns: [],
   trigger: '新增',
