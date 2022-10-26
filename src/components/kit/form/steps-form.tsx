@@ -1,13 +1,14 @@
 import { BetaSchemaForm, SubmitterProps } from '@ant-design/pro-components';
-import { Button, Form as AntdForm, FormInstance } from 'antd';
+import { Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React from 'react';
 import { Columns, waitTime } from './tools';
 
-export interface FormConfig {
+export interface StepsFormConfig {
   initialValue?: any;
   title?: string;
-  modal?: 'ModalForm' | 'DrawerForm' | 'Form';
+  modal: 'Modal' | 'Drawer' | 'Form';
+  layoutType?: 'StepForm' | 'StepsForm';
   trigger?: string | React.ReactNode;
   submitter?: SubmitterProps;
   submitterButtonType?: ButtonType;
@@ -16,26 +17,25 @@ export interface FormConfig {
   onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
 }
 
-export const Form: React.FC<FormConfig> = (props) => {
+export const StepsForm: React.FC<StepsFormConfig> = (props) => {
   const [form] = AntdForm.useForm();
-  const { modal, columns, trigger, submitterButtonType, submitTimeout, onFinish, ...rest } = props;
 
-  const triggerDom = (): any => {
-    if (trigger instanceof Object) {
-      return trigger;
-    }
-    return <Button type={submitterButtonType}>{trigger}</Button>;
-  };
+  const {
+    modal,
+    layoutType,
+    columns,
+    trigger,
+    submitterButtonType,
+    submitTimeout,
+    onFinish,
+    ...rest
+  } = props;
 
-  return (
+  const stepsForm = () => (
     <BetaSchemaForm
       form={form}
-      layoutType={modal}
-      trigger={triggerDom()}
+      layoutType={layoutType}
       autoFocusFirstInput
-      drawerProps={{
-        destroyOnClose: true,
-      }}
       // @ts-ignore
       columns={columns}
       onFinish={async (values) => {
@@ -46,11 +46,14 @@ export const Form: React.FC<FormConfig> = (props) => {
       {...rest}
     />
   );
+
+  return stepsForm();
 };
 
-Form.defaultProps = {
+StepsForm.defaultProps = {
   title: '新建表单',
-  modal: 'ModalForm',
+  modal: 'Form',
+  layoutType: 'StepForm',
   trigger: '新增',
   submitter: {
     searchConfig: {
@@ -63,8 +66,8 @@ Form.defaultProps = {
   columns: null,
 };
 
-export default Form;
+export default StepsForm;
 
-export const useForm = (props: FormConfig): [any, {}] => {
-  return [<Form {...props} />, {}];
+export const useStepsForm = (props: StepsFormConfig): [any, {}] => {
+  return [<StepsForm {...props} />, {}];
 };

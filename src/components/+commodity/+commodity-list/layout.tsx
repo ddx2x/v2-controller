@@ -2,19 +2,18 @@ import { useForm } from '@/components/kit/form';
 import { TableLayout } from '@/components/kit/table';
 import { commodityEdit } from './dialog';
 
-let dataSource = [];
-for (let i = 0; i < 3000; i++) {
-  dataSource.push({
-    name: '全合成发动机油 H6 CTL' + i,
-    price: i,
-    sales: 166 + i,
+let data = [];
+for (let i = 0; i < 300; i += 1) {
+  data.push({
+    key: i,
+    name: '全合成发动机油 H6 CTL',
+    price: 100,
+    sales: 166,
     channel: '线上+线下',
     sort: 0,
     availableStatus: true,
   });
 }
-
-console.log(dataSource);
 
 export const commodityTableLayout: TableLayout = {
   columns: [
@@ -35,5 +34,5 @@ export const commodityTableLayout: TableLayout = {
       },
     },
   ],
-  dataSource,
+  dataSource: data,
 };

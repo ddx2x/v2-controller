@@ -6,13 +6,19 @@ import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 
-interface TableProps {
-  scrollHeight?: number;
-  useBatchDelete?: boolean;
-  batchDelete?: (selectedRowKeys: React.Key[]) => void;
+export interface TableLayout {
   columns?: ProColumns<any>[];
+  rowKey?: string;
   dataSource?: any[];
-  headerTitle?: React.ReactNode;
+  scrollHeight?: number; // 表格高度
+  onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
+  // 批量删除
+  useBatchDelete?: boolean; // 开启批量删除
+  batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
+  //
+  headerTitle?: React.ReactNode; // 标题
+  // 数据项 嵌套表格扩展
+  // https://procomponents.ant.design/components/table#%E5%B5%8C%E5%A5%97%E8%A1%A8%E6%A0%BC
   expandable?: ExpandableConfig<any>;
   toolBarRender?:
     | false
@@ -24,45 +30,48 @@ interface TableProps {
         },
       ) => React.ReactNode[])
     | undefined;
-  onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void;
-  intl?: IntlShape;
+  intl?: IntlShape; // 国际化
 }
 
-export interface TableLayout extends TableProps {}
-
-export const Table: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableLayout> = (props) => {
   const {
+    columns,
+    dataSource,
+    rowKey,
+    onLoading,
     scrollHeight,
     headerTitle,
     intl,
-    columns,
-    dataSource,
+    //
     useBatchDelete,
     batchDelete,
+    //
     expandable,
-    onLoading,
     toolBarRender,
   } = props;
 
+  // ref
   const actionRef = useRef<ActionType>();
 
+  // 多选 批量删除
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
-
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
 
+  // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
       height: scrollHeight || 500,
       onReachEnd: () => onLoading && onLoading(actionRef),
     });
   }, []);
+
+  //
 
   return (
     <>
@@ -77,16 +86,14 @@ export const Table: React.FC<TableProps> = (props) => {
               })
         }
         actionRef={actionRef}
-        rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
+        rowKey={rowKey}
         toolBarRender={toolBarRender}
         columns={columns}
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
         expandable={expandable}
         pagination={false}
+        // 虚拟滚动
         sticky
         scroll={{
           y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
@@ -97,7 +104,7 @@ export const Table: React.FC<TableProps> = (props) => {
         <FooterToolbar
           extra={
             <div>
-              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen" />{' '}
+              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="已选择" />{' '}
               <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>{' '}
               <FormattedMessage id="pages.searchTable.item" defaultMessage="项" />
             </div>
@@ -110,10 +117,7 @@ export const Table: React.FC<TableProps> = (props) => {
               actionRef.current?.reloadAndRest?.();
             }}
           >
-            <FormattedMessage
-              id="pages.searchTable.batchDeletion"
-              defaultMessage="Batch deletion"
-            />
+            <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
           </Button>
         </FooterToolbar>
       )}
@@ -122,7 +126,8 @@ export const Table: React.FC<TableProps> = (props) => {
 };
 
 Table.defaultProps = {
-  scrollHeight: 500,
+  rowKey: 'key',
+  scrollHeight: 600,
   useBatchDelete: true,
   columns: [],
   dataSource: [],

@@ -3,15 +3,16 @@ import { ReactText, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import ProList from './pro-list';
 
-interface ListProps {
-  intl?: IntlShape;
+export interface ListLayout {
+  virtualList?: boolean;
   dataSource?: any[];
   metas?: ProListMetas<any> | undefined;
+  intl?: IntlShape; // 国际化
 }
 
-export interface ListLayout extends ListProps {}
+export const List: React.FC<ListLayout> = (props) => {
+  const { virtualList, dataSource, metas } = props;
 
-export const List: React.FC<ListProps> = (props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
   const rowSelection = {
     selectedRowKeys,
@@ -20,9 +21,9 @@ export const List: React.FC<ListProps> = (props) => {
 
   return (
     <ProList
-      virtualList={true}
-      dataSource={props.dataSource}
-      metas={props.metas}
+      virtualList={virtualList}
+      dataSource={dataSource}
+      metas={metas}
       rowSelection={rowSelection}
     />
   );
@@ -31,10 +32,11 @@ export const List: React.FC<ListProps> = (props) => {
 export default List;
 
 List.defaultProps = {
+  virtualList: true,
   dataSource: [],
   metas: {},
 };
 
-export const useList = (props: ListProps) => {
+export const useList = (props: ListLayout) => {
   return [<List {...props} />, {}];
 };
