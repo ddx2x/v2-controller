@@ -1,23 +1,24 @@
 import { BetaSchemaForm, StepFormProps, SubmitterProps } from '@ant-design/pro-components';
-import { Drawer, Form as AntdForm, FormInstance, Modal } from 'antd';
+import { Drawer, Form as AntdForm, FormInstance, Modal, Space, StepsProps } from 'antd';
 import Button, { ButtonType } from 'antd/lib/button';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Columns, waitTime } from './tools';
 
 export interface StepFormConfig {
-  initialValue?: any;
   title?: string;
   modal: 'Modal' | 'Drawer' | 'Form';
-  layoutType?: 'StepForm' | 'StepsForm';
+  layoutType?: 'StepsForm';
+  initialValue?: any;
   width?: string | number;
   steps?: StepFormProps[];
+  stepsProps?: StepsProps; // 多表单参数
   trigger?: string | React.ReactNode;
   triggerButtonType?: ButtonType;
   submitter?: SubmitterProps;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   columns?: Columns;
-  onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
+  onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
 }
 
@@ -25,14 +26,15 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
   const [form] = AntdForm.useForm();
 
   const {
+    title,
     modal,
-    layoutType,
     columns,
     trigger,
     triggerButtonType,
     submitTimeout,
     onFinish,
     width,
+    stepsProps,
     ...rest
   } = props;
 
@@ -40,6 +42,7 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
 
   const triggerDom = (): any => {
     if (trigger instanceof Object) {
+      trigger['onClick'] = showModal;
       return trigger;
     }
     return (
@@ -53,64 +56,84 @@ export const StepForm: React.FC<StepFormConfig> = (props) => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const stepsFormRender = (dom: any, submitter: any) => {
+    switch (modal) {
+      case 'Modal':
+        return (
+          <Modal
+            title={title}
+            width={width}
+            onCancel={handleClose}
+            open={isModalOpen}
+            footer={submitter}
+            destroyOnClose
+          >
+            {dom}
+          </Modal>
+        );
+      case 'Drawer':
+        return (
+          <Drawer
+            title={title}
+            width={width}
+            placement="right"
+            onClose={handleClose}
+            open={isModalOpen}
+            footer={<Space>{submitter}</Space>}
+            destroyOnClose
+          >
+            {dom}
+          </Drawer>
+        );
+      case 'Form':
+      default:
+        return null;
+    }
   };
 
-  const stepsForm = () => (
-    <BetaSchemaForm
-      form={form}
-      layoutType={layoutType}
-      autoFocusFirstInput
-      // @ts-ignore
-      columns={columns}
-      onFinish={async (values) => {
-        if (!onFinish) return false;
-        await waitTime(submitTimeout);
-        return onFinish(form, values);
-      }}
-      {...rest}
-    />
-  );
+  const stepsForm = () => {
+    // 嵌入多表单
+    if (modal == 'Modal' || modal == 'Drawer') {
+      rest['stepsFormRender'] = stepsFormRender;
+    }
+
+    return (
+      <BetaSchemaForm
+        form={form}
+        autoFocusFirstInput
+        stepsProps={{
+          // @ts-ignore
+          size: 'small',
+          ...stepsProps,
+        }}
+        // @ts-ignore
+        columns={columns}
+        onFinish={async (values) => {
+          if (!onFinish) return false;
+          await waitTime(submitTimeout);
+          return onFinish(form, values, handleClose);
+        }}
+        {...rest}
+      />
+    );
+  };
 
   switch (modal) {
     case 'Modal':
-      return (
-        <>
-          {triggerDom()}
-          <Modal
-            title="Basic Modal"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width={width}
-          >
-            {stepsForm()}
-          </Modal>
-        </>
-      );
     case 'Drawer':
       return (
         <>
           {triggerDom()}
-          <Drawer
-            title="Basic Drawer"
-            placement="right"
-            onClose={handleCancel}
-            open={isModalOpen}
-            width={width}
-          >
-            {stepsForm()}
-          </Drawer>
+          {stepsForm()}
         </>
       );
     case 'Form':
     default:
-      return stepsForm();
+      return <>{stepsForm()}</>;
   }
 };
 
@@ -120,6 +143,7 @@ StepForm.defaultProps = {
   layoutType: 'StepsForm',
   steps: [],
   columns: [],
+  stepsProps: { direction: 'vertical' },
   trigger: '新增',
   triggerButtonType: 'link',
   submitter: {
@@ -129,6 +153,7 @@ StepForm.defaultProps = {
     },
   },
   submitTimeout: 2000,
+  width: '50%',
 };
 
 export default StepForm;

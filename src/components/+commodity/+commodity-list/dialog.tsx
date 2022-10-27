@@ -162,6 +162,7 @@ const columns: ProFormColumnsType<DataItem>[][] = [
 ];
 
 export const commodityEdit: StepFormConfig = {
+  title: '干活',
   modal: 'Modal',
   steps: [
     {
@@ -175,5 +176,4 @@ export const commodityEdit: StepFormConfig = {
     },
   ],
   columns: columns,
-  width: '50%'
 };

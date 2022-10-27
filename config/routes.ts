@@ -31,6 +31,7 @@ export default [
   },
   {
     name: '商品',
+    path: '/',
     routes: [
       {
         path: '/app/commodity/table',
@@ -50,26 +51,6 @@ export default [
       {
         path: '/app/goods-sale/table',
         name: '在售商品',
-        component: './app',
-      },
-    ],
-  },
-  {
-    name: '门店',
-    routes: [
-      {
-        path: '/app/store/table',
-        name: '门店列表',
-        component: './app',
-      },
-    ],
-  },
-  {
-    name: '订单',
-    routes: [
-      {
-        path: '/app/order/table',
-        name: '全部订单',
         component: './app',
       },
     ],

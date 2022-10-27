@@ -62,7 +62,7 @@ export const commodityTableLayout: TableLayout = {
     },
   ],
   dataSource: data,
-  expandable: expanded({ columns: ecolumns, dataSource: edata, rowRender: 'any' }),
+  expandable: expanded({ columns: ecolumns, dataSource: edata, rowRender: 'table' }),
   onLoading: () => {
     message.info('数据加载中.....');
   },
