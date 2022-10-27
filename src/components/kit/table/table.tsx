@@ -1,4 +1,5 @@
 import { ActionType, FooterToolbar, ProColumns, ProTable } from '@ant-design/pro-components';
+import { OptionConfig } from '@ant-design/pro-table/es/components/ToolBar';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { ExpandableConfig } from 'antd/lib/table/interface';
@@ -6,12 +7,14 @@ import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 
+const defaulScrollHeight = 600;
+
 export interface TableLayout {
   edit?: boolean;
   columns?: ProColumns<any>[]; // https://procomponents.ant.design/components/table/#columns-%E5%88%97%E5%AE%9A%E4%B9%89
   rowKey?: string;
   dataSource?: any[];
-  scrollHeight?: number; // 表格高度
+  scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
@@ -21,6 +24,7 @@ export interface TableLayout {
   // 数据项 嵌套表格扩展
   // https://procomponents.ant.design/components/table#%E5%B5%8C%E5%A5%97%E8%A1%A8%E6%A0%BC
   expandable?: ExpandableConfig<any>;
+  options?: OptionConfig;
   toolBarRender?:
     | false
     | ((
@@ -32,6 +36,8 @@ export interface TableLayout {
       ) => React.ReactNode[])
     | undefined;
   intl?: IntlShape; // 国际化
+  onSearch?: (params: any) => void;
+  onReset?: () => void;
 }
 
 export const Table: React.FC<TableLayout> = (props) => {
@@ -47,8 +53,11 @@ export const Table: React.FC<TableLayout> = (props) => {
     useBatchDelete,
     batchDelete,
     //
+    options,
     expandable,
     toolBarRender,
+    onSearch,
+    onReset,
   } = props;
 
   // ref
@@ -67,7 +76,7 @@ export const Table: React.FC<TableLayout> = (props) => {
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
-      height: scrollHeight || 500,
+      height: scrollHeight || defaulScrollHeight,
       onReachEnd: () => onLoading && onLoading(actionRef),
     });
   }, []);
@@ -86,6 +95,11 @@ export const Table: React.FC<TableLayout> = (props) => {
                 defaultMessage: 'Enquiry form',
               })
         }
+        search={{
+          labelWidth: 'auto',
+        }}
+        onSubmit={onSearch}
+        onReset={onReset}
         actionRef={actionRef}
         rowKey={rowKey}
         toolBarRender={toolBarRender}
@@ -93,6 +107,12 @@ export const Table: React.FC<TableLayout> = (props) => {
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
         expandable={expandable}
+        options={{
+          density: true,
+          reload: false,
+          fullScreen: true,
+          ...options,
+        }}
         pagination={false}
         // 虚拟滚动
         sticky
@@ -129,8 +149,9 @@ export const Table: React.FC<TableLayout> = (props) => {
 Table.defaultProps = {
   edit: false,
   rowKey: 'key',
-  scrollHeight: 600,
+  scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
+  options: {},
   columns: [],
   dataSource: [],
 };
