@@ -11,7 +11,7 @@ export interface ContainerProps extends PageContainerProps {
 }
 
 export const Container: React.FC<ContainerProps> = (props) => {
-  const { useBreadcrumb, context, breadcrumb, ...rest } = props;
+  const { useBreadcrumb, context, breadcrumb, header, ...rest } = props;
 
   const headerBreadcrumb = (): BreadcrumbProps | undefined => {
     // 面包屑🍞
@@ -29,7 +29,7 @@ export const Container: React.FC<ContainerProps> = (props) => {
   };
 
   return (
-    <AntdPageContainer header={{ breadcrumb: headerBreadcrumb() }} {...rest}>
+    <AntdPageContainer header={{ breadcrumb: headerBreadcrumb(), ...header }} {...rest}>
       {props.children}
     </AntdPageContainer>
   );

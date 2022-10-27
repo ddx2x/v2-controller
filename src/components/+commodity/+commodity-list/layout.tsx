@@ -1,5 +1,6 @@
+import { TableLayout } from '@/components/+app';
 import { useStepsForm } from '@/components/kit/form';
-import { expanded, TableLayout } from '@/components/kit/table';
+import { expanded } from '@/components/kit/table';
 import { Badge, message, TableColumnsType } from 'antd';
 import { commodityEdit } from './dialog';
 
@@ -43,6 +44,11 @@ for (let i = 0; i < 3; ++i) {
 }
 
 export const commodityTableLayout: TableLayout = {
+  containerProps: {
+    header: {
+      title: '商品列表',
+    },
+  },
   columns: [
     { dataIndex: 'name', title: '商品名称' },
     { dataIndex: 'price', title: '价格', valueType: 'money' },

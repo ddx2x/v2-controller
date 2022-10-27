@@ -1,4 +1,3 @@
-import { PageContainerProps } from '@ant-design/pro-components';
 import { useIntl, useMatch } from '@umijs/max';
 import { useEffect } from 'react';
 import {
@@ -19,7 +18,13 @@ import { appManager, LayoutType } from './manager';
 export default () => {
   const match = useMatch('/app/:route/:layout');
   const route = match?.params['route'] as string;
-  let containerProps: PageContainerProps = {};
+  const layout = match?.params['layout'] as LayoutType; // 布局类型
+  const config = appManager.getLayout(route, layout) || null; // 注册配置项
+
+  if (!config) return null;
+
+  const intl = useIntl(); // 国际化组件
+  const { containerProps, ...layoutProps } = config;
 
   useEffect(() => {
     appManager.initStores(route); // 挂载 stores
@@ -27,14 +32,6 @@ export default () => {
   });
 
   const children = () => {
-    const layout = match?.params['layout'] as LayoutType; // 布局类型
-    const config = appManager.getLayout(route, layout) || null; // 注册配置项
-
-    if (!config) return null;
-    const intl = useIntl(); // 国际化组件
-    const { container, ...layoutProps } = config;
-    containerProps = container || {};
-
     switch (layout) {
       case 'table':
         return <Table {...(layoutProps as TableProps)} intl={intl} />;

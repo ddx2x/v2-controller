@@ -6,7 +6,7 @@ import { DescriptionsProps, FormProps, ListProps, StepFormProps, TableProps } fr
 export type LayoutType = 'table' | 'list' | 'descriptions' | 'form' | 'step-form';
 
 interface _Container_ {
-  container?: PageContainerProps;
+  containerProps?: PageContainerProps;
 }
 
 export interface TableLayout extends TableProps, _Container_ {}
@@ -28,7 +28,6 @@ export class AppManager {
   private stores = observable.map<string, ApiResource>();
 
   initStores(route: string) {
-    console.log('initStores......');
     (this.stores.get(route)?.stores || []).map((store) => {
       store.loadAll();
       store.watch();
@@ -36,7 +35,6 @@ export class AppManager {
   }
 
   clearStores(route: string) {
-    console.log('clearStores.....');
     (this.stores.get(route)?.stores || []).map((store) => {
       store.stop();
     });

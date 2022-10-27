@@ -1,4 +1,4 @@
-import { StepFormConfig } from '@/components/kit/form';
+import { StepFormLayout } from '@/components/+app';
 import { ProFormColumnsType } from '@ant-design/pro-components';
 
 const valueEnum = {
@@ -161,7 +161,12 @@ const columns: ProFormColumnsType<DataItem>[][] = [
   ],
 ];
 
-export const commodityEdit: StepFormConfig = {
+export const commodityEdit: StepFormLayout = {
+  containerProps: {
+    header: {
+      title: '干活啦',
+    },
+  },
   title: '干活',
   modal: 'Modal',
   steps: [

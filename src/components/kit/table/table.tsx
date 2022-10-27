@@ -151,7 +151,7 @@ Table.defaultProps = {
   rowKey: 'key',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
-  options: {},
+  options: { density: true },
   columns: [],
   dataSource: [],
 };
