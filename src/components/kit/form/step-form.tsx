@@ -1,17 +1,21 @@
-import { BetaSchemaForm, StepFormProps, SubmitterProps } from '@ant-design/pro-components';
+import {
+  BetaSchemaForm,
+  StepFormProps as ProStepFormProps,
+  SubmitterProps,
+} from '@ant-design/pro-components';
 import { Drawer, Form as AntdForm, FormInstance, Modal, Space, StepsProps } from 'antd';
 import Button, { ButtonType } from 'antd/lib/button';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Columns, waitTime } from './tools';
 
-export interface StepFormConfig {
+export interface StepFormProps {
   title?: string;
   modal: 'Modal' | 'Drawer' | 'Form';
   layoutType?: 'StepsForm';
   initialValue?: any;
   width?: string | number;
-  steps?: StepFormProps[];
+  steps?: ProStepFormProps[];
   stepsProps?: StepsProps; // 多表单参数
   trigger?: string | React.ReactNode;
   triggerButtonType?: ButtonType;
@@ -22,7 +26,7 @@ export interface StepFormConfig {
   intl?: IntlShape; // 国际化
 }
 
-export const StepForm: React.FC<StepFormConfig> = (props) => {
+export const StepForm: React.FC<StepFormProps> = (props) => {
   const [form] = AntdForm.useForm();
 
   const {
@@ -158,6 +162,6 @@ StepForm.defaultProps = {
 
 export default StepForm;
 
-export const useStepsForm = (props: StepFormConfig): [any, {}] => {
+export const useStepsForm = (props: StepFormProps): [any, {}] => {
   return [<StepForm {...props} />, {}];
 };

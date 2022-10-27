@@ -1,22 +1,25 @@
+import { PageContainerProps } from '@ant-design/pro-components';
 import { useIntl, useMatch } from '@umijs/max';
 import { useEffect } from 'react';
 import {
   Descriptions,
-  DescriptionsLayout,
+  DescriptionsProps,
   Form,
-  FormConfig,
+  FormProps,
   List,
-  ListLayout,
+  ListProps,
   PageContainer,
   StepForm,
+  StepFormProps,
   Table,
-  TableLayout,
+  TableProps,
 } from '../kit';
 import { appManager, LayoutType } from './manager';
 
 export default () => {
   const match = useMatch('/app/:route/:layout');
   const route = match?.params['route'] as string;
+  let containerProps: PageContainerProps = {};
 
   useEffect(() => {
     appManager.initStores(route); // 挂载 stores
@@ -25,27 +28,32 @@ export default () => {
 
   const children = () => {
     const layout = match?.params['layout'] as LayoutType; // 布局类型
-    const args = appManager.getLayout(route, layout) || null; // 注册配置项
+    const config = appManager.getLayout(route, layout) || null; // 注册配置项
 
-    if (!args) return null;
-
+    if (!config) return null;
     const intl = useIntl(); // 国际化组件
+    const { container, ...layoutProps } = config;
+    containerProps = container || {};
 
     switch (layout) {
       case 'table':
-        return <Table {...(args as TableLayout)} intl={intl} />;
+        return <Table {...(layoutProps as TableProps)} intl={intl} />;
       case 'list':
-        return <List {...(args as ListLayout)} intl={intl} />;
+        return <List {...(layoutProps as ListProps)} intl={intl} />;
       case 'form':
-        return <Form {...(args as FormConfig)} modal="Form" intl={intl} />;
+        return <Form {...(layoutProps as FormProps)} modal="Form" intl={intl} />;
       case 'step-form':
-        return <StepForm {...(args as FormConfig)} modal="Form" intl={intl} />;
+        return <StepForm {...(layoutProps as StepFormProps)} modal="Form" intl={intl} />;
       case 'descriptions':
-        return <Descriptions modal="page" intl={intl} {...(args as DescriptionsLayout)} />;
+        return <Descriptions modal="page" {...(layoutProps as DescriptionsProps)} intl={intl} />;
       default:
         return null;
     }
   };
 
-  return <PageContainer fixedHeader>{children()}</PageContainer>;
+  return (
+    <PageContainer fixedHeader {...containerProps}>
+      {children()}
+    </PageContainer>
+  );
 };

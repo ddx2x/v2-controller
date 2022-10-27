@@ -3,14 +3,14 @@ import { ReactText, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import ProList from './pro-list';
 
-export interface ListLayout {
+export interface ListProps {
   virtualList?: boolean;
   dataSource?: any[];
   metas?: ProListMetas<any> | undefined;
   intl?: IntlShape; // 国际化
 }
 
-export const List: React.FC<ListLayout> = (props) => {
+export const List: React.FC<ListProps> = (props) => {
   const { virtualList, dataSource, metas } = props;
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
@@ -35,8 +35,4 @@ List.defaultProps = {
   virtualList: true,
   dataSource: [],
   metas: {},
-};
-
-export const useList = (props: ListLayout) => {
-  return [<List {...props} />, {}];
 };

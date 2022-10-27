@@ -8,15 +8,13 @@ import { Button } from 'antd';
 import { IntlShape } from 'react-intl';
 import { DescriptionsItem, descriptionsItems } from './items';
 
-interface DescriptionsProps extends ProDescriptionsProps {
+export interface DescriptionsProps extends ProDescriptionsProps {
   modal?: 'modal' | 'drawer' | 'page';
   title?: string;
   trigger?: string | React.ReactNode;
   items?: DescriptionsItem[];
   intl?: IntlShape;
 }
-
-export interface DescriptionsLayout extends DescriptionsProps {}
 
 export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   const { title, modal, trigger, items, ...rest } = props;

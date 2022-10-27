@@ -1,14 +1,25 @@
 import { ObjectStore } from '@/client';
+import { PageContainerProps } from '@ant-design/pro-components';
 import { observable } from 'mobx';
-import { DescriptionsLayout, FormConfig, ListLayout, StepFormConfig, TableLayout } from '../kit';
+import { DescriptionsProps, FormProps, ListProps, StepFormProps, TableProps } from '../kit';
 
 export type LayoutType = 'table' | 'list' | 'descriptions' | 'form' | 'step-form';
+
+interface _Container_ {
+  container?: PageContainerProps;
+}
+
+export interface TableLayout extends TableProps, _Container_ {}
+export interface ListLayout extends ListProps, _Container_ {}
+export interface FormLayout extends FormProps, _Container_ {}
+export interface StepFormLayout extends StepFormProps, _Container_ {}
+export interface DescriptionsLayout extends DescriptionsProps, _Container_ {}
 
 interface ApiResource {
   table?: TableLayout;
   list?: ListLayout;
-  form?: FormConfig;
-  stepForm?: StepFormConfig;
+  form?: FormLayout;
+  stepForm?: StepFormLayout;
   descriptions?: DescriptionsLayout;
   stores?: ObjectStore<any>[];
 }

@@ -9,7 +9,7 @@ import { VList } from 'virtuallist-antd';
 
 const defaulScrollHeight = 600;
 
-export interface TableLayout {
+export interface TableProps {
   edit?: boolean;
   columns?: ProColumns<any>[]; // https://procomponents.ant.design/components/table/#columns-%E5%88%97%E5%AE%9A%E4%B9%89
   rowKey?: string;
@@ -40,7 +40,7 @@ export interface TableLayout {
   onReset?: () => void;
 }
 
-export const Table: React.FC<TableLayout> = (props) => {
+export const Table: React.FC<TableProps> = (props) => {
   const {
     columns,
     dataSource,

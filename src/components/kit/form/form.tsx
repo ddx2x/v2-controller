@@ -5,7 +5,7 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Columns, waitTime } from './tools';
 
-export interface FormConfig {
+export interface FormProps {
   initialValue?: any;
   title?: string;
   modal?: 'ModalForm' | 'DrawerForm' | 'Form';
@@ -18,7 +18,7 @@ export interface FormConfig {
   intl?: IntlShape; // 国际化
 }
 
-export const Form: React.FC<FormConfig> = (props) => {
+export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();
   const { modal, columns, trigger, triggerButtonType, submitTimeout, onFinish, ...rest } = props;
 
@@ -67,6 +67,6 @@ Form.defaultProps = {
 
 export default Form;
 
-export const useForm = (props: FormConfig): [any, {}] => {
+export const useForm = (props: FormProps): [any, {}] => {
   return [<Form {...props} />, {}];
 };
