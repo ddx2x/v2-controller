@@ -1,50 +1,25 @@
-import { ActionType, FooterToolbar, ProColumns, ProTable } from '@ant-design/pro-components';
-import { OptionConfig } from '@ant-design/pro-table/es/components/ToolBar';
+import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
-import { ExpandableConfig } from 'antd/lib/table/interface';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 
 const defaulScrollHeight = 600;
 
-export interface TableProps {
+export interface TableProps extends ProTableProps<any, any> {
   edit?: boolean;
-  columns?: ProColumns<any>[]; // https://procomponents.ant.design/components/table/#columns-%E5%88%97%E5%AE%9A%E4%B9%89
-  rowKey?: string;
-  dataSource?: any[];
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  //
-  headerTitle?: React.ReactNode; // 标题
-  // 数据项 嵌套表格扩展
-  // https://procomponents.ant.design/components/table#%E5%B5%8C%E5%A5%97%E8%A1%A8%E6%A0%BC
-  expandable?: ExpandableConfig<any>;
-  options?: OptionConfig;
-  toolBarRender?:
-    | false
-    | ((
-        action: ActionType | undefined,
-        rows: {
-          selectedRowKeys?: (string | number)[] | undefined;
-          selectedRows?: any[] | undefined;
-        },
-      ) => React.ReactNode[])
-    | undefined;
   intl?: IntlShape; // 国际化
-  onSearch?: (params: any) => void;
-  onReset?: () => void;
 }
 
 export const Table: React.FC<TableProps> = (props) => {
   const {
-    columns,
     dataSource,
-    rowKey,
     onLoading,
     scrollHeight,
     headerTitle,
@@ -52,12 +27,7 @@ export const Table: React.FC<TableProps> = (props) => {
     //
     useBatchDelete,
     batchDelete,
-    //
-    options,
-    expandable,
-    toolBarRender,
-    onSearch,
-    onReset,
+    ...rest
   } = props;
 
   // ref
@@ -81,8 +51,6 @@ export const Table: React.FC<TableProps> = (props) => {
     });
   }, []);
 
-  //
-
   return (
     <>
       <ProTable
@@ -98,28 +66,16 @@ export const Table: React.FC<TableProps> = (props) => {
         search={{
           labelWidth: 'auto',
         }}
-        onSubmit={onSearch}
-        onReset={onReset}
         actionRef={actionRef}
-        rowKey={rowKey}
-        toolBarRender={toolBarRender}
-        columns={columns}
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
-        expandable={expandable}
-        options={{
-          density: true,
-          reload: false,
-          fullScreen: true,
-          ...options,
-        }}
-        pagination={false}
         // 虚拟滚动
-        sticky
+        // sticky
         scroll={{
           y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
         }}
         components={vComponents}
+        {...rest}
       />
       {useBatchDelete && selectedRowKeys?.length > 0 && (
         <FooterToolbar
@@ -148,10 +104,11 @@ export const Table: React.FC<TableProps> = (props) => {
 
 Table.defaultProps = {
   edit: false,
+  pagination: false,
   rowKey: 'key',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
-  options: { density: true },
+  options: { density: true, reload: false, fullScreen: true },
   columns: [],
   dataSource: [],
 };

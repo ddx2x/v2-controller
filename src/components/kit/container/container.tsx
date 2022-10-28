@@ -38,5 +38,5 @@ export const Container: React.FC<ContainerProps> = (props) => {
 Container.defaultProps = {
   useBreadcrumb: true,
   context: null,
-  fixedHeader: true,
+  fixedHeader: false,
 };

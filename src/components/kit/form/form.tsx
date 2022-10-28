@@ -1,4 +1,4 @@
-import { BetaSchemaForm, SubmitterProps } from '@ant-design/pro-components';
+import { BetaSchemaForm, FooterToolbar, SubmitterProps } from '@ant-design/pro-components';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React from 'react';
@@ -28,6 +28,19 @@ export const Form: React.FC<FormProps> = (props) => {
     }
     return <Button type={triggerButtonType}>{trigger}</Button>;
   };
+
+  const stepsFormRender = (dom: any, submitter: any) => {
+    return (
+      <>
+        {dom}
+        <FooterToolbar>{submitter}</FooterToolbar>
+      </>
+    );
+  };
+
+  if (modal == 'Form') {
+    rest['stepsFormRender'] = stepsFormRender;
+  }
 
   return (
     <BetaSchemaForm

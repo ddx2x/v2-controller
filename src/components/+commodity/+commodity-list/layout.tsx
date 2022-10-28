@@ -5,7 +5,7 @@ import { Badge, message, TableColumnsType } from 'antd';
 import { commodityEdit } from './dialog';
 
 let data = [];
-for (let i = 0; i < 300; i += 1) {
+for (let i = 0; i < 30; i += 1) {
   data.push({
     key: i,
     name: '全合成发动机油 H6 CTL',
@@ -44,7 +44,7 @@ for (let i = 0; i < 3; ++i) {
 }
 
 export const commodityTableLayout: TableLayout = {
-  containerProps: {
+  pageContainer: {
     header: {
       title: '商品列表',
     },

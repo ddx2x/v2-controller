@@ -16,7 +16,8 @@ import {
 import { appManager, LayoutType } from './manager';
 
 export default () => {
-  const match = useMatch('/app/:route/:layout');
+  const match = useMatch('/:route/:layout');
+
   const route = match?.params['route'] as string;
   const layout = match?.params['layout'] as LayoutType; // 布局类型
   const config = appManager.getLayout(route, layout) || null; // 注册配置项
@@ -24,7 +25,7 @@ export default () => {
   if (!config) return null;
 
   const intl = useIntl(); // 国际化组件
-  const { containerProps, ...layoutProps } = config;
+  let { pageContainer, ...rest } = config;
 
   useEffect(() => {
     appManager.initStores(route); // 挂载 stores
@@ -34,23 +35,26 @@ export default () => {
   const children = () => {
     switch (layout) {
       case 'table':
-        return <Table {...(layoutProps as TableProps)} intl={intl} />;
+        return <Table {...(rest as TableProps)} intl={intl} />;
       case 'list':
-        return <List {...(layoutProps as ListProps)} intl={intl} />;
+        return <List {...(rest as ListProps)} intl={intl} />;
       case 'form':
-        return <Form {...(layoutProps as FormProps)} modal="Form" intl={intl} />;
+        pageContainer = { ...pageContainer, keepAlive: false };
+        return <Form {...(rest as FormProps)} modal="Form" intl={intl} />;
       case 'step-form':
-        return <StepForm {...(layoutProps as StepFormProps)} modal="Form" intl={intl} />;
+        pageContainer = { ...pageContainer, keepAlive: false };
+        return <StepForm {...(rest as StepFormProps)} modal="Form" intl={intl} />;
       case 'descriptions':
-        return <Descriptions modal="page" {...(layoutProps as DescriptionsProps)} intl={intl} />;
+        return <Descriptions modal="page" {...(rest as DescriptionsProps)} intl={intl} />;
       default:
         return null;
     }
   };
 
+  const _ = children();
   return (
-    <PageContainer fixedHeader {...containerProps}>
-      {children()}
+    <PageContainer fixedHeader {...pageContainer}>
+      {_}
     </PageContainer>
   );
 };

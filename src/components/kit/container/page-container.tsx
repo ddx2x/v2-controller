@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Container, ContainerProps } from './container';
 import { KeepAlive, KeepAliveProps } from './keep-alive';
 
-interface PageContainerProps extends KeepAliveProps, ContainerProps {
+export interface PageContainerProps extends KeepAliveProps, ContainerProps {
   keepAlive?: boolean;
 }
 

@@ -162,7 +162,7 @@ const columns: ProFormColumnsType<DataItem>[][] = [
 ];
 
 export const commodityEdit: StepFormLayout = {
-  containerProps: {
+  pageContainer: {
     header: {
       title: '干活啦',
     },

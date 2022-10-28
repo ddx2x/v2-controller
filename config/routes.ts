@@ -7,13 +7,14 @@
  * @param redirect 配置路由跳转
  * @param wrappers 配置路由组件的包装组件，通过包装组件可以为当前的路由组件组合进更多的功能。 比如，可以用于路由级别的权限校验
  * @doc https://umijs.org/docs/guides/routes
+ * @doc https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=9402
  */
 export default [
-  // {
-  //   path: '*',
-  //   layout: false,
-  //   component: './404',
-  // },
+  {
+    path: '*',
+    layout: false,
+    component: './404',
+  },
   {
     path: '/user',
     layout: false,
@@ -27,30 +28,37 @@ export default [
   },
   {
     path: '/',
-    redirect: '/app/commodity/table',
+    redirect: '/commodity/table',
   },
   {
+    icon: 'mail',
     name: '商品',
     path: '/',
     routes: [
       {
-        path: '/app/commodity/table',
+        icon: 'chrome',
+        path: '/commodity/table',
         name: '商品列表',
         component: './app',
       },
       {
-        path: '/app/commodity-add/step-form',
+        path: '/commodity-add/step-form',
         name: '新增商品',
         component: './app',
       },
       {
-        path: '/app/commodity-sale/table',
+        path: '/commodity-sale/table',
         name: '商品标签',
         component: './app',
       },
       {
-        path: '/app/goods-sale/table',
+        path: '/goods-sale/table',
         name: '在售商品',
+        component: './app',
+      },
+      {
+        path: '/store-list/list',
+        name: '商店',
         component: './app',
       },
     ],

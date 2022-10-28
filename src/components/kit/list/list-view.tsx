@@ -1,10 +1,9 @@
 import type { ProCardProps } from '@ant-design/pro-card';
-import type { GetComponentProps } from '@ant-design/pro-components';
+import { GetComponentProps, useToken } from '@ant-design/pro-components';
 import { PRO_LIST_KEYS_MAP } from '@ant-design/pro-list/es/constants';
 import type { ItemProps } from '@ant-design/pro-list/es/Item';
 import ProListItem from '@ant-design/pro-list/es/Item';
 import type { ActionType } from '@ant-design/pro-table';
-import { useToken } from '@ant-design/pro-utils';
 import type { ListProps, TableColumnType, TableProps } from 'antd';
 import { ConfigProvider, List } from 'antd';
 import useLazyKVMap from 'antd/es/table/hooks/useLazyKVMap';

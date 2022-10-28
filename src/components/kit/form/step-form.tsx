@@ -1,5 +1,6 @@
 import {
   BetaSchemaForm,
+  FooterToolbar,
   StepFormProps as ProStepFormProps,
   SubmitterProps,
 } from '@ant-design/pro-components';
@@ -95,16 +96,16 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         );
       case 'Form':
       default:
-        return null;
+        return (
+          <>
+            {dom}
+            <FooterToolbar>{submitter}</FooterToolbar>
+          </>
+        );
     }
   };
 
   const stepsForm = () => {
-    // 嵌入多表单
-    if (modal == 'Modal' || modal == 'Drawer') {
-      rest['stepsFormRender'] = stepsFormRender;
-    }
-
     return (
       <BetaSchemaForm
         form={form}
@@ -116,6 +117,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         }}
         // @ts-ignore
         columns={columns}
+        stepsFormRender={stepsFormRender}
         onFinish={async (values) => {
           if (!onFinish) return false;
           await waitTime(submitTimeout);
@@ -147,7 +149,7 @@ StepForm.defaultProps = {
   layoutType: 'StepsForm',
   steps: [],
   columns: [],
-  stepsProps: { direction: 'vertical' },
+  stepsProps: { direction: 'horizontal' },
   trigger: '新增',
   triggerButtonType: 'link',
   submitter: {
