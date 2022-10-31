@@ -1,8 +1,8 @@
 {
-  "name": "ant-design-pro",
-  "version": "6.0.0-beta.1",
+  "name": "v2-controller",
+  "version": "0.0.1",
   "private": true,
-  "description": "An out-of-box UI solution for enterprise applications",
+  "description": "",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 max build",
     "build": "max build",
@@ -11,30 +11,11 @@
     "gh-pages": "gh-pages -d dist",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
     "postinstall": "max setup",
-    "lint": "npm run lint:js && npm run lint:prettier && npm run tsc",
-    "lint-staged": "lint-staged",
-    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
-    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src ",
-    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:prettier": "prettier -c --write \"src/**/*\" --end-of-line auto",
-    "openapi": "max openapi",
-    "playwright": "playwright install && playwright test",
-    "prepare": "husky install",
     "prettier": "prettier -c --write \"src/**/*\"",
     "serve": "umi-serve",
     "start": "cross-env UMI_ENV=dev max dev",
     "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none UMI_ENV=dev max dev",
-    "start:no-mock": "cross-env MOCK=none UMI_ENV=dev max dev",
-    "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev max dev",
-    "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev max dev",
-    "test:e2e": "node ./tests/run-tests.js",
     "tsc": "tsc --noEmit"
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": [
-      "prettier --write"
-    ]
   },
   "browserslist": [
     "> 1%",
@@ -48,7 +29,6 @@
     "antd": "^4.20.0",
     "classnames": "^2.3.0",
     "lodash": "^4.17.0",
-    "mapvgl": "^1.0.0-beta.159",
     "mobx": "^6.6.2",
     "mobx-react": "^7.5.3",
     "moment": "^2.29.0",
@@ -77,7 +57,6 @@
     "@types/websocket": "^1.0.5",
     "@umijs/fabric": "^2.11.1",
     "@umijs/max": "^4.0.0-rc.22",
-    "@umijs/openapi": "^1.3.0",
     "cross-env": "^7.0.0",
     "cross-port-killer": "^1.3.0",
     "detect-installer": "^1.0.0",

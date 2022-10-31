@@ -3,7 +3,7 @@ import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { ReactText, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { ExtraAny, extraRenderList } from '../extra-render';
+import { ExtraAction, extraActionArray } from '../extensions/action';
 import ProList from './pro-list';
 
 export interface ListProps extends ProListProps {
@@ -11,7 +11,7 @@ export interface ListProps extends ProListProps {
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  toolBarExtraRender?: ExtraAny[];
+  toolBarExtraRender?: ExtraAction[];
   intl?: IntlShape; // 国际化
 }
 
@@ -71,7 +71,7 @@ export const List: React.FC<ListProps> = (props) => {
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
-          toolBarExtraRender ? () => extraRenderList(toolBarExtraRender) : toolBarRender
+          toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
         {...rest}
       />

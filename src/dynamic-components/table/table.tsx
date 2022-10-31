@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import { ExtraAny, extraRenderList } from '../extra-render';
+import { ExtraAction, extraActionArray } from '../extensions/action';
 
 const defaulScrollHeight = 600;
 
@@ -16,7 +16,7 @@ export interface TableProps extends ProTableProps<any, any> {
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
-  toolBarExtraRender?: ExtraAny[];
+  toolBarExtraRender?: ExtraAction[];
 }
 
 export const Table: React.FC<TableProps> = (props) => {
@@ -111,7 +111,7 @@ export const Table: React.FC<TableProps> = (props) => {
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
-          toolBarExtraRender ? () => extraRenderList(toolBarExtraRender) : toolBarRender
+          toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
         {...rest}
       />

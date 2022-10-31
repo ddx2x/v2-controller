@@ -1,5 +1,5 @@
-import Footer from '@/components/layout/footer';
-import RightContent from '@/components/layout/right-content';
+import Footer from '@/pages/layout/footer';
+import RightContent from '@/pages/layout/right-content';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -7,9 +7,8 @@ import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } f
 import { Button, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
-import { isCachingNode } from './components/kit/container';
+import { isCachingNode } from './dynamic-components/container';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -78,15 +77,13 @@ const menuRender = (
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: any;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<any | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
+      const msg = { data: '' };
       return msg.data;
     } catch (error) {
       history.push(loginPath);
@@ -120,9 +117,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       pathname: '/',
     },
     rightContentRender: () => <RightContent />,
-    // waterMarkProps: {
-    //   content: initialState?.currentUser?.name,
-    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       // 如果没有登录，重定向到 login
@@ -131,26 +125,26 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    layoutBgImgList: [
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-        left: 85,
-        bottom: 100,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-        bottom: -68,
-        right: -45,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-        bottom: 0,
-        left: 0,
-        width: '331px',
-      },
-    ],
+    // layoutBgImgList: [
+    //   {
+    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+    //     left: 85,
+    //     bottom: 100,
+    //     height: '303px',
+    //   },
+    //   {
+    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
+    //     bottom: -68,
+    //     right: -45,
+    //     height: '303px',
+    //   },
+    //   {
+    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
+    //     bottom: 0,
+    //     left: 0,
+    //     width: '331px',
+    //   },
+    // ],
     links: isDev
       ? [
           // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">

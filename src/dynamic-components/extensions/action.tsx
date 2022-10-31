@@ -19,9 +19,9 @@ interface Radio extends RadioProps {
   genre?: 'radio';
 }
 
-export type ExtraAny = Button | Switch | Radio;
+export type ExtraAction = Button | Switch | Radio;
 
-export const extraRender = (item: ExtraAny) => {
+export const extraAction = (item: ExtraAction) => {
   switch (item.genre) {
     case 'button':
       return <AntdButton {...item} />;
@@ -34,8 +34,8 @@ export const extraRender = (item: ExtraAny) => {
   }
 };
 
-export const extraRenderList = (items: ExtraAny[]) => {
+export const extraActionArray = (items: ExtraAction[]) => {
   return items?.map((item) => {
-    return extraRender(item);
+    return extraAction(item);
   });
 };

@@ -1,6 +1,4 @@
-import Footer from '@/components/layout/footer';
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import Footer from '@/pages/layout/footer';
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginForm,
@@ -29,7 +27,7 @@ const LoginMessage: React.FC<{
 };
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
@@ -46,7 +44,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async () => {
     const toIndex = async () => {
       const defaultLoginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',
@@ -57,28 +55,9 @@ const Login: React.FC = () => {
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
     };
-
-    try {
-      // 登录
-      // const msg = await login({ ...values, type });
-      const msg = {status: 'ok'}
-      if (msg.status === 'ok') {
-        toIndex();
-        return;
-      }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
-    } catch (error) {
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
-      });
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
-    }
   };
-  const { status, type: loginType } = userLoginState;
+  // const { status, type: loginType } = userLoginState;
+  const loginType = 'account';
 
   return (
     <div className={styles.container}>
@@ -103,7 +82,7 @@ const Login: React.FC = () => {
             ]
           }
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit();
           }}
         >
           <Tabs
@@ -184,7 +163,7 @@ const Login: React.FC = () => {
               />
             </>
           )}
-
+          {/* @ts-ignore */}
           {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
           {type === 'mobile' && (
             <>
@@ -256,9 +235,7 @@ const Login: React.FC = () => {
                   },
                 ]}
                 onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
+                  const result = false;
                   // @ts-ignore
                   if (result === false) {
                     return;

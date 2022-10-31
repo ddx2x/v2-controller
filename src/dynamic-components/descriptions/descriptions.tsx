@@ -13,8 +13,10 @@ export interface DescriptionsItem extends ProDescriptionsItemProps {
   value?: React.ReactNode | null | undefined;
 }
 
-export const descriptionsItems = (items: DescriptionsItem[] | undefined) => {
+export const DescriptionsItems = (props: { items: DescriptionsItem[] | undefined }) => {
+  const { items } = props;
   if (!items) return null;
+
   return (
     <>
       {items.map((item) => {
@@ -48,7 +50,7 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   const Page = () => {
     return (
       <ProDescriptions {...rest}>
-        {descriptionsItems(items)}
+        <DescriptionsItems items={items} />
         {props.children}
       </ProDescriptions>
     );
@@ -57,13 +59,25 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   switch (modal) {
     case 'modal':
       return (
-        <Modal title={title} trigger={triggerDom()}>
+        <Modal
+          title={title}
+          trigger={triggerDom()}
+          modalProps={{
+            destroyOnClose: true,
+          }}
+        >
           {Page()}
         </Modal>
       );
     case 'drawer':
       return (
-        <Drawer title={title} trigger={triggerDom()}>
+        <Drawer
+          title={title}
+          trigger={triggerDom()}
+          drawerProps={{
+            destroyOnClose: true,
+          }}
+        >
           {Page()}
         </Drawer>
       );

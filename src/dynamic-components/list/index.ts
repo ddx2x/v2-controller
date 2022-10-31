@@ -1,3 +1,3 @@
+export * from './antd-pro-list';
 export * from './list';
 export { default } from './list';
-export * from './pro-list';
