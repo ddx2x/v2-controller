@@ -4,25 +4,30 @@ import { Button } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
+import { ExtraAny, extraRenderList } from '../extra-render';
 
 const defaulScrollHeight = 600;
 
 export interface TableProps extends ProTableProps<any, any> {
-  edit?: boolean;
+  virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+  toolBarExtraRender?: ExtraAny[];
 }
 
 export const Table: React.FC<TableProps> = (props) => {
   const {
+    virtualList,
     dataSource,
     onLoading,
     scrollHeight,
     headerTitle,
+    toolBarExtraRender,
+    toolBarRender,
     intl,
     //
     useBatchDelete,
@@ -51,33 +56,19 @@ export const Table: React.FC<TableProps> = (props) => {
     });
   }, []);
 
-  return (
-    <>
-      <ProTable
-        headerTitle={
-          headerTitle
-            ? headerTitle
-            : intl &&
-              intl.formatMessage({
-                id: 'pages.searchTable.title',
-                defaultMessage: 'Enquiry form',
-              })
-        }
-        search={{
-          labelWidth: 'auto',
-        }}
-        actionRef={actionRef}
-        dataSource={dataSource}
-        rowSelection={dataSource ? rowSelection : false}
-        // 虚拟滚动
-        // sticky
-        scroll={{
-          y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
-        }}
-        components={vComponents}
-        {...rest}
-      />
-      {useBatchDelete && selectedRowKeys?.length > 0 && (
+  if (virtualList) {
+    rest['sticky'] = true;
+    rest['scroll'] = {
+      y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
+    };
+    rest['components'] = vComponents;
+    rest['pagination'] = false;
+  }
+
+  const footer = () => {
+    return (
+      useBatchDelete &&
+      selectedRowKeys?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
@@ -97,14 +88,45 @@ export const Table: React.FC<TableProps> = (props) => {
             <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
           </Button>
         </FooterToolbar>
-      )}
+      )
+    );
+  };
+
+  return (
+    <>
+      <ProTable
+        headerTitle={
+          headerTitle
+            ? headerTitle
+            : intl &&
+              intl.formatMessage({
+                id: 'pages.searchTable.title',
+                defaultMessage: 'Enquiry form',
+              })
+        }
+        search={{
+          labelWidth: 'auto',
+        }}
+        actionRef={actionRef}
+        dataSource={dataSource}
+        rowSelection={dataSource ? rowSelection : false}
+        toolBarRender={
+          toolBarExtraRender ? () => extraRenderList(toolBarExtraRender) : toolBarRender
+        }
+        {...rest}
+      />
+      {footer()}
     </>
   );
 };
 
 Table.defaultProps = {
-  edit: false,
-  pagination: false,
+  type: 'list',
+  virtualList: true,
+  editable: {
+    type: 'multiple',
+  },
+  cardBordered: true,
   rowKey: 'key',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,

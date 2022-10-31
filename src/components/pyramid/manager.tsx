@@ -27,6 +27,7 @@ interface ApiResource {
   form?: FormLayout;
   stepForm?: StepFormLayout;
   descriptions?: DescriptionsLayout;
+  mixins?: TableLayout | ListLayout | DescriptionsLayout[];
   stores?: ObjectStore<any>[];
 }
 

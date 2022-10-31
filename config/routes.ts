@@ -28,39 +28,6 @@ export default [
   },
   {
     path: '/',
-    redirect: '/commodity/table',
-  },
-  {
-    icon: 'mail',
-    name: '商品',
-    path: '/',
-    routes: [
-      {
-        icon: 'chrome',
-        path: '/commodity/table',
-        name: '商品列表',
-        component: './app',
-      },
-      {
-        path: '/commodity-add/step-form',
-        name: '新增商品',
-        component: './app',
-      },
-      {
-        path: '/commodity-sale/table',
-        name: '商品标签',
-        component: './app',
-      },
-      {
-        path: '/goods-sale/table',
-        name: '在售商品',
-        component: './app',
-      },
-      {
-        path: '/store-list/list',
-        name: '商店',
-        component: './app',
-      },
-    ],
+    redirect: '/',
   },
 ];

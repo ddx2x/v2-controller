@@ -3,6 +3,7 @@ import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { ReactText, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { ExtraAny, extraRenderList } from '../extra-render';
 import ProList from './pro-list';
 
 export interface ListProps extends ProListProps {
@@ -10,11 +11,20 @@ export interface ListProps extends ProListProps {
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
+  toolBarExtraRender?: ExtraAny[];
   intl?: IntlShape; // 国际化
 }
 
 export const List: React.FC<ListProps> = (props) => {
-  const { virtualList, dataSource, useBatchDelete, batchDelete, ...rest } = props;
+  const {
+    virtualList,
+    dataSource,
+    useBatchDelete,
+    batchDelete,
+    toolBarExtraRender,
+    toolBarRender,
+    ...rest
+  } = props;
 
   // ref
   const actionRef = useRef<ActionType>();
@@ -25,17 +35,10 @@ export const List: React.FC<ListProps> = (props) => {
     onChange: (keys: ReactText[]) => setSelectedRowKeys(keys),
   };
 
-  return (
-    <>
-      <ProList
-        showActions="hover"
-        actionRef={actionRef}
-        virtualList={virtualList}
-        dataSource={dataSource}
-        rowSelection={dataSource ? rowSelection : false}
-        {...rest}
-      />
-      {useBatchDelete && selectedRowKeys?.length > 0 && (
+  const footer = () => {
+    return (
+      useBatchDelete &&
+      selectedRowKeys?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
@@ -55,16 +58,34 @@ export const List: React.FC<ListProps> = (props) => {
             <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
           </Button>
         </FooterToolbar>
-      )}
+      )
+    );
+  };
+
+  return (
+    <>
+      <ProList
+        showActions="hover"
+        actionRef={actionRef}
+        virtualList={virtualList}
+        dataSource={dataSource}
+        rowSelection={dataSource ? rowSelection : false}
+        toolBarRender={
+          toolBarExtraRender ? () => extraRenderList(toolBarExtraRender) : toolBarRender
+        }
+        {...rest}
+      />
+      {footer()}
     </>
   );
 };
 
-export default List;
-
 List.defaultProps = {
   virtualList: true,
   pagination: false,
+  cardBordered: true,
   dataSource: [],
   metas: {},
 };
+
+export default List;
