@@ -1,18 +1,21 @@
 import {
   BetaSchemaForm,
   FooterToolbar,
+  ProProvider,
+  ProRenderFieldPropsType,
   StepFormProps as ProStepFormProps,
   SubmitterProps,
 } from '@ant-design/pro-components';
 import { Drawer, Form as AntdForm, FormInstance, Modal, Space, StepsProps } from 'antd';
 import Button, { ButtonType } from 'antd/lib/button';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { CustomColumns, customsValueTypeMap } from './customs';
 import { Columns, waitTime } from './tools';
 
 export interface StepFormProps {
   title?: string;
-  modal: 'Modal' | 'Drawer' | 'Form';
+  modal?: 'Modal' | 'Drawer' | 'Form';
   layoutType?: 'StepsForm';
   initialValue?: any;
   width?: string | number;
@@ -21,10 +24,13 @@ export interface StepFormProps {
   trigger?: string | React.ReactNode;
   triggerButtonType?: ButtonType;
   submitter?: SubmitterProps;
+  size?: 'default' | 'small';
+  grid?: boolean;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  columns?: Columns;
+  columns?: Columns | CustomColumns;
   onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
+  proProviderValueTypeMap?: Record<string, ProRenderFieldPropsType>;
 }
 
 export const StepForm: React.FC<StepFormProps> = (props) => {
@@ -40,6 +46,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     onFinish,
     width,
     stepsProps,
+    proProviderValueTypeMap,
     ...rest
   } = props;
 
@@ -106,25 +113,33 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
   };
 
   const stepsForm = () => {
+    const proProviderValues = useContext(ProProvider);
     return (
-      <BetaSchemaForm
-        form={form}
-        autoFocusFirstInput
-        stepsProps={{
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: { ...customsValueTypeMap, ...proProviderValueTypeMap },
+        }}
+      >
+        <BetaSchemaForm
+          form={form}
+          autoFocusFirstInput
+          stepsProps={{
+            // @ts-ignore
+            size: 'small',
+            ...stepsProps,
+          }}
           // @ts-ignore
-          size: 'small',
-          ...stepsProps,
-        }}
-        // @ts-ignore
-        columns={columns}
-        stepsFormRender={stepsFormRender}
-        onFinish={async (values) => {
-          if (!onFinish) return false;
-          await waitTime(submitTimeout);
-          return onFinish(form, values, handleClose);
-        }}
-        {...rest}
-      />
+          columns={columns}
+          stepsFormRender={stepsFormRender}
+          onFinish={async (values) => {
+            if (!onFinish) return false;
+            await waitTime(submitTimeout);
+            return onFinish(form, values, handleClose);
+          }}
+          {...rest}
+        />
+      </ProProvider.Provider>
     );
   };
 
@@ -158,8 +173,11 @@ StepForm.defaultProps = {
       resetText: '取消',
     },
   },
+  size: 'small',
   submitTimeout: 2000,
   width: '50%',
+  grid: true,
+  proProviderValueTypeMap: {},
 };
 
 export default StepForm;

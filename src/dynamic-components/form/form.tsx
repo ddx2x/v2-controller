@@ -1,8 +1,15 @@
-import { BetaSchemaForm, FooterToolbar, SubmitterProps } from '@ant-design/pro-components';
+import {
+  BetaSchemaForm,
+  FooterToolbar,
+  ProProvider,
+  ProRenderFieldPropsType,
+  SubmitterProps,
+} from '@ant-design/pro-components';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
-import React from 'react';
+import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
+import { CustomColumns, customsValueTypeMap } from './customs';
 import { Columns, waitTime } from './tools';
 
 export interface FormProps {
@@ -13,14 +20,26 @@ export interface FormProps {
   triggerButtonType?: ButtonType;
   submitter?: SubmitterProps;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  columns?: Columns;
+  columns?: Columns | CustomColumns;
   onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
+  proProviderValueTypeMap?: Record<string, ProRenderFieldPropsType>;
 }
 
 export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();
-  const { modal, columns, trigger, triggerButtonType, submitTimeout, onFinish, ...rest } = props;
+  const proProviderValues = useContext(ProProvider);
+
+  const {
+    modal,
+    columns,
+    trigger,
+    triggerButtonType,
+    submitTimeout,
+    onFinish,
+    proProviderValueTypeMap,
+    ...rest
+  } = props;
 
   const triggerDom = (): any => {
     if (trigger instanceof Object) {
@@ -43,23 +62,30 @@ export const Form: React.FC<FormProps> = (props) => {
   }
 
   return (
-    <BetaSchemaForm
-      form={form}
-      layoutType={modal}
-      trigger={triggerDom()}
-      autoFocusFirstInput
-      drawerProps={{
-        destroyOnClose: true,
+    <ProProvider.Provider
+      value={{
+        ...proProviderValues,
+        valueTypeMap: { ...customsValueTypeMap, ...proProviderValueTypeMap },
       }}
-      // @ts-ignore
-      columns={columns}
-      onFinish={async (values) => {
-        if (!onFinish) return false;
-        await waitTime(submitTimeout);
-        return onFinish(form, values);
-      }}
-      {...rest}
-    />
+    >
+      <BetaSchemaForm
+        form={form}
+        layoutType={modal}
+        trigger={triggerDom()}
+        autoFocusFirstInput
+        drawerProps={{
+          destroyOnClose: true,
+        }}
+        // @ts-ignore
+        columns={columns}
+        onFinish={async (values) => {
+          if (!onFinish) return false;
+          await waitTime(submitTimeout);
+          return onFinish(form, values);
+        }}
+        {...rest}
+      />
+    </ProProvider.Provider>
   );
 };
 
@@ -76,6 +102,7 @@ Form.defaultProps = {
   },
   submitTimeout: 2000,
   columns: null,
+  proProviderValueTypeMap: {},
 };
 
 export default Form;

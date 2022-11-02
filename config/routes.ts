@@ -16,18 +16,33 @@ export default [
     component: './404',
   },
   {
-    path: '/user',
+    name: 'login',
+    path: '/login',
     layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/user/login',
-        component: './login',
-      },
-    ],
+    component: './login',
+  },
+  // {
+  //   path: '/',
+  //   redirect: '/',
+  // },
+  {
+    name: 'superset',
+    path: '/superset',
+    component: './superset',
   },
   {
-    path: '/',
-    redirect: '/',
+    name: '商品列表',
+    path: '/commdity/table',
+    component: './dynamic-view',
+  },
+  {
+    name: '商品编辑',
+    path: '/commdity-edit/step-form',
+    component: './dynamic-view',
+  },
+  {
+    name: '门店列表',
+    path: '/store/table',
+    component: './dynamic-view',
   },
 ];

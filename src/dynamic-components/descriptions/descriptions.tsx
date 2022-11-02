@@ -1,12 +1,11 @@
 import {
-  DrawerForm as Drawer,
-  ModalForm as Modal,
   ProDescriptions,
   ProDescriptionsItemProps,
   ProDescriptionsProps,
 } from '@ant-design/pro-components';
-import { Button } from 'antd';
-import React from 'react';
+import { Button, Drawer, Modal } from 'antd';
+import { ButtonType } from 'antd/lib/button';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
 export interface DescriptionsItem extends ProDescriptionsItemProps {
@@ -30,21 +29,38 @@ export const DescriptionsItems = (props: { items: DescriptionsItem[] | undefined
 // https://next-procomponents.ant.design/components/descriptions
 
 export interface DescriptionsProps extends ProDescriptionsProps {
-  modal?: 'modal' | 'drawer' | 'page';
+  modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
   trigger?: string | React.ReactNode;
+  triggerButtonType?: ButtonType;
+  width?: string | number;
   items?: DescriptionsItem[];
   intl?: IntlShape;
 }
 
 export const Descriptions: React.FC<DescriptionsProps> = (props) => {
-  const { title, modal, trigger, items, ...rest } = props;
+  const { title, modal, width, trigger, items, triggerButtonType, ...rest } = props;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const triggerDom = (): any => {
     if (trigger instanceof Object) {
+      trigger['onClick'] = showModal;
       return trigger;
     }
-    return <Button type="primary">{trigger}</Button>;
+    return (
+      <Button type={triggerButtonType} onClick={showModal}>
+        {trigger}
+      </Button>
+    );
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
   };
 
   const Page = () => {
@@ -57,38 +73,45 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
   };
 
   switch (modal) {
-    case 'modal':
+    case 'Modal':
       return (
-        <Modal
-          title={title}
-          trigger={triggerDom()}
-          modalProps={{
-            destroyOnClose: true,
-          }}
-        >
-          {Page()}
-        </Modal>
+        <>
+          {triggerDom()}
+          <Modal
+            title={title}
+            width={width}
+            onCancel={handleClose}
+            open={isModalOpen}
+            destroyOnClose
+          >
+            {Page()}
+          </Modal>
+        </>
       );
-    case 'drawer':
+    case 'Drawer':
       return (
-        <Drawer
-          title={title}
-          trigger={triggerDom()}
-          drawerProps={{
-            destroyOnClose: true,
-          }}
-        >
-          {Page()}
-        </Drawer>
+        <>
+          {triggerDom()}
+          <Drawer
+            title={title}
+            width={width}
+            placement="right"
+            onClose={handleClose}
+            open={isModalOpen}
+            destroyOnClose
+          >
+            {Page()}
+          </Drawer>
+        </>
       );
-    case 'page':
+    case 'Page':
     default:
       return Page();
   }
 };
 
 Descriptions.defaultProps = {
-  modal: 'page',
+  modal: 'Page',
   trigger: '查看',
   title: '详情',
   column: 1,

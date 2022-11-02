@@ -29,24 +29,26 @@ export default () => {
     pageContainer = { ...pageContainer, keepAlive: false };
   }
 
+  const _ = (() => {
+    switch (layout) {
+      case 'table':
+        return <Table {...(rest as TableProps)} intl={intl} />;
+      case 'list':
+        return <List {...(rest as ListProps)} intl={intl} />;
+      case 'form':
+        return <Form {...(rest as FormProps)} modal="Form" intl={intl} />;
+      case 'step-form':
+        return <StepForm {...(rest as StepFormProps)} modal="Form" intl={intl} />;
+      case 'descriptions':
+        return <Descriptions modal="page" {...(rest as DescriptionsProps)} intl={intl} />;
+      default:
+        return null;
+    }
+  })();
+
   return (
     <PageContainer fixedHeader {...pageContainer}>
-      {() => {
-        switch (layout) {
-          case 'table':
-            return <Table {...(rest as TableProps)} intl={intl} />;
-          case 'list':
-            return <List {...(rest as ListProps)} intl={intl} />;
-          case 'form':
-            return <Form {...(rest as FormProps)} modal="Form" intl={intl} />;
-          case 'step-form':
-            return <StepForm {...(rest as StepFormProps)} modal="Form" intl={intl} />;
-          case 'descriptions':
-            return <Descriptions modal="page" {...(rest as DescriptionsProps)} intl={intl} />;
-          default:
-            return null;
-        }
-      }}
+      {_}
     </PageContainer>
   );
 };
