@@ -11,3 +11,4 @@ export const storeTable: TableTemplate = {
 };
 
 templateManager.register('store', { table: storeTable });
+

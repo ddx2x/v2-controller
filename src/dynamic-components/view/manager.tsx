@@ -8,18 +8,18 @@ import { TableProps } from '../table';
 
 export type LayoutType = 'table' | 'list' | 'descriptions' | 'form' | 'step-form';
 
-export interface TableTemplate extends TableProps {
+export type TableTemplate =  TableProps & {
   pageContainer?: PageContainerProps;
 }
 export interface ListTemplate extends ListProps {
   pageContainer?: PageContainerProps;
 }
-export interface FormTemplate extends FormProps {
+export type FormTemplate = FormProps & {
   pageContainer?: PageContainerProps;
-}
-export interface StepFormTemplate extends StepFormProps {
+};
+export type StepFormTemplate = StepFormProps & {
   pageContainer?: PageContainerProps;
-}
+};
 export interface DescriptionsTemplate extends DescriptionsProps {
   pageContainer?: PageContainerProps;
 }
@@ -51,17 +51,19 @@ export class TemplateManager {
   }
 
   getLayout(route: string, T: LayoutType) {
+    const store = this.stores.get(route);
+
     switch (T) {
       case 'table':
-        return this.stores.get(route)?.table;
+        return store?.table;
       case 'list':
-        return this.stores.get(route)?.list;
+        return store?.list;
       case 'form':
-        return this.stores.get(route)?.form;
+        return store?.form;
       case 'step-form':
-        return this.stores.get(route)?.stepForm;
+        return store?.stepForm;
       case 'descriptions':
-        return this.stores.get(route)?.descriptions;
+        return store?.descriptions;
       default:
         return null;
     }

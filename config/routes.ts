@@ -45,4 +45,9 @@ export default [
     path: '/store/table',
     component: './dynamic-view',
   },
+  {
+    name: 'form test',
+    path: '/form-testing/form',
+    component: './dynamic-view',
+  },
 ];

@@ -6,9 +6,9 @@ import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { ExtraAction, extraActionArray } from '../extensions/action';
 
-const defaulScrollHeight = 600;
+const defaulScrollHeight = 550;
 
-export interface TableProps extends ProTableProps<any, any> {
+export type TableProps = ProTableProps<any, any> & {
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
@@ -17,7 +17,7 @@ export interface TableProps extends ProTableProps<any, any> {
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
   toolBarExtraRender?: ExtraAction[];
-}
+};
 
 export const Table: React.FC<TableProps> = (props) => {
   const {

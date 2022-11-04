@@ -1,64 +1,53 @@
-import {
-  BetaSchemaForm,
-  FooterToolbar,
-  ProProvider,
-  ProRenderFieldPropsType,
-  SubmitterProps,
-} from '@ant-design/pro-components';
+import { BetaSchemaForm, ProProvider, ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-import { CustomColumns, customsValueTypeMap } from './customs';
-import { Columns, waitTime } from './tools';
+import { customsValueTypeMap } from './customs';
+import { waitTime } from './tools';
+import { FormColumnsType } from './typing';
 
-export interface FormProps {
-  initialValue?: any;
-  title?: string;
-  modal?: 'ModalForm' | 'DrawerForm' | 'Form';
-  trigger?: string | React.ReactNode;
+export type FormProps = FormSchema & {
+  layoutType?: 'ModalForm' | 'DrawerForm' | 'Form';
+  triggerText?: string;
   triggerButtonType?: ButtonType;
-  submitter?: SubmitterProps;
+  columns: FormColumnsType | any;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  columns?: Columns | CustomColumns;
-  onFinish?: (form: FormInstance<any> | undefined, values: any) => boolean;
+  onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
   proProviderValueTypeMap?: Record<string, ProRenderFieldPropsType>;
-}
+};
 
 export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();
   const proProviderValues = useContext(ProProvider);
 
   const {
-    modal,
-    columns,
-    trigger,
+    layoutType,
+    triggerText,
     triggerButtonType,
     submitTimeout,
-    onFinish,
+    onSubmit,
     proProviderValueTypeMap,
+    intl,
     ...rest
   } = props;
 
-  const triggerDom = (): any => {
-    if (trigger instanceof Object) {
-      return trigger;
-    }
-    return <Button type={triggerButtonType}>{trigger}</Button>;
-  };
-
-  const stepsFormRender = (dom: any, submitter: any) => {
-    return (
-      <>
-        {dom}
-        <FooterToolbar>{submitter}</FooterToolbar>
-      </>
-    );
-  };
-
-  if (modal == 'Form') {
-    rest['stepsFormRender'] = stepsFormRender;
+  if (layoutType == 'Form') {
+    rest['layoutType'] = layoutType;
+  }
+  if (layoutType == 'ModalForm') {
+    rest['layoutType'] = layoutType;
+    rest['modalProps'] = {
+      destroyOnClose: true,
+    };
+  }
+  if (layoutType == 'DrawerForm') {
+    rest['layoutType'] = layoutType;
+    rest['drawerProps'] = {
+      destroyOnClose: true,
+    };
   }
 
   return (
@@ -69,19 +58,16 @@ export const Form: React.FC<FormProps> = (props) => {
       }}
     >
       <BetaSchemaForm
-        form={form}
-        layoutType={modal}
-        trigger={triggerDom()}
-        autoFocusFirstInput
-        drawerProps={{
-          destroyOnClose: true,
-        }}
         // @ts-ignore
-        columns={columns}
+        form={form}
+        // @ts-ignore
+        trigger={<Button type={triggerButtonType}>{triggerText}</Button>}
+        autoFocusFirstInput
         onFinish={async (values) => {
-          if (!onFinish) return false;
+          if (!onSubmit) return false;
+          const b = onSubmit(form, values);
           await waitTime(submitTimeout);
-          return onFinish(form, values);
+          return b;
         }}
         {...rest}
       />
@@ -91,8 +77,8 @@ export const Form: React.FC<FormProps> = (props) => {
 
 Form.defaultProps = {
   title: '新建表单',
-  modal: 'ModalForm',
-  trigger: '新增',
+  layoutType: 'ModalForm',
+  triggerText: '新增',
   triggerButtonType: 'link',
   submitter: {
     searchConfig: {
@@ -101,7 +87,6 @@ Form.defaultProps = {
     },
   },
   submitTimeout: 2000,
-  columns: null,
   proProviderValueTypeMap: {},
 };
 

@@ -1,9 +1,7 @@
-import { StepFormTemplate, TableTemplate, templateManager } from '@/dynamic-components';
+import { TableTemplate, templateManager } from '@/dynamic-components';
 
-// form
-// table
-
-export const commdityTable: TableTemplate = {
+// 商品列表
+export const commdityListTable: TableTemplate = {
   columns: [
     {
       dataIndex: 'name',
@@ -37,4 +35,21 @@ export const commdityTable: TableTemplate = {
   dataSource: [],
 };
 
-templateManager.register('commdity', { table: commdityTable });
+templateManager.register('commdity', { table: commdityListTable });
+
+// 商品标签
+export const commdityLabelTable: TableTemplate = {
+  dataSource: [],
+  columns: [
+    {
+      dataIndex: 'name',
+      title: '标签名称',
+    },
+    {
+      dataIndex: 'numberOfProductLibraryAssociations',
+      title: '商品库关联数',
+    },
+  ],
+};
+
+templateManager.register('commdity-label', { table: commdityLabelTable });

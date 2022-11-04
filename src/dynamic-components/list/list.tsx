@@ -6,14 +6,14 @@ import { IntlShape } from 'react-intl';
 import { ExtraAction, extraActionArray } from '../extensions/action';
 import ProList from './pro-list';
 
-export interface ListProps extends ProListProps {
+export type ListProps = ProListProps & {
   virtualList?: boolean;
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   toolBarExtraRender?: ExtraAction[];
   intl?: IntlShape; // 国际化
-}
+};
 
 export const List: React.FC<ListProps> = (props) => {
   const {
