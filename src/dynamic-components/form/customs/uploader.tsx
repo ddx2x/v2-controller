@@ -2,8 +2,20 @@ import { PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
 import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import type { RcFile, UploadFile } from 'antd/es/upload/interface';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
+
+function dataURItoBlob(dataURI: string) {
+  var byteString = atob(dataURI.split(',')[1]);
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
+}
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -13,15 +25,12 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const Uploader: React.FC<ProFieldFCRenderProps> = (props) => {
-  const { fieldProps } = props;
+const Uploader: React.FC<ProFieldFCRenderProps> = (props: any) => {
+  const { name, listType, maxNumber, buttonText, uploadType, value, onChange } = props;
 
-  const fileList = fieldProps.value?.fileList || [];
-  const max = fieldProps?.max || null;
+  const fileList = value?.fileList || [];
 
-  // 预览
-  const uploadType = fieldProps?.uploadType || 'image';
-
+  // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -37,48 +46,71 @@ const Uploader: React.FC<ProFieldFCRenderProps> = (props) => {
     setPreviewOpen(true);
   };
 
+  const handleBeforeUpload: UploadProps['beforeUpload'] = (file: RcFile) => {
+    return new Promise((resolve) => {
+      let timeStamp = new Date().getTime();
+      let fileName = file.name.split('.');
+      let newName = fileName[0] + '_' + timeStamp + '.' + fileName[1];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+        // 重命名文件名称 + 时间戳
+        const blob = dataURItoBlob(reader.result as string);
+        const { type } = file;
+        const newFile = new File([blob], newName, { type: type });
+        resolve(newFile);
+      };
+    });
+  };
+
+  const handleChange: UploadProps['onChange'] = (info) => {
+    let newFileList = [...info.fileList];
+    onChange({ fileList: newFileList });
+  };
+
   // 按钮
   const button = (
     <div>
       <PlusOutlined />
       <div id={'ant-form-uploader'} style={{ marginTop: 8 }}>
-        Upload
+        {buttonText || '上传'}
       </div>
     </div>
   );
 
-  if (uploadType == 'image') {
+  if (!uploadType || uploadType == 'image') {
     return (
       <>
         <ImgCrop rotate>
           <Upload
-            name="file"
-            listType="picture-card"
+            name={name || 'file'}
+            listType={listType || 'picture-card'}
             fileList={fileList}
+            beforeUpload={handleBeforeUpload}
             onPreview={onImagePreview}
-            {...fieldProps}
+            onChange={handleChange}
           >
-            {typeof max == 'number' && fileList.length >= max ? null : button}
+            {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
           </Upload>
         </ImgCrop>
         <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          <img style={{ width: '100%' }} src={previewImage} />
         </Modal>
       </>
     );
   }
 
   return (
-    <Upload name="file" listType="picture-card" fileList={fileList} {...fieldProps}>
-      {typeof max == 'number' && fileList.length >= max ? null : button}
+    <Upload
+      name={name || 'file'}
+      listType={listType || 'picture-card'}
+      fileList={fileList}
+      beforeUpload={handleBeforeUpload}
+      onChange={handleChange}
+    >
+      {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
     </Upload>
   );
-};
-
-Uploader.defaultProps = {
-  fieldProps: {
-    uploadType: 'image',
-  },
 };
 
 export const uploader: ProRenderFieldPropsType = {
@@ -86,6 +118,6 @@ export const uploader: ProRenderFieldPropsType = {
     return <Uploader {...props} />;
   },
   renderFormItem: (text, props, dom) => {
-    return <Uploader {...props} />;
+    return <Uploader {...props} {...props.fieldProps} />;
   },
 };
