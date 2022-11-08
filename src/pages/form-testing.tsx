@@ -5,12 +5,12 @@ const columns: FormColumnsType = [
   {
     title: '商品图片',
     dataIndex: 'images',
-    valueType: 'uploader',
+    valueType: 'videoUpload',
     tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
     fieldProps: {
       name: 'upload',
-      action: '/images/upload',
-      maxNumber: 2,
+      action: '/media/upload',
+      maxNumber: 1,
     },
   },
 ];

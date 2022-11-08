@@ -23,8 +23,8 @@ export default {
       target: 'http://10.200.100.200:8088',
       // changeOrigin: true,
     },
-    '/images/**': {
-      target: 'http://0.0.0.0:51036',
+    '/media/**': {
+      target: 'http://0.0.0.0:8080',
     },
   },
 };
