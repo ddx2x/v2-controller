@@ -1,5 +1,5 @@
 import { ProRenderFieldPropsType } from '@ant-design/pro-components';
-import { modalForm } from './form';
+import { modalForm } from './modal-form';
 import { editTable, table } from './table';
 import { imageUpload, videoUpload } from './upload';
 

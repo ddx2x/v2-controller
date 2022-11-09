@@ -1,4 +1,53 @@
-import { FormColumnsType, StepFormTemplate, templateManager } from '@/dynamic-components';
+import { FormColumnsType, StepFormTemplate, templateManager, useForm } from '@/dynamic-components';
+import { ProRenderFieldPropsType } from '@ant-design/pro-components';
+
+const VideoModule: React.FC = (props) => {
+  const [form] = useForm({
+    title: '新增视频',
+    layoutType: 'ModalForm',
+    columns: [
+      {
+        title: '标题',
+        valueType: 'text',
+        fieldProps: {
+          showCount: true,
+          maxLength: 20,
+        },
+      },
+      {
+        title: '主图',
+        dataIndex: 'poster',
+        valueType: 'imageUpload',
+        fieldProps: {
+          name: 'upload',
+          action: '/media/upload',
+          maxNumber: 1,
+        },
+      },
+      {
+        title: '商品视频',
+        dataIndex: 'images',
+        valueType: 'videoUpload',
+        tooltip: '视频不能超过10M，视频时限20秒内，支持mp4视频格式',
+        fieldProps: {
+          name: 'upload',
+          action: '/media/upload',
+          maxNumber: 1,
+        },
+      },
+    ],
+  });
+  return form;
+};
+
+export const videoModule: ProRenderFieldPropsType = {
+  render: (text, props, dom) => {
+    return <VideoModule {...props} {...props.fieldProps} />;
+  },
+  renderFormItem: (text, props, dom) => {
+    return <VideoModule {...props} {...props.fieldProps} />;
+  },
+};
 
 const columns: FormColumnsType = [
   [
@@ -182,6 +231,9 @@ export const commdityEdit: StepFormTemplate = {
     { title: '图文详情' },
   ],
   columns: columns,
+  proProviderValueTypeMap: {
+    videoModule,
+  },
 };
 
 templateManager.register('commdity-edit', { stepForm: commdityEdit });

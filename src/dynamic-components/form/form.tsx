@@ -9,9 +9,9 @@ import { waitTime } from './tools';
 import { FormColumnsType } from './typing';
 
 export type FormProps = FormSchema & {
-  layoutType?: 'ModalForm' | 'DrawerForm' | 'Form';
   triggerText?: string;
   triggerButtonType?: ButtonType;
+  layoutType?: 'ModalForm' | 'DrawerForm' | 'Form';
   columns: FormColumnsType | any;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;

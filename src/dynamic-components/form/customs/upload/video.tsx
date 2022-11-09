@@ -4,6 +4,7 @@ import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
 import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video-react';
+import { useForm } from '../../form';
 import { getBase64, handleBeforeUpload } from './$';
 
 const VideoUpload: React.FC = (props: any) => {
@@ -75,3 +76,4 @@ export const videoUpload: ProRenderFieldPropsType = {
     return <VideoUpload {...props} {...props.fieldProps} />;
   },
 };
+
