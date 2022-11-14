@@ -9,7 +9,7 @@ import { ConfigProvider } from 'antd';
 import type { LabelTooltipType } from 'antd/es/form/FormItemLabel';
 import classNames from 'classnames';
 import React, { useContext, useImperativeHandle, useMemo, useRef } from 'react';
-import VirtualListView from './list-view';
+import VirtualListView from './listView';
 
 import 'antd/es/list/style';
 

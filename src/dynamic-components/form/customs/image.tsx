@@ -6,20 +6,16 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from './$';
 
-// {
-//   title: '商品图片',
-//   dataIndex: 'images',
-//   valueType: 'imageUpload',
-//   tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
-//   fieldProps: {
-//     name: 'upload',
-//     action: '/images/upload',
-//     maxNumber: 2,
-//   },
-// }
+export interface ImageUploadProps extends ProFieldFCRenderProps {
+  fieldProps: UploadProps & {
+    buttonText?: string;
+    maxNumber?: number | null;
+  };
+}
 
-const ImageUpload: React.FC<ProFieldFCRenderProps> = (props: any) => {
-  const { name, listType, maxNumber, buttonText, customOnChange, action, value, onChange } = props;
+const ImageUpload: React.FC<ImageUploadProps> = (props: any) => {
+  const { fieldProps } = props;
+  const { buttonText, name, listType, maxNumber, value, onChange, ...uploadProps } = fieldProps;
 
   const fileList = value?.fileList || [];
 
@@ -62,12 +58,12 @@ const ImageUpload: React.FC<ProFieldFCRenderProps> = (props: any) => {
       <ImgCrop rotate>
         <Upload
           name={name || 'file'}
-          action={action}
           listType={listType || 'picture-card'}
           fileList={fileList}
           beforeUpload={handleBeforeUpload}
           onPreview={onImagePreview}
           onChange={handleChange}
+          {...uploadProps}
         >
           {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
         </Upload>
@@ -81,7 +77,7 @@ const ImageUpload: React.FC<ProFieldFCRenderProps> = (props: any) => {
 
 export const imageUpload: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
-    return <ImageUpload {...props} />;
+    return <ImageUpload {...props} {...props.fieldProps} />;
   },
   renderFormItem: (text, props, dom) => {
     return <ImageUpload {...props} {...props.fieldProps} />;

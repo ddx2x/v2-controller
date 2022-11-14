@@ -1,66 +1,49 @@
-import { BetaSchemaForm, ProProvider, ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-import { customsValueTypeMap } from './customs';
+import { FormColumnsType } from '.';
 import { waitTime } from './tools';
-import { FormColumnsType } from './typing';
+import { valueTypeMapStore } from './valueTypeMap';
 
-export type FormProps = FormSchema & {
+export type FormProps = {
   triggerText?: string;
   triggerButtonType?: ButtonType;
-  layoutType?: 'ModalForm' | 'DrawerForm' | 'Form';
-  columns: FormColumnsType | any;
+  columns?: FormColumnsType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
-  proProviderValueTypeMap?: Record<string, ProRenderFieldPropsType>;
-};
+} & Omit<FormSchema, 'columns' | 'trigger'>;
 
 export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();
   const proProviderValues = useContext(ProProvider);
 
-  const {
-    layoutType,
-    triggerText,
-    triggerButtonType,
-    submitTimeout,
-    onSubmit,
-    proProviderValueTypeMap,
-    intl,
-    ...rest
-  } = props;
+  const { columns, triggerText, triggerButtonType, submitTimeout, onSubmit, intl, ...rest } = props;
 
-  if (layoutType == 'Form') {
-    rest['layoutType'] = layoutType;
-  }
-  if (layoutType == 'ModalForm') {
-    rest['layoutType'] = layoutType;
-    rest['modalProps'] = {
-      destroyOnClose: true,
-    };
-  }
-  if (layoutType == 'DrawerForm') {
-    rest['layoutType'] = layoutType;
-    rest['drawerProps'] = {
-      destroyOnClose: true,
-    };
+  switch (props.layoutType) {
+    case 'ModalForm':
+      rest['modalProps'] = {
+        destroyOnClose: true,
+      };
+    case 'DrawerForm':
+      rest['drawerProps'] = {
+        destroyOnClose: true,
+      };
   }
 
   return (
     <ProProvider.Provider
       value={{
         ...proProviderValues,
-        valueTypeMap: { ...customsValueTypeMap, ...proProviderValueTypeMap },
+        valueTypeMap: valueTypeMapStore.stores,
       }}
     >
       <BetaSchemaForm
-        // @ts-ignore
-        form={form}
-        // @ts-ignore
+        columns={columns as any}
+        layoutType="ModalForm"
         trigger={<Button type={triggerButtonType}>{triggerText}</Button>}
         autoFocusFirstInput
         onFinish={async (values) => {
@@ -75,6 +58,8 @@ export const Form: React.FC<FormProps> = (props) => {
   );
 };
 
+export default Form;
+
 Form.defaultProps = {
   title: '新建表单',
   layoutType: 'ModalForm',
@@ -87,11 +72,4 @@ Form.defaultProps = {
     },
   },
   submitTimeout: 2000,
-  proProviderValueTypeMap: {},
-};
-
-export default Form;
-
-export const useForm = (props: FormProps): [any, {}] => {
-  return [<Form {...props} />, {}];
 };

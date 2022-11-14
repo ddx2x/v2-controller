@@ -32,3 +32,7 @@ export const editTable: ProRenderFieldPropsType = {
     return <EditTable {...props} {...props.fieldProps} />;
   },
 };
+
+export interface TableProps extends ProRenderFieldPropsType {}
+
+export interface EditTableProps extends ProRenderFieldPropsType {}

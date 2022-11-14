@@ -1,43 +1,36 @@
-import {
-  BetaSchemaForm,
-  FooterToolbar,
-  ProProvider,
-  ProRenderFieldPropsType,
-} from '@ant-design/pro-components';
+import { BetaSchemaForm, FooterToolbar, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import Button, { ButtonType } from 'antd/lib/button';
 import React, { useContext, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { customsValueTypeMap } from './customs';
-import { waitTime } from './tools';
-import { FormColumnsType } from './typing';
+import { FormColumnsType } from '.';
 
-export type StepFormProps = FormSchema & {
+import { waitTime } from './tools';
+import { valueTypeMapStore } from './valueTypeMap';
+
+export type StepFormProps = {
+  columns?: FormColumnsType;
   modal?: 'Modal' | 'Drawer' | 'Form';
-  layoutType?: 'StepsForm';
   width?: string | number;
   triggerText?: string;
   triggerButtonType?: ButtonType;
-  columns: FormColumnsType | any;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
-  proProviderValueTypeMap?: Record<string, ProRenderFieldPropsType>;
-};
+} & Omit<FormSchema, 'columns'>;
 
 export const StepForm: React.FC<StepFormProps> = (props) => {
   const [form] = AntdForm.useForm();
-
   const {
     title,
+    columns,
     modal,
     triggerText,
     triggerButtonType,
     submitTimeout,
     onFinish,
     width,
-    proProviderValueTypeMap,
     ...rest
   } = props;
 
@@ -100,17 +93,17 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
   };
 
   const stepsForm = () => {
-    const proProviderValues = useContext(ProProvider);
     return (
       <ProProvider.Provider
         value={{
-          ...proProviderValues,
-          valueTypeMap: { ...customsValueTypeMap, ...proProviderValueTypeMap },
+          ...useContext(ProProvider),
+          valueTypeMap: valueTypeMapStore.stores,
         }}
       >
         <BetaSchemaForm
+          columns={columns as any}
           autoFocusFirstInput
-          // @ts-ignores
+          layoutType="StepsForm"
           stepsFormRender={stepsFormRender}
           onFinish={async (values) => {
             if (!onFinish) return false;
@@ -141,7 +134,6 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
 StepForm.defaultProps = {
   title: '新建',
   modal: 'Form',
-  layoutType: 'StepsForm',
   triggerText: '新增',
   triggerButtonType: 'link',
   steps: [],
@@ -155,11 +147,6 @@ StepForm.defaultProps = {
   size: 'small',
   submitTimeout: 2000,
   width: '50%',
-  proProviderValueTypeMap: {},
 };
 
 export default StepForm;
-
-export const useStepsForm = (props: StepFormProps): [any, {}] => {
-  return [<StepForm {...props} />, {}];
-};

@@ -1,4 +1,10 @@
-import { FormColumnsType, StepFormTemplate, templateManager, useForm } from '@/dynamic-components';
+import {
+  FormColumnsType,
+  StepFormTemplate,
+  templateManager,
+  useForm,
+  valueTypeMapStore,
+} from '@/dynamic-components';
 import { ProRenderFieldPropsType } from '@ant-design/pro-components';
 
 const VideoModule: React.FC = (props) => {
@@ -17,7 +23,7 @@ const VideoModule: React.FC = (props) => {
       {
         title: '主图',
         dataIndex: 'poster',
-        valueType: 'imageUpload',
+        valueType: 'switch',
         fieldProps: {
           name: 'upload',
           action: '/media/upload',
@@ -48,6 +54,8 @@ export const videoModule: ProRenderFieldPropsType = {
     return <VideoModule {...props} {...props.fieldProps} />;
   },
 };
+
+valueTypeMapStore.registerValueType({ videoModule });
 
 const columns: FormColumnsType = [
   [

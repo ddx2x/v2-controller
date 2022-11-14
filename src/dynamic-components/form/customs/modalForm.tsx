@@ -9,3 +9,5 @@ export const modalForm: ProRenderFieldPropsType = {
     return <Form {...props.fieldProps} />;
   },
 };
+
+export interface ModalFormProps extends ProRenderFieldPropsType {}

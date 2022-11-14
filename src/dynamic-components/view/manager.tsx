@@ -1,28 +1,13 @@
 import { ObjectStore } from '@/client';
 import { observable } from 'mobx';
-import { PageContainerProps } from '../container';
-import { DescriptionsProps } from '../descriptions';
-import { FormProps, StepFormProps } from '../form';
-import { ListProps } from '../list';
-import { TableProps } from '../table';
-
-export type LayoutType = 'table' | 'list' | 'descriptions' | 'form' | 'step-form';
-
-export type TableTemplate =  TableProps & {
-  pageContainer?: PageContainerProps;
-}
-export interface ListTemplate extends ListProps {
-  pageContainer?: PageContainerProps;
-}
-export type FormTemplate = FormProps & {
-  pageContainer?: PageContainerProps;
-};
-export type StepFormTemplate = StepFormProps & {
-  pageContainer?: PageContainerProps;
-};
-export interface DescriptionsTemplate extends DescriptionsProps {
-  pageContainer?: PageContainerProps;
-}
+import {
+  DescriptionsTemplate,
+  FormTemplate,
+  LayoutType,
+  ListTemplate,
+  StepFormTemplate,
+  TableTemplate,
+} from '../typing';
 
 interface Resource {
   table?: TableTemplate;
@@ -50,9 +35,8 @@ export class TemplateManager {
     });
   }
 
-  getLayout(route: string, T: LayoutType) {
+  Layout(route: string, T: LayoutType) {
     const store = this.stores.get(route);
-
     switch (T) {
       case 'table':
         return store?.table;

@@ -1,14 +1,23 @@
 import { ProRenderFieldPropsType } from '@ant-design/pro-components';
-import { modalForm } from './modal-form';
+import { card } from './card';
+import { imageUpload } from './image';
+import { modalForm } from './modalForm';
 import { editTable, table } from './table';
-import { imageUpload, videoUpload } from './upload';
+import { videoUpload } from './video';
 
-export type CustomFormType = 'imageUpload' | 'videoUpload' | 'table' | 'editTable' | 'modalForm';
-
-export const customsValueTypeMap: Record<string, ProRenderFieldPropsType> = {
+export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
+  card,
   imageUpload,
   videoUpload,
   table,
   editTable,
   modalForm,
 };
+
+export declare type ValueTypeMapType =
+  | 'card'
+  | 'imageUpload'
+  | 'videoUpload'
+  | 'table'
+  | 'editTable'
+  | 'modalForm';

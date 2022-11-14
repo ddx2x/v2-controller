@@ -1,24 +1,14 @@
-import { FormColumnsType, FormTemplate, templateManager } from '@/dynamic-components';
-import { FormInstance } from 'antd';
-import { videoModule } from './dynamic-view';
-
-const columns: FormColumnsType = [
-  {
-    title: '商品图片',
-    dataIndex: 'images',
-    valueType: 'videoModule',
-  },
-];
+import { FormTemplate, templateManager } from '@/dynamic-components';
 
 const form: FormTemplate = {
-  columns: columns,
-  onSubmit: (form: FormInstance<any> | undefined, values: any) => {
-    console.log(values);
-    return true;
-  },
-  proProviderValueTypeMap: {
-    videoModule,
-  },
+  layoutType: 'Form',
+  columns: [
+    {
+      title: '商品图片',
+      dataIndex: 'images',
+      valueType: '',
+    },
+  ],
 };
 
 templateManager.register('form-testing', { form: form });
