@@ -6,7 +6,7 @@ const form: FormTemplate = {
     {
       title: '商品图片',
       dataIndex: 'images',
-      valueType: '',
+      valueType: 'videoModule',
     },
   ],
 };
