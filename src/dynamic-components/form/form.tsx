@@ -4,24 +4,23 @@ import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-import { FormColumnsType } from '.';
+// import { FormColumnsType } from '.';
 import { waitTime } from './tools';
 import { valueTypeMapStore } from './valueTypeMap';
 
 export type FormProps = {
   triggerText?: string;
   triggerButtonType?: ButtonType;
-  columns?: FormColumnsType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
-} & Omit<FormSchema, 'columns' | 'trigger'>;
+} & FormSchema;
 
 export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();
   const proProviderValues = useContext(ProProvider);
 
-  const { columns, triggerText, triggerButtonType, submitTimeout, onSubmit, intl, ...rest } = props;
+  const { triggerText, triggerButtonType, submitTimeout, onSubmit, intl, ...rest } = props;
 
   switch (props.layoutType) {
     case 'ModalForm':
@@ -42,8 +41,7 @@ export const Form: React.FC<FormProps> = (props) => {
       }}
     >
       <BetaSchemaForm
-        columns={columns as any}
-        layoutType="ModalForm"
+        // @ts-ignore
         trigger={<Button type={triggerButtonType}>{triggerText}</Button>}
         autoFocusFirstInput
         onFinish={async (values) => {
@@ -72,4 +70,5 @@ Form.defaultProps = {
     },
   },
   submitTimeout: 2000,
+  columns: [],
 };

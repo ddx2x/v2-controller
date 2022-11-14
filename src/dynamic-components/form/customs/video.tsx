@@ -1,13 +1,21 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
 import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
 import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video-react';
 import { getBase64, handleBeforeUpload } from './$';
 
-const VideoUpload: React.FC = (props: any) => {
-  const { name, listType, maxNumber, buttonText, action, value, onChange } = props;
+export interface VideoUploadProps extends ProFieldFCRenderProps {
+  fieldProps: UploadProps;
+  maxNumber?: number;
+  buttonText?: string;
+}
+
+const VideoUpload: React.FC<VideoUploadProps> = (props) => {
+  const { maxNumber, buttonText, value, onChange, fieldProps } = props;
+  const { name, listType, action } = fieldProps;
+
   const fileList = value?.fileList || [];
 
   // 图片预览
@@ -31,7 +39,7 @@ const VideoUpload: React.FC = (props: any) => {
     fileList
       .filter((item) => item.uid == info.file.uid)
       .map((item) => (item.url = '/media/file/' + item.name));
-    onChange({ fileList: fileList });
+    onChange && onChange({ fileList: fileList });
   };
 
   const button = <Button icon={<UploadOutlined />}>{buttonText || '上传视频'}</Button>;
@@ -69,11 +77,9 @@ const VideoUpload: React.FC = (props: any) => {
 
 export const videoUpload: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
-    return <VideoUpload {...props} {...props.fieldProps} />;
+    return <VideoUpload {...props} fieldProps={props.fieldProps} />;
   },
   renderFormItem: (text, props, dom) => {
-    return <VideoUpload {...props} {...props.fieldProps} />;
+    return <VideoUpload {...props} fieldProps={props.fieldProps} />;
   },
 };
-
-export interface VideoUploadProps extends ProRenderFieldPropsType {}

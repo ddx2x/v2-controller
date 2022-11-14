@@ -17,12 +17,3 @@ export declare type StepFormTemplate = StepFormProps & {
 export declare interface DescriptionsTemplate extends DescriptionsProps {
   pageContainer?: PageContainerProps;
 }
-
-declare module '@ant-design/pro-utils' {
-  interface ProFieldValueTypeWithFieldProps {
-    tags: Record<string, any>;
-    link: {
-      customField: string;
-    };
-  }
-}

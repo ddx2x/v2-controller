@@ -1,11 +1,10 @@
 import {
-  FormColumnsType,
   StepFormTemplate,
   templateManager,
   useForm,
   valueTypeMapStore,
 } from '@/dynamic-components';
-import { ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { ProFormColumnsType, ProRenderFieldPropsType } from '@ant-design/pro-components';
 
 const VideoModule: React.FC = (props) => {
   const [form] = useForm({
@@ -57,7 +56,7 @@ export const videoModule: ProRenderFieldPropsType = {
 
 valueTypeMapStore.registerValueType({ videoModule });
 
-const columns: FormColumnsType = [
+const columns: ProFormColumnsType<any, 'text'>[][] = [
   [
     {
       title: '商品类型',
@@ -155,7 +154,7 @@ const columns: FormColumnsType = [
     {
       title: '规格',
       dataIndex: 'specification',
-      valueType: 'modalForm',
+      valueType: 'form',
       fieldProps: {
         title: '规格配置',
         triggerText: '操作',
@@ -239,9 +238,6 @@ export const commdityEdit: StepFormTemplate = {
     { title: '图文详情' },
   ],
   columns: columns,
-  proProviderValueTypeMap: {
-    videoModule,
-  },
 };
 
 templateManager.register('commdity-edit', { stepForm: commdityEdit });

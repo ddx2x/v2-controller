@@ -2,7 +2,12 @@ import { ProCard, ProCardProps, ProRenderFieldPropsType } from '@ant-design/pro-
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import Form, { FormProps } from '..';
 
-const Card = (props: CardProps) => {
+export interface CardProps extends ProFieldFCRenderProps {
+  proFieldProps?: ProCardProps;
+  fieldProps?: FormProps;
+}
+
+const Card: React.FC<CardProps> = (props) => {
   const { proFieldProps, fieldProps } = props;
 
   return (
@@ -20,8 +25,3 @@ export const card: ProRenderFieldPropsType = {
     return <Card {...props} />;
   },
 };
-
-export interface CardProps extends ProFieldFCRenderProps {
-  proFieldProps?: ProCardProps;
-  fieldProps?: FormProps;
-}
