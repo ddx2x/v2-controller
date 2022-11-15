@@ -1,8 +1,10 @@
-export * from './api.manager';
-export * from './item.store';
+/* eslint-disable @typescript-eslint/no-invalid-this */
+
+export * from './api';
+export * from './item';
+export * from './manager';
 export * from './object';
-export * from './object.api';
-export * from './object.json.api';
-export * from './object.store';
-export * from './object.watch.api';
+export * from './sse';
+export * from './store';
 export * from './store.wrap';
+

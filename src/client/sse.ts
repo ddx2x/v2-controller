@@ -1,20 +1,21 @@
-import { useModel } from '@umijs/max';
-import { computed, observable, reaction } from 'mobx';
+/* eslint-disable @typescript-eslint/no-invalid-this */
+import { action, computed, observable, reaction } from 'mobx';
 import { stringify } from 'querystring';
-import { apiManager } from './api.manager';
-import { EventSourcePolyfill as EventSource } from './eventsource/eventsource';
-import { IObject, ObjectStore } from './index';
-import { ObjectApi } from './object.api';
-import {
-  EventCallback,
+import { ObjectApi } from './api';
+import type {
+  EventHandle,
   IObjectWatchEvent,
   IObjectWatchRouteEvent,
-  IWatchRouteQuery,
-} from './object.event.api';
+  IWatchApi,
+  IWatchRouteQuery
+} from './event';
+import { EventSourcePolyfill as EventSource } from './eventsource/eventsource';
+import type { IObject, ObjectStore } from './index';
+import { apiManager } from './manager';
 import { autobind, EventEmitter } from './utils';
 
 @autobind()
-export class ObjectWatchApi {
+export class ObjectWatchApi implements IWatchApi {
   protected evtSource!: EventSource;
   protected onData = new EventEmitter<[IObjectWatchEvent]>();
   protected subscribers = observable.map<ObjectApi, number>();
@@ -23,7 +24,7 @@ export class ObjectWatchApi {
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
   protected reconnectAttempts = this.maxReconnectsOnError;
-  protected apiUrl = '/watch';
+  @observable protected apiUrl = '/watch';
 
   constructor() {
     reaction(
@@ -36,6 +37,10 @@ export class ObjectWatchApi {
     );
   }
 
+  @action setApiURL(url: string) {
+    this.apiUrl = url
+  }
+  
   @computed get apiURL(): string {
     return this.apiUrl;
   }
@@ -43,8 +48,6 @@ export class ObjectWatchApi {
   @computed get activeApis() {
     return Array.from(this.subscribers.keys());
   }
-
-  unregister() {}
 
   getSubscribersCount(api: ObjectApi) {
     return this.subscribers.get(api) || 0;
@@ -77,22 +80,22 @@ export class ObjectWatchApi {
     if (!this.activeApis.length) {
       return;
     }
-    const query = this.getQuery();
-    const apiUrl = `${this.apiURL}?${stringify(query)}`;
+    const q = this.getQuery();
+    const apiUrl = `${this.apiURL}?${stringify(q)}`;
     this.evtSource = new EventSource(apiUrl, {
       headers: {
-        Authorization: useModel('userModel').user?.token || '',
+        // Authorization: useModel('userModel').user?.token || '',
       },
     });
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;
-    if (!query.api) {
+    if (!q.api) {
       this.disconnect();
       this.reset();
       this.writeLog('NOT API REGISTERED');
       return;
     }
-    this.writeLog('CONNECTING', query.api);
+    this.writeLog('CONNECTING', q.api);
   }
 
   reconnect() {
@@ -126,12 +129,11 @@ export class ObjectWatchApi {
     if (type === 'STREAM_END') {
       this.disconnect();
       const { apiBase } = ObjectApi.parseApi(url);
-      if (apiBase === '') {
+      if (!apiBase) {
         return;
       }
-      const api = apiManager.getApi(apiBase);
+      const api = apiManager.getObjectApi(apiBase);
       if (api) {
-        await api.refreshResourceVersion({});
         this.reconnect();
       }
     } else if (type.toLowerCase() === 'ping') {
@@ -156,13 +158,13 @@ export class ObjectWatchApi {
     console.log('%cOBJECT-WATCH-API:', `font-weight: bold`, ...data);
   }
 
-  addListener = <T extends ObjectStore<IObject>>(store: T, ecb: EventCallback) => {
+  addListener = <S extends ObjectStore<IObject>>(store: S, ecb: EventHandle) => {
     const listener = (evt: IObjectWatchEvent<IObject>) => {
       if (!evt.object) {
         return;
       }
       const { version } = evt.object;
-      store.api.setVersion(version);
+      store.version = version;
       evt.store = store;
       ecb(evt);
     };

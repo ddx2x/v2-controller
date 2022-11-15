@@ -6,7 +6,7 @@ import {
   LayoutType,
   ListTemplate,
   StepFormTemplate,
-  TableTemplate,
+  TableTemplate
 } from '../typing';
 
 interface Resource {

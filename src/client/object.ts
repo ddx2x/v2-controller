@@ -1,37 +1,31 @@
-import { IObjectApiQueryParams, ObjectStore } from '.';
-import { ItemObject } from './item.store';
-import { ObjectJsonApiData, ObjectJsonApiDataList } from './object.json.api';
+import type { IQuery, ObjectData, ObjectDataList, ObjectStore } from '.';
 
 export type IObjectConstructor<T extends IObject = any> = new (
-  data: ObjectJsonApiData | any,
+  data: ObjectData | ObjectDataList | any,
 ) => T & { kind?: string };
 
-export class IObject implements ItemObject {
+export class IObject implements ObjectData {
   uid: string = '';
   kind: string = '';
   version: number = 0;
 
-  constructor(data: ObjectJsonApiData) {
+  constructor(data: ObjectData) {
     Object.assign(this, data);
   }
 
-  static isJsonApiData(data: any): data is ObjectJsonApiData {
+  static isObjectData(data: any): data is ObjectData {
     return !data && data.uid && data.kind && data.version;
   }
 
-  static isJsonApiDataList(data: any): data is ObjectJsonApiDataList {
+  static isObjectDataList(data: any): data is ObjectDataList {
     return !data && data.items;
   }
 
-  getId(): string {
-    return this.uid;
-  }
-
-  async update<S extends ObjectStore<T>, T extends IObject>(
+  update = async <S extends ObjectStore<T>, T extends IObject>(
     store: S,
-    data: Partial<T> | undefined,
-    query?: IObjectApiQueryParams,
-  ) {
-    return store.api.update({ id: this.getId() }, data, query);
+    partial: Partial<T>,
+    query?: IQuery,
+  ): Promise<T> => {
+    return store.api.update(partial, query);
   }
 }

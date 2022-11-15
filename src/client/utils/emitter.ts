@@ -1,5 +1,5 @@
 // Custom event emitter
-
+/* eslint-disable @typescript-eslint/no-invalid-this */
 interface Options {
   once?: boolean; // call once and remove
   prepend?: boolean; // put listener to the beginning
@@ -12,7 +12,7 @@ export class EventEmitter<D extends [...any[]]> {
   protected nlisteners: Map<string, [Callback<D>, Options][]> = new Map();
 
   naddListener(n: string, callback: Callback<D>, options: Options = {}) {
-    const fn = options.prepend ? 'unshift' : 'push';
+    // const fn = options.prepend ? 'unshift' : 'push';
     this.nlisteners.set(n, [...this.nlisteners.get(n) || [], [callback, options]]);
   }
 
@@ -34,15 +34,16 @@ export class EventEmitter<D extends [...any[]]> {
     this.nlisteners.clear();
   }
 
-  nemit(n: string, ...data: D) {
-    // @ts-ingore
-    this.nlisteners.get(n) &&
-      [...this.nlisteners.get(n)].every(([callback, options]) => {
-        if (options.once) this.removeListener(callback);
-        const result = callback(...data);
-        if (result === false) return; // break cycle
-        return true;
-      });
+  nemit(kind: string, ...data: D) {
+    const cbs = this.nlisteners.get(kind);
+    if (!cbs) return;
+    cbs.every(([callback, options]) => {
+      if (options.once) this.removeListener(callback);
+      const result = callback(...data);
+      if (result === false) return; // break cycle
+      return true;
+    });
+
   }
 
   emit(...data: D) {

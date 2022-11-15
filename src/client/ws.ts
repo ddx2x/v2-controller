@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-invalid-this */
 import { computed, observable, reaction } from 'mobx';
-import { IMessageEvent, w3cwebsocket as WebSocket } from 'websocket';
-import { apiManager } from './api.manager';
-import { IObject, ObjectStore } from './index';
-import { ObjectApi } from './object.api';
-import { EventCallback, IObjectWatchEvent, IObjectWatchRouteEvent } from './object.event.api';
+import type { IMessageEvent } from 'websocket';
+import { w3cwebsocket as WebSocket } from 'websocket';
+import { ObjectApi } from './api';
+import type { EventHandle, IObjectWatchEvent, IObjectWatchRouteEvent } from './event';
+import type { IObject, ObjectStore } from './index';
+import { apiManager } from './manager';
 import { autobind, EventEmitter } from './utils';
 
 @autobind()
@@ -35,6 +37,7 @@ export class ObjectWebSockApi {
   }
 
   public sendMessage(message: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.socket && this.socket.send(message);
   }
 
@@ -70,9 +73,9 @@ export class ObjectWebSockApi {
 
   protected register() {
     if (!this.socket) return;
-    this.socket.readyState === this.socket.OPEN
-      ? this.socket?.send(`{"op":0,"urls":[${this.getQuery()}]}`)
-      : null;
+    if (this.socket.readyState === this.socket.OPEN) {
+      this.socket?.send(`{"op":0,"urls":[${this.getQuery()}]}`)
+    }
   }
 
   public unregister() {
@@ -154,12 +157,11 @@ export class ObjectWebSockApi {
     if (type === 'STREAM_END') {
       this.disconnect();
       const { apiBase } = ObjectApi.parseApi(url);
-      if (apiBase === '') {
+      if (!apiBase) {
         return;
       }
-      const api = apiManager.getApi(apiBase);
+      const api = apiManager.getObjectApi(apiBase);
       if (api) {
-        await api.refreshResourceVersion({});
         this.reconnect();
       }
     } else if (type.toLowerCase() === 'ping') {
@@ -173,7 +175,7 @@ export class ObjectWebSockApi {
     }
   }
 
-  protected onError(_error: any) {
+  protected onError() {
     const { socket, reconnectAttempts: attemptsRemain, reconnectTimeoutMs } = this;
     if (socket && (socket.CLOSING || socket.CLOSED)) {
       if (attemptsRemain > 0) {
@@ -187,13 +189,13 @@ export class ObjectWebSockApi {
     console.log('%cOBJECT-WATCH-API:', `font-weight: bold`, ...data);
   }
 
-  addListener = <T extends ObjectStore<IObject>>(store: T, ecb: EventCallback) => {
+  addListener = <T extends ObjectStore<IObject>>(store: T, ecb: EventHandle) => {
     const listener = (evt: IObjectWatchEvent<IObject>) => {
       if (!evt.object) {
         return;
       }
       const { version } = evt.object;
-      store.api.setVersion(version);
+      store.version = version;
       evt.store = store;
       ecb(evt);
     };
