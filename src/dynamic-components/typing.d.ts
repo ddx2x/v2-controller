@@ -1,6 +1,7 @@
 export declare type LayoutType = 'table' | 'list' | 'descriptions' | 'form' | 'step-form';
+import { PageContainerProps } from './container';
 
-import { DescriptionsProps, FormProps, ListProps, StepFormProps, TableProps } from './form';
+import { DescriptionsProps, FormProps, ListProps, StepFormProps,TableProps } from './form';
 
 export declare type TableTemplate = TableProps & {
   pageContainer?: PageContainerProps;
