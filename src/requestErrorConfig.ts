@@ -1,5 +1,16 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
+﻿import type { AxiosResponse, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+
+const writeLog = (log: AxiosResponse) => {
+  const { config, ...params } = log;
+  let textStyle = 'font-weight: bold;';
+  if (params.status !== 200) {
+    textStyle += 'background: red; color: white;';
+  } else {
+    textStyle += 'background: green; color: white;';
+  }
+  console.log(`%c${config.method} ${config.url}`, textStyle, params);
+};
 
 /**
  * @name 错误处理
@@ -7,6 +18,14 @@ import type { RequestConfig } from '@umijs/max';
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const errorConfig: RequestConfig = {
+  transformResponse: (data) => {
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      console.log('JSON 格式化错误: ', e);
+      return data;
+    }
+  },
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
     // 错误抛出
@@ -18,7 +37,6 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      console.info(config);
       // 拦截请求配置，进行个性化处理。
       return config;
     },
@@ -27,6 +45,7 @@ export const errorConfig: RequestConfig = {
   // 响应拦截器
   responseInterceptors: [
     (response) => {
+      process.env.NODE_ENV === 'development' && writeLog(response);
       // 拦截响应数据，进行个性化处理
       return response;
     },

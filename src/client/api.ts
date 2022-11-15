@@ -5,6 +5,7 @@ import type { IObjectConstructor } from './object';
 import { IObject } from './object';
 import { autobind } from './utils';
 
+
 export interface JsonApiError {
   code?: number;
   message?: string;
@@ -151,4 +152,6 @@ export class ObjectApi<T extends IObject = any> {
   upload = async <D = string | ArrayBuffer>(data: D) => {
     return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
   };
+
+
 }
