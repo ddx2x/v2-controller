@@ -22,7 +22,7 @@ export const errorConfig: RequestConfig = {
     try {
       return JSON.parse(data);
     } catch (e) {
-      console.log('JSON 格式化错误: ', e);
+      console.error('JSON 格式化错误: ', e);
       return data;
     }
   },

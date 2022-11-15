@@ -24,15 +24,14 @@ export interface TemplateResource<S extends ObjectStore<IObject>> {
 export class TemplateManager<S extends ObjectStore<IObject>> {
   private stores = observable.map<string, TemplateResource<S>>();
 
-  initStores(route: string) {
+  init(route: string) {
     (this.stores.get(route)?.stores || []).map((store) => {
       store.next(10, '');
     });
   }
 
-  clearStores(route: string) {
-    (this.stores.get(route)?.stores || []).map(() => {
-      // store.stop();
+  clear(route: string) {
+    (this.stores.get(route)?.stores || []).map((store) => {
     });
   }
 

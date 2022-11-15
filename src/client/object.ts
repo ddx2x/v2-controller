@@ -14,11 +14,11 @@ export class IObject implements ObjectData {
   }
 
   static isObjectData(data: any): data is ObjectData {
-    return !data && data.uid && data.kind && data.version;
+    return data && data.uid && data.kind && data.version;
   }
 
   static isObjectDataList(data: any): data is ObjectDataList {
-    return !data && data.items;
+    return data && data.items;
   }
 
   update: any = async <S extends ObjectStore<T>, T extends IObject>(

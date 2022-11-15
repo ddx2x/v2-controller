@@ -1,14 +1,15 @@
 import { useIntl, useMatch } from '@umijs/max';
+import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import PageContainer from '../container';
-import Descriptions, { DescriptionsProps } from '../descriptions';
-import Form, { FormProps, StepForm, StepFormProps } from '../form';
-import List, { ListProps } from '../list';
-import Table, { TableProps } from '../table';
+import Descriptions from '../descriptions';
+import Form, { StepForm } from '../form';
+import List from '../list';
+import Table from '../table';
 import { LayoutType } from '../typing';
 import { templateManager } from './manager';
 
-export default () => {
+export default observer(() => {
   const match = useMatch('/:route/:layout');
 
   const route = match?.params['route'] as string;
@@ -21,26 +22,26 @@ export default () => {
   let { pageContainer, ...rest } = config;
 
   useEffect(() => {
-    templateManager.initStores(route); // 挂载 stores
-    return () => templateManager.clearStores(route); // 清除stores
+    templateManager.init(route); // 挂载 stores
+    return () => templateManager.clear(route); // 清除stores
   });
 
-  if (layout == 'form' || layout == 'step-form') {
-    pageContainer = { ...pageContainer, keepAlive: false };
-  }
-
   const _ = (() => {
+    if (layout == 'form' || layout == 'step-form') {
+      pageContainer = { ...pageContainer, keepAlive: false };
+    }
+
     switch (layout) {
       case 'table':
-        return <Table {...(rest as TableProps)} intl={intl} />;
+        return <Table {...rest} intl={intl} />;
       case 'list':
-        return <List {...(rest as ListProps)} intl={intl} />;
+        return <List {...rest} intl={intl} />;
       case 'form':
-        return <Form {...(rest as FormProps)} layoutType="Form" intl={intl} />;
+        return <Form {...rest} layoutType="Form" intl={intl} />;
       case 'step-form':
-        return <StepForm {...(rest as StepFormProps)} modal="Form" intl={intl} />;
+        return <StepForm {...rest} modal="Form" intl={intl} />;
       case 'descriptions':
-        return <Descriptions modal="Page" {...(rest as DescriptionsProps)} intl={intl} />;
+        return <Descriptions modal="Page" {...rest} intl={intl} />;
       default:
         return null;
     }
@@ -51,4 +52,4 @@ export default () => {
       {_}
     </PageContainer>
   );
-};
+});

@@ -1,3 +1,4 @@
+import { commdityStore } from '@/components/+commdity/commdity.store';
 import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
@@ -93,6 +94,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+  console.log('items', commdityStore.items);
+
   return (
     <>
       <ProTable
@@ -109,14 +112,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
           labelWidth: 'auto',
         }}
         actionRef={actionRef}
-        dataSource={dataSource}
+        dataSource={commdityStore.items}
         rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
         onDataSourceChange={(dataSource) => console.log('dataSource', dataSource)}
         onSubmit={(params) => console.log('onSubmit', params)}
-        onReset={() => { }}
+        onReset={() => {}}
         // request={async (params, sorter, filter) => {
         //   console.info('params, sorter, filter', params, sorter, filter, actionRef);
         //   return Promise.resolve({

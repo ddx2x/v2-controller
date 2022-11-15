@@ -2,12 +2,12 @@ import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
 import { IWatchApi } from '@/client/event';
 
 class Commdity extends IObject {
-  name?: string;
-  price?: number;
-  actualSales?: number;
-  salesChannels?: number;
-  creationTime?: string;
-  availableStatus?: boolean;
+  name?: string = '';
+  price?: number = 0;
+  actualSales?: number = 0;
+  salesChannels?: number = 0;
+  creationTime?: string = '';
+  availableStatus?: boolean = false;
 }
 
 const commdityApi = new ObjectApi<Commdity>({
