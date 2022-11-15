@@ -21,11 +21,11 @@ export class IObject implements ObjectData {
     return !data && data.items;
   }
 
-  update = async <S extends ObjectStore<T>, T extends IObject>(
+  update: any = async <S extends ObjectStore<T>, T extends IObject>(
     store: S,
     partial: Partial<T>,
     query?: IQuery,
   ): Promise<T> => {
     return store.api.update(partial, query);
-  }
+  };
 }

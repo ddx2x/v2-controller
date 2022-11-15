@@ -49,7 +49,7 @@ export class ObjectApi<T extends IObject = any> {
   readonly apiPrefix: string; // api
   readonly apiVersion: string;
   readonly apiResource: string;
-  
+
   // /api/v1/Product
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
@@ -81,13 +81,12 @@ export class ObjectApi<T extends IObject = any> {
   public objectConstructor: IObjectConstructor<T>;
 
   getWatchUrl(query: IQuery = {}): string {
-    return this.getUrl(
-      {
-        watch: 1,
-        ...query,
-      },
-    );
+    return this.getUrl({
+      watch: 1,
+      ...query,
+    });
   }
+
   private parseResponse = (data: ObjectData | ObjectDataList[]): any => {
     if (!data) return;
 
@@ -101,26 +100,27 @@ export class ObjectApi<T extends IObject = any> {
       return data.map((item) => {
         const { version } = item;
         if (this.version < version) this.version = version;
-        new this.objectConstructor({ ...item })
-      })
+        new this.objectConstructor({ ...item });
+      });
     }
 
     const { version } = data;
     if (this.version < version) this.version = version;
 
     return new this.objectConstructor(data);
-  }
+  };
 
   static createLink(ref: IObjectApiLinkRef): string {
     const { apiPrefix: prefix, apiVersion: version, apiResource: resource } = ref;
-    return [prefix, version, resource].filter(v => !!v).join('/');
+    return [prefix, version, resource].filter((v) => !!v).join('/');
   }
 
-
   getUrl = (query?: Partial<IQuery>, op?: string) => {
-    const { apiResource } = this;
+    const { apiPrefix, apiVersion, apiResource } = this;
     const resourcePath = ObjectApi.createLink({
-      apiResource: apiResource,
+      apiPrefix,
+      apiVersion,
+      apiResource,
     });
 
     // eslint-disable-next-line no-param-reassign
@@ -136,19 +136,11 @@ export class ObjectApi<T extends IObject = any> {
     return request(this.getUrl(query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  create = async (
-    partial?: Partial<T>,
-    query?: IQuery,
-    op?: string,
-  ): Promise<T> => {
+  create = async (partial?: Partial<T>, query?: IQuery, op?: string): Promise<T> => {
     return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
-  update = async (
-    partial?: Partial<T>,
-    query?: IQuery,
-    op?: string,
-  ): Promise<T> => {
+  update = async (partial?: Partial<T>, query?: IQuery, op?: string): Promise<T> => {
     return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
@@ -157,8 +149,6 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   upload = async <D = string | ArrayBuffer>(data: D) => {
-    return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(
-      this.parseResponse,
-    );
+    return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
   };
 }

@@ -7,7 +7,6 @@ import { ItemStore } from './item';
 import type { IObject } from './object';
 import { autobind } from './utils/bind';
 
-
 type ModifyIObject<T extends IObject> = (obj: T) => void;
 
 @autobind()
@@ -21,60 +20,57 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   private modifyEvtListeners: ModifyIObject<T>[] = [];
   private deleteEvtListeners: ModifyIObject<T>[] = [];
 
-  protected watchApi: IWatchApi;
+  protected watchApi: IWatchApi | null;
 
-  constructor(watchApi: IWatchApi) {
+  constructor(watchApi: IWatchApi | null) {
     super();
-    this.watchApi = watchApi
+    this.watchApi = watchApi;
   }
 
   private querys = (query?: IQuery): IQuery => {
     return merge({ limit: this.limit }, query);
-  }
+  };
 
   addModifyEvtListeners = (m: ModifyIObject<T>): void => {
-    this.modifyEvtListeners.push(m)
-  }
+    this.modifyEvtListeners.push(m);
+  };
 
   addDeleteEvtListeners = (m: ModifyIObject<T>): void => {
-    this.deleteEvtListeners.push(m)
-  }
+    this.deleteEvtListeners.push(m);
+  };
 
   watch = (): void => {
+    if (!this.watchApi) return;
     this.bindWatchEventsUpdater();
     this.defers.push(this.watchApi.addListener(this, this.onWatchApiEvent));
     this.defers.push(this.watchApi.subscribe(this.api));
-  }
+  };
 
   @action reset = (): void => {
     this.defers.reverse().map((cb) => cb());
-    this.watchApi.reset();
+    this.watchApi && this.watchApi.reset();
     this.data.clear();
     this.isLoaded = false;
-  }
+  };
 
   @action loadAll = async (query?: IQuery) => {
     const q = this.querys(query);
-    this.api.list(q).
-      then((items) => this.data.replace(items)).
-      finally(() => { this.isLoaded = true })
+    this.api
+      .list(q)
+      .then((items) => this.data.replace(items))
+      .finally(() => {
+        this.isLoaded = true;
+      });
   };
 
-  @action create = async (
-    partial?: Partial<T>,
-    query?: IQuery,
-  ): Promise<T> => {
+  @action create = async (partial?: Partial<T>, query?: IQuery): Promise<T> => {
     const q = this.querys(query);
     const newItem = await this.api.create(partial, q);
     this.data.replace([...this.data, newItem]);
     return newItem;
-  }
+  };
 
-  @action async update(
-    item: T,
-    partial: Partial<T>,
-    query?: IQuery,
-  ): Promise<T> {
+  @action async update(item: T, partial: Partial<T>, query?: IQuery): Promise<T> {
     const q = this.querys(query);
     const newItem = await item.update(this, partial, q);
     const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
@@ -82,15 +78,12 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     return newItem;
   }
 
-  @action remove = async (
-    id: string
-  ) => {
+  @action remove = async (id: string) => {
     const q = this.querys({ id: id });
-    this.api.delete(q).
-      then(() => {
-        this.data.filter((item) => item.uid === id);
-      });
-  }
+    this.api.delete(q).then(() => {
+      this.data.filter((item) => item.uid === id);
+    });
+  };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable<IObjectWatchEvent<IObject>>([], {
@@ -113,7 +106,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       throw new Error('type not supported push');
     }
     store.eventsBuffer.push(evt);
-  }
+  };
 
   @computed get items() {
     return this.data.slice();
