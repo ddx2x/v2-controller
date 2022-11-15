@@ -13,6 +13,7 @@ type ModifyIObject<T extends IObject> = (obj: T) => void;
 @autobind()
 export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract api: ObjectApi<T>;
+  abstract watchApi: IWatchApi;
 
   public limit: number = -1;
   public version: number = 0;
@@ -20,13 +21,6 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   private defers: Noop[] = [];
   private modifyEvtListeners: ModifyIObject<T>[] = [];
   private deleteEvtListeners: ModifyIObject<T>[] = [];
-
-  protected watchApi: IWatchApi;
-
-  constructor(watchApi: IWatchApi) {
-    super();
-    this.watchApi = watchApi
-  }
 
   private querys = (query?: IQuery): IQuery => {
     return merge({ limit: this.limit }, query);
