@@ -35,9 +35,9 @@ export interface IObjectApiOptions<T extends IObject> {
 
 export interface IQuery {
   id?: string | number;
-  watch?: boolean | number;
   resourceVersion?: number;
   timeoutSeconds?: number;
+  watch?: boolean | number;
   continue?: string; // might be used with ?limit from second reques
   path?: string; // label update datastructure field
   [key: string]: any;
@@ -122,10 +122,10 @@ export class ObjectApi<T extends IObject = any> {
       apiVersion,
       apiResource,
     });
-
-    // eslint-disable-next-line no-param-reassign
-    op = op ? '/op/' + op : '';
-    return resourcePath + op + (query ? `?` + stringify(query) : '');
+    if (op) {
+      return resourcePath + '/op/' + op + (query ? `?` + stringify(query) : '');
+    }
+    return '/' + resourcePath + (query ? `?` + stringify(query) : '');
   };
 
   list = async (query?: IQuery, op?: string): Promise<T[]> => {

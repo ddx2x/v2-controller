@@ -19,9 +19,9 @@ const Card: React.FC<CardProps> = (props) => {
 
 export const card: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
-    return <Card {...props} />;
+    return <Card {...props} fieldProps={props.fieldProps} />;
   },
   renderFormItem: (text, props, dom) => {
-    return <Card {...props} />;
+    return <Card {...props} fieldProps={props.fieldProps} />;
   },
 };

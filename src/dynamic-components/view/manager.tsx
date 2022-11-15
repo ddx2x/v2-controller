@@ -1,64 +1,47 @@
-import { ObjectStore } from '@/client';
+import type { IObject, ObjectStore } from '@/client';
 import { observable } from 'mobx';
-import {
+import type {
   DescriptionsTemplate,
   FormTemplate,
-  LayoutType,
   ListTemplate,
   StepFormTemplate,
-  TableTemplate
+  TableTemplate,
 } from '../typing';
 
-interface Resource {
-  table?: TableTemplate;
-  list?: ListTemplate;
-  form?: FormTemplate;
-  stepForm?: StepFormTemplate;
-  descriptions?: DescriptionsTemplate;
-  mixins?: TableTemplate | ListTemplate | DescriptionsTemplate[];
-  stores?: ObjectStore<any>[];
+export type Template =
+  | TableTemplate
+  | ListTemplate
+  | FormTemplate
+  | StepFormTemplate
+  | DescriptionsTemplate
+  | Template[];
+
+export interface TemplateResource<S extends ObjectStore<IObject>> {
+  template: Template;
+  stores?: S[];
 }
 
-export class TemplateManager {
-  private stores = observable.map<string, Resource>();
+export class TemplateManager<S extends ObjectStore<IObject>> {
+  private stores = observable.map<string, TemplateResource<S>>();
 
   initStores(route: string) {
     (this.stores.get(route)?.stores || []).map((store) => {
-      store.loadAll();
-      store.watch();
+      store.next(10, '');
     });
   }
 
   clearStores(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
-      store.stop();
+    (this.stores.get(route)?.stores || []).map(() => {
+      // store.stop();
     });
   }
 
-  Layout(route: string, T: LayoutType) {
-    const store = this.stores.get(route);
-    switch (T) {
-      case 'table':
-        return store?.table;
-      case 'list':
-        return store?.list;
-      case 'form':
-        return store?.form;
-      case 'step-form':
-        return store?.stepForm;
-      case 'descriptions':
-        return store?.descriptions;
-      default:
-        return null;
-    }
+  layout(route: string, kind: string) {
+    return this.stores.get(route)?.template[kind] || null;
   }
 
-  register(route: string, resource: Resource) {
-    let exist: Resource = resource;
-    if (this.stores.has(route)) {
-      exist = Object.assign(this.stores.get(route) || {}, exist);
-    }
-    this.stores.set(route, exist);
+  register(route: string, resource: TemplateResource<S>) {
+    this.stores.set(route, resource);
   }
 }
 

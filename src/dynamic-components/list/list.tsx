@@ -1,6 +1,7 @@
 import { ActionType, FooterToolbar, ProListProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { observer } from 'mobx-react';
 import { ReactText, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { ExtraAction, extraActionArray } from '../extensions/action';
@@ -15,7 +16,7 @@ export type ListProps = ProListProps & {
   intl?: IntlShape; // 国际化
 };
 
-export const List: React.FC<ListProps> = (props) => {
+export const List: React.FC<ListProps> = observer((props) => {
   const {
     virtualList,
     dataSource,
@@ -78,7 +79,7 @@ export const List: React.FC<ListProps> = (props) => {
       {footer()}
     </>
   );
-};
+});
 
 List.defaultProps = {
   virtualList: true,

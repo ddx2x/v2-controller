@@ -1,2 +1,2 @@
-export * from './commdity-form';
-export * from './commdity-table';
+export * from './form';
+export * from './table';

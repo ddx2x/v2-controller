@@ -13,9 +13,10 @@ export default () => {
 
   const route = match?.params['route'] as string;
   const layout = match?.params['layout'] as LayoutType; // 布局类型
-  const config = templateManager.Layout(route, layout) || null; // 注册配置项
+  const config = templateManager.layout(route, layout) || null; // 注册配置项
 
   if (!config) return null;
+
   const intl = useIntl(); // 国际化组件
   let { pageContainer, ...rest } = config;
 

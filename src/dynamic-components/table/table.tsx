@@ -1,6 +1,7 @@
 import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -19,7 +20,7 @@ export type TableProps = ProTableProps<any, any> & {
   toolBarExtraRender?: ExtraAction[];
 };
 
-export const Table: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableProps> = observer((props) => {
   const {
     virtualList,
     dataSource,
@@ -113,12 +114,22 @@ export const Table: React.FC<TableProps> = (props) => {
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
+        onDataSourceChange={(dataSource) => console.log('dataSource', dataSource)}
+        onSubmit={(params) => console.log('onSubmit', params)}
+        onReset={() => { }}
+        // request={async (params, sorter, filter) => {
+        //   console.info('params, sorter, filter', params, sorter, filter, actionRef);
+        //   return Promise.resolve({
+        //     data: [],
+        //     success: false,
+        //   });
+        // }}
         {...rest}
       />
       {footer()}
     </>
   );
-};
+});
 
 Table.defaultProps = {
   type: 'list',

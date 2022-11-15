@@ -6,9 +6,9 @@ const form: FormTemplate = {
     {
       title: '商品图片',
       dataIndex: 'images',
-      valueType: 'videoModule',
+      valueType: 'card',
     },
   ],
 };
 
-templateManager.register('form-testing', { form: form });
+templateManager.register('form-testing', { template: { form: form } });

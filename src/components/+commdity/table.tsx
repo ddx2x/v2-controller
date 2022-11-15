@@ -1,4 +1,5 @@
 import { TableTemplate, templateManager } from '@/dynamic-components';
+import { commdityStore } from './commdity.store';
 
 // 商品列表
 export const commdityListTable: TableTemplate = {
@@ -32,10 +33,13 @@ export const commdityListTable: TableTemplate = {
       title: '排序',
     },
   ],
-  dataSource: [],
+  dataSource: commdityStore.items,
 };
 
-templateManager.register('commdity', { table: commdityListTable });
+templateManager.register('commdity', {
+  template: { table: commdityListTable },
+  stores: [commdityStore],
+});
 
 // 商品标签
 export const commdityLabelTable: TableTemplate = {
@@ -52,4 +56,4 @@ export const commdityLabelTable: TableTemplate = {
   ],
 };
 
-templateManager.register('commdity-label', { table: commdityLabelTable });
+templateManager.register('commdity-label', { template: { table: commdityLabelTable } });

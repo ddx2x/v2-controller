@@ -10,5 +10,4 @@ export const storeTable: TableTemplate = {
   ],
 };
 
-templateManager.register('store', { table: storeTable });
-
+templateManager.register('store', { template: { table: storeTable } });

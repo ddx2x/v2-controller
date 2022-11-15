@@ -56,7 +56,7 @@ export const videoModule: ProRenderFieldPropsType = {
 
 valueTypeMapStore.registerValueType({ videoModule });
 
-const columns: ProFormColumnsType<any, 'text'>[][] = [
+const columns: ProFormColumnsType[][] = [
   [
     {
       title: '商品类型',
@@ -240,4 +240,4 @@ export const commdityEdit: StepFormTemplate = {
   columns: columns,
 };
 
-templateManager.register('commdity-edit', { stepForm: commdityEdit });
+templateManager.register('commdity-edit', { template: { stepForm: commdityEdit } });

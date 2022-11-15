@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from './$';
 
 export interface ImageUploadProps extends ProFieldFCRenderProps {
-  fieldProps: UploadProps & {
+  fieldProps?: UploadProps & {
     buttonText?: string;
     maxNumber?: number | null;
   };
@@ -77,9 +77,9 @@ const ImageUpload: React.FC<ImageUploadProps> = (props: any) => {
 
 export const imageUpload: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
-    return <ImageUpload {...props} {...props.fieldProps} />;
+    return <ImageUpload {...props} fieldProps={props.fieldProps} />;
   },
   renderFormItem: (text, props, dom) => {
-    return <ImageUpload {...props} {...props.fieldProps} />;
+    return <ImageUpload {...props} fieldProps={props.fieldProps} />;
   },
 };
