@@ -47,13 +47,28 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   }
 
   @action reset = (): void => {
-    this.defers.reverse().map((cb) => cb());
-    this.watchApi.reset();
+    if (this.defers) this.defers.reverse().map((cb) => cb());
+    if (this.watchApi) this.watchApi.reset();
+
     this.data.clear();
     this.isLoaded = false;
   }
 
-  @action loadAll = async (query?: IQuery) => {
+  @action next = async (per_page: number, sort: string) => {
+    // 0,10 | 10,10 | 20,30 | 50,10 |....
+    if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) {
+      this.reset();
+    }
+    const q = this.querys(this.ctx);
+    this.api.list(q).
+      then((items) => {
+        this.data.push(...items);
+        this.isLoaded = true;
+        this.ctx = { per_page: per_page, page: per_page + this.ctx.page, sort };
+      })
+  }
+
+  @action load = async (query?: IQuery) => {
     const q = this.querys(query);
     this.api.list(q).
       then((items) => this.data.replace(items)).

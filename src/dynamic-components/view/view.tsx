@@ -16,6 +16,7 @@ export default () => {
   const config = templateManager.Layout(route, layout) || null; // 注册配置项
 
   if (!config) return null;
+  
   const intl = useIntl(); // 国际化组件
   let { pageContainer, ...rest } = config;
 

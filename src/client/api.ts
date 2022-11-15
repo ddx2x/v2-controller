@@ -33,11 +33,13 @@ export interface IObjectApiOptions<T extends IObject> {
   service?: string;
 }
 
+
+
 export interface IQuery {
   id?: string | number;
-  watch?: boolean | number;
   resourceVersion?: number;
   timeoutSeconds?: number;
+  watch?: boolean | number;
   continue?: string; // might be used with ?limit from second reques
   path?: string; // label update datastructure field
   [key: string]: any;
@@ -49,7 +51,7 @@ export class ObjectApi<T extends IObject = any> {
   readonly apiPrefix: string; // api
   readonly apiVersion: string;
   readonly apiResource: string;
-  
+
   // /api/v1/Product
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
@@ -112,20 +114,20 @@ export class ObjectApi<T extends IObject = any> {
   }
 
   static createLink(ref: IObjectApiLinkRef): string {
-    const { apiPrefix: prefix, apiVersion: version, apiResource: resource } = ref;
-    return [prefix, version, resource].filter(v => !!v).join('/');
+    const { apiPrefix, apiVersion, apiResource } = ref;
+    return [apiPrefix, apiVersion, apiResource].filter(v => !!v).join('/');
   }
 
 
   getUrl = (query?: Partial<IQuery>, op?: string) => {
-    const { apiResource } = this;
+    const { apiPrefix, apiVersion, apiResource } = this;
     const resourcePath = ObjectApi.createLink({
-      apiResource: apiResource,
+      apiPrefix, apiVersion, apiResource
     });
-
-    // eslint-disable-next-line no-param-reassign
-    op = op ? '/op/' + op : '';
-    return resourcePath + op + (query ? `?` + stringify(query) : '');
+    if (op) {
+      return resourcePath + '/op/' + op + (query ? `?` + stringify(query) : '');
+    }
+    return resourcePath + (query ? `?` + stringify(query) : '');
   };
 
   list = async (query?: IQuery, op?: string): Promise<T[]> => {

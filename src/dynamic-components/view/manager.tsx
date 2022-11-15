@@ -1,6 +1,6 @@
-import { ObjectStore } from '@/client';
+import type { ObjectStore } from '@/client';
 import { observable } from 'mobx';
-import {
+import type {
   DescriptionsTemplate,
   FormTemplate,
   LayoutType,
@@ -30,8 +30,8 @@ export class TemplateManager {
   }
 
   clearStores(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
-      store.stop();
+    (this.stores.get(route)?.stores || []).map(() => {
+      // store.stop();
     });
   }
 
