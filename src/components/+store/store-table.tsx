@@ -1,4 +1,5 @@
-import { TableTemplate, templateManager } from '@/dynamic-components';
+import type { TableTemplate } from '@/dynamic-components';
+import { templateManager } from '@/dynamic-components';
 
 export const storeTable: TableTemplate = {
   columns: [

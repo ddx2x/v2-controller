@@ -1,9 +1,11 @@
 import { BetaSchemaForm, FooterToolbar, ProProvider } from '@ant-design/pro-components';
-import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
-import Button, { ButtonType } from 'antd/lib/button';
+import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
+import type { FormInstance } from 'antd';
+import { Drawer, Form as AntdForm, Modal, Space } from 'antd';
+import type { ButtonType } from 'antd/lib/button';
+import Button from 'antd/lib/button';
 import React, { useContext, useState } from 'react';
-import { IntlShape } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 
 import { waitTime } from './tools';
 import { valueTypeMapStore } from './valueTypeMap';
@@ -25,16 +27,16 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  
   const triggerDom = () => {
     return (
       <Button type={triggerButtonType} onClick={showModal}>
         {triggerText}
       </Button>
     );
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
   };
 
   const handleClose = () => {

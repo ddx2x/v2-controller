@@ -1,10 +1,13 @@
+import type {
+  StepFormTemplate
+} from '@/dynamic-components';
 import {
-  StepFormTemplate,
   templateManager,
   useForm,
-  valueTypeMapStore,
+  valueTypeMapStore
 } from '@/dynamic-components';
-import { ProFormColumnsType, ProRenderFieldPropsType } from '@ant-design/pro-components';
+
+import type { ProFormColumnsType, ProRenderFieldPropsType } from '@ant-design/pro-components';
 
 const VideoModule: React.FC = (props) => {
   const [form] = useForm({
@@ -240,4 +243,4 @@ export const commdityEdit: StepFormTemplate = {
   columns: columns,
 };
 
-templateManager.register('commdity-edit', { template: { stepForm: commdityEdit } });
+templateManager.register('commdity-edit', { template: { stepForm: commdityEdit} });

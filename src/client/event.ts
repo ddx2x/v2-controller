@@ -26,3 +26,16 @@ export interface IWatchApi {
   reset: () => any;
 }
 
+
+export class DefaultWatchApi implements IWatchApi {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  subscribe(...apis: ObjectApi<any>[]): Noop {
+    return () => { }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  addListener(store: any, ecb: EventHandle): Noop {
+    return () => { }
+  }
+  
+  reset() { };
+}

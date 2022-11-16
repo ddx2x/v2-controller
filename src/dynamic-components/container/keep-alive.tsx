@@ -1,12 +1,12 @@
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
-import { CachingNode } from 'react-activation';
+import type { CachingNode } from 'react-activation';
 
 export interface KeepAliveProps {
   path?: string | null;
 }
 
 export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
-  let path = props.path ? props.path : useLocation().pathname;
+  const path = props.path ? props.path : useLocation().pathname;
 
   return (
     // @ts-ignore

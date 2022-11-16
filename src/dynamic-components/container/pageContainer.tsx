@@ -1,7 +1,9 @@
 import { RouteContext } from '@ant-design/pro-components';
 import { useContext } from 'react';
-import { Container, ContainerProps } from './container';
-import { KeepAlive, KeepAliveProps } from './keep-alive';
+import type { ContainerProps } from './container';
+import { Container } from './container';
+import type { KeepAliveProps } from './keep-alive';
+import { KeepAlive } from './keep-alive';
 
 export interface PageContainerProps extends KeepAliveProps, ContainerProps {
   keepAlive?: boolean;

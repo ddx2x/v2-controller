@@ -12,7 +12,7 @@ type ModifyIObject<T extends IObject> = (obj: T) => void;
 @autobind()
 export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract api: ObjectApi<T>;
-  abstract watchApi: IWatchApi | null;
+  abstract watchApi: IWatchApi;
 
   public limit: number = -1;
   public version: number = 0;

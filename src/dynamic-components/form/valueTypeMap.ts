@@ -1,4 +1,4 @@
-import { ProRenderFieldPropsType } from '@ant-design/pro-components';
+import type { ProRenderFieldPropsType } from '@ant-design/pro-components';
 
 class ValueTypeMapStore {
   stores: Record<string, ProRenderFieldPropsType> = {};

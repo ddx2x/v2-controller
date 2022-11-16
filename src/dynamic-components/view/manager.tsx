@@ -5,7 +5,7 @@ import type {
   FormTemplate,
   ListTemplate,
   StepFormTemplate,
-  TableTemplate,
+  TableTemplate
 } from '../typing';
 
 export type Template =
@@ -32,11 +32,16 @@ export class TemplateManager<S extends ObjectStore<IObject>> {
 
   clear(route: string) {
     (this.stores.get(route)?.stores || []).map((store) => {
+      store.reset()
     });
   }
 
-  layout(route: string, kind: string) {
-    return this.stores.get(route)?.template[kind] || null;
+  getLayoutTemplate(route: string) {
+    const template = this.stores.get(route)?.template;
+    if (Array.isArray(template)) {
+      return template
+    }
+    return [template]
   }
 
   register(route: string, resource: TemplateResource<S>) {

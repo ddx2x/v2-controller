@@ -1,9 +1,11 @@
-import {
-  PageContainer as AntdPageContainer,
+import type {
   PageContainerProps,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
-import { BreadcrumbProps } from 'antd';
+import {
+  PageContainer as AntdPageContainer
+} from '@ant-design/pro-components';
+import type { BreadcrumbProps } from 'antd';
 
 export interface ContainerProps extends PageContainerProps {
   useBreadcrumb?: boolean;

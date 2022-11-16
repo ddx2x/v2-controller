@@ -1,5 +1,6 @@
 import type { ProCardProps } from '@ant-design/pro-card';
-import { GetComponentProps, useToken } from '@ant-design/pro-components';
+import type { GetComponentProps } from '@ant-design/pro-components';
+import { useToken } from '@ant-design/pro-components';
 import { PRO_LIST_KEYS_MAP } from '@ant-design/pro-list/es/constants';
 import type { ItemProps } from '@ant-design/pro-list/es/Item';
 import ProListItem from '@ant-design/pro-list/es/Item';
@@ -83,7 +84,7 @@ export function ListView<RecordType>(props: ListViewProps<RecordType>) {
   const [mergedPagination] = usePagination(
     dataSource.length,
     { responsive: true, ...pagination } as any,
-    () => {},
+    () => { },
   );
   /** 根据分页来返回不同的数据，模拟 table */
   const pageData = React.useMemo<RecordType[]>(() => {
@@ -231,13 +232,13 @@ export function ListView<RecordType>(props: ListViewProps<RecordType>) {
               cardProps={
                 rest.grid
                   ? {
-                      ...itemCardProps,
-                      ...rest.grid,
-                      checked: isChecked,
-                      onChecked: React.isValidElement(checkboxDom)
-                        ? (checkboxDom?.props as any)?.onChange
-                        : undefined,
-                    }
+                    ...itemCardProps,
+                    ...rest.grid,
+                    checked: isChecked,
+                    onChecked: React.isValidElement(checkboxDom)
+                      ? (checkboxDom?.props as any)?.onChange
+                      : undefined,
+                  }
                   : undefined
               }
               {...listItemProps}

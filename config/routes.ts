@@ -36,6 +36,17 @@ export default [
     component: './dynamic-view',
   },
   {
+    name: '商品列表2',
+    path: '/product/add',
+    component: './dynamic-view',
+  },
+  {
+    name: '商品列表3',
+    path: '/product/update',
+    component: './dynamic-view',
+  },
+  
+  {
     name: '商品编辑',
     path: '/commdity-edit/step-form',
     component: './dynamic-view',

@@ -2,9 +2,11 @@ import { ActionType, FooterToolbar, ProListProps } from '@ant-design/pro-compone
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { observer } from 'mobx-react';
-import { ReactText, useRef, useState } from 'react';
-import { IntlShape } from 'react-intl';
-import { ExtraAction, extraActionArray } from '../extensions/action';
+import type { ReactText } from 'react';
+import { useRef, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import type { ExtraAction } from '../extensions/action';
+import { extraActionArray } from '../extensions/action';
 import ProList from './proList';
 
 export type ListProps = ProListProps & {

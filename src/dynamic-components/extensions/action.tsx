@@ -1,10 +1,12 @@
+import type {
+  ButtonProps,
+  RadioProps,
+  SwitchProps
+} from 'antd';
 import {
   Button as AntdButton,
-  ButtonProps,
   Radio as AntdRadio,
-  RadioProps,
-  Switch as AntdSwitch,
-  SwitchProps,
+  Switch as AntdSwitch
 } from 'antd';
 
 interface Button extends ButtonProps {
