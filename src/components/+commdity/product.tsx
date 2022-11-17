@@ -1,5 +1,6 @@
 
-import { pageManager, View } from '@/dynamic-components';
+import type { View } from '@/dynamic-components';
+import { pageManager } from '@/dynamic-components';
 import { commdityStore } from './commdity.store';
 
 // 商品列表
@@ -54,4 +55,14 @@ const productLable: View = {
   ],
 };
 
-pageManager.register('product.add', { page: { view: [productTable, productLable] } });
+pageManager.register('product.add', {
+  page: { view: [productTable, productLable] },
+  stores: [
+    {
+      store: commdityStore,
+      query: { abc: 1 },
+      load: commdityStore.next,
+      exit: commdityStore.reset,
+    },
+  ],
+});

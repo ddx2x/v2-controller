@@ -1,9 +1,9 @@
-import type { IObject, ObjectStore } from '@/client';
-import { PageContainerProps } from '../container';
-import { DescriptionsProps } from '../descriptions';
-import { FormProps, StepFormProps } from '../form';
-import { ListProps } from '../list';
-import { TableProps } from '../table';
+import type { IObject, ObjectStore, Query } from '@/client';
+import type { PageContainerProps } from '../container';
+import type { DescriptionsProps } from '../descriptions';
+import type { FormProps, StepFormProps } from '../form';
+import type { ListProps } from '../list';
+import type { TableProps } from '../table';
 
 export declare type View =
   { kind: 'table'; } & TableProps |
@@ -14,23 +14,33 @@ export declare type View =
 
 export declare type Page = { view: View[], container?: PageContainerProps }
 
-export declare type PageSchema<S extends ObjectStore<IObject>> = {
+export declare type Store = {
+  store: ObjectStore<IObject>;
+  query?: Query;
+  load: (query?: Query) => Promise<void>;
+  watch?: () => Promise<void>;
+  exit: () => void;
+}
+
+export declare type PageSchema<S extends Store> = {
   page: Page;
   stores?: S[];
 }
 
-export class PageManager<S extends ObjectStore<IObject>> {
+export class PageManager<S extends Store> {
   private stores = new Map<string, PageSchema<S>>();
 
-  init(key: string) {
-    (this.stores.get(key)?.stores || []).map((store) => {
-      store.next(10, '');
+  init = (key: string) => {
+    (this.stores.get(key)?.stores || []).map(async (store) => {
+      store.load && store.load(store.query).then(async () => {
+        if (store.watch) store.watch()
+      })
     });
   }
 
   clear(key: string) {
     (this.stores.get(key)?.stores || []).map((store) => {
-      store.reset();
+      store.exit && store.exit();
     });
   }
 

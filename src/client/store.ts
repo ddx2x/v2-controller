@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import type { IQuery, ObjectApi } from './api';
+import type { ObjectApi, Query } from './api';
 import type { IObjectWatchEvent, IWatchApi, Noop } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -21,7 +21,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   private modifyEvtListeners: ModifyIObject<T>[] = [];
   private deleteEvtListeners: ModifyIObject<T>[] = [];
 
-  private querys = (query?: IQuery): IQuery => {
+  private querys = (query?: Query): Query => {
     return merge({ limit: this.limit }, query);
   };
 
@@ -48,8 +48,10 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     this.isLoaded = false;
   };
 
-  @action next = async (per_page: number, sort: string) => {
+  @action next = async (query?: Query) => {
     // 0,10 | 10,10 | 20,30 | 50,10 |....
+    const { per_page, sort } = !query ? { per_page: 0, sort: "" } : query;
+
     if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) {
       this.reset();
     }
@@ -57,11 +59,11 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     this.api.list(q).then((items) => {
       this.data.push(...items);
       this.isLoaded = true;
-      this.ctx = { per_page: per_page, page: per_page + this.ctx.page, sort };
+      this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
     });
   };
 
-  @action load = async (query?: IQuery) => {
+  @action load = async (query?: Query) => {
     const q = this.querys(query);
     this.api
       .list(q)
@@ -71,14 +73,14 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       });
   };
 
-  @action create = async (partial?: Partial<T>, query?: IQuery): Promise<T> => {
+  @action create = async (partial?: Partial<T>, query?: Query): Promise<T> => {
     const q = this.querys(query);
     const newItem = await this.api.create(partial, q);
     this.data.replace([...this.data, newItem]);
     return newItem;
   };
 
-  @action async update(item: T, partial: Partial<T>, query?: IQuery): Promise<T> {
+  @action async update(item: T, partial: Partial<T>, query?: Query): Promise<T> {
     const q = this.querys(query);
     const newItem = await item.update(this, partial, q);
     const index = this.data.findIndex((old: T) => old.uid === newItem.uid);

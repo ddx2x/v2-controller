@@ -33,10 +33,13 @@ export interface IObjectApiOptions<T extends IObject> {
   service?: string;
 }
 
-export interface IQuery {
-  id?: string | number;
-  resourceVersion?: number;
-  timeoutSeconds?: number;
+export declare type Query = {
+  id?: string,
+  page?: number,
+  per_page?: number,
+  sort?: string,
+  resourceVersion?: number
+  timeoutSeconds?: number
   watch?: boolean | number;
   continue?: string; // might be used with ?limit from second reques
   path?: string; // label update datastructure field
@@ -80,7 +83,7 @@ export class ObjectApi<T extends IObject = any> {
 
   public objectConstructor: IObjectConstructor<T>;
 
-  getWatchUrl(query: IQuery = {}): string {
+  getWatchUrl(query: Query = {}): string {
     return this.getUrl({
       ...query,
     });
@@ -115,7 +118,7 @@ export class ObjectApi<T extends IObject = any> {
     return [prefix, version, resource].filter((v) => !!v).join('/');
   }
 
-  getUrl = (query?: Partial<IQuery>, op?: string) => {
+  getUrl = (query?: Partial<Query>, op?: string) => {
     const { apiPrefix, apiVersion, apiResource } = this;
     const resourcePath = ObjectApi.createLink({
       apiPrefix,
@@ -128,23 +131,23 @@ export class ObjectApi<T extends IObject = any> {
     return '/' + resourcePath + (query ? `?` + stringify(query) : '');
   };
 
-  list = async (query?: IQuery, op?: string): Promise<T[]> => {
+  list = async (query?: Query, op?: string): Promise<T[]> => {
     return request(this.getUrl(query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  get = async (query?: IQuery, op?: string): Promise<T> => {
+  get = async (query?: Query, op?: string): Promise<T> => {
     return request(this.getUrl(query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  create = async (partial?: Partial<T>, query?: IQuery, op?: string): Promise<T> => {
+  create = async (partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
     return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
-  update = async (partial?: Partial<T>, query?: IQuery, op?: string): Promise<T> => {
+  update = async (partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
     return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
-  delete = async (query?: IQuery): Promise<T> => {
+  delete = async (query?: Query): Promise<T> => {
     return request(this.getUrl({ id: query?.id }), { method: 'DELETE' }).then(this.parseResponse);
   };
 

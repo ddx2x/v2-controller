@@ -2,11 +2,16 @@ import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { PageContainer } from '../container';
-import { Descriptions, DescriptionsProps } from '../descriptions';
-import { Form, FormProps, StepForm, StepFormProps } from '../form';
-import { List, ListProps } from '../list';
-import { Table, TableProps } from '../table';
-import { pageManager, View } from './manager';
+import type { DescriptionsProps } from '../descriptions';
+import { Descriptions } from '../descriptions';
+import type { FormProps, StepFormProps } from '../form';
+import { Form, StepForm } from '../form';
+import type { ListProps } from '../list';
+import { List } from '../list';
+import type { TableProps } from '../table';
+import { Table } from '../table';
+import type { View } from './manager';
+import { pageManager } from './manager';
 
 export default observer(() => {
 
@@ -20,7 +25,7 @@ export default observer(() => {
 
   const intl = useIntl(); // 国际化组件
 
-  useEffect(() => {
+  useEffect(() =>  {
     pageManager.init(routeKey); // 挂载 stores
     return () => pageManager.clear(routeKey); // 清除stores
   });

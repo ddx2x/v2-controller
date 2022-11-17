@@ -242,4 +242,5 @@ pageManager.register('commdity.edit', {
       },
     }
   },
+  stores: [],
 });

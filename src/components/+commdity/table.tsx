@@ -38,10 +38,10 @@ export const commdityListTable: View = {
   dataSource: commdityStore.items,
 };
 
-pageManager.register('commdity', {
-  page: { view: [commdityListTable] },
-  stores: [commdityStore],
-});
+// pageManager.register('commdity', {
+//   page: { view: [commdityListTable] },
+//   stores: [commdityStore],
+// });
 
 // 商品标签
 export const commdityLabelTable: View = {

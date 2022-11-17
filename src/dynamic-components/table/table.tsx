@@ -1,12 +1,14 @@
 import { commdityStore } from '@/components/+commdity/commdity.store';
-import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
+import type { ActionType, ProTableProps } from '@ant-design/pro-components';
+import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
-import { IntlShape } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import { ExtraAction, extraActionArray } from '../#/action';
+import type { ExtraAction } from '../#/action';
+import { extraActionArray } from '../#/action';
 
 const defaulScrollHeight = 550;
 
