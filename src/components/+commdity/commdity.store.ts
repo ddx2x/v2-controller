@@ -12,8 +12,9 @@ class Commdity extends IObject {
 }
 
 const commdityApi = new ObjectApi<Commdity>({
-  url: '/api/v1/commdity',
+  url: '/api/v1/Product',
   objectConstructor: Commdity,
+  service: "prod",
 });
 
 class CommdityStore extends ObjectStore<Commdity> {

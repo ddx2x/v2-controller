@@ -60,7 +60,7 @@ pageManager.register('product.add', {
   stores: [
     {
       store: commdityStore,
-      query: { abc: 1 },
+      query: { limit: 0 },
       load: commdityStore.next,
       exit: commdityStore.reset,
     },

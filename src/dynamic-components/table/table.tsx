@@ -57,15 +57,15 @@ export const Table: React.FC<TableProps> = (props) => {
       height: scrollHeight || defaulScrollHeight,
       onReachEnd: () => onLoading && onLoading(actionRef),
     });
-  }, []);
+  }, [onLoading, scrollHeight]);
 
   if (virtualList) {
-    rest['sticky'] = true;
-    rest['scroll'] = {
+    rest.sticky = true;
+    rest.scroll = {
       y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
     };
-    rest['components'] = vComponents;
-    rest['pagination'] = false;
+    rest.components = vComponents;
+    rest.pagination = false;
   }
 
   const footer = () => {

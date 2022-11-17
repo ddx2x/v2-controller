@@ -15,6 +15,7 @@ export interface IObjectApiLinkRef {
   apiPrefix?: string;
   apiVersion?: string;
   apiResource?: string;
+  service?: string;
 }
 
 export interface ObjectData {
@@ -52,6 +53,7 @@ export class ObjectApi<T extends IObject = any> {
   readonly apiPrefix: string; // api
   readonly apiVersion: string;
   readonly apiResource: string;
+  readonly service: string;
 
   // /api/v1/Product
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
@@ -71,11 +73,11 @@ export class ObjectApi<T extends IObject = any> {
   constructor(options: IObjectApiOptions<T>) {
     const { objectConstructor = IObject as IObjectConstructor } = options;
     const { apiPrefix, apiVersion, apiResource } = ObjectApi.parseApi(options.url);
-
     this.apiBase = options.url;
     this.apiPrefix = apiPrefix;
     this.apiVersion = apiVersion;
     this.apiResource = apiResource;
+    this.service = options.service ? options.service : "";
     this.objectConstructor = objectConstructor;
 
     apiManager.registerObjectApi(this.apiBase, this);
@@ -95,7 +97,6 @@ export class ObjectApi<T extends IObject = any> {
     if (IObject.isObjectDataList(data)) {
       const { version, items } = data;
       if (this.version < version) this.version = version;
-      console.log('parseResponse items', items);
       return items.map((item) => new this.objectConstructor({ ...item }));
     }
 
@@ -114,13 +115,14 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   static createLink(ref: IObjectApiLinkRef): string {
-    const { apiPrefix: prefix, apiVersion: version, apiResource: resource } = ref;
-    return [prefix, version, resource].filter((v) => !!v).join('/');
+    const { apiPrefix, apiVersion, apiResource, service } = ref;
+    return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
   }
 
   getUrl = (query?: Partial<Query>, op?: string) => {
-    const { apiPrefix, apiVersion, apiResource } = this;
+    const { service, apiPrefix, apiVersion, apiResource } = this;
     const resourcePath = ObjectApi.createLink({
+      service,
       apiPrefix,
       apiVersion,
       apiResource,

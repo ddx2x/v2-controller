@@ -1,4 +1,5 @@
-import { ActionType, FooterToolbar, ProListProps } from '@ant-design/pro-components';
+import type { ActionType, ProListProps } from '@ant-design/pro-components';
+import { FooterToolbar } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { observer } from 'mobx-react';

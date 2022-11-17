@@ -19,6 +19,10 @@ export default {
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
     },
+    '/prod/**': {
+      target: 'http://127.0.0.1:3000',
+      changeOrigin: true,
+    },
     '/superset/': {
       target: 'http://10.200.100.200:8088',
       // changeOrigin: true,

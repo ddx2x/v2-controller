@@ -50,7 +50,8 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action next = async (query?: Query) => {
     // 0,10 | 10,10 | 20,30 | 50,10 |....
-    const { per_page, sort } = !query ? { per_page: 0, sort: "" } : query;
+    const { per_page, sort, limit } = !query ? { per_page: 0, sort: '""', limit: -1 } : query;
+    this.limit = limit;
 
     if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) {
       this.reset();
