@@ -31,7 +31,7 @@ export default [
     component: './superset',
   },
   {
-    name: '商品列表2',
+    name: '商品列表',
     path: '/product/add',
     component: './dynamic-view',
   },

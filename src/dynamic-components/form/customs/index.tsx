@@ -5,6 +5,7 @@ import { imageUpload } from './image';
 import { editTable, table } from './table';
 import { videoUpload } from './video';
 
+
 export const form: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
     return <Form {...props.fieldProps} />;
@@ -22,3 +23,6 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
   editTable,
   form,
 };
+
+
+export * from './typing.d';
