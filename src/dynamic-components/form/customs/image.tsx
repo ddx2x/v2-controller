@@ -1,12 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
+import type { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
 import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from './$';
 
-export interface ImageUploadProps extends ProFieldFCRenderProps {
+export type ImageUploadProps = ProFieldFCRenderProps & {
   fieldProps: UploadProps & {
     buttonText?: string;
     maxNumber?: number | null;
@@ -15,7 +15,7 @@ export interface ImageUploadProps extends ProFieldFCRenderProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   const { value, onChange, fieldProps } = props;
-  const { buttonText, name, listType, maxNumber,  ...uploadProps } = fieldProps;
+  const { buttonText, name, listType, maxNumber, ...uploadProps } = fieldProps;
 
   const fileList = value?.fileList || [];
 
