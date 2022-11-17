@@ -1,7 +1,7 @@
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
 import type { CachingNode } from 'react-activation';
 
-export interface KeepAliveProps {
+export type KeepAliveProps = {
   path?: string | null;
 }
 

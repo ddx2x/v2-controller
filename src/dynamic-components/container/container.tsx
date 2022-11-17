@@ -1,13 +1,14 @@
 import type {
-  PageContainerProps,
+  PageContainerProps as ProPageContainerProps,
   RouteContextType
 } from '@ant-design/pro-components';
-import {
-  PageContainer as AntdPageContainer
-} from '@ant-design/pro-components';
+import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
 import type { BreadcrumbProps } from 'antd';
+import { useContext } from 'react';
+import type { KeepAliveProps } from './keepAlive';
+import { KeepAlive } from './keepAlive';
 
-export interface ContainerProps extends PageContainerProps {
+export declare type ContainerProps = ProPageContainerProps & {
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
 }
@@ -31,9 +32,9 @@ export const Container: React.FC<ContainerProps> = (props) => {
   };
 
   return (
-    <AntdPageContainer header={{ breadcrumb: headerBreadcrumb(), ...header }} {...rest}>
+    <ProPageContainer header={{ breadcrumb: headerBreadcrumb(), ...header }} {...rest}>
       {props.children}
-    </AntdPageContainer>
+    </ProPageContainer>
   );
 };
 
@@ -41,4 +42,30 @@ Container.defaultProps = {
   useBreadcrumb: true,
   context: null,
   fixedHeader: false,
+};
+
+
+export type PageContainerProps = KeepAliveProps & ContainerProps & {
+  keepAlive?: boolean;
+}
+
+export const PageContainer: React.FC<PageContainerProps> = (props) => {
+  const { keepAlive, path, children, ...rest } = props;
+
+  const container = () => {
+    // 获取 layout 上下文
+    const context = useContext(RouteContext);
+    return (
+      <Container context={context} {...rest}>
+        {children}
+      </Container>
+    );
+  };
+
+  if (!keepAlive) return container();
+  return <KeepAlive path={path}>{container()}</KeepAlive>;
+};
+
+PageContainer.defaultProps = {
+  keepAlive: true,
 };
