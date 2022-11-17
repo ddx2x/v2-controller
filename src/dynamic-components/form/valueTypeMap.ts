@@ -1,5 +1,6 @@
 import type { ProRenderFieldPropsType } from '@ant-design/pro-components';
 
+// 自定义组件 注册
 class ValueTypeMapStore {
   stores: Record<string, ProRenderFieldPropsType> = {};
 
