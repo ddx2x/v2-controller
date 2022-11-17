@@ -1,9 +1,10 @@
-import type { TableTemplate } from '@/dynamic-components';
-import { templateManager } from '@/dynamic-components';
+import type { View } from '@/dynamic-components';
+import { pageManager } from '@/dynamic-components';
 import { commdityStore } from './commdity.store';
 
 // 商品列表
-export const commdityListTable: TableTemplate = {
+export const commdityListTable: View = {
+  kind: 'table',
   columns: [
     {
       dataIndex: 'name',
@@ -37,13 +38,14 @@ export const commdityListTable: TableTemplate = {
   dataSource: commdityStore.items,
 };
 
-templateManager.register('commdity', {
-  template: { table: commdityListTable },
+pageManager.register('commdity', {
+  page: { view: [commdityListTable] },
   stores: [commdityStore],
 });
 
 // 商品标签
-export const commdityLabelTable: TableTemplate = {
+export const commdityLabelTable: View = {
+  kind: 'table',
   dataSource: [],
   columns: [
     {
@@ -57,4 +59,4 @@ export const commdityLabelTable: TableTemplate = {
   ],
 };
 
-templateManager.register('commdity-lable', { template: commdityLabelTable });
+pageManager.register('commdity.lable', { page: { view: [commdityLabelTable] } });

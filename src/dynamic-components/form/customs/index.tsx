@@ -1,13 +1,9 @@
 import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
-import { Form } from '../form';
+import { Form, FormProps } from '../form';
 import { card, CardProps } from './card';
 import { imageUpload, ImageUploadProps } from './image';
 import { editTable, EditTableProps, table, TableProps } from './table';
 import { videoUpload, VideoUploadProps } from './video';
-
-interface FormProps extends ProFieldFCRenderProps {
-  fieldProps?: FormProps;
-}
 
 export const form: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
@@ -34,6 +30,8 @@ declare module '@ant-design/pro-utils' {
     videoUpload: VideoUploadProps;
     table: TableProps;
     editTable: EditTableProps;
-    form: FormProps;
+    form: ProFieldFCRenderProps & {
+      fieldProps?: FormProps;
+    };
   }
-}
+};

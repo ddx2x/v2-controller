@@ -1,9 +1,10 @@
-import type { TableTemplate } from '@/dynamic-components';
-import { templateManager } from '@/dynamic-components';
+
+import { pageManager, View } from '@/dynamic-components';
 import { commdityStore } from './commdity.store';
 
 // 商品列表
-const productTable: TableTemplate = {
+const productTable: View = {
+  kind: 'table',
   columns: [
     {
       dataIndex: 'name',
@@ -38,7 +39,8 @@ const productTable: TableTemplate = {
 };
 
 // 商品标签
-const productLable: TableTemplate = {
+const productLable: View = {
+  kind: 'table',
   dataSource: [],
   columns: [
     {
@@ -52,5 +54,4 @@ const productLable: TableTemplate = {
   ],
 };
 
-templateManager.register('product.add', { template: [productTable, productLable] });
-templateManager.register('product.update', { template: productTable });
+pageManager.register('product.add', { page: { view: [productTable, productLable] } });

@@ -1,10 +1,5 @@
-import type {
-  StepFormTemplate
-} from '@/dynamic-components';
 import {
-  templateManager,
-  useForm,
-  valueTypeMapStore
+  pageManager, useForm, valueTypeMapStore, View
 } from '@/dynamic-components';
 
 import type { ProFormColumnsType, ProRenderFieldPropsType } from '@ant-design/pro-components';
@@ -228,12 +223,8 @@ const columns: ProFormColumnsType[][] = [
   [],
 ];
 
-export const commdityEdit: StepFormTemplate = {
-  pageContainer: {
-    header: {
-      title: '商品信息 编辑',
-    },
-  },
+export const commdityEdit: View = {
+  kind: 'table',
   steps: [
     { title: '基本信息' },
     { title: '交付设置' },
@@ -243,4 +234,13 @@ export const commdityEdit: StepFormTemplate = {
   columns: columns,
 };
 
-templateManager.register('commdity-edit', { template: { stepForm: commdityEdit} });
+pageManager.register('commdity.edit', {
+  page: {
+    view: [commdityEdit],
+    container: {
+      header: {
+        title: '商品信息 编辑',
+      },
+    }
+  },
+});

@@ -3,6 +3,7 @@ import { Form, FormProps } from './form';
 import { StepForm, StepFormProps } from './stepForm';
 import { valueTypeMapStore } from './valueTypeMap';
 
+export * from './customs';
 export * from './form';
 export * from './stepForm';
 export * from './valueTypeMap';

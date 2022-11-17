@@ -31,34 +31,13 @@ export default [
     component: './superset',
   },
   {
-    name: '商品列表',
-    path: '/commdity/table',
-    component: './dynamic-view',
-  },
-  {
     name: '商品列表2',
     path: '/product/add',
     component: './dynamic-view',
   },
   {
-    name: '商品列表3',
-    path: '/product/update',
-    component: './dynamic-view',
-  },
-
-  {
     name: '商品编辑',
-    path: '/commdity-edit/stepForm',
-    component: './dynamic-view',
-  },
-  {
-    name: '门店列表',
-    path: '/store/table',
-    component: './dynamic-view',
-  },
-  {
-    name: 'form test',
-    path: '/form-testing/form',
+    path: '/commdity/edit',
     component: './dynamic-view',
   },
 ];
