@@ -1,13 +1,10 @@
-import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
-import Form from '../form';
-import { card, CardProps } from './card';
-import { imageUpload, ImageUploadProps } from './image';
-import { editTable, EditTableProps, table, TableProps } from './table';
-import { videoUpload, VideoUploadProps } from './video';
+import { ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { Form } from '../form';
+import { card } from './card';
+import { imageUpload } from './image';
+import { editTable, table } from './table';
+import { videoUpload } from './video';
 
-interface FormProps extends ProFieldFCRenderProps {
-  fieldProps?: FormProps;
-}
 
 export const form: ProRenderFieldPropsType = {
   render: (text, props, dom) => {
@@ -27,13 +24,5 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
   form,
 };
 
-declare module '@ant-design/pro-utils' {
-  interface ProFieldValueTypeWithFieldProps {
-    card: CardProps;
-    imageUpload: ImageUploadProps;
-    videoUpload: VideoUploadProps;
-    table: TableProps;
-    editTable: EditTableProps;
-    form: FormProps;
-  }
-}
+
+export * from './typing.d';

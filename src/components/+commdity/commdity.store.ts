@@ -1,4 +1,4 @@
-import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
+import { IObject, ObjectApi, ObjectStore } from '@/client';
 import type { IWatchApi } from '@/client/event';
 import { DefaultWatchApi } from '@/client/event';
 
@@ -15,8 +15,6 @@ const commdityApi = new ObjectApi<Commdity>({
   url: '/api/v1/commdity',
   objectConstructor: Commdity,
 });
-
-export const watchApi = new ObjectWatchApi();
 
 class CommdityStore extends ObjectStore<Commdity> {
   watchApi: IWatchApi;

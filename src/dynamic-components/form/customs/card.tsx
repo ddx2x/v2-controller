@@ -1,6 +1,6 @@
 import { ProCard, ProCardProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
-import Form, { FormProps } from '..';
+import { Form, FormProps } from '../form';
 
 export interface CardProps extends ProFieldFCRenderProps {
   proFieldProps?: ProCardProps;

@@ -1,52 +1,46 @@
 import type { IObject, ObjectStore } from '@/client';
-import { observable } from 'mobx';
-import type {
-  DescriptionsTemplate,
-  FormTemplate,
-  ListTemplate,
-  StepFormTemplate,
-  TableTemplate
-} from '../typing';
+import { PageContainerProps } from '../container';
+import { DescriptionsProps } from '../descriptions';
+import { FormProps, StepFormProps } from '../form';
+import { ListProps } from '../list';
+import { TableProps } from '../table';
 
-export type Template =
-  | TableTemplate
-  | ListTemplate
-  | FormTemplate
-  | StepFormTemplate
-  | DescriptionsTemplate
-  | Template[];
+export declare type View =
+  { kind: 'table'; } & TableProps |
+  { kind: 'list'; } & ListProps |
+  { kind: 'form'; } & FormProps |
+  { kind: 'stepForm'; } & StepFormProps |
+  { kind: 'descriptions'; } & DescriptionsProps
 
-export interface TemplateResource<S extends ObjectStore<IObject>> {
-  template: Template;
+export declare type Page = { view: View[], container?: PageContainerProps }
+
+export declare type PageSchema<S extends ObjectStore<IObject>> = {
+  page: Page;
   stores?: S[];
 }
 
-export class TemplateManager<S extends ObjectStore<IObject>> {
-  private stores = observable.map<string, TemplateResource<S>>();
+export class PageManager<S extends ObjectStore<IObject>> {
+  private stores = new Map<string, PageSchema<S>>();
 
-  init(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
+  init(key: string) {
+    (this.stores.get(key)?.stores || []).map((store) => {
       store.next(10, '');
     });
   }
 
-  clear(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
-      store.reset()
+  clear(key: string) {
+    (this.stores.get(key)?.stores || []).map((store) => {
+      store.reset();
     });
   }
 
-  getLayoutTemplate(route: string) {
-    const template = this.stores.get(route)?.template;
-    if (Array.isArray(template)) {
-      return template
-    }
-    return [template]
+  page(key: string): Page | undefined {
+    return this.stores.get(key)?.page;
   }
 
-  register(route: string, resource: TemplateResource<S>) {
-    this.stores.set(route, resource);
+  register(key: string, schema: PageSchema<S>) {
+    this.stores.set(key, schema);
   }
 }
 
-export const templateManager = new TemplateManager();
+export const pageManager = new PageManager();

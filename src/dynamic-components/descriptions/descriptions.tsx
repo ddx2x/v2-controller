@@ -117,8 +117,6 @@ Descriptions.defaultProps = {
   column: 1,
 };
 
-export default Descriptions;
-
 export const useDescriptions = (props: DescriptionsProps) => {
   return [<Descriptions {...props} />];
 };

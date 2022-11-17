@@ -84,7 +84,7 @@ export function ListView<RecordType>(props: ListViewProps<RecordType>) {
   const [mergedPagination] = usePagination(
     dataSource.length,
     { responsive: true, ...pagination } as any,
-    () => { },
+    () => {},
   );
   /** 根据分页来返回不同的数据，模拟 table */
   const pageData = React.useMemo<RecordType[]>(() => {
@@ -232,13 +232,13 @@ export function ListView<RecordType>(props: ListViewProps<RecordType>) {
               cardProps={
                 rest.grid
                   ? {
-                    ...itemCardProps,
-                    ...rest.grid,
-                    checked: isChecked,
-                    onChecked: React.isValidElement(checkboxDom)
-                      ? (checkboxDom?.props as any)?.onChange
-                      : undefined,
-                  }
+                      ...itemCardProps,
+                      ...rest.grid,
+                      checked: isChecked,
+                      onChecked: React.isValidElement(checkboxDom)
+                        ? (checkboxDom?.props as any)?.onChange
+                        : undefined,
+                    }
                   : undefined
               }
               {...listItemProps}

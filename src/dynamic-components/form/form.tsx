@@ -4,7 +4,6 @@ import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-// import { FormColumnsType } from '.';
 import { waitTime } from './tools';
 import { valueTypeMapStore } from './valueTypeMap';
 
@@ -55,8 +54,6 @@ export const Form: React.FC<FormProps> = (props) => {
     </ProProvider.Provider>
   );
 };
-
-export default Form;
 
 Form.defaultProps = {
   title: '新建表单',
