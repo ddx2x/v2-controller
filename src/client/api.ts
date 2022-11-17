@@ -82,7 +82,6 @@ export class ObjectApi<T extends IObject = any> {
 
   getWatchUrl(query: IQuery = {}): string {
     return this.getUrl({
-      watch: 1,
       ...query,
     });
   }

@@ -1,6 +1,8 @@
 import { valueTypeMap } from './customs';
-import Form, { FormProps } from './form';
-import StepForm, { StepFormProps } from './stepForm';
+import type { FormProps } from './form';
+import Form from './form';
+import type { StepFormProps } from './stepForm';
+import StepForm from './stepForm';
 import { valueTypeMapStore } from './valueTypeMap';
 
 export * from './form';
