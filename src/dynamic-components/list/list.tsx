@@ -5,8 +5,8 @@ import { observer } from 'mobx-react';
 import type { ReactText } from 'react';
 import { useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
-import type { ExtraAction } from '../extensions/action';
-import { extraActionArray } from '../extensions/action';
+import type { ExtraAction } from '../#/action';
+import { extraActionArray } from '../#/action';
 import { ProList } from './proList';
 
 export type ListProps = ProListProps & {

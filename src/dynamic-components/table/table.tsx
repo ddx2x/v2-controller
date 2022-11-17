@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import { ExtraAction, extraActionArray } from '../extensions/action';
+import { ExtraAction, extraActionArray } from '../#/action';
 
 const defaulScrollHeight = 550;
 
@@ -103,10 +103,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
           headerTitle
             ? headerTitle
             : intl &&
-              intl.formatMessage({
-                id: 'pages.searchTable.title',
-                defaultMessage: 'Enquiry form',
-              })
+            intl.formatMessage({
+              id: 'pages.searchTable.title',
+              defaultMessage: 'Enquiry form',
+            })
         }
         search={{
           labelWidth: 'auto',
@@ -119,7 +119,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
         }
         onDataSourceChange={(dataSource) => console.log('dataSource', dataSource)}
         onSubmit={(params) => console.log('onSubmit', params)}
-        onReset={() => {}}
+        onReset={() => { }}
         // request={async (params, sorter, filter) => {
         //   console.info('params, sorter, filter', params, sorter, filter, actionRef);
         //   return Promise.resolve({
