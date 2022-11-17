@@ -1,5 +1,5 @@
 import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
-import Form from '../form';
+import { Form } from '../form';
 import { card, CardProps } from './card';
 import { imageUpload, ImageUploadProps } from './image';
 import { editTable, EditTableProps, table, TableProps } from './table';

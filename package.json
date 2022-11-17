@@ -41,6 +41,7 @@
     "react-dev-inspector": "^1.7.0",
     "react-dom": "^17.0.0",
     "react-helmet-async": "^1.2.0",
+    "reflect-metadata": "^0.1.13",
     "umi-plugin-keep-alive": "^0.0.1-beta.34",
     "video-react": "^0.15.0",
     "virtuallist-antd": "^0.7.4",
@@ -70,7 +71,7 @@
     "mockjs": "^1.1.0",
     "prettier": "^2.5.0",
     "swagger-ui-dist": "^4.12.0",
-    "typescript": "^5",
+    "typescript": "4.x",
     "umi-presets-pro": "^1.0.1",
     "umi-serve": "^1.9.10"
   },

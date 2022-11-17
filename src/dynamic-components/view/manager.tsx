@@ -1,11 +1,10 @@
 import type { IObject, ObjectStore } from '@/client';
-import { observable } from 'mobx';
 import type {
   DescriptionsTemplate,
   FormTemplate,
   ListTemplate,
   StepFormTemplate,
-  TableTemplate
+  TableTemplate,
 } from '../typing';
 
 export type Template =
@@ -14,7 +13,7 @@ export type Template =
   | FormTemplate
   | StepFormTemplate
   | DescriptionsTemplate
-  | Template[];
+  | TableTemplate[];
 
 export interface TemplateResource<S extends ObjectStore<IObject>> {
   template: Template;
@@ -22,30 +21,30 @@ export interface TemplateResource<S extends ObjectStore<IObject>> {
 }
 
 export class TemplateManager<S extends ObjectStore<IObject>> {
-  private stores = observable.map<string, TemplateResource<S>>();
+  private stores = new Map<string, TemplateResource<S>>();
 
-  init(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
+  init(key: string) {
+    (this.stores.get(key)?.stores || []).map((store) => {
       store.next(10, '');
     });
   }
 
-  clear(route: string) {
-    (this.stores.get(route)?.stores || []).map((store) => {
-      store.reset()
+  clear(key: string) {
+    (this.stores.get(key)?.stores || []).map((store) => {
+      store.reset();
     });
   }
 
-  getLayoutTemplate(route: string) {
-    const template = this.stores.get(route)?.template;
+  getLayoutTemplate(key: string): Template[] {
+    const template = this.stores.get(key)?.template;
     if (Array.isArray(template)) {
-      return template
+      return template;
     }
-    return [template]
+    return [template];
   }
 
-  register(route: string, resource: TemplateResource<S>) {
-    this.stores.set(route, resource);
+  register(key: string, template: TemplateResource<S>) {
+    this.stores.set(key, template);
   }
 }
 

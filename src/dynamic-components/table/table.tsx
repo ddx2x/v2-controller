@@ -148,5 +148,3 @@ Table.defaultProps = {
   columns: [],
   dataSource: [],
 };
-
-export default Table;

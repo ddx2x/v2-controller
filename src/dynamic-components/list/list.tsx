@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import type { ExtraAction } from '../extensions/action';
 import { extraActionArray } from '../extensions/action';
-import ProList from './proList';
+import { ProList } from './proList';
 
 export type ListProps = ProListProps & {
   virtualList?: boolean;
@@ -90,5 +90,3 @@ List.defaultProps = {
   dataSource: [],
   metas: {},
 };
-
-export default List;

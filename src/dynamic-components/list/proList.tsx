@@ -208,5 +208,3 @@ export function ProList<
 ProList.defaultProps = {
   virtualList: true,
 };
-
-export default ProList;

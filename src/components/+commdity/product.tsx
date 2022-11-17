@@ -3,8 +3,7 @@ import { templateManager } from '@/dynamic-components';
 import { commdityStore } from './commdity.store';
 
 // 商品列表
-export const productTable: TableTemplate = {
-  kind: "Table",
+const productTable: TableTemplate = {
   columns: [
     {
       dataIndex: 'name',
@@ -39,8 +38,7 @@ export const productTable: TableTemplate = {
 };
 
 // 商品标签
-export const productLable: TableTemplate = {
-  kind: "Table",
+const productLable: TableTemplate = {
   dataSource: [],
   columns: [
     {
@@ -56,5 +54,3 @@ export const productLable: TableTemplate = {
 
 templateManager.register('product.add', { template: [productTable, productLable] });
 templateManager.register('product.update', { template: productTable });
-
-// register("/commdity","view", {template: [table,list,serche]})

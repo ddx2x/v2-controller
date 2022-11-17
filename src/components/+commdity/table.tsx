@@ -58,5 +58,3 @@ export const commdityLabelTable: TableTemplate = {
 };
 
 templateManager.register('commdity-lable', { template: commdityLabelTable });
-
-// register("/commdity","view", {template: [table,list,serche]})

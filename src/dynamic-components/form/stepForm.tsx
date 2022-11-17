@@ -30,7 +30,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
   const showModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const triggerDom = () => {
     return (
       <Button type={triggerButtonType} onClick={showModal}>
@@ -142,4 +142,4 @@ StepForm.defaultProps = {
   width: '50%',
 };
 
-export default StepForm;
+

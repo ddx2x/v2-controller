@@ -7,15 +7,15 @@ import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from './$';
 
 export interface ImageUploadProps extends ProFieldFCRenderProps {
-  fieldProps?: UploadProps & {
+  fieldProps: UploadProps & {
     buttonText?: string;
     maxNumber?: number | null;
   };
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = (props: any) => {
-  const { fieldProps } = props;
-  const { buttonText, name, listType, maxNumber, value, onChange, ...uploadProps } = fieldProps;
+const ImageUpload: React.FC<ImageUploadProps> = (props) => {
+  const { value, onChange, fieldProps } = props;
+  const { buttonText, name, listType, maxNumber,  ...uploadProps } = fieldProps;
 
   const fileList = value?.fileList || [];
 
@@ -40,7 +40,7 @@ const ImageUpload: React.FC<ImageUploadProps> = (props: any) => {
     fileList
       .filter((item) => item.uid == info.file.uid)
       .map((item) => (item.url = '/media/file/' + item.name));
-    onChange({ fileList: fileList });
+    onChange && onChange({ fileList: fileList });
   };
 
   // 按钮

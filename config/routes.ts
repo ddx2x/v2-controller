@@ -45,10 +45,10 @@ export default [
     path: '/product/update',
     component: './dynamic-view',
   },
-  
+
   {
     name: '商品编辑',
-    path: '/commdity-edit/step-form',
+    path: '/commdity-edit/stepForm',
     component: './dynamic-view',
   },
   {
