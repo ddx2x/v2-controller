@@ -18,7 +18,7 @@ export declare type Store = {
   store: ObjectStore<IObject>;
   query?: Query;
   load: (query?: Query) => Promise<void>;
-  watch?: () => Promise<void>;
+  watch?: () => void;
   exit: () => void;
 }
 
@@ -32,9 +32,10 @@ export class PageManager<S extends Store> {
 
   init = (key: string) => {
     (this.stores.get(key)?.stores || []).map(async (store) => {
-      store.load && store.load(store.query).then(async () => {
-        if (store.watch) store.watch()
-      })
+      store.load && store.load(store.query).
+        then(() => {
+          if (store.watch) store.watch()
+        })
     });
   }
 

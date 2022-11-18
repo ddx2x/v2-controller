@@ -23,6 +23,10 @@ export default {
       target: 'http://127.0.0.1:3000',
       changeOrigin: true,
     },
+    '/watch/**': {
+      target: 'http://127.0.0.1:3000',
+      changeOrigin: true,
+    },
     '/superset/': {
       target: 'http://10.200.100.200:8088',
       // changeOrigin: true,

@@ -61,7 +61,8 @@ pageManager.register('product.add', {
     {
       store: commdityStore,
       query: { limit: 0 },
-      load: commdityStore.next,
+      load: commdityStore.load,
+      watch: commdityStore.watch,
       exit: commdityStore.reset,
     },
   ],

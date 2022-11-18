@@ -2,7 +2,7 @@
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import type { ObjectApi, Query } from './api';
-import type { IObjectWatchEvent, IWatchApi, Noop } from './event';
+import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
 import { autobind } from './utils/bind';
@@ -12,7 +12,7 @@ type ModifyIObject<T extends IObject> = (obj: T) => void;
 @autobind()
 export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract api: ObjectApi<T>;
-  abstract watchApi: IWatchApi;
+  abstract watchApi: WatchApi<T, ObjectStore<T>>;
 
   public limit: number = -1;
   public version: number = 0;
@@ -34,10 +34,12 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   watch = (): void => {
+    console.log("start watch")
     if (!this.watchApi) return;
     this.bindWatchEventsUpdater();
     this.defers.push(this.watchApi.addListener(this, this.onWatchApiEvent));
-    this.defers.push(this.watchApi.subscribe(this.api));
+    this.defers.push(this.watchApi.subscribe(this));
+    console.log("start watch2")
   };
 
   @action reset = (): void => {
@@ -97,7 +99,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable<IObjectWatchEvent<IObject>>([], {
+  protected eventsBuffer = observable<ObjectWatchEvent<T>>([], {
     deep: false,
   });
 
@@ -107,7 +109,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     });
   }
 
-  protected onWatchApiEvent = (evt: IObjectWatchEvent): void => {
+  protected onWatchApiEvent = (evt: ObjectWatchEvent<T>): void => {
     if (!this.isLoaded) return;
     const { store } = evt;
     if (!store) {

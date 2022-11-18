@@ -28,9 +28,9 @@ export const errorConfig: RequestConfig = {
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
     // 错误抛出
-    errorThrower: (res) => {},
+    errorThrower: (res) => { },
     // 错误接收及处理
-    errorHandler: (error: any, opts: any) => {},
+    errorHandler: (error: any, opts: any) => { },
   },
 
   // 请求拦截器
@@ -43,7 +43,7 @@ export const errorConfig: RequestConfig = {
 
   // 响应拦截器
   responseInterceptors: [
-    (response) => {    
+    (response) => {
       process.env.NODE_ENV === 'development' && writeLog(response);
       // 拦截响应数据，进行个性化处理
       return response;

@@ -85,10 +85,14 @@ export class ObjectApi<T extends IObject = any> {
 
   public objectConstructor: IObjectConstructor<T>;
 
-  getWatchUrl(query: Query = {}): string {
-    return this.getUrl({
-      ...query,
+  getWatchUrl(version: number): string {
+    const { apiPrefix, apiVersion, apiResource } = this;
+    const resourcePath = ObjectApi.createLink({
+      apiPrefix,
+      apiVersion,
+      apiResource,
     });
+    return stringify({ item: '/' + resourcePath + '/' + version })
   }
 
   private parseResponse = (data: ObjectData | ObjectDataList[]): any => {

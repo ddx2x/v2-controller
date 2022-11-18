@@ -3,7 +3,7 @@ import { computed, observable, reaction } from 'mobx';
 import type { IMessageEvent } from 'websocket';
 import { w3cwebsocket as WebSocket } from 'websocket';
 import { ObjectApi } from './api';
-import type { EventHandle, IObjectWatchEvent, IObjectWatchRouteEvent } from './event';
+import type { EventHandle, ObjectWatchEvent, ObjectWatchRouteEvent } from './event';
 import type { IObject, ObjectStore } from './index';
 import { apiManager } from './manager';
 import { autobind, EventEmitter } from './utils';
@@ -11,7 +11,7 @@ import { autobind, EventEmitter } from './utils';
 @autobind()
 export class ObjectWebSockApi {
   protected socket: WebSocket | undefined;
-  protected onData = new EventEmitter<[IObjectWatchEvent]>();
+  protected onData = new EventEmitter<[ObjectWatchEvent]>();
   protected subscribers = observable.map<ObjectApi, number>();
   protected reconnectTimeoutMs = 500;
   protected maxReconnectsOnError = 10;
@@ -141,8 +141,8 @@ export class ObjectWebSockApi {
     }
 
     const data = JSON.parse(evt.data);
-    if ((data as IObjectWatchEvent).object) {
-      const kind = (data as IObjectWatchEvent).object.kind;
+    if ((data as ObjectWatchEvent).object) {
+      const kind = (data as ObjectWatchEvent).object.kind;
       this.onData.nemit(kind, data);
       return;
     }
@@ -153,7 +153,7 @@ export class ObjectWebSockApi {
     }
   }
 
-  protected async onRouteEvent({ type, url }: IObjectWatchRouteEvent) {
+  protected async onRouteEvent({ type, url }: ObjectWatchRouteEvent) {
     if (type === 'STREAM_END') {
       this.disconnect();
       const { apiBase } = ObjectApi.parseApi(url);
@@ -190,7 +190,7 @@ export class ObjectWebSockApi {
   }
 
   addListener = <T extends ObjectStore<IObject>>(store: T, ecb: EventHandle) => {
-    const listener = (evt: IObjectWatchEvent<IObject>) => {
+    const listener = (evt: ObjectWatchEvent<IObject>) => {
       if (!evt.object) {
         return;
       }

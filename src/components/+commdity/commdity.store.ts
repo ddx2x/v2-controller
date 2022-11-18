@@ -1,6 +1,5 @@
-import { IObject, ObjectApi, ObjectStore } from '@/client';
-import type { IWatchApi } from '@/client/event';
-import { DefaultWatchApi } from '@/client/event';
+import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
+import type { WatchApi } from '@/client/event';
 
 class Commdity extends IObject {
   name?: string = '';
@@ -18,13 +17,14 @@ const commdityApi = new ObjectApi<Commdity>({
 });
 
 class CommdityStore extends ObjectStore<Commdity> {
-  watchApi: IWatchApi;
+  watchApi: WatchApi<Commdity, CommdityStore>;
   api: ObjectApi<Commdity>;
-  constructor(api: ObjectApi<Commdity>, watchApi: IWatchApi) {
+  constructor(api: ObjectApi<Commdity>, watchApi: WatchApi<Commdity, CommdityStore>) {
     super();
     this.api = api;
     this.watchApi = watchApi;
   }
 }
 
-export const commdityStore = new CommdityStore(commdityApi, new DefaultWatchApi());
+export const productWatchApi = new ObjectWatchApi();
+export const commdityStore = new CommdityStore(commdityApi, productWatchApi);
