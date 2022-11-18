@@ -1,5 +1,5 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { ProFieldFCRenderProps, ProRenderFieldPropsType } from '@ant-design/pro-components';
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ export interface VideoUploadProps extends ProFieldFCRenderProps {
   buttonText?: string;
 }
 
-const VideoUpload: React.FC<VideoUploadProps> = (props) => {
+export const videoUpload: React.FC<VideoUploadProps> = (props) => {
   const { maxNumber, buttonText, value, onChange, fieldProps } = props;
   const { name, listType, action } = fieldProps;
 
@@ -75,11 +75,3 @@ const VideoUpload: React.FC<VideoUploadProps> = (props) => {
   );
 };
 
-export const videoUpload: ProRenderFieldPropsType = {
-  render: (text, props, dom) => {
-    return <VideoUpload {...props} fieldProps={props.fieldProps} />;
-  },
-  renderFormItem: (text, props, dom) => {
-    return <VideoUpload {...props} fieldProps={props.fieldProps} />;
-  },
-};
