@@ -3,6 +3,7 @@ import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -22,7 +23,7 @@ export type TableProps = ProTableProps<any, any> & {
   toolBarExtraRender?: ExtraAction[];
 };
 
-export const Table: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableProps> = observer((props) => {
   const {
     virtualList,
     dataSource,
@@ -95,8 +96,6 @@ export const Table: React.FC<TableProps> = (props) => {
     );
   };
 
-  console.log('items', commdityStore.items);
-
   return (
     <>
       <ProTable
@@ -113,7 +112,7 @@ export const Table: React.FC<TableProps> = (props) => {
           labelWidth: 'auto',
         }}
         actionRef={actionRef}
-        dataSource={commdityStore.items}
+        dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
@@ -133,7 +132,7 @@ export const Table: React.FC<TableProps> = (props) => {
       {footer()}
     </>
   );
-};
+});
 
 Table.defaultProps = {
   type: 'list',

@@ -6,6 +6,7 @@ import { commdityStore } from './commdity.store';
 // 商品列表
 const productTable: View = {
   kind: 'table',
+  rowKey: "uid",
   columns: [
     {
       dataIndex: 'name',
@@ -15,26 +16,6 @@ const productTable: View = {
       dataIndex: 'price',
       title: '价格',
     },
-    {
-      dataIndex: 'actualSales',
-      title: '实际销量',
-    },
-    {
-      dataIndex: 'salesChannels',
-      title: '销售渠道',
-    },
-    {
-      dataIndex: 'creationTime',
-      title: '创建时间',
-    },
-    {
-      dataIndex: 'availableStatus',
-      title: '可售状态',
-    },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-    },
   ],
   dataSource: commdityStore.items,
 };
@@ -42,7 +23,8 @@ const productTable: View = {
 // 商品标签
 const productLable: View = {
   kind: 'table',
-  dataSource: [],
+  dataSource: commdityStore.items,
+  rowKey: "uid",
   columns: [
     {
       dataIndex: 'name',

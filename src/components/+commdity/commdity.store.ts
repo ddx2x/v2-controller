@@ -3,12 +3,9 @@ import type { IWatchApi } from '@/client/event';
 import { DefaultWatchApi } from '@/client/event';
 
 class Commdity extends IObject {
-  name?: string = '';
-  price?: number = 0;
-  actualSales?: number = 0;
-  salesChannels?: number = 0;
-  creationTime?: string = '';
-  availableStatus?: boolean = false;
+  name?: string;
+  title?: string;
+  brand_name?: string;
 }
 
 const commdityApi = new ObjectApi<Commdity>({
