@@ -1,6 +1,7 @@
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
+import { randomKey } from '../#';
 import { PageContainer } from '../container';
 import type { DescriptionsProps } from '../descriptions';
 import { Descriptions } from '../descriptions';
@@ -25,7 +26,7 @@ export default observer(() => {
 
   const intl = useIntl(); // 国际化组件
 
-  useEffect(() =>  {
+  useEffect(() => {
     pageManager.init(routeKey); // 挂载 stores
     return () => pageManager.clear(routeKey); // 清除stores
   });
@@ -35,6 +36,8 @@ export default observer(() => {
       <>
         {schema?.view && schema.view.map((config: View) => {
           const { kind, ...props } = config;
+          props['key'] = randomKey(8, { numbers: false })
+
           switch (kind) {
             case 'table':
               return <Table {...props as TableProps} intl={intl} />;
@@ -47,6 +50,7 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
+          
         })}
       </>
     );

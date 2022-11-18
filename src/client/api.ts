@@ -108,7 +108,7 @@ export class ObjectApi<T extends IObject = any> {
       return data.map((item) => {
         const { version } = item;
         if (this.version < version) this.version = version;
-        new this.objectConstructor({ ...item });
+        return new this.objectConstructor({ ...item })
       });
     }
 

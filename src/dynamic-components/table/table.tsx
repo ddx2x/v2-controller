@@ -3,6 +3,8 @@ import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -11,7 +13,8 @@ import { extraActionArray } from '../#/action';
 
 const defaulScrollHeight = 550;
 
-export type TableProps = ProTableProps<any, any> & {
+export type TableProps = Omit<ProTableProps<any, any>, 'dataSource'> & {
+  dataSource?: any
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
@@ -22,7 +25,7 @@ export type TableProps = ProTableProps<any, any> & {
   toolBarExtraRender?: ExtraAction[];
 };
 
-export const Table: React.FC<TableProps> = (props) => {
+export const Table: React.FC<TableProps> = observer((props) => {
   const {
     virtualList,
     dataSource,
@@ -95,7 +98,9 @@ export const Table: React.FC<TableProps> = (props) => {
     );
   };
 
-  console.log('items', commdityStore.items);
+
+  const data = computed(() => dataSource()).get()
+  console.log(data);
 
   return (
     <>
@@ -113,8 +118,8 @@ export const Table: React.FC<TableProps> = (props) => {
           labelWidth: 'auto',
         }}
         actionRef={actionRef}
-        dataSource={commdityStore.items}
-        rowSelection={dataSource ? rowSelection : false}
+        dataSource={data}
+        // rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
@@ -133,7 +138,7 @@ export const Table: React.FC<TableProps> = (props) => {
       {footer()}
     </>
   );
-};
+});
 
 Table.defaultProps = {
   type: 'list',
@@ -142,10 +147,10 @@ Table.defaultProps = {
     type: 'multiple',
   },
   cardBordered: true,
-  rowKey: 'key',
+  rowKey: 'uid',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },
   columns: [],
-  dataSource: [],
+  // dataSource: [],
 };
