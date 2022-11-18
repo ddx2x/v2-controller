@@ -3,6 +3,7 @@ import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -12,7 +13,8 @@ import { extraActionArray } from '../#/action';
 
 const defaulScrollHeight = 550;
 
-export type TableProps = ProTableProps<any, any> & {
+export type TableProps = Omit<ProTableProps<any, any>, 'dataSource'> & {
+  dataSource?: any
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
@@ -96,6 +98,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+
+  const data = computed(() => dataSource()).get()
+  console.log(data);
+
   return (
     <>
       <ProTable
@@ -112,8 +118,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
           labelWidth: 'auto',
         }}
         actionRef={actionRef}
-        dataSource={dataSource}
-        rowSelection={dataSource ? rowSelection : false}
+        dataSource={data}
+        // rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
@@ -141,10 +147,10 @@ Table.defaultProps = {
     type: 'multiple',
   },
   cardBordered: true,
-  rowKey: 'key',
+  rowKey: 'uid',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },
   columns: [],
-  dataSource: [],
+  // dataSource: [],
 };

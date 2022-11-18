@@ -58,6 +58,8 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     }
     const q = this.querys(this.ctx);
     this.api.list(q).then((items) => {
+      console.log('api', items);
+
       this.data.push(...items);
       this.isLoaded = true;
       this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
