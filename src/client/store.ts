@@ -34,12 +34,10 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   watch = (): void => {
-    console.log("start watch")
     if (!this.watchApi) return;
     this.bindWatchEventsUpdater();
     this.defers.push(this.watchApi.addListener(this, this.onWatchApiEvent));
     this.defers.push(this.watchApi.subscribe(this));
-    console.log("start watch2")
   };
 
   @action reset = (): void => {
@@ -55,17 +53,15 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     const { per_page, sort, limit } = !query ? { per_page: 0, sort: '""', limit: -1 } : query;
     this.limit = limit;
 
-    if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) {
-      this.reset();
-    }
-    const q = this.querys(this.ctx);
-    this.api.list(q).then((items) => {
-      console.log('api', items);
+    if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) this.reset();
 
-      this.data.push(...items);
-      this.isLoaded = true;
-      this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
-    });
+    const q = this.querys(this.ctx);
+    this.api.list(q).
+      then((items) => {
+        this.data.push(...items);
+        this.isLoaded = true;
+        this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
+      });
   };
 
   @action load = async (query?: Query) => {
@@ -101,25 +97,23 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable<ObjectWatchEvent<T>>([], {
-    deep: false,
-  });
+  protected eventsBuffer = observable<ObjectWatchEvent<T>>([], { deep: false });
 
-  protected bindWatchEventsUpdater(delay = 1000) {
-    return reaction(() => this.eventsBuffer.slice()[0], this.updateFromEventsBuffer, {
-      delay: delay,
-    });
+  protected bindWatchEventsUpdater = (delay = 1000) => {
+    return reaction(() =>
+      this.eventsBuffer.slice()[0],
+      this.updateFromEventsBuffer,
+      {
+        delay: delay,
+      },
+    );
   }
 
-  protected onWatchApiEvent = (evt: ObjectWatchEvent<T>): void => {
+  protected onWatchApiEvent = <T extends IObject>(evt: ObjectWatchEvent<T>): void => {
     if (!this.isLoaded) return;
     const { store } = evt;
-    if (!store) {
-      return;
-    }
-    if (store.api.apiResource !== this.api.apiResource) {
-      throw new Error('type not supported push');
-    }
+    if (!store) return;
+    if (store.api.apiResource !== this.api.apiResource) throw new Error('type not supported push');
     store.eventsBuffer.push(evt);
   };
 
@@ -129,15 +123,11 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action
   protected updateFromEventsBuffer() {
-    if (!this.eventsBuffer.length) {
-      return;
-    }
+    if (!this.eventsBuffer.length) return;
     // create latest non-observable copy of items to apply updates in one action (==single render)
     let items = this.data.slice();
     this.eventsBuffer.clear().forEach(({ type, object }) => {
-      if (!object) {
-        return;
-      }
+      if (!object) return;
       const { uid } = object;
       const index = items.findIndex((item) => item.uid === uid);
       const item = items[index];

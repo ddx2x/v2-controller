@@ -94,18 +94,21 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
     this.evtSource.onmessage = null;
   }
 
-  protected onMessage(evt: MessageEvent) {
+  protected onMessage = (evt: MessageEvent) => {
     if (!evt.data) return;
     if (!this.onData) return;
+
     const data = JSON.parse(evt.data);
     if ((data as ObjectWatchEvent<T>).object) {
       const object = (data as ObjectWatchEvent<T>).object;
       this.onData.nemit(object?.kind || "", data);
-    } else {
-      if (typeof this.onRouteEvent === 'function') {
-        this.onRouteEvent(data);
-      }
+      return;
     }
+
+    if (typeof this.onRouteEvent === 'function') {
+      this.onRouteEvent(data);
+    }
+
   }
 
   protected onRouteEvent = async ({ type, url }: ObjectWatchRouteEvent) => {
