@@ -1,2 +1,3 @@
 export * from '../components';
-export { default } from '../dynamic-components/view';
+export { default } from '../dynamic-view';
+

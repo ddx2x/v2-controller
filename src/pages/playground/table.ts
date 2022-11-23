@@ -1,2 +1,2 @@
-import { tablePlayGround } from '../../dynamic-components/playground'
+import { tablePlayGround } from '../../dynamic-playground'
 export default tablePlayGround

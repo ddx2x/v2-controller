@@ -7,7 +7,8 @@ import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export declare type FormProps = FormSchema & {
+export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
+  layoutType?: FormSchema['layoutType'];
   triggerText?: string;
   triggerButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
@@ -40,6 +41,8 @@ export const Form: React.FC<FormProps> = (props) => {
       }}
     >
       <BetaSchemaForm
+        // @ts-ignore
+        form={form}
         // @ts-ignore
         trigger={<Button type={triggerButtonType}>{triggerText}</Button>}
         autoFocusFirstInput

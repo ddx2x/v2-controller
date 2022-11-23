@@ -1,6 +1,5 @@
 
-import { pageManager } from '@/dynamic-components';
-import { View } from '@/dynamic-components/view/typing';
+import { pageManager, View } from '@/dynamic-view';
 import { commdityStore } from './commdity.store';
 
 // 商品列表

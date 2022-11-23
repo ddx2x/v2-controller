@@ -3,7 +3,6 @@ import { Table, TableColumnsType } from 'antd';
 import { ExpandableConfig } from 'antd/lib/table/interface';
 
 // 树型展示 https://ant.design/components/table-cn/#components-table-demo-tree-data
-
 // 表格 table
 
 interface ExpandedRowTableProps {

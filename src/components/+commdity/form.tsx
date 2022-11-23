@@ -1,6 +1,5 @@
-import {
-  pageManager, useForm, valueTypeMapStore, View
-} from '@/dynamic-components';
+import { useForm, valueTypeMapStore } from '@/dynamic-components';
+import { pageManager, View } from '@/dynamic-view';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 
 
@@ -14,7 +13,7 @@ const videoModule: React.FC<ProFieldFCRenderProps> = (props) => {
     columns: [
       {
         title: '标题',
-        valueType: 'text',
+        valueType: 'videoModule',
         fieldProps: {
           showCount: true,
           maxLength: 20,

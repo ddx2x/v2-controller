@@ -1,21 +1,20 @@
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
-import { PageContainer } from '../container';
-import type { DescriptionsProps } from '../descriptions';
-import { Descriptions } from '../descriptions';
-import type { FormProps, StepFormProps } from '../form';
-import { Form, StepForm } from '../form';
-import { randomKey } from '../helper';
-import type { ListProps } from '../list';
-import { List } from '../list';
-import type { TableProps } from '../table';
-import { Table } from '../table';
+import { PageContainer } from '../dynamic-components/container';
+import type { DescriptionsProps } from '../dynamic-components/descriptions';
+import { Descriptions } from '../dynamic-components/descriptions';
+import type { FormProps, StepFormProps } from '../dynamic-components/form';
+import { Form, StepForm } from '../dynamic-components/form';
+import { randomKey } from '../dynamic-components/helper';
+import type { ListProps } from '../dynamic-components/list';
+import { List } from '../dynamic-components/list';
+import type { TableProps } from '../dynamic-components/table';
+import { Table } from '../dynamic-components/table';
 import { pageManager } from './manager';
 import { View } from './typing';
 
 export default observer(() => {
-
   const routeKey = useLocation()
     .pathname.split('/')
     .filter((item) => item)
@@ -25,7 +24,6 @@ export default observer(() => {
   if (!schema) return null;
 
   const intl = useIntl(); // 国际化组件
-
   useEffect(() => {
     pageManager.init(routeKey); // 挂载 stores
     return () => pageManager.clear(routeKey); // 清除stores
@@ -50,7 +48,6 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
-
         })}
       </>
     );

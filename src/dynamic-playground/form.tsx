@@ -2,8 +2,8 @@ import { Space } from 'antd';
 import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { DndProvider, DragSourceMonitor, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useCard } from '../#';
-import { ProFieldValueTypeKeys, useForm, valueTypeMapStore } from '../form';
+import { useCard } from '../dynamic-components/#';
+import { ProFieldValueTypeKeys, useForm, valueTypeMapStore } from '../dynamic-components/form';
 
 export const Colors = {
   YELLOW: 'yellow',
@@ -104,8 +104,8 @@ export const formPlayGround = () => {
                 valueType: 'select',
                 valueEnum:
                   ProFieldValueTypeKeys
-                  .concat(Object.keys(valueTypeMapStore.stores))
-                  .reduce((a, v) => ({ ...a, [v]: v }), {}),
+                    .concat(Object.keys(valueTypeMapStore.stores))
+                    .reduce((a, v) => ({ ...a, [v]: v }), {}),
                 fieldProps: { showSearch: true, }
               },
               {

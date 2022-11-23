@@ -16,9 +16,7 @@ export const cardField: React.FC<CardFieldProps> = (props) => {
     submitter: false,
     layoutType: 'Form',
     initialValues: value || {},
-    onValuesChange: (changedValues, values) => {
-      onChange && onChange({ ...values })
-    },
+    onValuesChange: (_: any, values: any) => onChange && onChange({ ...values }),
     ...rest
   })
 

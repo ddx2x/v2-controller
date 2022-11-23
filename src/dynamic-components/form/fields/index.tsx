@@ -1,12 +1,25 @@
 
 import { Table } from '@/dynamic-components/table';
 import { EditableProTable } from '@ant-design/pro-components';
-import { Form } from '../form';
+import { TableProps } from '../../table';
+import { Form, FormProps } from '../form';
 import { valueTypeMapStore } from '../valueTypeMap';
-import { cardField } from './card';
-import { imageUploadField } from './imageUpload';
-import { monacoEditorField } from './monacoEditor';
-import { videoUploadField } from './videoUpload';
+import { cardField, CardFieldProps } from './card';
+import { imageUploadField, ImageUploadFieldProps } from './imageUpload';
+import { monacoEditorField, MonacoEditorFieldProps } from './monacoEditor';
+import { videoUploadField, VideoUploadFieldProps } from './videoUpload';
+
+declare module '@ant-design/pro-utils' {
+  interface ProFieldValueTypeWithFieldProps {
+    card: CardFieldProps;
+    imageUpload: ImageUploadFieldProps;
+    videoUpload: VideoUploadFieldProps;
+    monacoEditor: MonacoEditorFieldProps
+    table: TableProps;
+    // editTable: EditTableProps;
+    form: FormProps;
+  }
+};
 
 const valueTypeMap = {
   card: cardField,
@@ -20,4 +33,4 @@ const valueTypeMap = {
 
 valueTypeMapStore.registerValueType(valueTypeMap);
 
-export * from './typing.d';
+

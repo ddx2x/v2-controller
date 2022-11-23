@@ -26,11 +26,6 @@ export default [
   //   redirect: '/',
   // },
   {
-    name: 'superset',
-    path: '/superset',
-    component: './superset',
-  },
-  {
     name: '商品列表',
     path: '/product/add',
     component: './dynamic-view',
@@ -49,10 +44,5 @@ export default [
     name: 'form playground',
     path: '/form-playground',
     component: './playground/form'
-  },
-  {
-    name: 'editor',
-    path: '/editor',
-    component: './editor'
   }
 ];
