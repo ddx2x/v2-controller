@@ -4,7 +4,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { dndType, isObject, useStore } from '../utils';
 import './wrapper.less';
 
-
 export const DndWrapper = (props: any) => {
 
   const { $id, item, inside = false, children } = props
