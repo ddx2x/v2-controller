@@ -15,7 +15,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   triggerText?: string;
   triggerButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
+  onFinish?: (form: FormInstance<unknown> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
 };
 

@@ -21,28 +21,18 @@ export default [
     layout: false,
     component: './login',
   },
-  // {
-  //   path: '/',
-  //   redirect: '/',
-  // },
+  {
+    path: '/',
+    redirect: '/',
+  },
   {
     name: '商品列表',
     path: '/product/add',
     component: './dynamic-view',
   },
-  {
-    name: '商品编辑',
-    path: '/commdity/edit',
-    component: './dynamic-view',
-  },
   // {
-  //   name: 'table playground',
-  //   path: '/table-playground',
-  //   component: './playground/table'
+  //   name: '商品编辑',
+  //   path: '/commdity/edit',
+  //   component: './dynamic-view',
   // },
-  {
-    name: 'form playground',
-    path: '/form-playground',
-    component: './playground/form'
-  }
 ];
