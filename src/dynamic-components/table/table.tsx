@@ -1,20 +1,19 @@
-import { commdityStore } from '@/components/+commdity/commdity.store';
 import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
-import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import type { ExtraAction } from '../#/action';
-import { extraActionArray } from '../#/action';
+import type { ExtraAction } from '../#';
+import { extraActionArray } from '../#';
 
 const defaulScrollHeight = 550;
 
-export type TableProps = Omit<ProTableProps<any, any>, 'dataSource'> & {
-  dataSource?: any
+export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
+  loading?: Function | boolean
+  dataSource?: Function | any[]
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
@@ -28,6 +27,7 @@ export type TableProps = Omit<ProTableProps<any, any>, 'dataSource'> & {
 export const Table: React.FC<TableProps> = observer((props) => {
   const {
     virtualList,
+    loading,
     dataSource,
     onLoading,
     scrollHeight,
@@ -99,9 +99,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   };
 
 
-  const data = computed(() => dataSource()).get()
-  console.log(data);
-
   return (
     <>
       <ProTable
@@ -118,21 +115,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
           labelWidth: 'auto',
         }}
         actionRef={actionRef}
-        dataSource={data}
-        // rowSelection={dataSource ? rowSelection : false}
+        loading={typeof loading == 'function' ? loading() : loading}
+        dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
+        rowSelection={dataSource ? rowSelection : false}
         toolBarRender={
           toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
         }
-        onDataSourceChange={(dataSource) => console.log('dataSource', dataSource)}
-        onSubmit={(params) => console.log('onSubmit', params)}
-        onReset={() => { }}
-        // request={async (params, sorter, filter) => {
-        //   console.info('params, sorter, filter', params, sorter, filter, actionRef);
-        //   return Promise.resolve({
-        //     data: [],
-        //     success: false,
-        //   });
-        // }}
+        onReset={() => props.onSubmit && props.onSubmit({})}
         {...rest}
       />
       {footer()}
@@ -151,6 +140,6 @@ Table.defaultProps = {
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },
+  toolBarExtraRender: [],
   columns: [],
-  // dataSource: [],
 };

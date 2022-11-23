@@ -1,13 +1,16 @@
 import {
   pageManager, useForm, valueTypeMapStore, View
 } from '@/dynamic-components';
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 
-import type { ProRenderFieldPropsType } from '@ant-design/pro-components';
 
-const VideoModule: React.FC = (props) => {
+const videoModule: React.FC<ProFieldFCRenderProps> = (props) => {
+  const { fieldProps } = props
   const [form] = useForm({
     title: '新增视频',
     layoutType: 'ModalForm',
+    initialValues: fieldProps.value,
+    onValuesChange: (changedValues, values) => fieldProps.onChange && fieldProps.onChange(values),
     columns: [
       {
         title: '标题',
@@ -40,20 +43,11 @@ const VideoModule: React.FC = (props) => {
       },
     ],
   });
-  return form;
-};
 
-export const videoModule: ProRenderFieldPropsType = {
-  render: (text, props, dom) => {
-    return <VideoModule {...props} {...props.fieldProps} />;
-  },
-  renderFormItem: (text, props, dom) => {
-    return <VideoModule {...props} {...props.fieldProps} />;
-  },
+  return <>{form}</>;
 };
 
 valueTypeMapStore.registerValueType({ videoModule });
-
 
 export const commdityEdit: View = {
   kind: 'stepForm',

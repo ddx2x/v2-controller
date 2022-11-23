@@ -7,10 +7,10 @@ import Button from 'antd/lib/button';
 import React, { useContext, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 
-import { waitTime } from './tools';
+import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export type StepFormProps = {
+export declare type StepFormProps = FormSchema & {
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
@@ -18,7 +18,7 @@ export type StepFormProps = {
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
-} & Omit<FormSchema, 'layoutType'>;
+};
 
 export const StepForm: React.FC<StepFormProps> = (props) => {
   const [form] = AntdForm.useForm();
@@ -92,7 +92,6 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         }}
       >
         <BetaSchemaForm
-          // @ts-ignore
           form={form}
           autoFocusFirstInput
           layoutType="StepsForm"

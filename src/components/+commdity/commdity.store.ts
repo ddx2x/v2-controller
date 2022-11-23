@@ -5,8 +5,6 @@ class Commdity extends IObject {
   name?: string;
   title?: string;
   brand_name?: string;
-
-
   constructor(data: Commdity) {
     super(data);
     Object.assign(this, data);

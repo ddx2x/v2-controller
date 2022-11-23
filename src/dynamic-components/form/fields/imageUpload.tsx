@@ -1,21 +1,19 @@
 import { PlusOutlined } from '@ant-design/icons';
-import type { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
-import { getBase64, handleBeforeUpload } from './$';
+import { getBase64, handleBeforeUpload } from './utils';
 
-export type ImageUploadProps = ProFieldFCRenderProps & {
-  fieldProps?: UploadProps & {
-    buttonText?: string;
-    maxNumber?: number | null;
-  };
+export declare type ImageUploadFieldProps = UploadProps & {
+  maxNumber?: number;
+  buttonText?: string;
+  value?: any;
+  onChange?: ((...rest: any[]) => void) | undefined;
 }
 
-export const imageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { value, onChange, fieldProps } = props;
-  const { buttonText, name, listType, maxNumber, ...uploadProps } = fieldProps;
+export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
+  const { buttonText, name, listType, maxNumber, value, onChange, ...rest } = props;
 
   const fileList = value?.fileList || [];
 
@@ -63,7 +61,7 @@ export const imageUpload: React.FC<ImageUploadProps> = (props) => {
           beforeUpload={handleBeforeUpload}
           onPreview={onImagePreview}
           onChange={handleChange}
-          {...uploadProps}
+          {...rest}
         >
           {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
         </Upload>

@@ -1,21 +1,20 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
 import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video-react';
-import { getBase64, handleBeforeUpload } from './$';
+import { getBase64, handleBeforeUpload } from './utils';
 
-export interface VideoUploadProps extends ProFieldFCRenderProps {
-  fieldProps: UploadProps;
+export declare type VideoUploadFieldProps = UploadProps & {
   maxNumber?: number;
   buttonText?: string;
+  value?: any;
+  onChange?: ((...rest: any[]) => void) | undefined;
 }
 
-export const videoUpload: React.FC<VideoUploadProps> = (props) => {
-  const { maxNumber, buttonText, value, onChange, fieldProps } = props;
-  const { name, listType, action } = fieldProps;
+export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
 
+  const { maxNumber, buttonText, name, listType, action, value, onChange, ...rest } = props;
   const fileList = value?.fileList || [];
 
   // 图片预览
@@ -54,6 +53,7 @@ export const videoUpload: React.FC<VideoUploadProps> = (props) => {
         onPreview={onVideoPreview}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
+        {...rest}
       >
         {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
       </Upload>

@@ -1,31 +1,4 @@
-import type { IObject, ObjectStore, Query } from '@/client';
-import type { PageContainerProps } from '../container';
-import type { DescriptionsProps } from '../descriptions';
-import type { FormProps, StepFormProps } from '../form';
-import type { ListProps } from '../list';
-import type { TableProps } from '../table';
-
-export declare type View =
-  { kind: 'table'; } & TableProps |
-  { kind: 'list'; } & ListProps |
-  { kind: 'form'; } & FormProps |
-  { kind: 'stepForm'; } & StepFormProps |
-  { kind: 'descriptions'; } & DescriptionsProps
-
-export declare type Page = { view: View[], container?: PageContainerProps }
-
-export declare type Store = {
-  store: ObjectStore<IObject>;
-  query?: Query;
-  load: (query?: Query) => Promise<void>;
-  watch?: () => void;
-  exit: () => void;
-}
-
-export declare type PageSchema<S extends Store> = {
-  page: Page;
-  stores?: S[];
-}
+import { Page, PageSchema, Store } from './typing';
 
 export class PageManager<S extends Store> {
   private stores = new Map<string, PageSchema<S>>();

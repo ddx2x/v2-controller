@@ -1,18 +1,18 @@
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
-import { randomKey } from '../#';
 import { PageContainer } from '../container';
 import type { DescriptionsProps } from '../descriptions';
 import { Descriptions } from '../descriptions';
 import type { FormProps, StepFormProps } from '../form';
 import { Form, StepForm } from '../form';
+import { randomKey } from '../helper';
 import type { ListProps } from '../list';
 import { List } from '../list';
 import type { TableProps } from '../table';
 import { Table } from '../table';
-import type { View } from './manager';
 import { pageManager } from './manager';
+import { View } from './typing';
 
 export default observer(() => {
 
@@ -50,7 +50,7 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
-          
+
         })}
       </>
     );

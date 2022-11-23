@@ -1,5 +1,6 @@
-import type { View } from '@/dynamic-components';
+
 import { pageManager } from '@/dynamic-components';
+import { View } from '@/dynamic-components/view/typing';
 import { commdityStore } from './commdity.store';
 
 // 商品列表
@@ -35,13 +36,10 @@ export const commdityListTable: View = {
       title: '排序',
     },
   ],
-  dataSource: commdityStore.items,
+  dataSource: () => commdityStore.items,
+  onLoading: () => { commdityStore.next() },
 };
 
-// pageManager.register('commdity', {
-//   page: { view: [commdityListTable] },
-//   stores: [commdityStore],
-// });
 
 // 商品标签
 export const commdityLabelTable: View = {
@@ -50,10 +48,12 @@ export const commdityLabelTable: View = {
   columns: [
     {
       dataIndex: 'name',
+      valueType: 'text',
       title: '标签名称',
     },
     {
       dataIndex: 'numberOfProductLibraryAssociations',
+      valueType: 'text',
       title: '商品库关联数',
     },
   ],

@@ -1,15 +1,15 @@
 import {
   ProDescriptions,
   ProDescriptionsItemProps,
-  ProDescriptionsProps,
+  ProDescriptionsProps
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
-export interface DescriptionsItem extends ProDescriptionsItemProps {
-  value?: React.ReactNode | null | undefined;
+export declare type DescriptionsItem = ProDescriptionsItemProps & {
+  value?: any;
 }
 
 export const DescriptionsItems = (props: { items: DescriptionsItem[] | undefined }) => {
@@ -28,7 +28,7 @@ export const DescriptionsItems = (props: { items: DescriptionsItem[] | undefined
 
 // https://next-procomponents.ant.design/components/descriptions
 
-export interface DescriptionsProps extends ProDescriptionsProps {
+export declare type DescriptionsProps = ProDescriptionsProps & {
   modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
   trigger?: string | React.ReactNode;

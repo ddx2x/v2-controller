@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@@/*": ["./src/.umi/*"]
-    }
+    },
+    "plugins": [{ "transform": "ts-transformer-keys/transformer" }]
   },
   "include": [
     "mock/**/*",

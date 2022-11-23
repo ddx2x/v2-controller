@@ -40,4 +40,19 @@ export default [
     path: '/commdity/edit',
     component: './dynamic-view',
   },
+  // {
+  //   name: 'table playground',
+  //   path: '/table-playground',
+  //   component: './playground/table'
+  // },
+  {
+    name: 'form playground',
+    path: '/form-playground',
+    component: './playground/form'
+  },
+  {
+    name: 'editor',
+    path: '/editor',
+    component: './editor'
+  }
 ];

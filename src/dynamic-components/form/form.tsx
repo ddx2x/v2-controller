@@ -4,16 +4,16 @@ import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonType } from 'antd/lib/button';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-import { waitTime } from './tools';
+import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export type FormProps = {
+export declare type FormProps = FormSchema & {
   triggerText?: string;
   triggerButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
-} & FormSchema;
+}
 
 export const Form: React.FC<FormProps> = (props) => {
   const [form] = AntdForm.useForm();

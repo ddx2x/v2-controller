@@ -121,6 +121,10 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     return this.data.slice();
   }
 
+  @computed get loading() {
+    return this.isLoaded
+  }
+
   @action
   protected updateFromEventsBuffer() {
     if (!this.eventsBuffer.length) return;
