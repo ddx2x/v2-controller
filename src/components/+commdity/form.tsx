@@ -9,7 +9,7 @@ const videoModule: React.FC<ProFieldFCRenderProps> = (props) => {
     title: '新增视频',
     layoutType: 'ModalForm',
     initialValues: fieldProps.value,
-    onValuesChange: (changedValues, values) => fieldProps.onChange && fieldProps.onChange(values),
+    onValuesChange: (_: any, values: any) => fieldProps.onChange && fieldProps.onChange(values),
     columns: [
       {
         title: '标题',

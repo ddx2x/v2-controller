@@ -6,11 +6,10 @@ import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import React, { useContext, useState } from 'react';
 import type { IntlShape } from 'react-intl';
-
 import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export declare type StepFormProps = FormSchema & {
+export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
@@ -92,11 +91,13 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         }}
       >
         <BetaSchemaForm
+          // @ts-ignore
           form={form}
-          autoFocusFirstInput
-          layoutType="StepsForm"
           // @ts-ignore
           stepsFormRender={stepsFormRender}
+          autoFocusFirstInput
+          layoutType="StepsForm"
+
           onFinish={async (values) => {
             if (!onFinish) return false;
             await waitTime(submitTimeout);

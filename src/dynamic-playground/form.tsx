@@ -65,8 +65,8 @@ export const formPlayGround = () => {
 
   const [form,] = useForm({
     submitter: false,
-    onValuesChange: (changedValues, values) => {
-      console.log('changedValues, values', changedValues, values);
+    onValuesChange: (_: any, values: any) => {
+      console.log('changedValues, values', _, values);
     },
     layoutType: 'Form',
     colProps: {
