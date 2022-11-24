@@ -1,8 +1,8 @@
 import { useStore } from '../utils';
 import { RenderField } from './render-field';
-import { DndWrapper } from './wrapper';
+import { DndWrapper } from './wraapper';
 
-export * from './wrapper';
+export * from './wraapper';
 
 export const FR = (props: any) => {
   const { id = '#', item } = props

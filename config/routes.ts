@@ -35,4 +35,9 @@ export default [
   //   path: '/commdity/edit',
   //   component: './dynamic-view',
   // },
+  {
+    name: 'dnd',
+    path: '/dnd',
+    component: './dnd',
+  },
 ];

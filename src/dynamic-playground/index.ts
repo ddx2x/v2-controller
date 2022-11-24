@@ -1,2 +1,2 @@
 export * from './table'
-export * from './form-dnd'
+export * from './dnd-form'

@@ -1,5 +1,5 @@
 
 
-export const RenderField: React.FC = (props) => {
+export const RenderField: React.FC = () => {
   return <></>
 }

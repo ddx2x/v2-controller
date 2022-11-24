@@ -48,9 +48,13 @@ export const DndWrapper = (props: any) => {
     }),
   })
 
-  const deleteItem = async (e: React.MouseEvent) => { }
+  const deleteItem = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+   }
 
-  const handleItemCopy = async (e: React.MouseEvent) => { }
+  const handleItemCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+  }
 
   const _controlButtons = Array.isArray(controlButtons)
     ? controlButtons
