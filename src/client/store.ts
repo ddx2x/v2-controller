@@ -62,6 +62,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
         this.isLoaded = true;
         this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
       });
+
   };
 
   @action load = async (query?: Query) => {
@@ -122,7 +123,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   }
 
   @computed get loading() {
-    return this.isLoaded
+    return !this.isLoaded
   }
 
   @action

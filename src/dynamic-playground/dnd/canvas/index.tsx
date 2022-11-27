@@ -1,8 +1,9 @@
 import { FR } from '../core';
-import { useStore } from '../utils';
+import { useStore } from '../utils/hook';
 
 export const Canvas: React.FC = () => {
   const {
+    displaySchema,
     userProps,
     preview,
   } = useStore();
@@ -11,7 +12,7 @@ export const Canvas: React.FC = () => {
     <div className="mid-layout pr2">
       <div className={`dnd-container ${preview ? 'preview' : 'edit'}`}>
         <div style={{ height: preview ? 33 : 0 }}>
-          {/* <FR preview={preview} displaySchema={null} /> */}
+          <FR preview={preview} displaySchema={displaySchema} />
         </div>
       </div>
     </div>

@@ -1,17 +1,19 @@
-import { useStore } from '../utils';
+import { useStore } from '../utils/hook';
 import { RenderField } from './render-field';
 import { DndWrapper } from './wraapper';
 
 export * from './wraapper';
 
-export const FR = (props: any) => {
-  const { id = '#', item } = props
+export const FR = ({ id = '#', preview, displaySchema }: any) => {
   const { flatten } = useStore();
+
+  const item = flatten[id];
+  if (!item) return null;
   const { schema } = item;
 
-  const isObj = schema.type === 'object';
+  const isObj = schema.valueType === 'object';
   const isList =
-    schema.type === 'array' && schema.enum === undefined && !!schema.items;
+    schema.valueType === 'formList' && schema.valueEnum === undefined && !!schema.items;
   const isComplex = isObj || isList;
 
   let containerClass = `fr-field w-100 ${isComplex ? 'fr-field-complex' : ''} ${schema.className || ''

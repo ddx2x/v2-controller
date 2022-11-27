@@ -1,7 +1,23 @@
 
+import { FormProps, useForm } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { commdityStore } from './commdity.store';
+
+const editFormColumns: FormProps = {
+  title: '编辑商品',
+  layoutType: 'ModalForm',
+  columns: [{
+    title: '商品名称',
+    dataIndex: 'name'
+  }],
+  onSubmit: (form, values) => {
+    console.log(values);
+    return true
+  }
+}
+
+
 
 // 商品列表
 const productTable: View = {
@@ -17,6 +33,10 @@ const productTable: View = {
       title: '价格',
     },
   ],
+  moreMenuButton: (record) => [(() => {
+    const [form] = useForm({ ...editFormColumns, initialValues: record, })
+    return form
+  })()],
   loading: () => commdityStore.loading,
   onLoading: (actionRef) => commdityStore.next(),
   dataSource: () => commdityStore.items.map(item => { return { uid: item.uid, name: item.name } })

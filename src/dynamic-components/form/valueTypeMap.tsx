@@ -5,7 +5,7 @@ import React from 'react';
 class ValueTypeMapStore {
   stores: Record<string, ProRenderFieldPropsType> = {};
 
-  registerValueType = (valueType: Record<string, React.FC<unknown>>) => {
+  registerValueType = (valueType: Record<string, React.FC<any>>) => {
     let vT: Record<string, ProRenderFieldPropsType> = {}
     // 自定义组件 注册
     Object.entries(valueType).map(([key, Component]) => vT[key] = {

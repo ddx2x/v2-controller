@@ -1,3 +1,3 @@
-export * from '../components';
+export * from '../example';
 export { default } from '../dynamic-view';
 

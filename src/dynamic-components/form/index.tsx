@@ -1,4 +1,5 @@
 
+import { randomKey } from '../helper';
 import { Form, FormProps } from './form';
 import { StepForm, StepFormProps } from './stepForm';
 
@@ -52,9 +53,9 @@ export const ProFieldValueTypeKeys = [
 ]
 
 export const useForm = (props: FormProps): [React.ReactNode, {}] => {
-  return [<Form {...props} />, {}];
+  return [<Form key={randomKey(10, { numbers: false })} {...props} />, {}];
 };
 
 export const useStepsForm = (props: StepFormProps): [React.ReactNode, {}] => {
-  return [<StepForm {...props} />, {}];
+  return [<StepForm key={randomKey(10, { numbers: false })} {...props} />, {}];
 };

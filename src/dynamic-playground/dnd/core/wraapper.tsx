@@ -1,7 +1,8 @@
 import { CopyOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
 import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { dndType, isObject, useStore } from '../utils';
+import { dndType, isObject } from '../utils';
+import { useStore } from '../utils/hook';
 import './wrapper.less';
 
 export const DndWrapper = (props: any) => {

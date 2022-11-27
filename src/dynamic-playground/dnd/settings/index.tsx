@@ -1,6 +1,6 @@
 import { RightOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
-import { useSet } from '../utils';
+import { useSet } from '../utils/hook';
 import './index.less';
 
 const { TabPane } = Tabs;

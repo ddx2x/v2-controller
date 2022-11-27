@@ -1,6 +1,9 @@
 
+import { FormProps, useForm } from '@/dynamic-components';
 import { pageManager, View } from '@/dynamic-view';
 import { commdityStore } from './commdity.store';
+
+
 
 // 商品列表
 export const commdityListTable: View = {
@@ -34,6 +37,13 @@ export const commdityListTable: View = {
       dataIndex: 'sort',
       title: '排序',
     },
+  ],
+  moreMenuButton: [
+    {
+      title: '编辑', onClick: record => {
+
+      },
+    }
   ],
   dataSource: () => commdityStore.items,
   onLoading: () => { commdityStore.next() },

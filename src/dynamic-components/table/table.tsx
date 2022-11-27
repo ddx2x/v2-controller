@@ -1,21 +1,21 @@
-import type { ActionType, ProTableProps } from '@ant-design/pro-components';
-import { FooterToolbar, ProTable } from '@ant-design/pro-components';
+import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import { observer } from 'mobx-react';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import type { ExtraAction } from '../#';
 import { extraActionArray } from '../#';
 
-const defaulScrollHeight = 550;
+const defaulScrollHeight = 200;
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
   loading?: Function | boolean
   dataSource?: Function | any[]
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
+  moreMenuButton?: (record: any) => React.ReactNode[],
   onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
@@ -26,6 +26,8 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
 
 export const Table: React.FC<TableProps> = observer((props) => {
   const {
+    columns,
+    moreMenuButton,
     virtualList,
     loading,
     dataSource,
@@ -40,6 +42,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     batchDelete,
     ...rest
   } = props;
+
+  let newColumns = columns
 
   // ref
   const actionRef = useRef<ActionType>();
@@ -98,6 +102,15 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+  if (moreMenuButton && newColumns) {
+    newColumns = newColumns.filter(item => item.dataIndex != 'more')
+    newColumns.push({
+      dataIndex: 'more',
+      title: '操作',
+      valueType: 'option',
+      render: (_, record) => moreMenuButton(record).map(item => item),
+    })
+  }
 
   return (
     <>
@@ -114,6 +127,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
         search={{
           labelWidth: 'auto',
         }}
+        columns={newColumns}
         actionRef={actionRef}
         loading={typeof loading == 'function' ? loading() : loading}
         dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
