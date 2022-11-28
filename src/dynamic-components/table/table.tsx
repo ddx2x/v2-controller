@@ -10,7 +10,7 @@ import type { ExtraAction } from '../#';
 import { extraActionArray } from '../#';
 import { randomKey } from '../helper';
 
-const defaulScrollHeight = 200;
+const defaulScrollHeight = 550;
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
   loading?: Function | boolean
@@ -18,7 +18,7 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   moreMenuButton?: (record: any) => React.ReactNode[],
-  onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
+  onLoading?: (actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
@@ -64,7 +64,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const vComponents = useMemo(() => {
     return VList({
       height: scrollHeight || defaulScrollHeight,
-      onReachEnd: () => onLoading && onLoading(actionRef),
+      // onReachEnd: () => onLoading && onLoading(actionRef),
     });
   }, [onLoading, scrollHeight]);
 
@@ -148,9 +148,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
         loading={typeof loading == 'function' ? loading() : loading}
         dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
         rowSelection={dataSource ? rowSelection : false}
-        toolBarRender={
-          toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
-        }
+        toolBarRender={() => [<Button key='loadMore' onClick={() => onLoading && onLoading(actionRef)}>加载更多</Button>]}
+        // toolBarRender={
+        //   toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
+        // }
         onReset={() => props.onSubmit && props.onSubmit({})}
         {...rest}
       />

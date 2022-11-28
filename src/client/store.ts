@@ -45,24 +45,23 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     if (this.watchApi) this.watchApi.reset();
 
     this.data.clear();
-    this.isLoaded = false;
+    this.isLoaded.set(false);
   };
 
   @action next = async (query?: Query) => {
     // 0,10 | 10,10 | 20,30 | 50,10 |....
-    const { per_page, sort, limit } = !query ? { per_page: 0, sort: '""', limit: -1 } : query;
+    const { per_page, sort, limit, ...rest } = !query ? { per_page: ((this.ctx.per_page || 0) + (this.ctx.page || 10)), sort: '""', limit: -1 } : query;
     this.limit = limit;
 
     if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) this.reset();
 
-    const q = this.querys(this.ctx);
+    const q = this.querys({ ...this.ctx, ...rest });
     this.api.list(q).
       then((items) => {
         this.data.push(...items);
-        this.isLoaded = true;
-        this.ctx = { per_page, page: (per_page || 0) + (this.ctx.page || 0), sort };
+        this.isLoaded.set(true);
+        this.ctx = { per_page: per_page, page: this.ctx.page, sort };
       });
-
   };
 
   @action load = async (query?: Query) => {
@@ -71,7 +70,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       .list(q)
       .then((items) => this.data.replace(items))
       .finally(() => {
-        this.isLoaded = true;
+        this.isLoaded.set(true);
       });
   };
 

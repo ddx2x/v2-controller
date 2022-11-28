@@ -38,9 +38,10 @@ const productTable: View = {
     const [editForm] = useForm({ ...editFormColumns, initialValues: record, })
     return [editForm]
   },
+  dataSource: () => commdityStore.items.map(item => { return { uid: item.uid, name: item.name } }),
   loading: () => commdityStore.loading,
   onLoading: (actionRef) => commdityStore.next(),
-  dataSource: () => commdityStore.items.map(item => { return { uid: item.uid, name: item.name } })
+  onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
 };
 
 

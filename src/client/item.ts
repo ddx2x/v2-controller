@@ -5,8 +5,8 @@ import { autobind } from './utils';
 
 @autobind()
 export abstract class ItemStore<T extends ObjectData = any> {
-  @observable protected ctx: Query = { page: 0, per_page: 10, sort: '""' };
-  @observable protected isLoaded = true;
+  @observable protected ctx: Query = { page: 10, per_page: 0, sort: '""' };
+  @observable protected isLoaded = observable.box(true);
   @observable protected data = observable.array<T>([], { deep: false });
 
   *[Symbol.iterator]() {
