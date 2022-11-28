@@ -2,9 +2,11 @@
 import { FormProps, useForm } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
+import { message } from 'antd';
 import { commdityStore } from './commdity.store';
 
 const editFormColumns: FormProps = {
+  triggerText: '编辑',
   title: '编辑商品',
   layoutType: 'ModalForm',
   columns: [{
@@ -13,11 +15,10 @@ const editFormColumns: FormProps = {
   }],
   onSubmit: (form, values) => {
     console.log(values);
+    message.success('提交成功')
     return true
   }
 }
-
-
 
 // 商品列表
 const productTable: View = {
@@ -33,10 +34,10 @@ const productTable: View = {
       title: '价格',
     },
   ],
-  moreMenuButton: (record) => [(() => {
-    const [form] = useForm({ ...editFormColumns, initialValues: record, })
-    return form
-  })()],
+  moreMenuButton: (record) => {
+    const [editForm] = useForm({ ...editFormColumns, initialValues: record, })
+    return [editForm]
+  },
   loading: () => commdityStore.loading,
   onLoading: (actionRef) => commdityStore.next(),
   dataSource: () => commdityStore.items.map(item => { return { uid: item.uid, name: item.name } })

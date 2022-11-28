@@ -1,12 +1,14 @@
+import { DownOutlined } from '@ant-design/icons';
 import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Button } from 'antd';
+import { Button, Dropdown, Space } from 'antd';
 import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import type { ExtraAction } from '../#';
 import { extraActionArray } from '../#';
+import { randomKey } from '../helper';
 
 const defaulScrollHeight = 200;
 
@@ -108,7 +110,21 @@ export const Table: React.FC<TableProps> = observer((props) => {
       dataIndex: 'more',
       title: '操作',
       valueType: 'option',
-      render: (_, record) => moreMenuButton(record).map(item => item),
+      fixed: true,
+      render: (_, record) => {
+        var items = moreMenuButton(record).map(
+          item => { return { label: item, key: randomKey(5, { numbers: false }) } })
+        return (
+          <Dropdown menu={{ items }}>
+            <a onClick={e => e.preventDefault()}>
+              <Space>
+                操作
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        )
+      },
     })
   }
 
