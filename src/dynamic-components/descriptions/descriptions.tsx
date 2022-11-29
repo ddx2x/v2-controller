@@ -13,25 +13,6 @@ export declare type DescriptionsItem = ProDescriptionsItemProps & {
   value?: any;
 }
 
-export const DescriptionsItems = (props: { dataSource?: any, items: DescriptionsItem[] | undefined }) => {
-  const { dataSource, items } = props;
-  if (!items) return null;
-
-  return (
-    <>
-      {items.map((item) => {
-        const { value, dataIndex, key, ...rest } = item;
-        let dKey = dataIndex || key || ''
-        return <ProDescriptions.Item {...rest}>{
-          value ?
-            value :
-            (dataSource && dKey ? dataSource[String(dKey)] : '')
-        }</ProDescriptions.Item>;
-      })}
-    </>
-  );
-};
-
 // https://next-procomponents.ant.design/components/descriptions
 
 export declare type DescriptionsProps = ProDescriptionsProps & {
@@ -61,6 +42,8 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  console.log('dataSource', dataSource);
+
   const triggerDom = () => {
     return (
       <Button size={triggerButtonSize} type={triggerButtonType} block onClick={showModal}>
@@ -79,8 +62,18 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
 
   const Page = () => {
     return (
-      <ProDescriptions {...rest}>
-        <DescriptionsItems dataSource={dataSource} items={items} />
+      <ProDescriptions dataSource={dataSource} {...rest}>
+        {items && items.map((item) => {
+          const { value, valueType, dataIndex, key, ...rest } = item;
+          let dKey = dataIndex || key || ''
+          return (
+            <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>{
+              value ?
+                value :
+                (dataSource && dKey ? dataSource[String(dKey)] : '')
+            }</ProDescriptions.Item>
+          );
+        })}
         {props.children}
       </ProDescriptions>
     );
@@ -130,7 +123,7 @@ Descriptions.defaultProps = {
   triggerButtonType: 'link',
   triggerButtonSize: 'small',
   title: '详情信息',
-  column: 1,
+  column: 2,
   width: '48%',
 };
 
