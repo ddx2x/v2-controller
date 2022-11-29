@@ -4,6 +4,8 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
@@ -117,4 +119,21 @@ export default defineConfig({
    * umi 插件
    */
   plugins: ['umi-plugin-keep-alive'],
+  /**
+   * webpack
+   */
+  chainWebpack: (config, { webpack }) => {
+    
+    config.devServer.set('compress', false)
+    config.devServer
+      .set('client', { webSocketTransport: 'ws' })
+      .set('webSocketServer', 'ws')
+
+    config.module.rule('raw-loader').test(`/\.ts$/i`).use('raw-loader').end()
+
+    // config.plugin('monaco-editor-webpack-plugin')
+    //   .use(new MonacoWebpackPlugin({
+    //     languages: ["json", "javascript", "typescript"]
+    //   }))
+  },
 });

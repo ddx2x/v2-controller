@@ -18,14 +18,17 @@ export default {
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
+      logger: console,
     },
     '/prod/**': {
       target: 'http://127.0.0.1:3000',
       changeOrigin: true,
+      logger: console,
     },
     '/watch/**': {
       target: 'http://127.0.0.1:3000',
-      changeOrigin: true,
+      // changeOrigin: true,
+      logger: console,
     },
     '/superset/': {
       target: 'http://10.200.100.200:8088',

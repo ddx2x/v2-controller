@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import type { KeepAliveProps } from './keepAlive';
 import { KeepAlive } from './keepAlive';
 
-export declare type ContainerProps = ProPageContainerProps & {
+ export declare type ContainerProps = ProPageContainerProps & {
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
 }
@@ -45,7 +45,7 @@ Container.defaultProps = {
 };
 
 
-export type PageContainerProps = KeepAliveProps & ContainerProps & {
+export declare type PageContainerProps = KeepAliveProps & ContainerProps & {
   keepAlive?: boolean;
 }
 

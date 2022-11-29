@@ -1,25 +1,28 @@
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
-import { ButtonType } from 'antd/lib/button';
+import { ButtonSize, ButtonType } from 'antd/lib/button';
+import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
-import { waitTime } from './tools';
+import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export type FormProps = {
+export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
+  layoutType?: FormSchema['layoutType'];
   triggerText?: string;
   triggerButtonType?: ButtonType;
+  triggerButtonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
-} & FormSchema;
+}
 
-export const Form: React.FC<FormProps> = (props) => {
+export const Form: React.FC<FormProps> = observer((props) => {
   const [form] = AntdForm.useForm();
   const proProviderValues = useContext(ProProvider);
 
-  const { triggerText, triggerButtonType, submitTimeout, onSubmit, intl, ...rest } = props;
+  const { triggerText, triggerButtonType, triggerButtonSize, submitTimeout, onSubmit, intl, ...rest } = props;
 
   switch (props.layoutType) {
     case 'ModalForm':
@@ -41,7 +44,9 @@ export const Form: React.FC<FormProps> = (props) => {
     >
       <BetaSchemaForm
         // @ts-ignore
-        trigger={<Button type={triggerButtonType}>{triggerText}</Button>}
+        form={form}
+        // @ts-ignore
+        trigger={<Button size={triggerButtonSize} type={triggerButtonType} block>{triggerText}</Button>}
         autoFocusFirstInput
         onFinish={async (values) => {
           if (!onSubmit) return false;
@@ -53,19 +58,20 @@ export const Form: React.FC<FormProps> = (props) => {
       />
     </ProProvider.Provider>
   );
-};
+});
 
 Form.defaultProps = {
   title: '新建表单',
   layoutType: 'ModalForm',
   triggerText: '新增',
   triggerButtonType: 'link',
+  triggerButtonSize: 'small',
   submitter: {
     searchConfig: {
       submitText: '确认',
       resetText: '取消',
     },
   },
-  submitTimeout: 2000,
+  submitTimeout: 1000,
   columns: [],
 };

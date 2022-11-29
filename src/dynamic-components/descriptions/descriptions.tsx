@@ -1,56 +1,53 @@
 import {
   ProDescriptions,
   ProDescriptionsItemProps,
-  ProDescriptionsProps,
+  ProDescriptionsProps
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
-import { ButtonType } from 'antd/lib/button';
+import { ButtonSize, ButtonType } from 'antd/lib/button';
+import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
-export interface DescriptionsItem extends ProDescriptionsItemProps {
-  value?: React.ReactNode | null | undefined;
+export declare type DescriptionsItem = ProDescriptionsItemProps & {
+  value?: any;
 }
-
-export const DescriptionsItems = (props: { items: DescriptionsItem[] | undefined }) => {
-  const { items } = props;
-  if (!items) return null;
-
-  return (
-    <>
-      {items.map((item) => {
-        const { value, ...rest } = item;
-        return <ProDescriptions.Item {...rest}>{value}</ProDescriptions.Item>;
-      })}
-    </>
-  );
-};
 
 // https://next-procomponents.ant.design/components/descriptions
 
-export interface DescriptionsProps extends ProDescriptionsProps {
+export declare type DescriptionsProps = ProDescriptionsProps & {
   modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
-  trigger?: string | React.ReactNode;
+  triggerText?: string;
   triggerButtonType?: ButtonType;
+  triggerButtonSize?: ButtonSize;
   width?: string | number;
-  items?: DescriptionsItem[];
+  items?: DescriptionsItem[]; // 自定义类型
   intl?: IntlShape;
 }
 
-export const Descriptions: React.FC<DescriptionsProps> = (props) => {
-  const { title, modal, width, trigger, items, triggerButtonType, ...rest } = props;
+export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
+
+  const {
+    title,
+    modal,
+    width,
+    triggerText,
+    triggerButtonSize,
+    triggerButtonType,
+    items,
+    dataSource,
+    ...rest
+  } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const triggerDom = (): any => {
-    if (trigger instanceof Object) {
-      trigger['onClick'] = showModal;
-      return trigger;
-    }
+  console.log('dataSource', dataSource);
+
+  const triggerDom = () => {
     return (
-      <Button type={triggerButtonType} onClick={showModal}>
-        {trigger}
+      <Button size={triggerButtonSize} type={triggerButtonType} block onClick={showModal}>
+        {triggerText}
       </Button>
     );
   };
@@ -65,8 +62,18 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
 
   const Page = () => {
     return (
-      <ProDescriptions {...rest}>
-        <DescriptionsItems items={items} />
+      <ProDescriptions dataSource={dataSource} {...rest}>
+        {items && items.map((item) => {
+          const { value, valueType, dataIndex, key, ...rest } = item;
+          let dKey = dataIndex || key || ''
+          return (
+            <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>{
+              value ?
+                value :
+                (dataSource && dKey ? dataSource[String(dKey)] : '')
+            }</ProDescriptions.Item>
+          );
+        })}
         {props.children}
       </ProDescriptions>
     );
@@ -108,13 +115,16 @@ export const Descriptions: React.FC<DescriptionsProps> = (props) => {
     default:
       return Page();
   }
-};
+});
 
 Descriptions.defaultProps = {
   modal: 'Page',
-  trigger: '查看',
-  title: '详情',
-  column: 1,
+  triggerText: '详情',
+  triggerButtonType: 'link',
+  triggerButtonSize: 'small',
+  title: '详情信息',
+  column: 2,
+  width: '48%',
 };
 
 export const useDescriptions = (props: DescriptionsProps) => {

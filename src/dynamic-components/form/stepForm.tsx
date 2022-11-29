@@ -6,19 +6,18 @@ import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import React, { useContext, useState } from 'react';
 import type { IntlShape } from 'react-intl';
-
-import { waitTime } from './tools';
+import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export type StepFormProps = {
+export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
   triggerButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (form: FormInstance<any> | undefined, values: any, handleClose: () => void) => boolean;
+  onFinish?: (form: FormInstance<unknown> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
-} & Omit<FormSchema, 'layoutType'>;
+};
 
 export const StepForm: React.FC<StepFormProps> = (props) => {
   const [form] = AntdForm.useForm();
@@ -94,10 +93,10 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         <BetaSchemaForm
           // @ts-ignore
           form={form}
-          autoFocusFirstInput
-          layoutType="StepsForm"
           // @ts-ignore
           stepsFormRender={stepsFormRender}
+          autoFocusFirstInput
+          layoutType="StepsForm"
           onFinish={async (values) => {
             if (!onFinish) return false;
             await waitTime(submitTimeout);

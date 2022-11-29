@@ -21,18 +21,13 @@ export default [
     layout: false,
     component: './login',
   },
-  // {
-  //   path: '/',
-  //   redirect: '/',
-  // },
   {
-    name: 'superset',
-    path: '/superset',
-    component: './superset',
+    path: '/',
+    redirect: '/',
   },
   {
     name: '商品列表',
-    path: '/product/add',
+    path: '/commdity',
     component: './dynamic-view',
   },
   {

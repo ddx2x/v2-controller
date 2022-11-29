@@ -18,6 +18,7 @@ const writeLog = (log: AxiosResponse) => {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const errorConfig: RequestConfig = {
+  headers: { 'Cache-Control': 'no-transform' },
   transformResponse: (data) => {
     try {
       return JSON.parse(data);
@@ -40,7 +41,6 @@ export const errorConfig: RequestConfig = {
       return config;
     },
   ],
-
   // 响应拦截器
   responseInterceptors: [
     (response) => {

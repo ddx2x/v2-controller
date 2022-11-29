@@ -1,38 +1,78 @@
-import { commdityStore } from '@/components/+commdity/commdity.store';
-import type { ActionType, ProTableProps } from '@ant-design/pro-components';
-import { FooterToolbar, ProTable } from '@ant-design/pro-components';
+import { DownOutlined } from '@ant-design/icons';
+import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Button } from 'antd';
-import { computed } from 'mobx';
+import type {
+  ButtonProps,
+  RadioProps,
+  SwitchProps
+} from 'antd';
+import {
+  Button, Dropdown, Popconfirm, Radio, Space, Switch
+} from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import type { ExtraAction } from '../#/action';
-import { extraActionArray } from '../#/action';
+import { DescriptionsProps, useDescriptions } from '../descriptions';
+import { FormProps, useForm } from '../form';
+import { randomKey } from '../helper';
+
+// export declare type ExtraAction =
+//   { valueType: 'button' } & ButtonProps |
+//   { valueType: 'switch' } & SwitchProps |
+//   { valueType?: 'radio' } & RadioProps
+
+// export const extraAction = (item: ExtraAction) => {
+//   switch (item.valueType) {
+//     case 'button':
+//       return <Button {...item} />;
+//     case 'switch':
+//       return <Switch {...item} />;
+//     case 'radio':
+//       return <Radio {...item} />;
+//     default:
+//       return null;
+//   }
+// };
+
+// export const extraActionArray = (items: ExtraAction[]) => {
+//   return items?.map((item) => {
+//     return extraAction(item);
+//   });
+// };
+
+export declare type MoreButtonType = (
+  { btkind: 'descriptions' } & DescriptionsProps | // 详情页
+  { btkind: 'form'; } & FormProps | // 表单
+  { btkind: 'link'; } & { link: string, title: string } | // 跳转
+  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
+) & { fold?: boolean } // 放入折叠框
 
 const defaulScrollHeight = 550;
 
-export type TableProps = Omit<ProTableProps<any, any>, 'dataSource'> & {
-  dataSource?: any
+export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
+  loading?: Function | boolean
+  dataSource?: Function | any[]
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
-  onLoading?: (actionRef: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
+  moreMenuButton?: (record: any) => MoreButtonType[],
+  onLoading?: (actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
-  toolBarExtraRender?: ExtraAction[];
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
   const {
+    columns,
+    moreMenuButton,
     virtualList,
+    loading,
     dataSource,
     onLoading,
     scrollHeight,
     headerTitle,
-    toolBarExtraRender,
     toolBarRender,
     intl,
     //
@@ -40,6 +80,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     batchDelete,
     ...rest
   } = props;
+
+  let newColumns = columns
 
   // ref
   const actionRef = useRef<ActionType>();
@@ -58,7 +100,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const vComponents = useMemo(() => {
     return VList({
       height: scrollHeight || defaulScrollHeight,
-      onReachEnd: () => onLoading && onLoading(actionRef),
+      // onReachEnd: () => onLoading && onLoading(actionRef),
     });
   }, [onLoading, scrollHeight]);
 
@@ -98,9 +140,62 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+  if (moreMenuButton && newColumns) {
+    newColumns = newColumns.filter(item => item.dataIndex != 'more')
+    newColumns.push({
+      dataIndex: 'more',
+      title: '操作',
+      valueType: 'option',
+      fixed: true,
+      render: (_, record) => {
+        let notFold: any[] = []
+        let items: any[] = []
 
-  const data = computed(() => dataSource()).get()
-  console.log(data);
+        moreMenuButton(record).map(item => {
+          let label = (() => {
+            switch (item.btkind) {
+              case 'descriptions':
+                const [description] = useDescriptions({ ...item })
+                return description
+              case 'form':
+                const [form] = useForm({ ...item })
+                return form
+              case 'link':
+                return <Button type='link' size='small' block ><a href={item.link}>{item.title}</a></Button>
+              case 'confirm':
+                return (
+                  <Popconfirm
+                    key="popconfirm"
+                    title={item.text || `确认${item.title}吗 ?`}
+                    okText="是" cancelText="否" onConfirm={(e) => item.onClick(e)}>
+                    <Button type='link' size='small' block >{item.title}</Button>
+                  </Popconfirm>
+                )
+              default:
+                return <Button type='link' size='small' block>请定义操作</Button>
+            }
+          })()
+
+          item.fold ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notFold.push(label)
+        })
+        return (
+          <>
+            <Space>
+              {notFold.map(item => item)}
+              <Dropdown menu={{ items }}>
+                <a onClick={e => e.preventDefault()}>
+                  <Space>
+                    操作
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            </Space>
+          </>
+        )
+      },
+    })
+  }
 
   return (
     <>
@@ -117,22 +212,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
         search={{
           labelWidth: 'auto',
         }}
+        columns={newColumns}
         actionRef={actionRef}
-        dataSource={data}
-        // rowSelection={dataSource ? rowSelection : false}
-        toolBarRender={
-          toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
-        }
-        onDataSourceChange={(dataSource) => console.log('dataSource', dataSource)}
-        onSubmit={(params) => console.log('onSubmit', params)}
-        onReset={() => { }}
-        // request={async (params, sorter, filter) => {
-        //   console.info('params, sorter, filter', params, sorter, filter, actionRef);
-        //   return Promise.resolve({
-        //     data: [],
-        //     success: false,
-        //   });
-        // }}
+        loading={typeof loading == 'function' ? loading() : loading}
+        dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
+        rowSelection={dataSource ? rowSelection : false}
+        toolBarRender={() => [<Button key='loadMore' onClick={() => onLoading && onLoading(actionRef)}>加载更多</Button>]}
+        onReset={() => props.onSubmit && props.onSubmit({})}
         {...rest}
       />
       {footer()}
@@ -147,10 +233,9 @@ Table.defaultProps = {
     type: 'multiple',
   },
   cardBordered: true,
-  rowKey: 'uid',
+  // rowKey: 'uid',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },
   columns: [],
-  // dataSource: [],
 };
