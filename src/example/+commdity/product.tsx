@@ -1,5 +1,5 @@
 
-import { FormProps, useForm } from '@/dynamic-components';
+import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
@@ -26,6 +26,10 @@ const productTable: View = {
   rowKey: "uid",
   columns: [
     {
+      dataIndex: 'uid',
+      title: 'id',
+    },
+    {
       dataIndex: 'name',
       title: '商品名称',
     },
@@ -34,11 +38,12 @@ const productTable: View = {
       title: '价格',
     },
   ],
-  moreMenuButton: (record) => {
-    const [editForm] = useForm({ ...editFormColumns, initialValues: record, })
-    return [editForm]
-  },
-  dataSource: () => commdityStore.items.map(item => { return { uid: item.uid, name: item.name } }),
+  moreMenuButton: (record) => [
+    { kind: 'form', initialValues: record, ...editFormColumns },
+    { kind: 'link', link: '/product/add', title: '详情页' },
+    { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除' }
+  ],
+  dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
   onLoading: (actionRef) => commdityStore.next(),
   onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),

@@ -22,7 +22,10 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   private deleteEvtListeners: ModifyIObject<T>[] = [];
 
   private querys = (query?: Query): Query => {
-    return merge({ limit: this.limit }, query);
+    return merge({
+      limit: this.limit, page: 10, per_page: 0
+
+    }, query);
   };
 
   addModifyEvtListeners = (m: ModifyIObject<T>): void => {
@@ -50,17 +53,23 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action next = async (query?: Query) => {
     // 0,10 | 10,10 | 20,30 | 50,10 |....
-    const { per_page, sort, limit, ...rest } = !query ? { per_page: ((this.ctx.per_page || 0) + (this.ctx.page || 10)), sort: '""', limit: -1 } : query;
+    let { per_page, sort, limit, ...rest } = !query ? { per_page: undefined, sort: '""', limit: -1 } : query;
     this.limit = limit;
 
-    if (this.ctx.sort !== sort || this.ctx.per_page !== per_page) this.reset();
+    if (this.ctx.sort !== sort || (per_page && this.ctx.per_page !== per_page)) this.reset();
 
-    const q = this.querys({ ...this.ctx, ...rest });
+    per_page = (per_page || per_page == 0) ? per_page : ((this.ctx.per_page || 0) + (this.ctx.page || 10))
+    const q = this.querys({ ...this.ctx, per_page, ...rest });
+
     this.api.list(q).
       then((items) => {
-        this.data.push(...items);
+        this.data.push(...items)
         this.isLoaded.set(true);
-        this.ctx = { per_page: per_page, page: this.ctx.page, sort };
+        this.ctx = {
+          per_page: per_page,
+          page: this.ctx.page,
+          sort
+        };
       });
   };
 
@@ -118,7 +127,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   @computed get items() {
-    return this.data.slice();
+    return this.data.slice().reverse();
   }
 
   @computed get loading() {

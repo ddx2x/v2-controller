@@ -1,14 +1,19 @@
 import { DownOutlined } from '@ant-design/icons';
 import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Button, Dropdown, Space } from 'antd';
+import { Button, Dropdown, Popconfirm, Space } from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import type { ExtraAction } from '../#';
-import { extraActionArray } from '../#';
+import { FormProps, useForm } from '../form';
 import { randomKey } from '../helper';
+
+export declare type MoreButtonType =
+  { kind: 'form'; } & FormProps |
+  { kind: 'link'; } & { link: string, title: string } |
+  { kind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string }
 
 const defaulScrollHeight = 550;
 
@@ -17,7 +22,7 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   dataSource?: Function | any[]
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
-  moreMenuButton?: (record: any) => React.ReactNode[],
+  moreMenuButton?: (record: any) => MoreButtonType[],
   onLoading?: (actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
@@ -113,7 +118,32 @@ export const Table: React.FC<TableProps> = observer((props) => {
       fixed: true,
       render: (_, record) => {
         var items = moreMenuButton(record).map(
-          item => { return { label: item, key: randomKey(5, { numbers: false }) } })
+          item => {
+
+            let label = (() => {
+              switch (item.kind) {
+                case 'form':
+                  const { kind, ...rest } = item
+                  const [form] = useForm({ ...rest })
+                  return form
+                case 'link':
+                  return <Button type='link' size='small' block ><a href={item.link}>{item.title}</a></Button>
+                case 'confirm':
+                  return (
+                    <Popconfirm
+                      key="popconfirm"
+                      title={item.text || `确认${item.title}吗 ?`}
+                      okText="是" cancelText="否" onConfirm={(e) => item.onClick(e)}>
+                      <Button type='link' size='small' block >{item.title}</Button>
+                    </Popconfirm>
+                  )
+                default:
+                  return <></>
+              }
+            })()
+
+            return { label: label, key: randomKey(5, { numbers: false }) }
+          })
         return (
           <Dropdown menu={{ items }}>
             <a onClick={e => e.preventDefault()}>
@@ -167,7 +197,7 @@ Table.defaultProps = {
     type: 'multiple',
   },
   cardBordered: true,
-  rowKey: 'uid',
+  // rowKey: 'uid',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },

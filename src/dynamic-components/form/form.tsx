@@ -45,7 +45,7 @@ export const Form: React.FC<FormProps> = (props) => {
         // @ts-ignore
         form={form}
         // @ts-ignore
-        trigger={<Button block size={triggerButtonSize} type={triggerButtonType}>{triggerText}</Button>}
+        trigger={<Button size={triggerButtonSize} type={triggerButtonType} block>{triggerText}</Button>}
         autoFocusFirstInput
         onFinish={async (values) => {
           if (!onSubmit) return false;
