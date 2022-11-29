@@ -66,6 +66,16 @@ const detailCommdity: DescriptionsProps = {
       valueType: 'money',
     },
     {
+      title: 'Id',
+      key: 'uid',
+      dataIndex: 'uid'
+    },
+    {
+      title: '名称',
+      key: 'name',
+      dataIndex: 'name',
+    },
+    {
       title: '操作',
       valueType: 'option',
       render: () => [
@@ -81,18 +91,6 @@ const detailCommdity: DescriptionsProps = {
       ],
     },
   ],
-  items: [
-    {
-      title: 'Id',
-      key: 'uid',
-      dataIndex: 'uid'
-    },
-    {
-      title: '名称',
-      key: 'name',
-      dataIndex: 'name',
-    }
-  ]
 }
 
 
