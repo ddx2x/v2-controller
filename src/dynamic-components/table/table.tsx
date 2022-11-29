@@ -1,19 +1,52 @@
 import { DownOutlined } from '@ant-design/icons';
 import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Button, Dropdown, Popconfirm, Space } from 'antd';
+import type {
+  ButtonProps,
+  RadioProps,
+  SwitchProps
+} from 'antd';
+import {
+  Button, Dropdown, Popconfirm, Radio, Space, Switch
+} from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import type { ExtraAction } from '../#';
+import { DescriptionsProps, useDescriptions } from '../descriptions';
 import { FormProps, useForm } from '../form';
 import { randomKey } from '../helper';
 
-export declare type MoreButtonType =
-  { kind: 'form'; } & FormProps |
-  { kind: 'link'; } & { link: string, title: string } |
-  { kind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string }
+// export declare type ExtraAction =
+//   { valueType: 'button' } & ButtonProps |
+//   { valueType: 'switch' } & SwitchProps |
+//   { valueType?: 'radio' } & RadioProps
+
+// export const extraAction = (item: ExtraAction) => {
+//   switch (item.valueType) {
+//     case 'button':
+//       return <Button {...item} />;
+//     case 'switch':
+//       return <Switch {...item} />;
+//     case 'radio':
+//       return <Radio {...item} />;
+//     default:
+//       return null;
+//   }
+// };
+
+// export const extraActionArray = (items: ExtraAction[]) => {
+//   return items?.map((item) => {
+//     return extraAction(item);
+//   });
+// };
+
+export declare type MoreButtonType = (
+  { btkind: 'descriptions' } & DescriptionsProps | // 详情页
+  { btkind: 'form'; } & FormProps | // 表单
+  { btkind: 'link'; } & { link: string, title: string } | // 跳转
+  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
+) & { fold?: boolean } // 放入折叠框
 
 const defaulScrollHeight = 550;
 
@@ -28,7 +61,6 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
-  toolBarExtraRender?: ExtraAction[];
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
@@ -41,7 +73,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onLoading,
     scrollHeight,
     headerTitle,
-    toolBarExtraRender,
     toolBarRender,
     intl,
     //
@@ -117,42 +148,50 @@ export const Table: React.FC<TableProps> = observer((props) => {
       valueType: 'option',
       fixed: true,
       render: (_, record) => {
-        var items = moreMenuButton(record).map(
-          item => {
+        let notFold: any[] = []
+        let items: any[] = []
 
-            let label = (() => {
-              switch (item.kind) {
-                case 'form':
-                  const { kind, ...rest } = item
-                  const [form] = useForm({ ...rest })
-                  return form
-                case 'link':
-                  return <Button type='link' size='small' block ><a href={item.link}>{item.title}</a></Button>
-                case 'confirm':
-                  return (
-                    <Popconfirm
-                      key="popconfirm"
-                      title={item.text || `确认${item.title}吗 ?`}
-                      okText="是" cancelText="否" onConfirm={(e) => item.onClick(e)}>
-                      <Button type='link' size='small' block >{item.title}</Button>
-                    </Popconfirm>
-                  )
-                default:
-                  return <></>
-              }
-            })()
+        moreMenuButton(record).map(item => {
+          let label = (() => {
+            switch (item.btkind) {
+              case 'descriptions':
+                const [description] = useDescriptions({ ...item })
+                return description
+              case 'form':
+                const [form] = useForm({ ...item })
+                return form
+              case 'link':
+                return <Button type='link' size='small' block ><a href={item.link}>{item.title}</a></Button>
+              case 'confirm':
+                return (
+                  <Popconfirm
+                    key="popconfirm"
+                    title={item.text || `确认${item.title}吗 ?`}
+                    okText="是" cancelText="否" onConfirm={(e) => item.onClick(e)}>
+                    <Button type='link' size='small' block >{item.title}</Button>
+                  </Popconfirm>
+                )
+              default:
+                return <Button type='link' size='small' block>请定义操作</Button>
+            }
+          })()
 
-            return { label: label, key: randomKey(5, { numbers: false }) }
-          })
+          item.fold ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notFold.push(label)
+        })
         return (
-          <Dropdown menu={{ items }}>
-            <a onClick={e => e.preventDefault()}>
-              <Space>
-                操作
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
+          <>
+            <Space>
+              {notFold.map(item => item)}
+              <Dropdown menu={{ items }}>
+                <a onClick={e => e.preventDefault()}>
+                  <Space>
+                    操作
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            </Space>
+          </>
         )
       },
     })
@@ -179,9 +218,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
         dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
         rowSelection={dataSource ? rowSelection : false}
         toolBarRender={() => [<Button key='loadMore' onClick={() => onLoading && onLoading(actionRef)}>加载更多</Button>]}
-        // toolBarRender={
-        //   toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
-        // }
         onReset={() => props.onSubmit && props.onSubmit({})}
         {...rest}
       />
@@ -201,6 +237,5 @@ Table.defaultProps = {
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: true },
-  toolBarExtraRender: [],
   columns: [],
 };

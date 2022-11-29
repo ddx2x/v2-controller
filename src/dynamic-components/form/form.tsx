@@ -2,6 +2,7 @@ import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
+import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
@@ -17,7 +18,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
 }
 
-export const Form: React.FC<FormProps> = (props) => {
+export const Form: React.FC<FormProps> = observer((props) => {
   const [form] = AntdForm.useForm();
   const proProviderValues = useContext(ProProvider);
 
@@ -57,7 +58,7 @@ export const Form: React.FC<FormProps> = (props) => {
       />
     </ProProvider.Provider>
   );
-};
+});
 
 Form.defaultProps = {
   title: '新建表单',

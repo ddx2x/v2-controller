@@ -97,7 +97,6 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
           layoutType="StepsForm"
-
           onFinish={async (values) => {
             if (!onFinish) return false;
             await waitTime(submitTimeout);

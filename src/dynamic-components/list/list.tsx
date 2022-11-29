@@ -6,8 +6,7 @@ import { observer } from 'mobx-react';
 import type { ReactText } from 'react';
 import { useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
-import type { ExtraAction } from '../#/extra';
-import { extraActionArray } from '../#/extra';
+
 import { ProList } from './proList';
 
 export type ListProps = ProListProps & {
@@ -15,7 +14,6 @@ export type ListProps = ProListProps & {
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  toolBarExtraRender?: ExtraAction[];
   intl?: IntlShape; // 国际化
 };
 
@@ -25,7 +23,6 @@ export const List: React.FC<ListProps> = observer((props) => {
     dataSource,
     useBatchDelete,
     batchDelete,
-    toolBarExtraRender,
     toolBarRender,
     ...rest
   } = props;
@@ -74,9 +71,6 @@ export const List: React.FC<ListProps> = observer((props) => {
         virtualList={virtualList}
         dataSource={dataSource}
         rowSelection={dataSource ? rowSelection : false}
-        toolBarRender={
-          toolBarExtraRender ? () => extraActionArray(toolBarExtraRender) : toolBarRender
-        }
         {...rest}
       />
       {footer()}

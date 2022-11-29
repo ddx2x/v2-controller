@@ -1,5 +1,4 @@
-import { useCard } from '@/dynamic-components/#';
-import { ProCardProps } from '@ant-design/pro-components';
+import { ProCard, ProCardProps } from '@ant-design/pro-components';
 import { useForm } from '..';
 import { FormProps } from '../form';
 
@@ -20,10 +19,5 @@ export const cardField: React.FC<CardFieldProps> = (props) => {
     ...rest
   })
 
-  const [card] = useCard({
-    children: form,
-    ...proCardProps
-  })
-
-  return <>{card}</>
+  return < ProCard {...proCardProps}>{form}</ProCard>
 };

@@ -1,11 +1,11 @@
 
-import { FormProps } from '@/dynamic-components';
+import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { commdityStore } from './commdity.store';
 
-const editFormColumns: FormProps = {
+const editCommdity: FormProps = {
   triggerText: '编辑',
   title: '编辑商品',
   layoutType: 'ModalForm',
@@ -19,6 +19,23 @@ const editFormColumns: FormProps = {
     return true
   }
 }
+
+const detailCommdity: DescriptionsProps = {
+  modal: 'Drawer',
+  items: [
+    {
+      title: 'Id',
+      dataIndex: 'uid',
+      key: 'id',
+    },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      key: 'name',
+    }
+  ]
+}
+
 
 // 商品列表
 const commdityTable: View = {
@@ -39,16 +56,16 @@ const commdityTable: View = {
     },
   ],
   moreMenuButton: (record) => [
-    { kind: 'form', initialValues: record, ...editFormColumns },
-    { kind: 'link', link: '/commdity/edit', title: '详情编辑' },
-    { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
+    { btkind: 'descriptions', fold: true, dataSource: record, ...detailCommdity },
+    { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
+    { btkind: 'link', fold: true, link: '/commdity/edit', title: '全量编辑' },
+    { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
   onLoading: (actionRef) => commdityStore.next(),
   onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
 };
-
 
 pageManager.register('commdity', {
   page: { view: [commdityTable] },
