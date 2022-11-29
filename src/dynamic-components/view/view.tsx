@@ -30,7 +30,7 @@ export default observer(() => {
     pageManager.init(routeKey); // 挂载 stores
     return () => pageManager.clear(routeKey); // 清除stores
   });
-
+  
   const page = (() => {
     return (
       <>

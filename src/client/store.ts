@@ -15,7 +15,6 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract watchApi: WatchApi<T, ObjectStore<T>>;
 
   public limit: number = -1;
-  public version: number = 0;
 
   private defers: Noop[] = [];
   private modifyEvtListeners: ModifyIObject<T>[] = [];

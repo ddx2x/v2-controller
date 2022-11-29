@@ -58,7 +58,7 @@ export class ObjectApi<T extends IObject = any> {
   // /api/v1/Product
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
-  protected version: number = 0;
+  public version: number = 0;
 
   static parseApi(url = '') {
     const [apiBase, apiPrefix, apiVersion, apiResource] = url.match(ObjectApi.matcher) || [];
