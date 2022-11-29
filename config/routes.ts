@@ -27,14 +27,14 @@ export default [
   },
   {
     name: '商品列表',
-    path: '/product/add',
+    path: '/commdity',
     component: './dynamic-view',
   },
-  // {
-  //   name: '商品编辑',
-  //   path: '/commdity/edit',
-  //   component: './dynamic-view',
-  // },
+  {
+    name: '商品编辑',
+    path: '/commdity/edit',
+    component: './dynamic-view',
+  },
   // {
   //   name: 'dnd',
   //   path: '/dnd',

@@ -21,7 +21,7 @@ const editFormColumns: FormProps = {
 }
 
 // 商品列表
-const productTable: View = {
+const commdityTable: View = {
   kind: 'table',
   rowKey: "uid",
   columns: [
@@ -40,8 +40,8 @@ const productTable: View = {
   ],
   moreMenuButton: (record) => [
     { kind: 'form', initialValues: record, ...editFormColumns },
-    { kind: 'link', link: '/product/add', title: '详情页' },
-    { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除' }
+    { kind: 'link', link: '/commdity/edit', title: '详情编辑' },
+    { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
@@ -50,8 +50,8 @@ const productTable: View = {
 };
 
 
-pageManager.register('product.add', {
-  page: { view: [productTable] },
+pageManager.register('commdity', {
+  page: { view: [commdityTable] },
   stores: [
     {
       store: commdityStore,
