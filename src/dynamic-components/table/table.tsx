@@ -3,7 +3,7 @@ import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components'
 import { FormattedMessage, Link } from '@umijs/max';
 import { Button, ButtonProps, Dropdown, Popconfirm, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
 import { observer } from 'mobx-react';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { DescriptionsProps, useDescriptions } from '../descriptions';
@@ -41,7 +41,7 @@ export declare type MoreButtonType = (
   { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
 ) & { fold?: boolean } // 放入折叠框
 
-const defaulScrollHeight = '400px';
+const defaulScrollHeight = '500px';
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
   loading?: Function | boolean
@@ -57,6 +57,20 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
+  useEffect(() => {
+    window.addEventListener('mousemove', (evt: MouseEvent) => {
+      if (
+        evt.defaultPrevented ||
+        (container !== null && container.contains(evt.target as Node))
+      ) {
+        document.body.style.overflow = "hidden";
+        return
+      }
+      document.body.style.overflow = "visible";
+    })
+  })
+
+
   const {
     columns,
     moreMenuButton,
@@ -78,6 +92,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // ref
   const actionRef = useRef<ActionType>();
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // 多选 批量删除
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -97,7 +112,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }, [onLoading, scrollHeight]);
 
   if (virtualList) {
-    // rest.sticky = true;
+    rest.sticky = true;
     rest.scroll = {
       y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
     };
@@ -171,7 +186,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   let data = typeof dataSource == 'function' ? dataSource() : dataSource
 
   return (
-    <>
+    <div ref={setContainer}>
       <ProTable
         headerTitle={
           headerTitle
@@ -224,7 +239,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           {data.lenght > 0 || `（已展示${data.length}条）`}
         </Button>
       </div>
-    </>
+    </div>
   );
 });
 

@@ -5,7 +5,7 @@ import type {
 import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
 import type { BreadcrumbProps } from 'antd';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import type { CachingNode } from 'react-activation';
 
 export declare type KeepAliveProps = {
@@ -14,8 +14,6 @@ export declare type KeepAliveProps = {
 
 export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
   const path = props.path ? props.path : useLocation().pathname;
-
-  useEffect(() => console.log('KeepAlive........'))
 
   return (
     // @ts-ignore
@@ -81,8 +79,6 @@ export declare type PageContainerProps = KeepAliveProps & ContainerProps & {
 
 export const PageContainer: React.FC<PageContainerProps> = (props) => {
   const { keepAlive, path, children, ...rest } = props;
-
-  useEffect(() => console.log('PageContainer........'))
 
   const container = () => {
     // 获取 layout 上下文
