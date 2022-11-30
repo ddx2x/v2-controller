@@ -3,12 +3,42 @@ import type {
   RouteContextType
 } from '@ant-design/pro-components';
 import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
+import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
 import type { BreadcrumbProps } from 'antd';
-import { useContext } from 'react';
-import type { KeepAliveProps } from './keepAlive';
-import { KeepAlive } from './keepAlive';
+import { useContext, useEffect } from 'react';
+import type { CachingNode } from 'react-activation';
 
- export declare type ContainerProps = ProPageContainerProps & {
+export declare type KeepAliveProps = {
+  path?: string | null;
+}
+
+export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
+  const path = props.path ? props.path : useLocation().pathname;
+
+  useEffect(() => console.log('KeepAlive........'))
+
+  return (
+    // @ts-ignore
+    <UmiKeepAlive name={path} cacheKey={path} id={path} saveScrollPosition="screen">
+      {props.children}
+    </UmiKeepAlive>
+  );
+};
+
+// 获取所有 keep alive 缓存节点
+export const cachingNodes = (): CachingNode[] => {
+  const { getCachingNodes } = useAliveController();
+  return getCachingNodes();
+};
+
+// 节点是否缓存
+export const isCachingNode = (path: string | undefined): boolean => {
+  const nodes = cachingNodes();
+  return nodes.filter((node) => node.name == path).length > 0;
+};
+
+
+export declare type ContainerProps = ProPageContainerProps & {
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
 }
@@ -51,6 +81,8 @@ export declare type PageContainerProps = KeepAliveProps & ContainerProps & {
 
 export const PageContainer: React.FC<PageContainerProps> = (props) => {
   const { keepAlive, path, children, ...rest } = props;
+
+  useEffect(() => console.log('PageContainer........'))
 
   const container = () => {
     // 获取 layout 上下文

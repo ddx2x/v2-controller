@@ -136,7 +136,7 @@ const commdityTable: View = {
   onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
 };
 
-pageManager.register('commdity', {
+pageManager.register('commdity.page', {
   page: { view: [commdityTable] },
   stores: [
     {
