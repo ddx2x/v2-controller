@@ -182,7 +182,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
     // siderMenuType: 'group',
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
-    // subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
+    subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

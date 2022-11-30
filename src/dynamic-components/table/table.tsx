@@ -1,6 +1,6 @@
 import { DownOutlined } from '@ant-design/icons';
 import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components';
-import { FormattedMessage } from '@umijs/max';
+import { FormattedMessage, Link } from '@umijs/max';
 import { Button, ButtonProps, Dropdown, Popconfirm, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
@@ -127,7 +127,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
                 const [form] = useForm({ ...item })
                 return form
               case 'link':
-                return <Button type='link' size='small' block ><a href={item.link}>{item.title}</a></Button>
+                return (
+                  <Button type='link' size='small' block>
+                    <Link to={item.link}>{item.title}</Link>
+                  </Button>
+                )
               case 'confirm':
                 return (
                   <Popconfirm

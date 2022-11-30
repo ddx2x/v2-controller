@@ -22,17 +22,22 @@ export default [
     component: './login',
   },
   {
-    path: '/',
-    redirect: '/',
-  },
-  {
-    name: '商品列表',
+    name: '商品',
     path: '/commdity',
-    component: './dynamic-view',
-  },
-  {
-    name: '商品编辑',
-    path: '/commdity/edit',
-    component: './dynamic-view',
+    icon: 'setting',
+    routes: [
+      {
+        name: '商品编辑',
+        path: '/commdity/page',
+        icon: 'setting',
+        component: './dynamic-view',
+      },
+      {
+        name: '商品编辑',
+        path: '/commdity/edit',
+        icon: 'setting',
+        component: './dynamic-view',
+      },
+    ]
   },
 ];
