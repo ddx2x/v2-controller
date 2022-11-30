@@ -1,3 +1,4 @@
+import { randomKey } from '@/dynamic-components/helper';
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
@@ -6,7 +7,6 @@ import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
 import { Form, StepForm } from '../dynamic-components/form';
-import { randomKey } from '../dynamic-components/helper';
 import type { ListProps } from '../dynamic-components/list';
 import { List } from '../dynamic-components/list';
 import type { TableProps } from '../dynamic-components/table';
@@ -34,13 +34,12 @@ export default observer(() => {
       <>
         {schema?.view && schema.view.map((config: View) => {
           const { kind, ...props } = config;
-          props['key'] = randomKey(8, { numbers: false })
 
           switch (kind) {
             case 'table':
               return <Table {...props as TableProps} intl={intl} />;
             case 'list':
-              return <List {...props as ListProps} intl={intl} />;
+              return <List  {...props as ListProps} intl={intl} />;
             case 'form':
               return <Form {...props as FormProps} intl={intl} />;
             case 'stepForm':
