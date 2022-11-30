@@ -1,8 +1,7 @@
-import { randomKey } from '@/dynamic-components/helper';
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
-import { PageContainer } from '../dynamic-components/container';
+import { isCachingNode, PageContainer } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
@@ -15,8 +14,10 @@ import { pageManager } from './manager';
 import { View } from './typing';
 
 export default observer(() => {
-  const routeKey = useLocation()
-    .pathname.split('/')
+
+  const pathname = useLocation()
+    .pathname
+  const routeKey = pathname.split('/')
     .filter((item) => item)
     .join('.');
 
@@ -24,9 +25,11 @@ export default observer(() => {
   if (!schema) return null;
 
   const intl = useIntl(); // 国际化组件
+  const isCaching = isCachingNode(pathname)
   useEffect((): () => void => {
-    pageManager.init(routeKey); // 挂载 stores
-    return () => pageManager.clear(routeKey); // 清除stores
+    !isCaching && pageManager.init(routeKey); // 挂载 stores
+    return () => {}
+    // return () => pageManager.clear(routeKey); // 清除stores
   });
 
   const page = (() => {
@@ -47,6 +50,7 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
+          
         })}
       </>
     );
