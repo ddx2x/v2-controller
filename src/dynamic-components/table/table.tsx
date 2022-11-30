@@ -1,14 +1,7 @@
 import { DownOutlined } from '@ant-design/icons';
-import { ActionType, FooterToolbar, ProTable, ProTableProps } from '@ant-design/pro-components';
+import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import type {
-  ButtonProps,
-  RadioProps,
-  SwitchProps
-} from 'antd';
-import {
-  Button, Dropdown, Popconfirm, Radio, Space, Switch
-} from 'antd';
+import { Button, ButtonProps, Dropdown, Popconfirm, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
 import { observer } from 'mobx-react';
 import React, { useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -17,29 +10,29 @@ import { DescriptionsProps, useDescriptions } from '../descriptions';
 import { FormProps, useForm } from '../form';
 import { randomKey } from '../helper';
 
-// export declare type ExtraAction =
-//   { valueType: 'button' } & ButtonProps |
-//   { valueType: 'switch' } & SwitchProps |
-//   { valueType?: 'radio' } & RadioProps
+export declare type ExtraAction =
+  { valueType: 'button' } & ButtonProps |
+  { valueType: 'switch' } & SwitchProps |
+  { valueType?: 'radio' } & RadioProps
 
-// export const extraAction = (item: ExtraAction) => {
-//   switch (item.valueType) {
-//     case 'button':
-//       return <Button {...item} />;
-//     case 'switch':
-//       return <Switch {...item} />;
-//     case 'radio':
-//       return <Radio {...item} />;
-//     default:
-//       return null;
-//   }
-// };
+export const extraAction = (item: ExtraAction) => {
+  switch (item.valueType) {
+    case 'button':
+      return <Button {...item} />;
+    case 'switch':
+      return <Switch {...item} />;
+    case 'radio':
+      return <Radio {...item} />;
+    default:
+      return null;
+  }
+};
 
-// export const extraActionArray = (items: ExtraAction[]) => {
-//   return items?.map((item) => {
-//     return extraAction(item);
-//   });
-// };
+export const extraActionArray = (items: ExtraAction[]) => {
+  return items?.map((item) => {
+    return extraAction(item);
+  });
+};
 
 export declare type MoreButtonType = (
   { btkind: 'descriptions' } & DescriptionsProps | // 详情页
@@ -48,7 +41,7 @@ export declare type MoreButtonType = (
   { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
 ) & { fold?: boolean } // 放入折叠框
 
-const defaulScrollHeight = 550;
+const defaulScrollHeight = '400px';
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
   loading?: Function | boolean
@@ -99,13 +92,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
-      height: scrollHeight || defaulScrollHeight,
-      // onReachEnd: () => onLoading && onLoading(actionRef),
+      height: scrollHeight || defaulScrollHeight
     });
   }, [onLoading, scrollHeight]);
 
   if (virtualList) {
-    rest.sticky = true;
+    // rest.sticky = true;
     rest.scroll = {
       y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
     };
@@ -113,33 +105,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     rest.pagination = false;
   }
 
-  const footer = () => {
-    return (
-      useBatchDelete &&
-      selectedRowKeys?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="已选择" />{' '}
-              <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>{' '}
-              <FormattedMessage id="pages.searchTable.item" defaultMessage="项" />
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              batchDelete && batchDelete(selectedRowKeys);
-              setSelectedRowKeys([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
-          </Button>
-        </FooterToolbar>
-      )
-    );
-  };
-
+  // 更多操作 按钮
   if (moreMenuButton && newColumns) {
     newColumns = newColumns.filter(item => item.dataIndex != 'more')
     newColumns.push({
@@ -197,6 +163,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
     })
   }
 
+  // 数据
+  let data = typeof dataSource == 'function' ? dataSource() : dataSource
+
   return (
     <>
       <ProTable
@@ -212,16 +181,45 @@ export const Table: React.FC<TableProps> = observer((props) => {
         search={{
           labelWidth: 'auto',
         }}
+        tableAlertOptionRender={() => {
+          return (
+            <Space size={6}>
+              <Button
+                type='link'
+                onClick={async () => {
+                  batchDelete && batchDelete(selectedRowKeys);
+                  setSelectedRowKeys([]);
+                  actionRef.current?.reloadAndRest?.();
+                }}
+              >
+                <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+              </Button>
+              <Button
+                type='link'
+                onClick={async () => {
+                  setSelectedRowKeys([]);
+                }}
+              >
+                <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
+              </Button>
+            </Space>
+          );
+        }}
         columns={newColumns}
         actionRef={actionRef}
         loading={typeof loading == 'function' ? loading() : loading}
-        dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
-        rowSelection={dataSource ? rowSelection : false}
-        toolBarRender={() => [<Button key='loadMore' onClick={() => onLoading && onLoading(actionRef)}>加载更多</Button>]}
+        dataSource={data}
+        rowSelection={data ? rowSelection : false}
+        toolBarRender={() => []}
         onReset={() => props.onSubmit && props.onSubmit({})}
         {...rest}
       />
-      {footer()}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Button style={{ width: '350px' }} key='loadMore' onClick={() => onLoading && onLoading(actionRef)}>
+          加载更多
+          {data.lenght > 0 || `（已展示${data.length}条）`}
+        </Button>
+      </div>
     </>
   );
 });
@@ -236,6 +234,6 @@ Table.defaultProps = {
   // rowKey: 'uid',
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
-  options: { density: true, reload: false, fullScreen: true },
+  options: { density: true, reload: true, fullScreen: false },
   columns: [],
 };

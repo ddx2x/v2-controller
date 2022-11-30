@@ -1,9 +1,9 @@
-import { BetaSchemaForm, FooterToolbar, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import type { FormInstance } from 'antd';
-import { Drawer, Form as AntdForm, Modal, Space } from 'antd';
+import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
+import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
@@ -19,7 +19,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
 };
 
-export const StepForm: React.FC<StepFormProps> = (props) => {
+export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const [form] = AntdForm.useForm();
   const { title, modal, triggerText, triggerButtonType, submitTimeout, onFinish, width, ...rest } =
     props;
@@ -76,7 +76,13 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         return (
           <>
             {dom}
-            <FooterToolbar>{submitter}</FooterToolbar>
+            <Affix
+              style={{ position: 'absolute', right: 120 }}
+              offsetTop={120}
+              offsetBottom={110}
+            >
+              <Space>{submitter}</Space>
+            </Affix>
           </>
         );
     }
@@ -121,7 +127,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     default:
       return <>{stepsForm()}</>;
   }
-};
+});
 
 StepForm.defaultProps = {
   title: '新建',

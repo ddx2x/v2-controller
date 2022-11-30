@@ -1,3 +1,3 @@
 export * from './commdity';
-export * from './edit';
+export * from './commdity.edit';
 

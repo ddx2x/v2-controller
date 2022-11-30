@@ -14,10 +14,6 @@ import { Table } from '../dynamic-components/table';
 import { pageManager } from './manager';
 import { View } from './typing';
 
-type Kind<T> = {
-  [T in keyof View['kind']]?: View
-}
-
 export default observer(() => {
   const routeKey = useLocation()
     .pathname.split('/')

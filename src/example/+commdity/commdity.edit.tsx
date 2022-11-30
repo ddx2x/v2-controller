@@ -229,7 +229,7 @@ pageManager.register('commdity.edit', {
   page: {
     view: [commdityEdit],
     container: {
-      keepAlive: false,
+      keepAlive: true,
       header: {
         title: '商品信息 编辑',
       },
