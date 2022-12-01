@@ -27,16 +27,17 @@ export default observer(() => {
   const isCaching = isCachingNode(location.pathname)
   useEffect((): () => void => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
-    return () => {}
+    return () => { }
     // return () => pageManager.clear(routeKey); // 清除stores
   });
 
   const page = (() => {
     return (
       <>
-        {schema?.view && schema.view.map((config: View) => {
+        {schema?.view && schema.view.map((config: View, index) => {
           const { kind, ...props } = config;
           props['location'] = location
+          props['key'] = index
 
           switch (kind) {
             case 'table':
