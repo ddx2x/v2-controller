@@ -145,7 +145,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   let data = typeof dataSource == 'function' ? dataSource() : dataSource
 
   return (
-    <div ref={setContainer}>
+    <>
       <ProTable
         headerTitle={
           headerTitle
@@ -191,6 +191,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
         toolBarRender={() => []}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}
+        tableRender={(_, defaultDom) => {
+          return (
+            <div ref={setContainer}>
+              {defaultDom}
+            </div>
+          )
+        }}
         {...rest}
       />
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
@@ -199,7 +206,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           {data.lenght > 0 || `（已展示${data.length}条）`}
         </Button>
       </div>
-    </div>
+    </>
   );
 });
 
