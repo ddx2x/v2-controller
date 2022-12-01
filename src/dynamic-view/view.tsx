@@ -25,11 +25,11 @@ export default observer(() => {
 
   const intl = useIntl(); // 国际化组件
   const isCaching = isCachingNode(location.pathname)
-  useEffect((): () => void => {
+
+  useEffect(() => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
-    return () => { }
-    // return () => pageManager.clear(routeKey); // 清除stores
-  });
+    return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
+  }, []);
 
   const page = (() => {
     return (
