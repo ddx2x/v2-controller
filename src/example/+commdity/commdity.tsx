@@ -112,6 +112,22 @@ const commdityTable: View = {
       title: '价格',
     },
   ],
+  expand: {
+    kind: 'table',
+    onDataRender: (record) => [record],
+    table: {
+      columns: [
+        {
+          dataIndex: 'name',
+          title: '商品名称',
+        },
+        {
+          dataIndex: 'value',
+          title: '价格',
+        },
+      ],
+    },
+  },
   moreMenuButton: (record) => [
     {
       btkind: 'descriptions',
@@ -128,7 +144,7 @@ const commdityTable: View = {
     },
     { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
     { btkind: 'link', fold: true, link: `/commdity/page/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
-    { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
+    { btkind: 'confirm', fold: true, onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,

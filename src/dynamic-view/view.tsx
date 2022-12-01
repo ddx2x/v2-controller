@@ -10,15 +10,24 @@ import type { ListProps } from '../dynamic-components/list';
 import { List } from '../dynamic-components/list';
 import type { TableProps } from '../dynamic-components/table';
 import { Table } from '../dynamic-components/table';
+import { eventEmitter } from './event';
 import { pageManager } from './manager';
 import { View } from './typing';
 
-export default observer(() => {
-
-  const location = useLocation()
-  const routeKey = location.pathname.split('/')
+const trRouterKey = (path: string) => {
+  return path.split('/')
     .filter((item) => item)
     .join('.');
+}
+
+export default observer(() => {
+
+  eventEmitter.on('pageManagerClear', (path: string) => {
+    pageManager.clear(trRouterKey(path));
+  })
+
+  const location = useLocation()
+  const routeKey = trRouterKey(location.pathname)
 
   const schema = pageManager.page(routeKey); // 注册配置项
   if (!schema) return null;
@@ -28,7 +37,7 @@ export default observer(() => {
 
   useEffect(() => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
-    return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
+    // return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
   }, []);
 
   const page = (() => {

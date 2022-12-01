@@ -46,8 +46,6 @@ export const Container: React.FC<ContainerProps> = (props) => {
   const headerBreadcrumb = (): BreadcrumbProps | undefined => {
     // 面包屑🍞
     // 开启 useBreadcrumb 后如果不传值, 可根据 layout context 动态获取到自动根据路由计算的面包屑
-    console.log('useBreadcrumb', useBreadcrumb, context);
-
     if (!useBreadcrumb) return undefined;
     if (!context) {
       console.warn(
