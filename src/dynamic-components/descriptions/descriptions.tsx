@@ -2,14 +2,16 @@ import {
   ActionType,
   ProDescriptions,
   ProDescriptionsItemProps,
-  ProDescriptionsProps
+  ProDescriptionsProps,
+  ProProvider
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from "history";
 import { observer } from 'mobx-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
 
 export declare type DescriptionsItem = ProDescriptionsItemProps & {
@@ -61,6 +63,8 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
     return () => actionRef && unMount && unMount(location, actionRef)
   }, [])
 
+  const proProviderValues = useContext(ProProvider);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -79,24 +83,31 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
 
   const Page = () => {
     return (
-      <ProDescriptions
-        actionRef={actionRef}
-        dataSource={dataSource}
-        {...rest}
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
+        }}
       >
-        {items && items.map((item) => {
-          const { value, valueType, dataIndex, key, ...rest } = item;
-          let dKey = dataIndex || key || ''
-          return (
-            <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>{
-              value ?
-                value :
-                (dataSource && dKey ? dataSource[String(dKey)] : '')
-            }</ProDescriptions.Item>
-          );
-        })}
-        {props.children}
-      </ProDescriptions>
+        <ProDescriptions
+          actionRef={actionRef}
+          dataSource={dataSource}
+          {...rest}
+        >
+          {items && items.map((item) => {
+            const { value, valueType, dataIndex, key, ...rest } = item;
+            let dKey = dataIndex || key || ''
+            return (
+              <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>{
+                value ?
+                  value :
+                  (dataSource && dKey ? dataSource[String(dKey)] : '')
+              }</ProDescriptions.Item>
+            );
+          })}
+          {props.children}
+        </ProDescriptions>
+      </ProProvider.Provider>
     );
   };
 

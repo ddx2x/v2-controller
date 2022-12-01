@@ -76,6 +76,12 @@ const detailCommdity: DescriptionsProps = {
       dataIndex: 'name',
     },
     {
+      title: '名称',
+      key: 'name',
+      dataIndex: 'name',
+      valueType: 'imageUpload',
+    },
+    {
       title: '操作',
       valueType: 'option',
       render: () => [
@@ -120,6 +126,7 @@ const commdityTable: View = {
         {
           dataIndex: 'name',
           title: '商品名称',
+          
         },
         {
           dataIndex: 'value',
@@ -136,7 +143,7 @@ const commdityTable: View = {
         id: '这是一段文本columns',
         date: '20200809',
         money: '1212100',
-        state: 'all',
+        state: 'closed',
         state2: 'open',
         ...record
       },
@@ -144,7 +151,7 @@ const commdityTable: View = {
     },
     { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
     { btkind: 'link', fold: true, link: `/commdity/page/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
-    { btkind: 'confirm', fold: true, onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
+    { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,

@@ -169,6 +169,7 @@ export const commdityEdit: View = {
             {
               title: '名称',
               dataIndex: 'text',
+              valueType: 'date',
             },
           ],
         },
