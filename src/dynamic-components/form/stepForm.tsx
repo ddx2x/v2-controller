@@ -1,12 +1,15 @@
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
+import type { ProFormInstance } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
+import type { Location } from "history";
 import { observer } from 'mobx-react';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
+import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
@@ -17,12 +20,39 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onFinish?: (form: FormInstance<unknown> | undefined, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
+} & RouterHistory & {
+  mount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance | undefined>
+  ) => void
+  unMount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance | undefined>
+  ) => void
 };
 
 export const StepForm: React.FC<StepFormProps> = observer((props) => {
+  const {
+    location,
+    mount,
+    unMount,
+    title,
+    modal,
+    triggerText,
+    triggerButtonType,
+    submitTimeout,
+    onFinish,
+    width,
+    ...rest
+  } = props;
+  // ref
   const [form] = AntdForm.useForm();
-  const { title, modal, triggerText, triggerButtonType, submitTimeout, onFinish, width, ...rest } =
-    props;
+  const formRef = useRef<ProFormInstance>();
+
+  useEffect(() => {
+    formRef && mount && mount(location, formRef)
+    return () => formRef && unMount && unMount(location, formRef)
+  }, [])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -97,6 +127,8 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
         }}
       >
         <BetaSchemaForm
+          // @ts-ignore
+          formRef={formRef}
           // @ts-ignore
           form={form}
           // @ts-ignore

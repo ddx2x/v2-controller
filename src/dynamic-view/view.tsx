@@ -15,9 +15,8 @@ import { View } from './typing';
 
 export default observer(() => {
 
-  const pathname = useLocation()
-    .pathname
-  const routeKey = pathname.split('/')
+  const location = useLocation()
+  const routeKey = location.pathname.split('/')
     .filter((item) => item)
     .join('.');
 
@@ -25,7 +24,7 @@ export default observer(() => {
   if (!schema) return null;
 
   const intl = useIntl(); // 国际化组件
-  const isCaching = isCachingNode(pathname)
+  const isCaching = isCachingNode(location.pathname)
   useEffect((): () => void => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
     return () => {}
@@ -37,6 +36,7 @@ export default observer(() => {
       <>
         {schema?.view && schema.view.map((config: View) => {
           const { kind, ...props } = config;
+          props['location'] = location
 
           switch (kind) {
             case 'table':
@@ -50,7 +50,7 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
-          
+
         })}
       </>
     );

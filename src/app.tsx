@@ -113,9 +113,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
   return {
     // path: '/',
-    location: {
-      pathname: '/',
-    },
+    // location: {
+    //   pathname: '/',
+    // },
     rightContentRender: () => <RightContent />,
     footerRender: () => <Footer />,
     onPageChange: () => {

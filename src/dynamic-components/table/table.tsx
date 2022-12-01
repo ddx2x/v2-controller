@@ -2,6 +2,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage, Link } from '@umijs/max';
 import { Button, ButtonProps, Dropdown, Popconfirm, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
+import type { Location } from "history";
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -9,6 +10,7 @@ import { VList } from 'virtuallist-antd';
 import { DescriptionsProps, useDescriptions } from '../descriptions';
 import { FormProps, useForm } from '../form';
 import { randomKey } from '../helper';
+import { RouterHistory } from '../router';
 
 export declare type ExtraAction =
   { valueType: 'button' } & ButtonProps |
@@ -54,24 +56,22 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+} & RouterHistory & {
+  mount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
+  unMount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
-  useEffect(() => {
-    window.addEventListener('mousemove', (evt: MouseEvent) => {
-      if (
-        evt.defaultPrevented ||
-        (container !== null && container.contains(evt.target as Node))
-      ) {
-        document.body.style.overflow = "hidden";
-        return
-      }
-      document.body.style.overflow = "visible";
-    })
-  })
-
-
   const {
+    location,
+    mount,
+    unMount,
     columns,
     moreMenuButton,
     virtualList,
@@ -87,11 +87,29 @@ export const Table: React.FC<TableProps> = observer((props) => {
     batchDelete,
     ...rest
   } = props;
-
-  let newColumns = columns
-
   // ref
   const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    actionRef && mount && mount(location, actionRef)
+    return () => actionRef && unMount && unMount(location, actionRef)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('mousemove', (evt: MouseEvent) => {
+      if (
+        evt.defaultPrevented ||
+        (container !== null && container.contains(evt.target as Node))
+      ) {
+        document.body.style.overflow = "hidden";
+        return
+      }
+      document.body.style.overflow = "visible";
+    })
+  })
+
+
+  let newColumns = columns
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // 多选 批量删除

@@ -49,6 +49,14 @@ valueTypeMapStore.registerValueType({ videoModule });
 
 export const commdityEdit: View = {
   kind: 'stepForm',
+  mount: (location, formRef) => {
+    console.log('location?.search', location?.search);
+    location?.search &&
+      formRef.current?.setFieldsValue({ name: location?.search })
+  },
+  unMount: (location, formRef) => {
+    formRef.current?.resetFields()
+  },
   steps: [
     { title: '基本信息' },
     { title: '交付设置' },
@@ -225,11 +233,25 @@ export const commdityEdit: View = {
   ],
 };
 
-pageManager.register('commdity.edit', {
+pageManager.register('commdity.add', {
   page: {
     view: [commdityEdit],
     container: {
       keepAlive: true,
+      header: {
+        title: '商品信息 新增',
+      },
+    }
+  },
+  stores: [],
+});
+
+pageManager.register('commdity.page.edit', {
+  page: {
+    view: [commdityEdit],
+    container: {
+      keepAlive: false,
+      useBreadcrumb: true,
       header: {
         title: '商品信息 编辑',
       },

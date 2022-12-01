@@ -127,7 +127,7 @@ const commdityTable: View = {
       ...detailCommdity
     },
     { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
-    { btkind: 'link', fold: true, link: '/commdity/edit', title: '全量编辑' },
+    { btkind: 'link', fold: true, link: `/commdity/page/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
     { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,

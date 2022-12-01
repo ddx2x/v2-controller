@@ -1,11 +1,13 @@
-import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, FooterToolbar, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
+import type { Location } from "history";
 import { observer } from 'mobx-react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
+import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
@@ -16,13 +18,37 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
   intl?: IntlShape; // 国际化
+} & RouterHistory & {
+  mount?: (
+    location: Location | undefined,
+    form: FormInstance
+  ) => void
+  unMount?: (
+    location: Location | undefined,
+    form: FormInstance
+  ) => void
 }
 
 export const Form: React.FC<FormProps> = observer((props) => {
+  const {
+    location,
+    mount,
+    unMount,
+    triggerText,
+    triggerButtonType,
+    triggerButtonSize,
+    submitTimeout,
+    onSubmit,
+    intl,
+    ...rest
+  } = props;
+  // ref
   const [form] = AntdForm.useForm();
-  const proProviderValues = useContext(ProProvider);
 
-  const { triggerText, triggerButtonType, triggerButtonSize, submitTimeout, onSubmit, intl, ...rest } = props;
+  useEffect(() => {
+    form && mount && form && mount(location, form)
+    return () => form && unMount && form && unMount(location, form)
+  }, [])
 
   switch (props.layoutType) {
     case 'ModalForm':
@@ -34,6 +60,8 @@ export const Form: React.FC<FormProps> = observer((props) => {
         destroyOnClose: true,
       };
   }
+
+  const proProviderValues = useContext(ProProvider);
 
   return (
     <ProProvider.Provider
