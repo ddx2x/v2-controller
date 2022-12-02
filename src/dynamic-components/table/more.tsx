@@ -20,7 +20,7 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
     dataIndex: 'more',
     title: '操作',
     valueType: 'option',
-    fixed: true,
+    fixed: 'right',
     render: (_: any, record: any) => {
       let notFold: any[] = []
       let items: any[] = []

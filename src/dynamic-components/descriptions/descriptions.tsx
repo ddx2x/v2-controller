@@ -14,34 +14,43 @@ import { IntlShape } from 'react-intl';
 import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
 
-export declare type DescriptionsItem = ProDescriptionsItemProps & {
-  value?: any;
+export declare type DescriptionsActionRef = {
+  open?: () => void
 }
+
+export declare type DescriptionsItem =
+  ProDescriptionsItemProps & {
+    value?: any;
+  }
 
 // https://next-procomponents.ant.design/components/descriptions
 
-export declare type DescriptionsProps = ProDescriptionsProps & {
-  modal?: 'Modal' | 'Drawer' | 'Page';
-  title?: string;
-  triggerText?: string;
-  triggerButtonType?: ButtonType;
-  triggerButtonSize?: ButtonSize;
-  width?: string | number;
-  items?: DescriptionsItem[]; // 自定义类型
-  intl?: IntlShape;
-} & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>
-  ) => void
-  unMount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>
-  ) => void
-}
+export declare type DescriptionsProps =
+  ProDescriptionsProps & {
+    pageActionRef?: React.MutableRefObject<DescriptionsActionRef | undefined>
+    modal?: 'Modal' | 'Drawer' | 'Page';
+    title?: string;
+    triggerText?: string;
+    triggerButtonType?: ButtonType;
+    triggerButtonSize?: ButtonSize;
+    width?: string | number;
+    items?: DescriptionsItem[]; // 自定义类型
+    intl?: IntlShape;
+
+  } & RouterHistory & {
+    mount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>
+    ) => void
+    unMount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>
+    ) => void
+  }
 
 export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
   const {
+    pageActionRef,
     location,
     mount,
     unMount,
@@ -59,8 +68,12 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
 
   useEffect(() => {
-    actionRef && mount && mount(location, actionRef)
-    return () => actionRef && unMount && unMount(location, actionRef)
+    actionRef &&
+      mount &&
+      mount(location, actionRef)
+    return () => actionRef &&
+      unMount &&
+      unMount(location, actionRef)
   }, [])
 
   const proProviderValues = useContext(ProProvider);
@@ -160,5 +173,7 @@ Descriptions.defaultProps = {
 };
 
 export const useDescriptions = (props: DescriptionsProps) => {
-  return [<Descriptions {...props} />];
+  return [
+    <Descriptions  {...props} />,
+  ];
 };

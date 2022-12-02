@@ -25,6 +25,11 @@ export default {
       changeOrigin: true,
       logger: console,
     },
+    '/search/**': {
+      target: 'http://127.0.0.1:3000',
+      // changeOrigin: true,
+      logger: console,
+    },
     '/watch/**': {
       target: 'http://127.0.0.1:3000',
       // changeOrigin: true,

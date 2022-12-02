@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import type { ObjectApi, Query } from './api';
+import type { ObjectApi, Query, SerachQuery } from './api';
 import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -100,6 +100,10 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       this.data.filter((item) => item.uid === id);
     });
   };
+
+  serach = async (sq: SerachQuery): Promise<any> => {
+    this.api.search(sq)
+  }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable<ObjectWatchEvent<T>>([], { deep: false });

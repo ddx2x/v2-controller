@@ -34,6 +34,12 @@ export interface IObjectApiOptions<T extends IObject> {
   service?: string;
 }
 
+export declare type SerachQuery = {
+  text: string,
+  offset: number,
+  limit: number,
+}
+
 export declare type Query = {
   id?: string,
   page?: number,
@@ -125,6 +131,18 @@ export class ObjectApi<T extends IObject = any> {
     return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
   }
 
+  serachUrl = (query?: Partial<Query>) => {
+    const { apiPrefix, apiVersion, apiResource } = this;
+    const service = 'serach';
+    const resourcePath = ObjectApi.createLink({
+      service,
+      apiPrefix,
+      apiVersion,
+      apiResource,
+    });
+    return '/' + resourcePath + (query ? `?` + stringify(query) : '');
+  };
+
   getUrl = (query?: Partial<Query>, op?: string) => {
     const { service, apiPrefix, apiVersion, apiResource } = this;
     const resourcePath = ObjectApi.createLink({
@@ -161,5 +179,9 @@ export class ObjectApi<T extends IObject = any> {
 
   upload = async <D = string | ArrayBuffer>(data: D) => {
     return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
+  };
+
+  search = async (q: SerachQuery) => {
+    return request(this.serachUrl(q), { method: 'GET' }).then(this.parseResponse);
   };
 }
