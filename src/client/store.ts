@@ -102,7 +102,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   search = async (sq: SearchQuery): Promise<any> => {
-    this.api.search(sq)
+    return this.api.search(sq)
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data

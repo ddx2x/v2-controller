@@ -182,6 +182,9 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   search = async (q: SearchQuery) => {
-    return request(this.searchUrl(q), { method: 'GET' }).then(this.parseResponse);
+    return request(this.searchUrl(q), { method: 'GET' })
   };
 }
+
+
+// export type ISerachObjectConstructor<T = any> = new (data: any) => T;

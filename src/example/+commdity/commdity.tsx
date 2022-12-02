@@ -173,7 +173,7 @@ const commdityTable: View = {
     onSearch: (value, setGlobalSearchOptions) => {
       commdityStore.search({ text: value || '', offset: 0, limit: 10 })
         .then(res => {
-          console.log(res)
+          console.log("------", res)
 
           Array.isArray(res) &&
             setGlobalSearchOptions(
