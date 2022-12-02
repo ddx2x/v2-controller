@@ -189,10 +189,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
             allowClear
             options={globalSearchOptions}
             placeholder={'请输入搜索文本'}
-            onSearch={(value) =>
+            onSearch={(value) => {
+              setGlobalSearchOptions([])
               globalSearch.onSearch &&
-              globalSearch.onSearch(value, setGlobalSearchOptions)
-            }
+                globalSearch.onSearch(value, setGlobalSearchOptions)
+            }}
             style={searchCollapsed ? { width: '350px' } : undefined}
           />
         )

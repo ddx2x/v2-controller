@@ -4,7 +4,7 @@ import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { SearchLabel } from '../search.label';
-import { commditySearchApi, commdityStore } from './commdity.store';
+import { commdityStore } from './commdity.store';
 
 const editCommdity: FormProps = {
   triggerText: '编辑',
@@ -171,12 +171,16 @@ const commdityTable: View = {
   ],
   globalSearch: {
     onSearch: (value, setGlobalSearchOptions) => {
-      setGlobalSearchOptions([])
-      commditySearchApi.search({ text: value || '', offset: 0, limit: 10 }).then(
-        res => Array.isArray(res) &&
-          setGlobalSearchOptions(
-            res.map(item => { return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name } }))
-      )
+      commdityStore.search({ text: value || '', offset: 0, limit: 10 })
+        .then(res => {
+          console.log(res)
+
+          Array.isArray(res) &&
+            setGlobalSearchOptions(
+              res.map(item => {
+                return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name }
+              }))
+        })
     }
   },
   dataSource: () => commdityStore.items,

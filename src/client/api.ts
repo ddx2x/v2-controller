@@ -34,10 +34,10 @@ export interface IObjectApiOptions<T extends IObject> {
   service?: string;
 }
 
-export declare type SerachQuery = {
+export declare type SearchQuery = {
   text: string,
-  offset: number,
-  limit: number,
+  offset?: number,
+  limit?: number,
 }
 
 export declare type Query = {
@@ -131,9 +131,9 @@ export class ObjectApi<T extends IObject = any> {
     return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
   }
 
-  serachUrl = (query?: Partial<Query>) => {
+  searchUrl = (query?: Partial<Query>) => {
     const { apiPrefix, apiVersion, apiResource } = this;
-    const service = 'serach';
+    const service = 'search';
     const resourcePath = ObjectApi.createLink({
       service,
       apiPrefix,
@@ -181,7 +181,7 @@ export class ObjectApi<T extends IObject = any> {
     return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
   };
 
-  search = async (q: SerachQuery) => {
-    return request(this.serachUrl(q), { method: 'GET' }).then(this.parseResponse);
+  search = async (q: SearchQuery) => {
+    return request(this.searchUrl(q), { method: 'GET' }).then(this.parseResponse);
   };
 }

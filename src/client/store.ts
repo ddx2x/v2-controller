@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import type { ObjectApi, Query, SerachQuery } from './api';
+import type { ObjectApi, Query, SearchQuery } from './api';
 import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -101,7 +101,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     });
   };
 
-  serach = async (sq: SerachQuery): Promise<any> => {
+  search = async (sq: SearchQuery): Promise<any> => {
     this.api.search(sq)
   }
 

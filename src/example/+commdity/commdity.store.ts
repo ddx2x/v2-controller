@@ -1,6 +1,5 @@
-import { IObject, ObjectApi, ObjectStore, ObjectWatchApi, SearchObject } from '@/client';
+import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
 import type { WatchApi } from '@/client/event';
-import { request } from '@umijs/max';
 
 class Commodity extends IObject {
   name?: string
@@ -21,21 +20,6 @@ const commdityApi = new ObjectApi<Commodity>({
   objectConstructor: Commodity,
   service: "prod",
 });
-
-export const commditySearchApi = {
-  search: async (
-    query: {
-      text: string | number,
-      offset: number,
-      limit: number
-    }
-  ) => {
-    return request(
-      '/search/api/v1/Product',
-      { method: 'GET', params: query }
-    )
-  }
-}
 
 class CommdityStore extends ObjectStore<Commodity> {
   watchApi: WatchApi<Commodity, CommdityStore>;
