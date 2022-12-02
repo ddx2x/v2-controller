@@ -2,14 +2,16 @@ import { Page, PageSchema, Store } from './typing';
 
 class PageManager<S extends Store> {
   private stores = new Map<string, PageSchema<S>>();
-  
+
   init = (key: string) =>
-    (this.stores.get(key)?.stores || []).map(async (store) => {
-      store.load && store.load(store.query).
-        then(() => {
-          if (store.watch) store.watch()
-        })
-    });
+    (this.stores.get(key)?.stores || []).
+      map(async (store) => {
+        store.load &&
+          store.load(store.query).
+            then(() => {
+               store.watch && store.watch() 
+            })
+      });
 
   clear = (key: string) =>
     (this.stores.get(key)?.stores || []).map((store) => {

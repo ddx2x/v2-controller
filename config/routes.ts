@@ -27,17 +27,29 @@ export default [
     icon: 'setting',
     routes: [
       {
-        name: '商品编辑',
-        path: '/commdity/page',
+        name: '商品列表',
+        path: '/commdity/list',
         icon: 'setting',
         component: './dynamic-view',
+        routes: [
+          {
+            name: '商品编辑',
+            path: '/commdity/list/edit',
+            hideInMenu: true,
+            icon: 'setting',
+            component: './dynamic-view',
+            parentKeys: ['/commdity/list']
+          },
+        ]
       },
       {
-        name: '商品编辑',
-        path: '/commdity/edit',
+        name: '商品新增',
+        path: '/commdity/add',
         icon: 'setting',
         component: './dynamic-view',
+        parentKeys: ['/commdity']
       },
+
     ]
   },
 ];

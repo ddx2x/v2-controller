@@ -37,8 +37,9 @@ export interface IObjectApiOptions<T extends IObject> {
 export declare type Query = {
   id?: string,
   page?: number,
-  per_page?: number,
-  sort?: string,
+  size?: number,
+  sort?: { [key: string]: any },
+
   resourceVersion?: number
   timeoutSeconds?: number
   watch?: boolean | number;

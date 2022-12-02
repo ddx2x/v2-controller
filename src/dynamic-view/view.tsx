@@ -10,33 +10,43 @@ import type { ListProps } from '../dynamic-components/list';
 import { List } from '../dynamic-components/list';
 import type { TableProps } from '../dynamic-components/table';
 import { Table } from '../dynamic-components/table';
+import { eventEmitter } from './event';
 import { pageManager } from './manager';
 import { View } from './typing';
 
-export default observer(() => {
-
-  const pathname = useLocation()
-    .pathname
-  const routeKey = pathname.split('/')
+const trRouterKey = (path: string) => {
+  return path.split('/')
     .filter((item) => item)
     .join('.');
+}
+
+export default observer(() => {
+
+  eventEmitter.on('pageManagerClear', (path: string) => {
+    pageManager.clear(trRouterKey(path));
+  })
+
+  const location = useLocation()
+  const routeKey = trRouterKey(location.pathname)
 
   const schema = pageManager.page(routeKey); // 注册配置项
   if (!schema) return null;
 
   const intl = useIntl(); // 国际化组件
-  const isCaching = isCachingNode(pathname)
-  useEffect((): () => void => {
+  const isCaching = isCachingNode(location.pathname)
+
+  useEffect(() => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
-    return () => {}
-    // return () => pageManager.clear(routeKey); // 清除stores
-  });
-  
+    return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
+  }, []);
+
   const page = (() => {
     return (
       <>
-        {schema?.view && schema.view.map((config: View) => {
+        {schema?.view && schema.view.map((config: View, index) => {
           const { kind, ...props } = config;
+          props['location'] = location
+          props['key'] = index
 
           switch (kind) {
             case 'table':
@@ -50,7 +60,7 @@ export default observer(() => {
             case 'descriptions':
               return <Descriptions modal="Page" {...props as DescriptionsProps} intl={intl} />;
           }
-          
+
         })}
       </>
     );

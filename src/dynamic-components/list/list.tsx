@@ -2,10 +2,11 @@ import type { ActionType, ProListProps } from '@ant-design/pro-components';
 import { FooterToolbar } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
+import type { Location } from "history";
 import { observer } from 'mobx-react';
-import type { ReactText } from 'react';
-import { useRef, useState } from 'react';
+import { ReactText, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
+import { RouterHistory } from '../router';
 
 import { ProList } from './proList';
 
@@ -15,10 +16,22 @@ export type ListProps = ProListProps & {
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+} & RouterHistory & {
+  mount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
+  unMount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
 };
 
 export const List: React.FC<ListProps> = observer((props) => {
   const {
+    location,
+    mount,
+    unMount,
     virtualList,
     dataSource,
     useBatchDelete,
@@ -26,9 +39,13 @@ export const List: React.FC<ListProps> = observer((props) => {
     toolBarRender,
     ...rest
   } = props;
-
   // ref
   const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    actionRef && mount && mount(location, actionRef)
+    return () => actionRef && unMount && unMount(location, actionRef)
+  })
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
   const rowSelection = {

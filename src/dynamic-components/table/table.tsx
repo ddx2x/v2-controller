@@ -1,14 +1,17 @@
-import { DownOutlined } from '@ant-design/icons';
 import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components';
-import { FormattedMessage, Link } from '@umijs/max';
-import { Button, ButtonProps, Dropdown, Popconfirm, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
+import { FormattedMessage } from '@umijs/max';
+import { Button, ButtonProps, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
+import type { Location } from "history";
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
-import { DescriptionsProps, useDescriptions } from '../descriptions';
-import { FormProps, useForm } from '../form';
-import { randomKey } from '../helper';
+
+import { RouterHistory } from '../router';
+import { ExpandedConfig, expandModule } from './expand';
+import { injectTableOperate, MoreButtonType } from './more';
+
+
 
 export declare type ExtraAction =
   { valueType: 'button' } & ButtonProps |
@@ -34,19 +37,15 @@ export const extraActionArray = (items: ExtraAction[]) => {
   });
 };
 
-export declare type MoreButtonType = (
-  { btkind: 'descriptions' } & DescriptionsProps | // 详情页
-  { btkind: 'form'; } & FormProps | // 表单
-  { btkind: 'link'; } & { link: string, title: string } | // 跳转
-  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
-) & { fold?: boolean } // 放入折叠框
+
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading'> & {
+export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading' | 'expandable'> & {
   loading?: Function | boolean
   dataSource?: Function | any[]
   virtualList?: boolean;
+  expand?: ExpandedConfig;
   scrollHeight?: string | number; // 表格高度
   moreMenuButton?: (record: any) => MoreButtonType[],
   onLoading?: (actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
@@ -54,25 +53,24 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+} & RouterHistory & {
+  mount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
+  unMount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>
+  ) => void
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
-  useEffect(() => {
-    window.addEventListener('mousemove', (evt: MouseEvent) => {
-      if (
-        evt.defaultPrevented ||
-        (container !== null && container.contains(evt.target as Node))
-      ) {
-        document.body.style.overflow = "hidden";
-        return
-      }
-      document.body.style.overflow = "visible";
-    })
-  })
-
-
   const {
+    location,
+    mount,
+    unMount,
     columns,
+    expand,
     moreMenuButton,
     virtualList,
     loading,
@@ -87,11 +85,29 @@ export const Table: React.FC<TableProps> = observer((props) => {
     batchDelete,
     ...rest
   } = props;
-
-  let newColumns = columns
-
   // ref
   const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    actionRef && mount && mount(location, actionRef)
+    return () => actionRef && unMount && unMount(location, actionRef)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('mousemove', (evt: MouseEvent) => {
+      if (
+        evt.defaultPrevented ||
+        (container !== null && container.contains(evt.target as Node))
+      ) {
+        document.body.style.overflow = "hidden";
+        return
+      }
+      document.body.style.overflow = "visible";
+    })
+  })
+
+
+  let newColumns = columns
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // 多选 批量删除
@@ -122,71 +138,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 更多操作 按钮
   if (moreMenuButton && newColumns) {
-    newColumns = newColumns.filter(item => item.dataIndex != 'more')
-    newColumns.push({
-      dataIndex: 'more',
-      title: '操作',
-      valueType: 'option',
-      fixed: true,
-      render: (_, record) => {
-        let notFold: any[] = []
-        let items: any[] = []
-
-        moreMenuButton(record).map(item => {
-          let label = (() => {
-            switch (item.btkind) {
-              case 'descriptions':
-                const [description] = useDescriptions({ ...item })
-                return description
-              case 'form':
-                const [form] = useForm({ ...item })
-                return form
-              case 'link':
-                return (
-                  <Button type='link' size='small' block>
-                    <Link to={item.link}>{item.title}</Link>
-                  </Button>
-                )
-              case 'confirm':
-                return (
-                  <Popconfirm
-                    key="popconfirm"
-                    title={item.text || `确认${item.title}吗 ?`}
-                    okText="是" cancelText="否" onConfirm={(e) => item.onClick(e)}>
-                    <Button type='link' size='small' block >{item.title}</Button>
-                  </Popconfirm>
-                )
-              default:
-                return <Button type='link' size='small' block>请定义操作</Button>
-            }
-          })()
-
-          item.fold ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notFold.push(label)
-        })
-        return (
-          <>
-            <Space>
-              {notFold.map(item => item)}
-              <Dropdown menu={{ items }}>
-                <a onClick={e => e.preventDefault()}>
-                  <Space>
-                    操作
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            </Space>
-          </>
-        )
-      },
-    })
+    newColumns = injectTableOperate(moreMenuButton, newColumns)
   }
 
   // 数据
   let data = typeof dataSource == 'function' ? dataSource() : dataSource
 
   return (
-    <div ref={setContainer}>
+    <>
       <ProTable
         headerTitle={
           headerTitle
@@ -231,6 +190,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
         rowSelection={data ? rowSelection : false}
         toolBarRender={() => []}
         onReset={() => props.onSubmit && props.onSubmit({})}
+        expandable={expand && { ...expandModule(expand) }}
+        tableRender={(_, defaultDom) => {
+          return (
+            <div ref={setContainer}>
+              {defaultDom}
+            </div>
+          )
+        }}
         {...rest}
       />
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
@@ -239,7 +206,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           {data.lenght > 0 || `（已展示${data.length}条）`}
         </Button>
       </div>
-    </div>
+    </>
   );
 });
 

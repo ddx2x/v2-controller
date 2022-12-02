@@ -1,13 +1,13 @@
 import Footer from '@/pages/layout/footer';
 import RightContent from '@/pages/layout/right-content';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
-import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { MenuDataItem, PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
 import { Button, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { isCachingNode } from './dynamic-components/container';
+import { eventEmitter } from './dynamic-view';
 import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -58,7 +58,11 @@ const menuRender = (
           title="是否清除缓存"
           okText="是"
           cancelText="否"
-          onConfirm={() => item.path && dropScope(item.path)}
+          onConfirm={async () =>
+            item.path
+            && await dropScope(item.path)
+            && eventEmitter.emit('pageManagerClear', item.path)
+          }
         >
           <Button
             disabled={location.pathname == item.path}
@@ -113,9 +117,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
   return {
     // path: '/',
-    location: {
-      pathname: '/',
-    },
+    // location: {
+    //   pathname: '/',
+    // },
     rightContentRender: () => <RightContent />,
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -147,11 +151,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // ],
     links: isDev
       ? [
-          // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-          //   <LinkOutlined />
-          //   <span>OpenAPI 文档</span>
-          // </Link>,
-        ]
+        // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+        //   <LinkOutlined />
+        //   <span>OpenAPI 文档</span>
+        // </Link>,
+      ]
       : [],
     // 自定义菜单
     collapsed: collapsed,
@@ -188,7 +192,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
+      if (initialState?.loading) return <PageLoading />;
       return (
         <>
           {children}

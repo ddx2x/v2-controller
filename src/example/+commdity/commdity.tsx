@@ -76,6 +76,12 @@ const detailCommdity: DescriptionsProps = {
       dataIndex: 'name',
     },
     {
+      title: '名称',
+      key: 'name',
+      dataIndex: 'name',
+      valueType: 'imageUpload',
+    },
+    {
       title: '操作',
       valueType: 'option',
       render: () => [
@@ -108,10 +114,31 @@ const commdityTable: View = {
       title: '商品名称',
     },
     {
-      dataIndex: 'value',
-      title: '价格',
+      dataIndex: 'title',
+      title: '标题',
+    },
+    {
+      dataIndex: 'sub_title',
+      title: '子标题',
+    },
+    {
+      dataIndex: 'brand_name',
+      title: '品牌名称',
     },
   ],
+  expand: {
+    kind: 'table',
+    onDataRender: (record) => [record],
+    table: {
+      columns: [
+        {
+          dataIndex: 'name',
+          title: '商品名称',
+        },
+
+      ],
+    },
+  },
   moreMenuButton: (record) => [
     {
       btkind: 'descriptions',
@@ -120,30 +147,29 @@ const commdityTable: View = {
         id: '这是一段文本columns',
         date: '20200809',
         money: '1212100',
-        state: 'all',
+        state: 'closed',
         state2: 'open',
         ...record
       },
       ...detailCommdity
     },
     { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
-    { btkind: 'link', fold: true, link: '/commdity/edit', title: '全量编辑' },
+    { btkind: 'link', fold: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
     { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
-  onLoading: (actionRef) => commdityStore.next(),
-  onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
+  onLoading: (actionRef) => commdityStore.next({ sort: { "name": 1 } }),
+  onSubmit: (params) => commdityStore.next({ sort: { "name": 1 } }),
 };
 
-pageManager.register('commdity.page', {
+pageManager.register('commdity.list', {
   page: { view: [commdityTable] },
   stores: [
     {
       store: commdityStore,
-      query: { limit: 0 },
-      load: commdityStore.load,
-      watch: commdityStore.watch,
+      query: { sort: { "name": 1 } },
+      load: commdityStore.next,
       exit: commdityStore.reset,
     },
   ],

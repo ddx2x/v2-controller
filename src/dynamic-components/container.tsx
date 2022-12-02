@@ -14,7 +14,6 @@ export declare type KeepAliveProps = {
 
 export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
   const path = props.path ? props.path : useLocation().pathname;
-
   return (
     // @ts-ignore
     <UmiKeepAlive name={path} cacheKey={path} id={path} saveScrollPosition="screen">

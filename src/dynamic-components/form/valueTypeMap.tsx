@@ -9,8 +9,8 @@ class ValueTypeMapStore {
     let vT: Record<string, ProRenderFieldPropsType> = {}
     // 自定义组件 注册
     Object.entries(valueType).map(([key, Component]) => vT[key] = {
-      render: (text) => {
-        return text;
+      render: (text, props) => {
+        return <Component {...props} {...props?.fieldProps} />;
       },
       renderFormItem: (props) => {
         return <Component {...props} {...props?.fieldProps} />;
