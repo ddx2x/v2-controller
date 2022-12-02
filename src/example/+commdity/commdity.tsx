@@ -109,34 +109,37 @@ const commdityTable: View = {
     {
       dataIndex: 'uid',
       title: 'id',
-      width: 300,
+      width: 30,
     },
     {
       dataIndex: 'name',
       title: '商品名称',
-      width: 300,
+      width: 200,
     },
     {
       dataIndex: 'name1',
       title: '商品名称',
-      width: 300,
+      width: 200,
     },
     {
       dataIndex: 'name2',
       title: '商品名称',
-      width: 300,
+      width: 200,
     },
     {
       dataIndex: 'title',
       title: '标题',
+      width: 200,
     },
     {
       dataIndex: 'sub_title',
       title: '子标题',
+      width: 100,
     },
     {
       dataIndex: 'brand_name',
       title: '品牌名称',
+      width: 100,
     },
   ],
   expand: {
