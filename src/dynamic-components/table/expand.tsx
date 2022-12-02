@@ -2,7 +2,6 @@
 import { Table, TableProps } from 'antd';
 import { ExpandableConfig } from 'antd/lib/table/interface';
 
-
 // 文本
 export declare type ExpandedRowAnyProps = {
   content: string | React.ReactNode;

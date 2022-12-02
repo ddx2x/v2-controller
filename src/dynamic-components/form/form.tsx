@@ -1,4 +1,4 @@
-import { BetaSchemaForm, FooterToolbar, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button, Form as AntdForm, FormInstance } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -102,4 +102,9 @@ Form.defaultProps = {
   },
   submitTimeout: 1000,
   columns: [],
+};
+
+
+export const useForm = (props: FormProps): [React.ReactNode, {}] => {
+  return [<Form {...props} />, {}];
 };

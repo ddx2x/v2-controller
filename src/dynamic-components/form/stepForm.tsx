@@ -1,5 +1,5 @@
-import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
@@ -180,3 +180,6 @@ StepForm.defaultProps = {
 };
 
 
+export const useStepsForm = (props: StepFormProps): [React.ReactNode, {}] => {
+  return [<StepForm {...props} />, {}];
+};

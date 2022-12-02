@@ -3,7 +3,8 @@ import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
-import { commdityStore } from './commdity.store';
+import { SearchLabel } from '../search.label';
+import { commditySearchApi, commdityStore } from './commdity.store';
 
 const editCommdity: FormProps = {
   triggerText: '编辑',
@@ -108,14 +109,27 @@ const commdityTable: View = {
     {
       dataIndex: 'uid',
       title: 'id',
+      width: 300,
     },
     {
       dataIndex: 'name',
       title: '商品名称',
+      width: 300,
+    },
+    {
+      dataIndex: 'name1',
+      title: '商品名称',
+      width: 300,
+    },
+    {
+      dataIndex: 'name2',
+      title: '商品名称',
+      width: 300,
     },
     {
       dataIndex: 'value',
       title: '价格',
+      width: 300,
     },
   ],
   expand: {
@@ -126,11 +140,13 @@ const commdityTable: View = {
         {
           dataIndex: 'name',
           title: '商品名称',
-          
+          width: 300,
         },
         {
           dataIndex: 'value',
           title: '价格',
+          sorter: true,
+          width: 300,
         },
       ],
     },
@@ -153,9 +169,19 @@ const commdityTable: View = {
     { btkind: 'link', fold: true, link: `/commdity/page/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
     { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
+  globalSearch: {
+    onSearch: (value, setGlobalSearchOptions) => {
+      setGlobalSearchOptions([])
+      commditySearchApi.search({ text: value || '', offset: 0, limit: 10 }).then(
+        res => Array.isArray(res) &&
+          setGlobalSearchOptions(
+            res.map(item => { return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name } }))
+      )
+    }
+  },
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
-  onLoading: (actionRef) => commdityStore.next(),
+  onNext: (actionRef) => commdityStore.next(),
   onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
 };
 
