@@ -127,9 +127,16 @@ const commdityTable: View = {
       width: 300,
     },
     {
-      dataIndex: 'value',
-      title: '价格',
-      width: 300,
+      dataIndex: 'title',
+      title: '标题',
+    },
+    {
+      dataIndex: 'sub_title',
+      title: '子标题',
+    },
+    {
+      dataIndex: 'brand_name',
+      title: '品牌名称',
     },
   ],
   expand: {
@@ -140,13 +147,6 @@ const commdityTable: View = {
         {
           dataIndex: 'name',
           title: '商品名称',
-          width: 300,
-        },
-        {
-          dataIndex: 'value',
-          title: '价格',
-          sorter: true,
-          width: 300,
         },
       ],
     },
@@ -166,7 +166,7 @@ const commdityTable: View = {
       ...detailCommdity
     },
     { btkind: 'form', fold: true, initialValues: record, ...editCommdity },
-    { btkind: 'link', fold: true, link: `/commdity/page/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
+    { btkind: 'link', fold: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
     { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
   globalSearch: {
@@ -181,18 +181,17 @@ const commdityTable: View = {
   },
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
-  onNext: (actionRef) => commdityStore.next(),
-  onSubmit: (params) => commdityStore.next({ per_page: 0, ...params }),
+  onNext: (actionRef) => commdityStore.next({ sort: { "name": 1 } }),
+  onSubmit: (params) => commdityStore.next({ sort: { "name": 1 } }),
 };
 
-pageManager.register('commdity.page', {
+pageManager.register('commdity.list', {
   page: { view: [commdityTable] },
   stores: [
     {
       store: commdityStore,
-      query: { limit: 0 },
-      load: commdityStore.load,
-      watch: commdityStore.watch,
+      query: { sort: { "name": 1 } },
+      load: commdityStore.next,
       exit: commdityStore.reset,
     },
   ],

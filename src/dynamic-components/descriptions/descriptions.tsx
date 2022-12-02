@@ -109,7 +109,7 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
         >
           {items && items.map((item) => {
             const { value, valueType, dataIndex, key, ...rest } = item;
-            let dKey = dataIndex || key || ''
+            const dKey = dataIndex || key || ''
             return (
               <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>{
                 value ?

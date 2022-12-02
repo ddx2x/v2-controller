@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { action, computed, observable, reaction } from 'mobx';
-import { ObjectApi } from './api';
 import type {
-  EventHandle, ObjectWatchEvent, ObjectWatchRouteEvent, WatchApi
+  EventHandle, ObjectWatchEvent, WatchApi
 } from './event';
 import { EventSourcePolyfill as EventSource } from './eventsource/eventsource';
 import type { IObject, ObjectStore } from './index';
-import { apiManager } from './manager';
 import { autobind, EventEmitter } from './utils';
 
 @autobind()
@@ -40,13 +38,9 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
     return this.apiUrl;
   }
 
-  @computed get activeStores() {
-    return Array.from(this.subscribers.keys());
-  }
+  @computed get activeStores() { return Array.from(this.subscribers.keys()); }
 
-  getSubscribersCount = (s: S) => {
-    return this.subscribers.get(s) || 0;
-  }
+  getSubscribersCount = (s: S) => { return this.subscribers.get(s) || 0; }
 
   subscribe = (...stores: S[]) => {
     stores.forEach((store) => {
@@ -60,41 +54,42 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
       });
   }
 
-  protected getQuery(): string[] {
+  protected getQuery = (): string[] => {
     return this.activeStores
       .map((store) => {
-        return store.api.getWatchUrl(store.version);
+        return store.api.getWatchUrl(store.api.version);
       })
   }
 
-  protected connect() {
+  protected connect = () => {
     if (this.evtSource) this.disconnect(); // close previous connection
     if (!this.activeStores.length) return;
 
     const apiUrl = `${this.apiURL}?${this.getQuery().join("&")}`;
     this.evtSource = new EventSource(apiUrl, {
       headers: {
-        // Authorization: useModel('userModel').user?.token || '',
+        Authorization: "test"
       },
     });
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;
   }
 
-  reconnect() {
+  reconnect = () => {
     if (!this.evtSource || this.evtSource.readyState !== EventSource.OPEN) {
       this.reconnectAttempts = this.maxReconnectsOnError;
       this.connect();
     }
   }
 
-  protected disconnect() {
+  protected disconnect = () => {
     if (!this.evtSource) return;
     this.evtSource.close();
     this.evtSource.onmessage = null;
   }
 
   protected onMessage = (evt: MessageEvent) => {
+    console.log("evt", evt);
     if (!evt.data) return;
     if (!this.onData) return;
 
@@ -104,29 +99,12 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
       this.onData.nemit(object?.kind || "", data);
       return;
     }
-
-    if (typeof this.onRouteEvent === 'function') {
-      this.onRouteEvent(data);
-    }
-
   }
 
-  protected onRouteEvent = async ({ type, url }: ObjectWatchRouteEvent) => {
-    if (type === 'STREAM_END') {
+  protected onRouteEvent = async (evt: string) => {
+    if (evt === 'STREAM_END') {
       this.disconnect();
-      const { apiBase } = ObjectApi.parseApi(url);
-      if (!apiBase) {
-        return;
-      }
-      const api = apiManager.getObjectApi(apiBase);
-      if (api) {
-        this.reconnect();
-      }
-    } else if (type.toLowerCase() === 'ping') {
-      // console.log('onMessage: PING');
-    } else if (type === 'STREAM_ERROR') {
-      this.disconnect();
-      // console.log('onMessage: STREAM_ERROR');
+    } else if (evt.toLowerCase() === 'ping') {
     }
   }
 
@@ -150,7 +128,7 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
         return;
       }
       const { version } = evt.object;
-      store.version = version;
+      store.api.version = version;
       evt.store = store;
       ecb(evt);
     };

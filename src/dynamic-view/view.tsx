@@ -37,7 +37,7 @@ export default observer(() => {
 
   useEffect(() => {
     !isCaching && pageManager.init(routeKey); // 挂载 stores
-    // return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
+    return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
   }, []);
 
   const page = (() => {

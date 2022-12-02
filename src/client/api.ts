@@ -37,8 +37,9 @@ export interface IObjectApiOptions<T extends IObject> {
 export declare type Query = {
   id?: string,
   page?: number,
-  per_page?: number,
-  sort?: string,
+  size?: number,
+  sort?: { [key: string]: any },
+
   resourceVersion?: number
   timeoutSeconds?: number
   watch?: boolean | number;
@@ -58,7 +59,7 @@ export class ObjectApi<T extends IObject = any> {
   // /api/v1/Product
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
-  protected version: number = 0;
+  public version: number = 0;
 
   static parseApi(url = '') {
     const [apiBase, apiPrefix, apiVersion, apiResource] = url.match(ObjectApi.matcher) || [];

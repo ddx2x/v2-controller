@@ -15,17 +15,13 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract watchApi: WatchApi<T, ObjectStore<T>>;
 
   public limit: number = -1;
-  public version: number = 0;
 
   private defers: Noop[] = [];
   private modifyEvtListeners: ModifyIObject<T>[] = [];
   private deleteEvtListeners: ModifyIObject<T>[] = [];
 
   private querys = (query?: Query): Query => {
-    return merge({
-      limit: this.limit, page: 10, per_page: 0
-
-    }, query);
+    return merge(query);
   };
 
   addModifyEvtListeners = (m: ModifyIObject<T>): void => {
@@ -52,24 +48,21 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   @action next = async (query?: Query) => {
-    // 0,10 | 10,10 | 20,30 | 50,10 |....
-    let { per_page, sort, limit, ...rest } = !query ? { per_page: undefined, sort: '""', limit: -1 } : query;
-    this.limit = limit;
+    const { page, size, sort, ...rest } = !query ? this.ctx : query;
 
-    if (this.ctx.sort !== sort || (per_page && this.ctx.per_page !== per_page)) this.reset();
+    if ((sort && this.ctx.sort !== sort) || (size && this.ctx.size !== size)) this.reset();
 
-    per_page = (per_page || per_page == 0) ? per_page : ((this.ctx.per_page || 0) + (this.ctx.page || 10))
-    const q = this.querys({ ...this.ctx, per_page, ...rest });
+    if (!this.isLoaded.get()) {
+      merge(this.ctx, { page: page, limit: this.limit, sort: JSON.stringify(sort), ...rest });
+    }
 
-    this.api.list(q).
+    this.api.list(this.ctx).
       then((items) => {
-        this.data.push(...items)
+        this.data.push(...items);
+        if (this.ctx.size && this.data.length >= this.ctx.size) {
+          if (this.ctx.page != undefined) merge(this.ctx, { page: this.ctx.page + 1 });
+        }
         this.isLoaded.set(true);
-        this.ctx = {
-          per_page: per_page,
-          page: this.ctx.page,
-          sort
-        };
       });
   };
 

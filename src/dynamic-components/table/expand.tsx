@@ -8,7 +8,7 @@ export declare type ExpandedRowAnyProps = {
 }
 
 export const ExpandedRowAny: React.FC<ExpandedRowAnyProps> = (props) => {
-  let { content } = props;
+  const { content } = props;
   return <div style={{ margin: 0 }}>{content}</div>;
 };
 

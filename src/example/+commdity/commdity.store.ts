@@ -2,19 +2,23 @@ import { IObject, ObjectApi, ObjectStore, ObjectWatchApi, SearchObject } from '@
 import type { WatchApi } from '@/client/event';
 import { request } from '@umijs/max';
 
-class Commdity extends IObject {
-  name?: string;
-  title?: string;
-  brand_name?: string;
-  constructor(data: Commdity) {
+class Commodity extends IObject {
+  name?: string
+  title?: string
+  sub_title?: string
+  images?: any[]
+  brand_name?: string
+  state?: number
+
+  constructor(data: Commodity) {
     super(data);
     Object.assign(this, data);
   }
 }
 
-const commdityApi = new ObjectApi<Commdity>({
-  url: '/api/v1/Product',
-  objectConstructor: Commdity,
+const commdityApi = new ObjectApi<Commodity>({
+  url: '/api/v1/commodity',
+  objectConstructor: Commodity,
   service: "prod",
 });
 
@@ -33,10 +37,10 @@ export const commditySearchApi = {
   }
 }
 
-class CommdityStore extends ObjectStore<Commdity> {
-  watchApi: WatchApi<Commdity, CommdityStore>;
-  api: ObjectApi<Commdity>;
-  constructor(api: ObjectApi<Commdity>, watchApi: WatchApi<Commdity, CommdityStore>) {
+class CommdityStore extends ObjectStore<Commodity> {
+  watchApi: WatchApi<Commodity, CommdityStore>;
+  api: ObjectApi<Commodity>;
+  constructor(api: ObjectApi<Commodity>, watchApi: WatchApi<Commodity, CommdityStore>) {
     super();
     this.api = api;
     this.watchApi = watchApi;
