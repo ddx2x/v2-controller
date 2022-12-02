@@ -173,13 +173,13 @@ const commdityTable: View = {
     onSearch: (value, setGlobalSearchOptions) => {
       commdityStore.search({ text: value || '', offset: 0, limit: 10 })
         .then(res => {
-          console.log("------", res)
-
-          Array.isArray(res) &&
-            setGlobalSearchOptions(
-              res.map(item => {
-                return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name }
-              }))
+          if (!Array.isArray(res)) {
+            return
+          }
+          const options = res.map(item => {
+            return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name }
+          })
+          setGlobalSearchOptions([...options])
         })
     }
   },

@@ -175,7 +175,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   // 全局搜索
-  const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any, value: any}[]>([])
+  const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any, value: any }[]>([])
   if (globalSearch && newColumns) {
     newColumns = newColumns.filter(item => item.dataIndex != 'text')
     newColumns.splice(0, 0, {
@@ -190,7 +190,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
             options={globalSearchOptions}
             placeholder={'请输入搜索文本'}
             onSearch={(value) => {
-              setGlobalSearchOptions([])
               globalSearch.onSearch &&
                 globalSearch.onSearch(value, setGlobalSearchOptions)
             }}

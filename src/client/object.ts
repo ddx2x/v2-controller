@@ -36,7 +36,7 @@ export class SearchObject {
   name: string = '';
   title: string = '';
   brand_name: string = '';
-  img: string = '';
+  image: string = '';
 
   constructor(data: ObjectData) {
     Object.assign(this, data);
