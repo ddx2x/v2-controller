@@ -38,6 +38,7 @@ export declare type Query = {
   id?: string,
   page?: number,
   size?: number,
+  order?: string,
   sort?: { [key: string]: any },
 
   resourceVersion?: number

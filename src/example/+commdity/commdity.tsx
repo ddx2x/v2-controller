@@ -159,8 +159,8 @@ const commdityTable: View = {
   ],
   dataSource: () => commdityStore.items,
   loading: () => commdityStore.loading,
-  onLoading: (actionRef) => commdityStore.next({ sort: { "name": 1 } }),
-  onSubmit: (params) => commdityStore.next({ sort: { "name": 1 } }),
+  onLoading: (actionRef) => commdityStore.next({ sort: { "version": 1 } }),
+  onSubmit: (params) => commdityStore.next({ sort: { "version": 1 } }),
 };
 
 pageManager.register('commdity.list', {
