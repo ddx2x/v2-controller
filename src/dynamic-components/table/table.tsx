@@ -1,4 +1,4 @@
-import { ActionType, ProTable, ProTableProps } from '@ant-design/pro-components';
+import { ActionType, ProCard, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { AutoComplete, Button, ButtonProps, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
 import type { Location } from "history";
@@ -145,9 +145,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   let newColumns = columns
 
-  // 搜索框折叠
-  const [searchCollapsed, setSearchCollapsed] = useState(true);
-
   // 多选 批量删除
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -176,39 +173,33 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 全局搜索
   const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any, value: any }[]>([])
-  if (globalSearch && newColumns) {
-    newColumns = newColumns.filter(item => item.dataIndex != 'text')
-    newColumns.splice(0, 0, {
-      title: globalSearch.title || '全局搜索 🔍 ',
-      dataIndex: globalSearch.key || 'text',
-      hideInTable: true,
-      hideInDescriptions: true,
-      renderFormItem: () => {
-        return (
-          <AutoComplete
-            allowClear
-            options={globalSearchOptions}
-            placeholder={'请输入搜索文本'}
-            onSearch={(value) => {
-              globalSearch.onSearch &&
-                globalSearch.onSearch(value, setGlobalSearchOptions)
-            }}
-            style={searchCollapsed ? { width: '350px' } : undefined}
-          />
-        )
-      }
-    })
-  }
-
   // 更多操作 按钮
   if (moreMenuButton && newColumns) {
     newColumns = injectTableOperate(moreMenuButton, newColumns)
   }
 
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [search, setSearch] = useState(!globalSearch)
 
   return (
     <>
+      {!search && globalSearch && <ProCard bordered style={{ marginBottom: '10px' }}>
+        <Space style={{ float: 'right' }}>
+          全局搜索🔍：
+          <AutoComplete
+            allowClear
+            options={globalSearchOptions}
+            placeholder={'请输入搜索文本'}
+            onSearch={async (value) => {
+              globalSearch.onSearch &&
+                await globalSearch.onSearch(value, setGlobalSearchOptions)
+            }}
+            style={{ width: '320px' }}
+            />
+          <Button type='primary' onClick={() => setSearch(!search)}>更多筛选</Button>
+        </Space>
+      </ProCard>
+      }
       <ProTable
         headerTitle={
           headerTitle
@@ -219,11 +210,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
               defaultMessage: 'Enquiry form',
             })
         }
-        search={{
-          labelWidth: 90,
-          collapsed: searchCollapsed,
-          onCollapse: setSearchCollapsed,
-          span: searchCollapsed ? 12 : undefined,
+        search={search && {
+          labelWidth: 80,
+          optionRender: (searchConfig, props, dom) => {
+            return [
+              ...dom,
+              globalSearch && <Button type='primary' onClick={() => setSearch(!search)}>模糊搜索</Button>,]
+          }
         }}
         tableAlertOptionRender={() => {
           return (
@@ -256,7 +249,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
         rowSelection={dataSource ? rowSelection : false}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}
-        tableRender={(_, defaultDom) => {
+        tableRender={(_, defaultDom, { toolbar, alert, table }) => {
           return (
             <div ref={setContainer}>
               {defaultDom}
@@ -291,10 +284,6 @@ Table.defaultProps = {
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
-  globalSearch: {
-    key: 'text',
-    title: '全局搜索',
-  },
   options: { density: true, reload: true, fullScreen: false },
   columns: [],
 };

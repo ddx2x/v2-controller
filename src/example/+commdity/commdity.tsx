@@ -117,16 +117,6 @@ const commdityTable: View = {
       width: 200,
     },
     {
-      dataIndex: 'name1',
-      title: '商品名称',
-      width: 200,
-    },
-    {
-      dataIndex: 'name2',
-      title: '商品名称',
-      width: 200,
-    },
-    {
       dataIndex: 'title',
       title: '标题',
       width: 200,
