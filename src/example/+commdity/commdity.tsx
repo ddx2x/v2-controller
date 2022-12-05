@@ -4,7 +4,7 @@ import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { SearchLabel } from '../search.label';
-import { commdityStore } from './commdity.store';
+import { commdityAggregateStore, commdityStore } from './commdity.store';
 
 const editCommdity: FormProps = {
   triggerText: '编辑',
@@ -107,49 +107,42 @@ const commdityTable: View = {
   rowKey: "uid",
   columns: [
     {
+      dataIndex: 'brand_name',
+      title: '品牌',
+      width: 200,
+    },
+    {
       dataIndex: 'uid',
-      title: 'id',
-      width: 30,
-    },
-    {
-      dataIndex: 'name',
       title: '商品名称',
-      width: 200,
-    },
-    {
-      dataIndex: 'name1',
-      title: '商品名称',
-      width: 200,
-    },
-    {
-      dataIndex: 'name2',
-      title: '商品名称',
-      width: 200,
-    },
-    {
-      dataIndex: 'title',
-      title: '标题',
-      width: 200,
+      width: 100,
     },
     {
       dataIndex: 'sub_title',
-      title: '子标题',
+      title: '标题',
       width: 100,
     },
-    {
-      dataIndex: 'brand_name',
-      title: '品牌名称',
-      width: 100,
-    },
+
   ],
   expand: {
     kind: 'table',
-    onDataRender: (record) => [record],
+    onDataRender: (record) => { commdityStore.api.list({ title: record.uid }).then(res => res) },
     table: {
       columns: [
         {
-          dataIndex: 'name',
-          title: '商品名称',
+          dataIndex: '_type',
+          title: '商品类型',
+        },
+        {
+          dataIndex: 'sale_channels',
+          title: '销售渠道',
+        },
+        {
+          dataIndex: 'price',
+          title: '价格',
+        },
+        {
+          dataIndex: 'stock',
+          title: '库存',
         },
       ],
     },
@@ -186,20 +179,20 @@ const commdityTable: View = {
         })
     }
   },
-  dataSource: () => commdityStore.items,
-  loading: () => commdityStore.loading,
-  onNext: (actionRef) => commdityStore.next({ sort: { "name": 1 } }),
-  onSubmit: (params) => commdityStore.next({ sort: { "name": 1 } }),
+  dataSource: () => commdityAggregateStore.items,
+  loading: () => commdityAggregateStore.loading,
+  onNext: (actionRef) => commdityAggregateStore.next({ sort: { "brand_name": 1 } }),
+  onSubmit: (params) => commdityAggregateStore.next({ sort: { "brand_name": 1 } }),
 };
 
 pageManager.register('commdity.list', {
   page: { view: [commdityTable] },
   stores: [
     {
-      store: commdityStore,
-      query: { sort: { "name": 1 } },
-      load: commdityStore.next,
-      exit: commdityStore.reset,
+      store: commdityAggregateStore,
+      query: { sort: { "brand_name": 1 } },
+      load: commdityAggregateStore.next,
+      exit: commdityAggregateStore.reset,
     },
   ],
 });

@@ -34,7 +34,7 @@ export const extraActionArray = (items: ExtraAction[]) => {
   });
 };
 
-const defaulScrollHeight = '52vh';
+const defaulScrollHeight = '500px';
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading' | 'expandable'> & {
   loading?: Function | boolean
