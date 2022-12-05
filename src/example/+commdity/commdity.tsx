@@ -114,7 +114,12 @@ const commdityTable: View = {
     {
       dataIndex: 'uid',
       title: '商品名称',
-      width: 100,
+      width: 200,
+    },
+    {
+      dataIndex: 'title',
+      title: '标题',
+      width: 200,
     },
     {
       dataIndex: 'sub_title',
