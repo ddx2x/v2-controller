@@ -44,9 +44,8 @@ export declare type Query = {
   id?: string,
   page?: number,
   size?: number,
-  order?: string,
-  sort?: { [key: string]: any },
-
+  order?: { [key: string]: any },
+  sort?: string,
   resourceVersion?: number
   timeoutSeconds?: number
   watch?: boolean | number;

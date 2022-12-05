@@ -24,7 +24,7 @@ export default [
   {
     name: '商品',
     path: '/commdity',
-    icon: 'setting',
+    icon: 'compass',
     routes: [
       {
         name: '商品列表',
@@ -50,6 +50,110 @@ export default [
         parentKeys: ['/commdity']
       },
 
+    ]
+  },
+
+  {
+    name: '订单',
+    path: '/order',
+    icon: 'setting',
+    routes: [
+      {
+        name: '订单列表',
+        path: '/order/list',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+
+        ]
+      },
+
+      {
+        name: '发货管理',
+        path: '/order/deliverlist',
+        icon: 'setting',
+        component: './dynamic-view',
+        parentKeys: ['/order']
+      },
+
+    ]
+  },
+
+
+  {
+    name: '客户',
+    path: '/customer',
+    icon: 'setting',
+    routes: [
+      {
+        name: '客户列表',
+        path: '/customer/list',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+
+        ]
+      },
+
+      {
+        name: '积分',
+        path: '/customer/integral',
+        icon: 'setting',
+        component: './dynamic-view',
+        parentKeys: ['/customer']
+      },
+
+    ]
+  },
+
+
+
+  {
+    name: '门店',
+    path: '/door',
+    icon: 'setting',
+    routes: [
+      {
+        name: '门店列表',
+        path: '/door/list',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+
+        ]
+      },
+    ]
+  },
+
+  {
+    name: '设置',
+    path: '/settings',
+    icon: 'setting',
+    routes: [
+      {
+        name: '商户设置',
+        path: '/settings/shop',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+        ]
+      },
+      {
+        name: '网店设置',
+        path: '/settings/door',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+        ]
+      },
+      {
+        name: '配送设置',
+        path: '/settings/door',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+        ]
+      },
     ]
   },
 ];

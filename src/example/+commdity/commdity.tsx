@@ -131,9 +131,7 @@ const commdityTable: View = {
   expand: {
     kind: 'table',
     onDataRender: async (record) => {
-      let res = await commdityStore.api.list({ title: record.uid }).then(res => res)
-      console.log('res//', res);
-      return res
+      return await commdityStore.api.list({ title: record.uid }).then(res => res)
     },
     table: {
       columns: [
@@ -190,8 +188,8 @@ const commdityTable: View = {
   },
   dataSource: () => commdityAggregateStore.items,
   loading: () => commdityAggregateStore.loading,
-  onNext: (actionRef) => commdityAggregateStore.next({ sort: { "brand_name": 1 } }),
-  onSubmit: (params) => commdityAggregateStore.next({ sort: { "brand_name": 1 } }),
+  onNext: (actionRef) => commdityAggregateStore.next({ order: { "brand_name": 1 } }),
+  onSubmit: (params) => commdityAggregateStore.next({ order: { "brand_name": 1 } }),
 };
 
 pageManager.register('commdity.list', {
@@ -199,7 +197,7 @@ pageManager.register('commdity.list', {
   stores: [
     {
       store: commdityAggregateStore,
-      query: { sort: { "brand_name": 1 } },
+      query: { order: { "brand_name": 1 } },
       load: commdityAggregateStore.next,
       exit: commdityAggregateStore.reset,
     },

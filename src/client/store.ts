@@ -45,26 +45,29 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
+    this.ctx = { page: 0, size: 1, sort: "{}" };
   };
 
   @action next = async (query?: Query) => {
-    const { page, size, sort, ...rest } = !query ? this.ctx : query;
+    const { page, size, order } = !query ? this.ctx : query;
+    const sort = JSON.stringify(order);
 
-    this.ctx.sort && sort && console.log("isDeepEqual", !isDeepEqual(this.ctx.sort, sort))
-    if ((sort && this.ctx.sort && !isDeepEqual(this.ctx.sort, sort)) || (size && this.ctx.size && this.ctx.size !== size)) {
+    if ((sort !== this.ctx.sort) || (size && this.ctx.size !== size)) {
       this.reset();
     }
 
     if (!this.isLoaded.get()) {
-      merge(this.ctx, { page: page, limit: this.limit, sort: JSON.stringify(sort), ...rest });
+      merge(this.ctx, { page, size, sort });
     }
 
     this.api.list(this.ctx).
       then((items) => {
         this.data.push(...items);
-        if (this.ctx.size && this.data.length >= this.ctx.size) {
-          if (this.ctx.page != undefined) merge(this.ctx, { page: this.ctx.page + 1 });
+        if (this.ctx.size && (this.data.length >= this.ctx.size)) {
+          if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
         }
+        console.log("next2", this.data.length, this.ctx);
+
         this.isLoaded.set(true);
       });
   };
