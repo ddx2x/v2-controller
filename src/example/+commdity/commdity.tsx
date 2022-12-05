@@ -125,7 +125,11 @@ const commdityTable: View = {
   ],
   expand: {
     kind: 'table',
-    onDataRender: (record) => { commdityStore.api.list({ title: record.uid }).then(res => res) },
+    onDataRender: async (record) => {
+      let res = await commdityStore.api.list({ title: record.uid }).then(res => res)
+      console.log('res//', res);
+      return res
+    },
     table: {
       columns: [
         {
