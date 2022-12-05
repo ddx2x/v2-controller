@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { action, computed, observable, reaction } from 'mobx';
 import type {
-  EventHandle, ObjectWatchEvent, WatchApi
+  EventHandle, Noop, ObjectWatchEvent, WatchApi
 } from './event';
 import { EventSourcePolyfill as EventSource } from './eventsource/eventsource';
 import type { IObject, ObjectStore } from './index';
 import { autobind, EventEmitter } from './utils';
 
 @autobind()
-export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> implements WatchApi<T, S> {
+export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> implements WatchApi<T, S> {
   protected evtSource!: EventSource;
   protected onData = new EventEmitter<[ObjectWatchEvent<T>]>();
   protected subscribers = observable.map<S, number>();
@@ -42,7 +42,7 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T>> impleme
 
   getSubscribersCount = (s: S) => { return this.subscribers.get(s) || 0; }
 
-  subscribe = (...stores: S[]) => {
+  subscribe = (...stores: S[]): Noop => {
     stores.forEach((store) => {
       this.subscribers.set(store, this.getSubscribersCount(store) + 1);
     });
