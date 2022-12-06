@@ -1,7 +1,7 @@
 
-import { Table, TableProps } from 'antd';
 import { ExpandableConfig } from 'antd/lib/table/interface';
 import { useEffect, useState } from 'react';
+import { Table, TableProps } from '../table';
 
 export declare type ExpandRowProps = {
   onDataRender: (
@@ -12,7 +12,7 @@ export declare type ExpandRowProps = {
   ) => any
   record?: any
 } & (
-    { kind: 'table', table: TableProps<any> }
+    { kind: 'table', table: TableProps }
   )
 
 export declare type ExpandedConfig =
@@ -23,16 +23,19 @@ const ExpandRow: React.FC<ExpandRowProps> = (props) => {
   const [dataSource, setDataSource] = useState<any>([])
 
   useEffect(() => {
-    props.onDataRender && props.onDataRender(props.record).then((res: any) => setDataSource(res))
+    props.onDataRender &&
+      props.onDataRender(props.record).then((res: any) => setDataSource(res))
   }, [])
 
   if (props.kind == 'table') {
-    return <Table
-      {...props.table}
-      style={{ marginTop: 10, marginBottom: 10 }}
-      pagination={false}
-      dataSource={props.table.dataSource || dataSource}
-    />
+    return (
+      <Table
+        {...props.table}
+        search={false}
+        expanding={true}
+        dataSource={props.table.dataSource || dataSource}
+      />
+    )
   }
 
   return null

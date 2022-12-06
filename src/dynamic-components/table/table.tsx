@@ -40,7 +40,6 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   loading?: () => boolean | boolean
   dataSource?: () => any | any[]
   virtualList?: boolean;
-  expand?: ExpandedConfig;
   scrollHeight?: string | number; // 表格高度
   moreMenuButton?: (record: any) => MoreButtonType[],
   onNext?: (actionRef?: React.MutableRefObject<ActionType | undefined>, params?: { page: number, size: number }) => void; // 虚拟滚动 加载数据
@@ -50,7 +49,9 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'l
   intl?: IntlShape; // 国际化
   pagination?: (Omit<TablePaginationConfig, 'total'> & {
     total?: () => number | number
-  })
+  });
+  expand?: ExpandedConfig;
+  expanding?: boolean
   // 全局搜索
   globalSearch?: {
     key?: string,
@@ -115,6 +116,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     pagination,
     useBatchDelete,
     batchDelete,
+    expanding,
     // 全局搜索
     globalSearch,
     // 鼠标事件
@@ -166,7 +168,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
         height: scrollHeight || defaulScrollHeight
       });
     }, []);
-    // rest.components = vComponents;
+    rest.components = vComponents;
   }
 
   // 全局搜索
@@ -204,6 +206,36 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   }
 
+  const LoadMore: React.FC = () => {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Button style={{ width: '350px' }} key='loadMore' onClick={() => onNext && onNext(actionRef)}>
+          加载更多
+        </Button>
+      </div>
+    )
+  }
+
+  const tableRender = (
+    props: ProTableProps<any, any, "text">,
+    defaultDom: JSX.Element,
+    domList: { toolbar: JSX.Element | undefined; alert: JSX.Element | undefined; table: JSX.Element | undefined; }
+  ): React.ReactNode | undefined => {
+
+    if (expanding) {
+      return <div style={{ marginTop: 5, marginBottom: 8, marginRight: 15 }}>{domList.table}</div>
+    }
+
+    return (
+      <div>
+        <div ref={virtualList ? setContainer : null}>
+          {defaultDom}
+        </div>
+        <LoadMore />
+      </div>
+    )
+  }
+
   return (
     <>
       {!search && globalSearch && <ProCard bordered style={{ marginBottom: '10px' }}>
@@ -221,8 +253,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           />
           <Button type='primary' onClick={() => setSearch(!search)}>更多筛选</Button>
         </Space>
-      </ProCard>
-      }
+      </ProCard>}
       <ProTable
         headerTitle={
           headerTitle
@@ -253,16 +284,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
         actionRef={actionRef}
         loading={typeof loading == 'function' ? loading() : loading}
         dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
-        rowSelection={dataSource ? rowSelection : false}
+        rowSelection={dataSource && rowSelection ? rowSelection : false}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}
-        // tableRender={(_, defaultDom, { toolbar, alert, table }) => {
-        //   return (
-        //     <div ref={setContainer}>
-        //       {defaultDom}
-        //     </div>
-        //   )
-        // }}
+        tableRender={tableRender}
         onRow={(record) => {
           return {
             onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
@@ -273,21 +298,17 @@ export const Table: React.FC<TableProps> = observer((props) => {
         }}
         {...rest}
       />
-      {!pagination && < div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Button style={{ width: '350px' }} key='loadMore' onClick={() => onNext && onNext(actionRef)}>
-          加载更多
-        </Button>
-      </div>}
     </>
   );
 });
 
 Table.defaultProps = {
   type: 'list',
-  virtualList: true,
+  virtualList: false,
   editable: {
     type: 'multiple',
   },
+  expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
