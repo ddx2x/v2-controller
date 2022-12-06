@@ -2,7 +2,7 @@ import { BetaSchemaForm, ProFormInstance, ProProvider } from '@ant-design/pro-co
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
-import type { Location } from "history";
+import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
@@ -11,8 +11,8 @@ import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
 
 export declare type ModalActionRefType = {
-  openModal: () => void
-}
+  openModal: () => void;
+};
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   layoutType?: FormSchema['layoutType'];
@@ -20,99 +20,105 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   triggerButtonType?: ButtonType;
   triggerButtonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any) => boolean;
+  onSubmit?: (
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+    values: any,
+  ) => boolean;
   intl?: IntlShape; // 国际化
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>
-  ) => void
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>
-  ) => void
-}
+    mount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+    ) => void;
+  };
 
-export const Form = observer(React.forwardRef((props: FormProps, forwardRef) => {
-  const {
-    location,
-    mount,
-    unMount,
-    triggerText,
-    triggerButtonType,
-    triggerButtonSize,
-    submitTimeout,
-    onSubmit,
-    intl,
-    ...rest
-  } = props;
+export const Form = observer(
+  React.forwardRef((props: FormProps, forwardRef) => {
+    const {
+      location,
+      mount,
+      unMount,
+      triggerText,
+      triggerButtonType,
+      triggerButtonSize,
+      submitTimeout,
+      onSubmit,
+      intl,
+      ...rest
+    } = props;
 
-  // ref
-  React.useImperativeHandle(forwardRef, () => {
-    openModal: openModal
-  })
+    // ref
+    React.useImperativeHandle(forwardRef, () => {
+      openModal: openModal;
+    });
 
-  const formRef = useRef<ProFormInstance>();
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const formRef = useRef<ProFormInstance>();
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-  const openModal = () => {
-    setModalVisible(true)
-  }
+    const openModal = () => {
+      setModalVisible(true);
+    };
 
-  useEffect(() => {
-    if (formRef && mount) {
-      mount(location, formRef)
-    }
-    return () => {
-      if (formRef && unMount) { unMount(location, formRef) }
-    }
-  }, [])
-
-  switch (props.layoutType) {
-    case 'ModalForm':
-      rest['modalProps'] = {
-        destroyOnClose: true,
-      };
-    case 'DrawerForm':
-      rest['drawerProps'] = {
-        destroyOnClose: true,
-      };
-  }
-
-  const proProviderValues = useContext(ProProvider);
-
-  return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
-      }}
-    >
-      <BetaSchemaForm
-        // @ts-ignore
-        formRef={formRef}
-        // @ts-ignore
-        trigger={
-          <Button
-            size={triggerButtonSize} type={triggerButtonType} block onClick={openModal}>
-            {triggerText}
-          </Button>
+    useEffect(() => {
+      if (formRef && mount) {
+        mount(location, formRef);
+      }
+      return () => {
+        if (formRef && unMount) {
+          unMount(location, formRef);
         }
-        ref={forwardRef}
-        open={modalVisible}
-        onOpenChange={setModalVisible}
-        autoFocusFirstInput
-        onFinish={async (values) => {
-          if (!onSubmit) return false;
-          const b = onSubmit(formRef, values);
-          await waitTime(submitTimeout);
-          return b;
+      };
+    }, []);
+
+    switch (props.layoutType) {
+      case 'ModalForm':
+        rest['modalProps'] = {
+          destroyOnClose: true,
+        };
+      case 'DrawerForm':
+        rest['drawerProps'] = {
+          destroyOnClose: true,
+        };
+    }
+
+    const proProviderValues = useContext(ProProvider);
+
+    return (
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
         }}
-        {...rest}
-      />
-    </ProProvider.Provider>
-  );
-}));
+      >
+        <BetaSchemaForm
+          // @ts-ignore
+          formRef={formRef}
+          // @ts-ignore
+          trigger={
+            <Button size={triggerButtonSize} type={triggerButtonType} block onClick={openModal}>
+              {triggerText}
+            </Button>
+          }
+          ref={forwardRef}
+          open={modalVisible}
+          onOpenChange={setModalVisible}
+          autoFocusFirstInput
+          onFinish={async (values) => {
+            if (!onSubmit) return false;
+            const b = onSubmit(formRef, values);
+            await waitTime(submitTimeout);
+            return b;
+          }}
+          {...rest}
+        />
+      </ProProvider.Provider>
+    );
+  }),
+);
 
 Form.defaultProps = {
   title: '新建表单',
@@ -130,8 +136,7 @@ Form.defaultProps = {
   columns: [],
 };
 
-
-export const useForm = (props: FormProps): [React.ReactNode,] => {
-  const dom = <Form {...props} />
+export const useForm = (props: FormProps): [React.ReactNode] => {
+  const dom = <Form {...props} />;
   return [dom];
 };

@@ -10,7 +10,7 @@ export declare type ImageUploadFieldProps = UploadProps & {
   buttonText?: string;
   value?: any;
   onChange?: ((...rest: any[]) => void) | undefined;
-}
+};
 
 export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
   const { buttonText, name, listType, maxNumber, value, onChange, ...rest } = props;
@@ -72,4 +72,3 @@ export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
     </>
   );
 };
-

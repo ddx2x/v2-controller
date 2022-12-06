@@ -10,10 +10,9 @@ export declare type VideoUploadFieldProps = UploadProps & {
   buttonText?: string;
   value?: any;
   onChange?: ((...rest: any[]) => void) | undefined;
-}
+};
 
 export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
-
   const { maxNumber, buttonText, name, listType, action, value, onChange, ...rest } = props;
   const fileList = value?.fileList || [];
 
@@ -74,4 +73,3 @@ export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
     </>
   );
 };
-

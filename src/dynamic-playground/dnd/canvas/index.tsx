@@ -2,11 +2,7 @@ import { FR } from '../core';
 import { useStore } from '../utils/hook';
 
 export const Canvas: React.FC = () => {
-  const {
-    displaySchema,
-    userProps,
-    preview,
-  } = useStore();
+  const { displaySchema, userProps, preview } = useStore();
 
   return (
     <div className="mid-layout pr2">
@@ -16,5 +12,5 @@ export const Canvas: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

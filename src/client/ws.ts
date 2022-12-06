@@ -74,7 +74,7 @@ export class ObjectWebSockApi {
   protected register() {
     if (!this.socket) return;
     if (this.socket.readyState === this.socket.OPEN) {
-      this.socket?.send(`{"op":0,"urls":[${this.getQuery()}]}`)
+      this.socket?.send(`{"op":0,"urls":[${this.getQuery()}]}`);
     }
   }
 

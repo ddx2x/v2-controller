@@ -2,10 +2,10 @@ import { useContext, useReducer } from 'react';
 import { Ctx, StoreCtx } from './context';
 
 type GlobalState = {
-  tabsKey: string
-  showRight: boolean
-  showItemSettings: boolean
-}
+  tabsKey: string;
+  showRight: boolean;
+  showItemSettings: boolean;
+};
 
 // 使用最顶层组件的 setState
 export const useGlobal = () => {

@@ -1,6 +1,6 @@
 import type {
   PageContainerProps as ProPageContainerProps,
-  RouteContextType
+  RouteContextType,
 } from '@ant-design/pro-components';
 import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
@@ -10,7 +10,7 @@ import type { CachingNode } from 'react-activation';
 
 export declare type KeepAliveProps = {
   path?: string | null;
-}
+};
 
 export const KeepAlive: React.FC<KeepAliveProps> = (props) => {
   const path = props.path ? props.path : useLocation().pathname;
@@ -34,11 +34,10 @@ export const isCachingNode = (path: string | undefined): boolean => {
   return nodes.filter((node) => node.name == path).length > 0;
 };
 
-
 export declare type ContainerProps = ProPageContainerProps & {
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
-}
+};
 
 export const Container: React.FC<ContainerProps> = (props) => {
   const { useBreadcrumb, context, breadcrumb, header, ...rest } = props;
@@ -71,10 +70,10 @@ Container.defaultProps = {
   fixedHeader: false,
 };
 
-
-export declare type PageContainerProps = KeepAliveProps & ContainerProps & {
-  keepAlive?: boolean;
-}
+export declare type PageContainerProps = KeepAliveProps &
+  ContainerProps & {
+    keepAlive?: boolean;
+  };
 
 export const PageContainer: React.FC<PageContainerProps> = (props) => {
   const { keepAlive, path, children, ...rest } = props;

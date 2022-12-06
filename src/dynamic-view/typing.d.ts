@@ -6,13 +6,13 @@ import type { ListProps } from '../dynamic-components/list';
 import type { TableProps } from '../dynamic-components/table';
 
 export declare type View =
-  { kind: 'table'; } & TableProps |
-  { kind: 'list'; } & ListProps |
-  { kind: 'form'; } & FormProps |
-  { kind: 'stepForm'; } & StepFormProps |
-  { kind: 'descriptions'; } & DescriptionsProps
+  | ({ kind: 'table' } & TableProps)
+  | ({ kind: 'list' } & ListProps)
+  | ({ kind: 'form' } & FormProps)
+  | ({ kind: 'stepForm' } & StepFormProps)
+  | ({ kind: 'descriptions' } & DescriptionsProps);
 
-export declare type Page = { view: View[], container?: PageContainerProps }
+export declare type Page = { view: View[]; container?: PageContainerProps };
 
 export declare type Store = {
   store: ObjectStore<IObject>;
@@ -20,10 +20,9 @@ export declare type Store = {
   load: (query?: Query) => Promise<void>;
   watch?: () => void;
   exit: () => void;
-}
+};
 
 export declare type PageSchema<S extends Store> = {
   page: Page;
   stores?: S[];
-}
-
+};

@@ -1,12 +1,9 @@
-export const dndType = 'playground'
-
+export const dndType = 'playground';
 
 function stringContains(str: string, text: string) {
   return str.indexOf(text) > -1;
 }
-export const isObject = (a: any) =>
-  stringContains(Object.prototype.toString.call(a), 'Object');
-
+export const isObject = (a: any) => stringContains(Object.prototype.toString.call(a), 'Object');
 
 export const getKeyFromUniqueId = (uniqueId = '#') => {
   const arr = uniqueId.split('/');
@@ -14,14 +11,7 @@ export const getKeyFromUniqueId = (uniqueId = '#') => {
 };
 
 // Left 点击添加 item
-export const addItem = ({
-  selected,
-  name,
-  schema,
-  flatten,
-  fixedName,
-  getId,
-}: any) => {
+export const addItem = ({ selected, name, schema, flatten, fixedName, getId }: any) => {
   let _selected = selected || '#';
   let newId;
   // string第一个是0，说明点击了object、list的里侧
@@ -75,4 +65,3 @@ export const addItem = ({
   }
   return { newId, newFlatten };
 };
-

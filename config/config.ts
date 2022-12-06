@@ -123,13 +123,10 @@ export default defineConfig({
    * webpack
    */
   chainWebpack: (config, { webpack }) => {
-    
-    config.devServer.set('compress', false)
-    config.devServer
-      .set('client', { webSocketTransport: 'ws' })
-      .set('webSocketServer', 'ws')
+    config.devServer.set('compress', false);
+    config.devServer.set('client', { webSocketTransport: 'ws' }).set('webSocketServer', 'ws');
 
-    config.module.rule('raw-loader').test(`/\.ts$/i`).use('raw-loader').end()
+    config.module.rule('raw-loader').test(`/\.ts$/i`).use('raw-loader').end();
 
     // config.plugin('monaco-editor-webpack-plugin')
     //   .use(new MonacoWebpackPlugin({

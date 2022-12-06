@@ -1,4 +1,3 @@
-
 import { Table } from '@/dynamic-components/table';
 import { EditableProTable } from '@ant-design/pro-components';
 import { TableProps } from '../../table';
@@ -14,12 +13,12 @@ declare module '@ant-design/pro-utils' {
     card: CardFieldProps;
     imageUpload: ImageUploadFieldProps;
     videoUpload: VideoUploadFieldProps;
-    monacoEditor: MonacoEditorFieldProps
+    monacoEditor: MonacoEditorFieldProps;
     table: TableProps;
     // editTable: EditTableProps;
     form: FormProps;
   }
-};
+}
 
 const valueTypeMap = {
   card: cardField,
@@ -32,5 +31,3 @@ const valueTypeMap = {
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);
-
-

@@ -11,19 +11,17 @@ export interface Store<S extends ObjectStore<IObject>> {
 }
 
 export function storeables(stores: Store<any>[]) {
-  return function classes<T extends { new(...args: any[]): any }>(constructor: T) {
+  return function classes<T extends { new (...args: any[]): any }>(constructor: T) {
     return class extends constructor {
       stores = stores;
       componentDidMount() {
         stores.map((item) => {
           const { store, iswatch } = item;
-          store
-            .loadAll()
-            .then(() => {
-              if (!store.isLoaded && iswatch) {
-                store.watch()
-              }
-            })
+          store.loadAll().then(() => {
+            if (!store.isLoaded && iswatch) {
+              store.watch();
+            }
+          });
         });
       }
       componentWillUnmount() {

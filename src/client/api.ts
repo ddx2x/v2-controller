@@ -35,26 +35,26 @@ export interface IObjectApiOptions<T extends IObject> {
 }
 
 export declare type SearchQuery = {
-  text: string,
-  offset?: number,
-  limit?: number,
-}
+  text: string;
+  offset?: number;
+  limit?: number;
+};
 
 export declare type Parameter = string | number;
 
 export declare type Query = {
-  id?: string,
-  page?: number,
-  size?: number,
-  order?: { [key: string]: any },
-  sort?: string,
-  resourceVersion?: number
-  timeoutSeconds?: number
+  id?: string;
+  page?: number;
+  size?: number;
+  order?: { [key: string]: any };
+  sort?: string;
+  resourceVersion?: number;
+  timeoutSeconds?: number;
   watch?: boolean | number;
   continue?: string; // might be used with ?limit from second reques
   path?: string; // label update datastructure field
   [key: string]: any;
-}
+};
 
 @autobind()
 export class ObjectApi<T extends IObject = any> {
@@ -86,7 +86,7 @@ export class ObjectApi<T extends IObject = any> {
     this.apiPrefix = apiPrefix;
     this.apiVersion = apiVersion;
     this.apiResource = apiResource;
-    this.service = options.service ? options.service : "";
+    this.service = options.service ? options.service : '';
     this.objectConstructor = objectConstructor;
 
     apiManager.registerObjectApi(this.apiBase, this);
@@ -101,7 +101,7 @@ export class ObjectApi<T extends IObject = any> {
       apiVersion,
       apiResource,
     });
-    return stringify({ item: '/' + resourcePath + '/' + version })
+    return stringify({ item: '/' + resourcePath + '/' + version });
   }
 
   private parseResponse = (data: ObjectData | ObjectDataList[]): any => {
@@ -117,7 +117,7 @@ export class ObjectApi<T extends IObject = any> {
       return data.map((item) => {
         const { version } = item;
         if (this.version < version) this.version = version;
-        return new this.objectConstructor({ ...item })
+        return new this.objectConstructor({ ...item });
       });
     }
 
@@ -165,12 +165,26 @@ export class ObjectApi<T extends IObject = any> {
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  create = async (parameter?: Parameter, partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
-    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(this.parseResponse);
+  create = async (
+    parameter?: Parameter,
+    partial?: Partial<T>,
+    query?: Query,
+    op?: string,
+  ): Promise<T> => {
+    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(
+      this.parseResponse,
+    );
   };
 
-  update = async (partial?: Partial<T>, parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
-    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(this.parseResponse);
+  update = async (
+    partial?: Partial<T>,
+    parameter?: Parameter,
+    query?: Query,
+    op?: string,
+  ): Promise<T> => {
+    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(
+      this.parseResponse,
+    );
   };
 
   delete = async (parameter?: Parameter, query?: Query): Promise<T> => {
@@ -178,10 +192,12 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   upload = async <D = string | ArrayBuffer>(data: D) => {
-    return request(this.getUrl(undefined, {}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
+    return request(this.getUrl(undefined, {}, 'upload'), { method: 'POST', data }).then(
+      this.parseResponse,
+    );
   };
 
   search = async (q: SearchQuery) => {
-    return request(this.searchUrl(q), { method: 'GET' })
+    return request(this.searchUrl(q), { method: 'GET' });
   };
 }

@@ -4,12 +4,7 @@ import { useGlobal, useStore } from '../utils/hook';
 
 export const Element = ({ text, name, schema, icon, fixedName }: any) => {
   const setGlobal = useGlobal();
-  const {
-    flatten,
-    selected,
-    errorFields,
-    userProps,
-  } = useStore();
+  const { flatten, selected, errorFields, userProps } = useStore();
   const { getId } = userProps;
 
   const [{ isDragging }, dragRef] = useDrag({
@@ -21,7 +16,7 @@ export const Element = ({ text, name, schema, icon, fixedName }: any) => {
       },
       $id: '',
     },
-    collect: monitor => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
@@ -54,12 +49,10 @@ export const Element = ({ text, name, schema, icon, fixedName }: any) => {
 
   return (
     <div ref={dragRef}>
-      {elementRender
-        ? elementRender(schema, widgetProps, originNode)
-        : originNode}
+      {elementRender ? elementRender(schema, widgetProps, originNode) : originNode}
     </div>
-  )
-}
+  );
+};
 
 // 目前没有用icon，但是可以补上
 const WidgetUI = ({ onClick, text, icon }) => {

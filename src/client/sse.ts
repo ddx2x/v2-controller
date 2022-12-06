@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { action, computed, observable, reaction } from 'mobx';
-import type {
-  EventHandle, Noop, ObjectWatchEvent, WatchApi
-} from './event';
+import type { EventHandle, Noop, ObjectWatchEvent, WatchApi } from './event';
 import { EventSourcePolyfill as EventSource } from './eventsource/eventsource';
 import type { IObject, ObjectStore } from './index';
 import { autobind, EventEmitter } from './utils';
 
 @autobind()
-export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> implements WatchApi<T, S> {
+export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any>
+  implements WatchApi<T, S>
+{
   protected evtSource!: EventSource;
   protected onData = new EventEmitter<[ObjectWatchEvent<T>]>();
   protected subscribers = observable.map<S, number>();
@@ -31,16 +31,20 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> i
   }
 
   @action setApiURL(url: string) {
-    this.apiUrl = url
+    this.apiUrl = url;
   }
 
   @computed get apiURL(): string {
     return this.apiUrl;
   }
 
-  @computed get activeStores() { return Array.from(this.subscribers.keys()); }
+  @computed get activeStores() {
+    return Array.from(this.subscribers.keys());
+  }
 
-  getSubscribersCount = (s: S) => { return this.subscribers.get(s) || 0; }
+  getSubscribersCount = (s: S) => {
+    return this.subscribers.get(s) || 0;
+  };
 
   subscribe = (...stores: S[]): Noop => {
     stores.forEach((store) => {
@@ -52,61 +56,60 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> i
         if (count <= 0) this.subscribers.delete(store);
         else this.subscribers.set(store, count);
       });
-  }
+  };
 
   protected getQuery = (): string[] => {
-    return this.activeStores
-      .map((store) => {
-        return store.api.getWatchUrl(store.api.version);
-      })
-  }
+    return this.activeStores.map((store) => {
+      return store.api.getWatchUrl(store.api.version);
+    });
+  };
 
   protected connect = () => {
     if (this.evtSource) this.disconnect(); // close previous connection
     if (!this.activeStores.length) return;
 
-    const apiUrl = `${this.apiURL}?${this.getQuery().join("&")}`;
+    const apiUrl = `${this.apiURL}?${this.getQuery().join('&')}`;
     this.evtSource = new EventSource(apiUrl, {
       headers: {
-        Authorization: "test"
+        Authorization: 'test',
       },
     });
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;
-  }
+  };
 
   reconnect = () => {
     if (!this.evtSource || this.evtSource.readyState !== EventSource.OPEN) {
       this.reconnectAttempts = this.maxReconnectsOnError;
       this.connect();
     }
-  }
+  };
 
   protected disconnect = () => {
     if (!this.evtSource) return;
     this.evtSource.close();
     this.evtSource.onmessage = null;
-  }
+  };
 
   protected onMessage = (evt: MessageEvent) => {
-    console.log("evt", evt);
+    console.log('evt', evt);
     if (!evt.data) return;
     if (!this.onData) return;
 
     const data = JSON.parse(evt.data);
     if ((data as ObjectWatchEvent<T>).object) {
       const object = (data as ObjectWatchEvent<T>).object;
-      this.onData.nemit(object?.kind || "", data);
+      this.onData.nemit(object?.kind || '', data);
       return;
     }
-  }
+  };
 
   protected onRouteEvent = async (evt: string) => {
     if (evt === 'STREAM_END') {
       this.disconnect();
     } else if (evt.toLowerCase() === 'ping') {
     }
-  }
+  };
 
   protected onError = (evt: MessageEvent) => {
     const { reconnectAttempts: attemptsRemain, reconnectTimeoutMs } = this;
@@ -116,11 +119,11 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> i
         setTimeout(() => this.connect(), reconnectTimeoutMs);
       }
     }
-  }
+  };
 
   protected writeLog = (...data: any[]) => {
     console.log('%cOBJECT-WATCH-API:', `font-weight: bold`, ...data);
-  }
+  };
 
   addListener = (store: S, ecb: EventHandle) => {
     const listener = (evt: ObjectWatchEvent<T>) => {
@@ -140,7 +143,7 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any> i
 
   reset = () => {
     this.subscribers.clear();
-  }
+  };
 }
 
 export const objectWatchApi = new ObjectWatchApi();

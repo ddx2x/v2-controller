@@ -38,19 +38,18 @@ export default [
             hideInMenu: true,
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/commdity/list']
+            parentKeys: ['/commdity/list'],
           },
-        ]
+        ],
       },
       {
         name: '商品新增',
         path: '/commdity/add',
         icon: 'setting',
         component: './dynamic-view',
-        parentKeys: ['/commdity']
+        parentKeys: ['/commdity'],
       },
-
-    ]
+    ],
   },
 
   {
@@ -63,9 +62,7 @@ export default [
         path: '/order/list',
         icon: 'setting',
         component: './dynamic-view',
-        routes: [
-
-        ]
+        routes: [],
       },
 
       {
@@ -73,12 +70,10 @@ export default [
         path: '/order/deliverlist',
         icon: 'setting',
         component: './dynamic-view',
-        parentKeys: ['/order']
+        parentKeys: ['/order'],
       },
-
-    ]
+    ],
   },
-
 
   {
     name: '客户',
@@ -90,9 +85,7 @@ export default [
         path: '/customer/list',
         icon: 'setting',
         component: './dynamic-view',
-        routes: [
-
-        ]
+        routes: [],
       },
 
       {
@@ -100,10 +93,9 @@ export default [
         path: '/customer/integral',
         icon: 'setting',
         component: './dynamic-view',
-        parentKeys: ['/customer']
+        parentKeys: ['/customer'],
       },
-
-    ]
+    ],
   },
 
   {
@@ -115,11 +107,9 @@ export default [
         name: '门店列表',
         path: '/door/list',
         component: './dynamic-view',
-        routes: [
-
-        ]
+        routes: [],
       },
-    ]
+    ],
   },
 
   {
@@ -132,25 +122,22 @@ export default [
         path: '/settings/shop',
         icon: 'setting',
         component: './dynamic-view',
-        routes: [
-        ]
+        routes: [],
       },
       {
         name: '网店设置',
         path: '/settings/door',
         icon: 'setting',
         component: './dynamic-view',
-        routes: [
-        ]
+        routes: [],
       },
       {
         name: '配送设置',
         path: '/settings/logistics',
         icon: 'setting',
         component: './dynamic-view',
-        routes: [
-        ]
+        routes: [],
       },
-    ]
+    ],
   },
 ];

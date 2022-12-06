@@ -1,5 +1,21 @@
 import { DownOutlined } from '@ant-design/icons';
-import { ProCard, ProColumnType, ProForm, ProFormDependency, ProFormDigit, ProFormGroup, ProFormInstance, ProFormList, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea, ProTable, useDebounceFn } from '@ant-design/pro-components';
+import {
+  ProCard,
+  ProColumnType,
+  ProForm,
+  ProFormDependency,
+  ProFormDigit,
+  ProFormGroup,
+  ProFormInstance,
+  ProFormList,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+  ProTable,
+  useDebounceFn,
+} from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { useRef, useState } from 'react';
 
@@ -155,7 +171,8 @@ export const tablePlayGround = () => {
       style={{
         height: '100vh',
         overflow: 'hidden',
-      }}>
+      }}
+    >
       <ProCard
         style={{
           height: '100vh',
@@ -169,8 +186,8 @@ export const tablePlayGround = () => {
             config.pagination?.show
               ? config.pagination
               : {
-                pageSize: 5,
-              }
+                  pageSize: 5,
+                }
           }
           search={config.search?.show ? config.search : {}}
           expandable={
@@ -182,10 +199,10 @@ export const tablePlayGround = () => {
           toolBarRender={
             config?.toolBarRender
               ? () => [
-                <Button key="refresh" type="primary">
-                  刷新
-                </Button>,
-              ]
+                  <Button key="refresh" type="primary">
+                    刷新
+                  </Button>,
+                ]
               : false
           }
           footer={config.footer ? () => 'Here is footer' : false}
@@ -687,5 +704,5 @@ export const tablePlayGround = () => {
         />
       </ProForm>
     </ProCard>
-  )
-}
+  );
+};

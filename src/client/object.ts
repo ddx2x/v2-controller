@@ -30,7 +30,6 @@ export class IObject implements ObjectData {
   };
 }
 
-
 export class SearchObject {
   uid: string = '';
   name: string = '';

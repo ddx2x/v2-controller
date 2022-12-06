@@ -25,7 +25,9 @@ export class ApiManager<T extends IObject = any> {
 
   getStore(api: string): ObjectStore<T> | undefined {
     const objectApi = this.getObjectApi(api);
-    if (!objectApi) { return; }
+    if (!objectApi) {
+      return;
+    }
     return this.stores.get(objectApi);
   }
 

@@ -13,7 +13,7 @@ export class EventEmitter<D extends [...any[]]> {
 
   naddListener(n: string, callback: Callback<D>, options: Options = {}) {
     // const fn = options.prepend ? 'unshift' : 'push';
-    this.nlisteners.set(n, [...this.nlisteners.get(n) || [], [callback, options]]);
+    this.nlisteners.set(n, [...(this.nlisteners.get(n) || []), [callback, options]]);
   }
 
   addListener(callback: Callback<D>, options: Options = {}) {
@@ -43,7 +43,6 @@ export class EventEmitter<D extends [...any[]]> {
       if (result === false) return; // break cycle
       return true;
     });
-
   }
 
   emit(...data: D) {
@@ -52,6 +51,6 @@ export class EventEmitter<D extends [...any[]]> {
       const result = callback(...data);
       if (result === false) return; // break cycle
       return true;
-    })
+    });
   }
 }

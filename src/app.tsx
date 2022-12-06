@@ -1,7 +1,12 @@
 import Footer from '@/pages/layout/footer';
 import RightContent from '@/pages/layout/right-content';
 import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
-import { MenuDataItem, PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
+import {
+  MenuDataItem,
+  PageLoading,
+  SettingDrawer,
+  Settings as LayoutSettings,
+} from '@ant-design/pro-components';
 import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
 import { Button, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
@@ -59,9 +64,9 @@ const menuRender = (
           okText="是"
           cancelText="否"
           onConfirm={async () =>
-            item.path
-            && await dropScope(item.path)
-            && eventEmitter.emit('pageManagerClear', item.path)
+            item.path &&
+            (await dropScope(item.path)) &&
+            eventEmitter.emit('pageManagerClear', item.path)
           }
         >
           <Button
@@ -151,11 +156,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // ],
     links: isDev
       ? [
-        // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-        //   <LinkOutlined />
-        //   <span>OpenAPI 文档</span>
-        // </Link>,
-      ]
+          // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+          //   <LinkOutlined />
+          //   <span>OpenAPI 文档</span>
+          // </Link>,
+        ]
       : [],
     // 自定义菜单
     collapsed: collapsed,

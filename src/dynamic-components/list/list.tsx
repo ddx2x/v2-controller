@@ -2,7 +2,7 @@ import type { ActionType, ProListProps } from '@ant-design/pro-components';
 import { FooterToolbar } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
-import type { Location } from "history";
+import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import { ReactText, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -17,15 +17,15 @@ export type ListProps = ProListProps & {
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>
-  ) => void
-  unMount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>
-  ) => void
-};
+    mount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+    ) => void;
+  };
 
 export const List: React.FC<ListProps> = observer((props) => {
   const {
@@ -43,9 +43,9 @@ export const List: React.FC<ListProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
 
   useEffect(() => {
-    actionRef && mount && mount(location, actionRef)
-    return () => actionRef && unMount && unMount(location, actionRef)
-  })
+    actionRef && mount && mount(location, actionRef);
+    return () => actionRef && unMount && unMount(location, actionRef);
+  });
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
   const rowSelection = {

@@ -45,14 +45,14 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 10, sort: "{}" };
+    this.ctx = { page: 0, size: 10, sort: '{}' };
   };
 
   @action next = async (query?: Query) => {
     const { page, size, order } = !query ? this.ctx : query;
     const sort = JSON.stringify(order);
 
-    if ((sort !== this.ctx.sort) || (size && this.ctx.size !== size)) {
+    if (sort !== this.ctx.sort || (size && this.ctx.size !== size)) {
       this.reset();
     }
 
@@ -60,27 +60,26 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       merge(this.ctx, { page, size, sort });
     }
 
-    this.api.list(undefined, this.ctx).
-      then((items) => {
-        items.forEach(object => {
-          if (!object) return;
-          const { uid } = object;
-          const index = this.data.findIndex((item) => item.uid === uid);
-          const item = this.data[index];
-          const newItem = new this.api.objectConstructor(object);
-          if (!item) {
-            this.data.push(newItem);
-          } else {
-            this.data.splice(index, 1, newItem);
-          }
-        });
-
-        if (this.ctx.size && (this.data.length >= this.ctx.size)) {
-          if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
+    this.api.list(undefined, this.ctx).then((items) => {
+      items.forEach((object) => {
+        if (!object) return;
+        const { uid } = object;
+        const index = this.data.findIndex((item) => item.uid === uid);
+        const item = this.data[index];
+        const newItem = new this.api.objectConstructor(object);
+        if (!item) {
+          this.data.push(newItem);
+        } else {
+          this.data.splice(index, 1, newItem);
         }
-
-        this.isLoaded.set(true);
       });
+
+      if (this.ctx.size && this.data.length >= this.ctx.size) {
+        if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
+      }
+
+      this.isLoaded.set(true);
+    });
   };
 
   @action load = async (query?: Query) => {
@@ -115,21 +114,17 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   search = async (sq: SearchQuery): Promise<any> => {
-    return this.api.search(sq)
-  }
+    return this.api.search(sq);
+  };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected eventsBuffer = observable<ObjectWatchEvent<T>>([], { deep: false });
 
   protected bindWatchEventsUpdater = (delay = 1000) => {
-    return reaction(() =>
-      this.eventsBuffer.slice()[0],
-      this.updateFromEventsBuffer,
-      {
-        delay: delay,
-      },
-    );
-  }
+    return reaction(() => this.eventsBuffer.slice()[0], this.updateFromEventsBuffer, {
+      delay: delay,
+    });
+  };
 
   protected onWatchApiEvent = <T extends IObject>(evt: ObjectWatchEvent<T>): void => {
     if (!this.isLoaded) return;
@@ -139,13 +134,12 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     store.eventsBuffer.push(evt);
   };
 
-  
   @computed get items() {
     return this.data.slice().reverse();
   }
 
   @computed get loading() {
-    return !this.isLoaded
+    return !this.isLoaded;
   }
 
   @action
@@ -190,10 +184,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   }
 }
 
-
-
 const isDeepEqual = (object1: any, object2: any) => {
-
   const objKeys1 = Object.keys(object1);
   const objKeys2 = Object.keys(object2);
 
@@ -205,9 +196,7 @@ const isDeepEqual = (object1: any, object2: any) => {
 
     const isObjects = isObject(value1) && isObject(value2);
 
-    if ((isObjects && !isDeepEqual(value1, value2)) ||
-      (!isObjects && value1 !== value2)
-    ) {
+    if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
       return false;
     }
   }
@@ -215,5 +204,5 @@ const isDeepEqual = (object1: any, object2: any) => {
 };
 
 const isObject = (object: null) => {
-  return object != null && typeof object === "object";
+  return object != null && typeof object === 'object';
 };
