@@ -26,7 +26,7 @@ export class IObject implements ObjectData {
     partial: Partial<T>,
     query?: Query,
   ): Promise<T> => {
-    return store.api.update(partial, query);
+    return store.api.update(partial, undefined, query);
   };
 }
 

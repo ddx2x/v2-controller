@@ -40,6 +40,8 @@ export declare type SearchQuery = {
   limit?: number,
 }
 
+export declare type Parameter = string | number;
+
 export declare type Query = {
   id?: string,
   page?: number,
@@ -142,42 +144,41 @@ export class ObjectApi<T extends IObject = any> {
     return '/' + resourcePath + (query ? `?` + stringify(query) : '');
   };
 
-  getUrl = (query?: Partial<Query>, op?: string) => {
+  getUrl = (parameter?: Parameter, query?: Partial<Query>, op?: string) => {
     const { service, apiPrefix, apiVersion, apiResource } = this;
-    const resourcePath = ObjectApi.createLink({
+    let resourcePath = ObjectApi.createLink({
       service,
       apiPrefix,
       apiVersion,
       apiResource,
     });
-    if (op) {
-      return resourcePath + '/op/' + op + (query ? `?` + stringify(query) : '');
-    }
+    if (parameter) resourcePath = resourcePath + '/' + parameter;
+    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(query) : '');
     return '/' + resourcePath + (query ? `?` + stringify(query) : '');
   };
 
-  list = async (query?: Query, op?: string): Promise<T[]> => {
-    return request(this.getUrl(query, op), { method: 'GET' }).then(this.parseResponse);
+  list = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  get = async (query?: Query, op?: string): Promise<T> => {
-    return request(this.getUrl(query, op), { method: 'GET' }).then(this.parseResponse);
+  get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  create = async (partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
-    return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
+  create = async (parameter?: Parameter, partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
+    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
-  update = async (partial?: Partial<T>, query?: Query, op?: string): Promise<T> => {
-    return request(this.getUrl(query, op), { method: 'POST', partial }).then(this.parseResponse);
+  update = async (partial?: Partial<T>, parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
+    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(this.parseResponse);
   };
 
-  delete = async (query?: Query): Promise<T> => {
-    return request(this.getUrl({ id: query?.id }), { method: 'DELETE' }).then(this.parseResponse);
+  delete = async (parameter?: Parameter, query?: Query): Promise<T> => {
+    return request(this.getUrl(parameter, query), { method: 'DELETE' }).then(this.parseResponse);
   };
 
   upload = async <D = string | ArrayBuffer>(data: D) => {
-    return request(this.getUrl({}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
+    return request(this.getUrl(undefined, {}, 'upload'), { method: 'POST', data }).then(this.parseResponse);
   };
 
   search = async (q: SearchQuery) => {
