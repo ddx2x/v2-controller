@@ -45,7 +45,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 1, sort: "{}" };
+    this.ctx = { page: 0, size: 10, sort: "{}" };
   };
 
   @action next = async (query?: Query) => {
@@ -62,11 +62,22 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.api.list(this.ctx).
       then((items) => {
-        this.data.push(...items);
+        items.forEach(object => {
+          if (!object) return;
+          const { uid } = object;
+          const index = this.data.findIndex((item) => item.uid === uid);
+          const item = this.data[index];
+          const newItem = new this.api.objectConstructor(object);
+          if (!item) {
+            this.data.push(newItem);
+          } else {
+            this.data.splice(index, 1, newItem);
+          }
+        });
+
         if (this.ctx.size && (this.data.length >= this.ctx.size)) {
           if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
         }
-        console.log("next2", this.data.length, this.ctx);
 
         this.isLoaded.set(true);
       });

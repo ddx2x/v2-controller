@@ -56,7 +56,7 @@ export default [
   {
     name: '订单',
     path: '/order',
-    icon: 'setting',
+    icon: 'solution',
     routes: [
       {
         name: '订单列表',
@@ -83,7 +83,7 @@ export default [
   {
     name: '客户',
     path: '/customer',
-    icon: 'setting',
+    icon: 'flag',
     routes: [
       {
         name: '客户列表',
@@ -106,17 +106,14 @@ export default [
     ]
   },
 
-
-
   {
     name: '门店',
     path: '/door',
-    icon: 'setting',
+    icon: 'team',
     routes: [
       {
         name: '门店列表',
         path: '/door/list',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [
 
@@ -148,7 +145,7 @@ export default [
       },
       {
         name: '配送设置',
-        path: '/settings/door',
+        path: '/settings/logistics',
         icon: 'setting',
         component: './dynamic-view',
         routes: [

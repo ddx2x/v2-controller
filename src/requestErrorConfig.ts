@@ -1,5 +1,6 @@
 ﻿import type { AxiosResponse, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import { message } from 'antd';
 
 const writeLog = (log: AxiosResponse) => {
   const { config, ...params } = log;
@@ -29,9 +30,13 @@ export const errorConfig: RequestConfig = {
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
     // 错误抛出
-    errorThrower: (res) => { },
+    errorThrower: (res) => {
+      message.error(res, 3000)
+    },
     // 错误接收及处理
-    errorHandler: (error: any, opts: any) => { },
+    errorHandler: (error: any, opts: any) => {
+      message.error(error.message, 3000)
+    },
   },
 
   // 请求拦截器

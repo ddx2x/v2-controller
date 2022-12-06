@@ -184,6 +184,3 @@ export class ObjectApi<T extends IObject = any> {
     return request(this.searchUrl(q), { method: 'GET' })
   };
 }
-
-
-// export type ISerachObjectConstructor<T = any> = new (data: any) => T;

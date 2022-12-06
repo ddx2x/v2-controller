@@ -11,7 +11,7 @@ import { autobind, EventEmitter } from './utils';
 @autobind()
 export class ObjectWebSockApi {
   protected socket: WebSocket | undefined;
-  protected onData = new EventEmitter<[ObjectWatchEvent]>();
+  protected onData = new EventEmitter<[ObjectWatchEvent<any>]>();
   protected subscribers = observable.map<ObjectApi, number>();
   protected reconnectTimeoutMs = 500;
   protected maxReconnectsOnError = 10;
