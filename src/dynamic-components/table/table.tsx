@@ -1,6 +1,6 @@
 import { ActionType, ProCard, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { AutoComplete, Button, ButtonProps, Radio, RadioProps, Space, Switch, SwitchProps, TablePaginationConfig } from 'antd';
+import { AutoComplete, Button, ButtonProps, Card, Radio, RadioProps, Space, Switch, SwitchProps, TablePaginationConfig } from 'antd';
 import type { Location } from "history";
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -223,7 +223,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   ): React.ReactNode | undefined => {
 
     if (expanding) {
-      return <div style={{ marginTop: 5, marginBottom: 8, marginRight: 15 }}>{domList.table}</div>
+      return <Card bordered={false} style={{ background: '#fbfbfc'}}>{domList.table}</Card>
     }
 
     return (
