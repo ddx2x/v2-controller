@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { Table, TableProps } from '../table';
 
 export declare type ExpandRowProps = {
+  record?: any
   onDataRender: (
     record: any,
     index?: number,
     indent?: number,
     expanded?: boolean
   ) => any
-  record?: any
 } & (
     { kind: 'table', table: TableProps }
   )

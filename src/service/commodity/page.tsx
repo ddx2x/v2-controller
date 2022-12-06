@@ -12,7 +12,7 @@ const eidt: FormProps = {
     layoutType: 'ModalForm',
     columns: [{
         title: '商品名称',
-        dataIndex: 'name'
+        dataIndex: 'sub_title'
     }],
     onSubmit: (form, values) => {
         console.log(values);
@@ -103,11 +103,11 @@ const detail: DescriptionsProps = {
 
 // 商品列表
 const table: View = {
+    kind: 'table',
+    rowKey: "uid",
     toolbar: {
         title: '商品列表'
     },
-    kind: 'table',
-    rowKey: "uid",
     columns: [
         {
             dataIndex: 'uid',
@@ -136,10 +136,6 @@ const table: View = {
                     title: '名称'
                 },
                 {
-                    dataIndex: 'name',
-                    title: '商品类型',
-                },
-                {
                     dataIndex: 'sale_channels',
                     title: '销售渠道',
                 },
@@ -153,8 +149,8 @@ const table: View = {
                 },
             ],
             moreMenuButton: (record) => [{
-                btkind: 'descriptions',
-                fold: true,
+                kind: 'descriptions',
+                collapse: true,
                 dataSource: {
                     id: '这是一段文本columns',
                     date: '20200809',
@@ -169,8 +165,8 @@ const table: View = {
     },
     moreMenuButton: (record) => [
         {
-            btkind: 'descriptions',
-            fold: true,
+            kind: 'descriptions',
+            collapse: true,
             dataSource: {
                 id: '这是一段文本columns',
                 date: '20200809',
@@ -181,9 +177,9 @@ const table: View = {
             },
             ...detail
         },
-        { btkind: 'form', fold: true, initialValues: record, ...eidt },
-        { btkind: 'link', fold: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
-        { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
+        { kind: 'form', collapse: true, initialValues: record, ...eidt },
+        { kind: 'link', collapse: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
+        { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
     ],
     globalSearch: {
         onSearch: (value, setGlobalSearchOptions) => {
@@ -199,8 +195,8 @@ const table: View = {
                 })
         }
     },
-    dataSource: () => commdityAggregateStore.items,
-    loading: () => commdityAggregateStore.loading,
+    dataSource: commdityAggregateStore.items,
+    loading: commdityAggregateStore.loading,
     onNext: (actionRef) => commdityAggregateStore.next({ order: { "brand_name": 1 } }),
     onSubmit: (params) => commdityAggregateStore.next({ order: { "brand_name": 1 } }),
 };

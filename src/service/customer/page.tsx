@@ -58,8 +58,8 @@ const table: View = {
     },
     moreMenuButton: (record) => [
         {
-            btkind: 'descriptions',
-            fold: true,
+            kind: 'descriptions',
+            collapse: true,
             dataSource: {
                 id: '这是一段文本columns',
                 date: '20200809',
@@ -70,9 +70,9 @@ const table: View = {
             },
             // ...detail
         },
-        // { btkind: 'form', fold: true, initialValues: record, ...eidt },
-        // { btkind: 'link', fold: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
-        // { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
+        // { kind: 'form', collapse: true, initialValues: record, ...eidt },
+        // { kind: 'link', collapse: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
+        // { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
     ],
     // globalSearch: {
     //     onSearch: (value, setGlobalSearchOptions) => {

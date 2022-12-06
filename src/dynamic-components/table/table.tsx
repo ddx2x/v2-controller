@@ -37,8 +37,8 @@ export const extraActionArray = (items: ExtraAction[]) => {
 const defaulScrollHeight = 1000;
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading' | 'expandable' | 'pagination'> & {
-  loading?: () => boolean | boolean
-  dataSource?: () => any | any[]
+  loading?: any
+  dataSource?: any
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   moreMenuButton?: (record: any) => MoreButtonType[],
@@ -129,6 +129,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // ref
   const actionRef = useRef<ActionType>();
 
+  console.log('dataSource....', dataSource, loading);
+
   // 页面挂载 销毁事件
   useEffect(() => {
     actionRef && mount && mount(location, actionRef)
@@ -149,6 +151,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     })
   })
 
+  //
   let newColumns = columns
 
   // 多选 批量删除
@@ -161,8 +164,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onChange: onSelectChange,
   };
 
+  // 虚拟滚动
   if (virtualList) {
-    // 虚拟滚动
     const vComponents = useMemo(() => {
       return VList({
         height: scrollHeight || defaulScrollHeight
@@ -255,15 +258,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
         </Space>
       </ProCard>}
       <ProTable
-        headerTitle={
-          headerTitle
-            ? headerTitle
-            : intl &&
-            intl.formatMessage({
-              id: 'pages.searchTable.title',
-              defaultMessage: 'Enquiry form',
-            })
-        }
         search={search && {
           labelWidth: 80,
           optionRender: (searchConfig, props, dom) => {
@@ -282,8 +276,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
         } : false}
         columns={newColumns}
         actionRef={actionRef}
-        loading={typeof loading == 'function' ? loading() : loading}
-        dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
+        // loading={typeof loading == 'function' ? loading() : loading}
+        // dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
         rowSelection={dataSource && rowSelection ? rowSelection : false}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}

@@ -140,6 +140,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     store.eventsBuffer.push(evt);
   };
 
+  
   @computed get items() {
     return this.data.slice().reverse();
   }

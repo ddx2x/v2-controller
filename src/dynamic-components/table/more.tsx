@@ -7,11 +7,11 @@ import { randomKey } from '../helper';
 
 // 更多按钮
 export declare type MoreButtonType = (
-  { btkind: 'descriptions' } & DescriptionsProps | // 详情页
-  { btkind: 'form'; } & FormProps | // 表单
-  { btkind: 'link'; } & { link: string, title: string } | // 跳转
-  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
-) & { fold?: boolean } // 放入折叠框
+  { kind: 'descriptions' } & DescriptionsProps | // 详情页
+  { kind: 'form'; } & FormProps | // 表单
+  { kind: 'link'; } & { link: string, title: string } | // 跳转
+  { kind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
+) & { collapse?: boolean } // 放入折叠框
 
 export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonType[], columns: any[]): any[] => {
   columns = columns.filter(item => item.dataIndex != 'more')
@@ -22,12 +22,12 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
     valueType: 'option',
     fixed: 'right',
     render: (_: any, record: any) => {
-      let notFold: any[] = []
+      let notcollapse: any[] = []
       let items: any[] = []
 
       moreMenuButton(record).map(item => {
         let label = (() => {
-          switch (item.btkind) {
+          switch (item.kind) {
             case 'descriptions':
               const [descriptionDom] = useDescriptions({ ...item })
               return descriptionDom
@@ -59,12 +59,12 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
           }
         })()
 
-        item.fold ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notFold.push(label)
+        item.collapse ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notcollapse.push(label)
       })
       return (
         <>
           <Space>
-            {notFold.map(item => item)}
+            {notcollapse.map(item => item)}
             <Dropdown menu={{ items }}>
               <a onClick={e => e.preventDefault()}>
                 <Space>
