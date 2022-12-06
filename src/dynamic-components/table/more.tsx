@@ -29,11 +29,11 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
         let label = (() => {
           switch (item.btkind) {
             case 'descriptions':
-              const [description] = useDescriptions({ ...item })
-              return description
+              const [descriptionDom] = useDescriptions({ ...item })
+              return descriptionDom
             case 'form':
-              const [form] = useForm({ ...item })
-              return form
+              const [formDom] = useForm({ ...item })
+              return formDom
             case 'link':
               return (
                 <Button type='link' size='small' block>

@@ -1,6 +1,6 @@
 import { ActionType, ProCard, ProTable, ProTableProps } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { AutoComplete, Button, ButtonProps, Radio, RadioProps, Space, Switch, SwitchProps } from 'antd';
+import { AutoComplete, Button, ButtonProps, Radio, RadioProps, Space, Switch, SwitchProps, TablePaginationConfig } from 'antd';
 import type { Location } from "history";
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -34,20 +34,23 @@ export const extraActionArray = (items: ExtraAction[]) => {
   });
 };
 
-const defaulScrollHeight = '500px';
+const defaulScrollHeight = 1000;
 
-export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading' | 'expandable'> & {
-  loading?: Function | boolean
-  dataSource?: Function | any[]
+export declare type TableProps = Omit<ProTableProps<any, any>, 'dataSource' | 'loading' | 'expandable' | 'pagination'> & {
+  loading?: () => boolean | boolean
+  dataSource?: () => any | any[]
   virtualList?: boolean;
   expand?: ExpandedConfig;
   scrollHeight?: string | number; // 表格高度
   moreMenuButton?: (record: any) => MoreButtonType[],
-  onNext?: (actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
+  onNext?: (actionRef?: React.MutableRefObject<ActionType | undefined>, params?: { page: number, size: number }) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+  pagination?: (Omit<TablePaginationConfig, 'total'> & {
+    total?: () => number | number
+  })
   // 全局搜索
   globalSearch?: {
     key?: string,
@@ -109,6 +112,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     toolBarRender,
     intl,
     //
+    pagination,
     useBatchDelete,
     batchDelete,
     // 全局搜索
@@ -155,20 +159,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onChange: onSelectChange,
   };
 
-  // 虚拟滚动
-  const vComponents = useMemo(() => {
-    return VList({
-      height: scrollHeight || defaulScrollHeight
-    });
-  }, [onNext, scrollHeight]);
-
   if (virtualList) {
-    rest.sticky = true;
-    rest.scroll = {
-      y: scrollHeight, // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
-    };
-    rest.components = vComponents;
-    rest.pagination = false;
+    // 虚拟滚动
+    const vComponents = useMemo(() => {
+      return VList({
+        height: scrollHeight || defaulScrollHeight
+      });
+    }, []);
+    // rest.components = vComponents;
   }
 
   // 全局搜索
@@ -180,6 +178,31 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [search, setSearch] = useState(!globalSearch)
+
+  const tableAlertOptionRender = () => {
+    return (
+      <Space size={6}>
+        <Button
+          type='link'
+          onClick={async () => {
+            batchDelete && batchDelete(selectedRowKeys);
+            setSelectedRowKeys([]);
+            actionRef.current?.reloadAndRest?.();
+          }}
+        >
+          <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+        </Button>
+        <Button
+          type='link'
+          onClick={async () => {
+            setSelectedRowKeys([]);
+          }}
+        >
+          <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
+        </Button>
+      </Space>
+    );
+  }
 
   return (
     <>
@@ -195,7 +218,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
                 await globalSearch.onSearch(value, setGlobalSearchOptions)
             }}
             style={{ width: '320px' }}
-            />
+          />
           <Button type='primary' onClick={() => setSearch(!search)}>更多筛选</Button>
         </Space>
       </ProCard>
@@ -218,30 +241,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
               globalSearch && <Button type='primary' onClick={() => setSearch(!search)}>模糊搜索</Button>,]
           }
         }}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={6}>
-              <Button
-                type='link'
-                onClick={async () => {
-                  batchDelete && batchDelete(selectedRowKeys);
-                  setSelectedRowKeys([]);
-                  actionRef.current?.reloadAndRest?.();
-                }}
-              >
-                <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
-              </Button>
-              <Button
-                type='link'
-                onClick={async () => {
-                  setSelectedRowKeys([]);
-                }}
-              >
-                <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
-              </Button>
-            </Space>
-          );
-        }}
+        tableAlertOptionRender={tableAlertOptionRender}
+        // @ts-ignore
+        pagination={pagination ? {
+          ...pagination,
+          onChange: (page, size) => onNext && onNext(actionRef, { page, size }),
+          // @ts-ignore
+          total: typeof pagination.total == 'function' ? pagination.total() : pagination.total,
+        } : false}
         columns={newColumns}
         actionRef={actionRef}
         loading={typeof loading == 'function' ? loading() : loading}
@@ -249,13 +256,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
         rowSelection={dataSource ? rowSelection : false}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}
-        tableRender={(_, defaultDom, { toolbar, alert, table }) => {
-          return (
-            <div ref={setContainer}>
-              {defaultDom}
-            </div>
-          )
-        }}
+        // tableRender={(_, defaultDom, { toolbar, alert, table }) => {
+        //   return (
+        //     <div ref={setContainer}>
+        //       {defaultDom}
+        //     </div>
+        //   )
+        // }}
         onRow={(record) => {
           return {
             onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
@@ -266,11 +273,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
         }}
         {...rest}
       />
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      {!pagination && < div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
         <Button style={{ width: '350px' }} key='loadMore' onClick={() => onNext && onNext(actionRef)}>
           加载更多
         </Button>
-      </div>
+      </div>}
     </>
   );
 });

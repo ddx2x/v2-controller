@@ -1,14 +1,18 @@
-import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProFormInstance, ProProvider } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Button, Form as AntdForm, FormInstance } from 'antd';
+import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from "history";
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
+
+export declare type ModalActionRefType = {
+  openModal: () => void
+}
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   layoutType?: FormSchema['layoutType'];
@@ -16,20 +20,20 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   triggerButtonType?: ButtonType;
   triggerButtonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (form: FormInstance<any> | undefined, values: any) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any) => boolean;
   intl?: IntlShape; // 国际化
 } & RouterHistory & {
   mount?: (
     location: Location | undefined,
-    form: FormInstance
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>
   ) => void
   unMount?: (
     location: Location | undefined,
-    form: FormInstance
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>
   ) => void
 }
 
-export const Form: React.FC<FormProps> = observer((props) => {
+export const Form = observer(React.forwardRef((props: FormProps, forwardRef) => {
   const {
     location,
     mount,
@@ -42,12 +46,26 @@ export const Form: React.FC<FormProps> = observer((props) => {
     intl,
     ...rest
   } = props;
+
   // ref
-  const [form] = AntdForm.useForm();
+  React.useImperativeHandle(forwardRef, () => {
+    openModal: openModal
+  })
+
+  const formRef = useRef<ProFormInstance>();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const openModal = () => {
+    setModalVisible(true)
+  }
 
   useEffect(() => {
-    form && mount && form && mount(location, form)
-    return () => form && unMount && form && unMount(location, form)
+    if (formRef && mount) {
+      mount(location, formRef)
+    }
+    return () => {
+      if (formRef && unMount) { unMount(location, formRef) }
+    }
   }, [])
 
   switch (props.layoutType) {
@@ -72,13 +90,21 @@ export const Form: React.FC<FormProps> = observer((props) => {
     >
       <BetaSchemaForm
         // @ts-ignore
-        form={form}
+        formRef={formRef}
         // @ts-ignore
-        trigger={<Button size={triggerButtonSize} type={triggerButtonType} block>{triggerText}</Button>}
+        trigger={
+          <Button
+            size={triggerButtonSize} type={triggerButtonType} block onClick={openModal}>
+            {triggerText}
+          </Button>
+        }
+        ref={forwardRef}
+        open={modalVisible}
+        onOpenChange={setModalVisible}
         autoFocusFirstInput
         onFinish={async (values) => {
           if (!onSubmit) return false;
-          const b = onSubmit(form, values);
+          const b = onSubmit(formRef, values);
           await waitTime(submitTimeout);
           return b;
         }}
@@ -86,7 +112,7 @@ export const Form: React.FC<FormProps> = observer((props) => {
       />
     </ProProvider.Provider>
   );
-});
+}));
 
 Form.defaultProps = {
   title: '新建表单',
@@ -105,6 +131,7 @@ Form.defaultProps = {
 };
 
 
-export const useForm = (props: FormProps): [React.ReactNode, {}] => {
-  return [<Form {...props} />, {}];
+export const useForm = (props: FormProps): [React.ReactNode,] => {
+  const dom = <Form {...props} />
+  return [dom];
 };

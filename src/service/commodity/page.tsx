@@ -2,7 +2,7 @@
 import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
-import { SearchLabel } from '@/example/search.label';
+import { SearchLabel } from '@/service/search.label';
 import { message } from 'antd';
 import { commdityAggregateStore, commdityStore } from './store';
 
@@ -128,13 +128,15 @@ const table: View = {
     ],
     expand: {
         kind: 'table',
-        onDataRender: (record) => {
-            [record]
-        },
+        onDataRender: (record) => commdityStore.api.list({ title: record.uid }),
         table: {
             columns: [
                 {
-                    dataIndex: '_type',
+                    dataIndex: 'name',
+                    title: '名称'
+                },
+                {
+                    dataIndex: 'name',
                     title: '商品类型',
                 },
                 {
@@ -178,7 +180,7 @@ const table: View = {
                         return
                     }
                     const options = res.map(item => {
-                        return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name }
+                        return { label: <SearchLabel key={item.uid} searchObject={item} columns={[]} />, value: item.name }
                     })
                     setGlobalSearchOptions([...options])
                 })

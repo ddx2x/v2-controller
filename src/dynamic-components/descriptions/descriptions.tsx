@@ -48,7 +48,7 @@ export declare type DescriptionsProps =
     ) => void
   }
 
-export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
+export const Descriptions = observer(React.forwardRef((props: DescriptionsProps, ref) => {
   const {
     pageActionRef,
     location,
@@ -160,7 +160,7 @@ export const Descriptions: React.FC<DescriptionsProps> = observer((props) => {
     default:
       return Page();
   }
-});
+}));
 
 Descriptions.defaultProps = {
   modal: 'Page',
@@ -173,7 +173,8 @@ Descriptions.defaultProps = {
 };
 
 export const useDescriptions = (props: DescriptionsProps) => {
+  const dom = <Descriptions {...props} />
   return [
-    <Descriptions  {...props} />,
+    dom
   ];
 };
