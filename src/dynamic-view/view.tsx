@@ -1,6 +1,6 @@
+import NoFoundPage from '@/pages/404';
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
-import { useEffect } from 'react';
 import { isCachingNode, PageContainer } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
@@ -30,17 +30,14 @@ export default observer(() => {
   const routeKey = trRouterKey(location.pathname)
 
   const schema = pageManager.page(routeKey); // 注册配置项
-  if (!schema) return null;
 
-  const intl = useIntl(); // 国际化组件
+  if (!schema) return <NoFoundPage />;
+
   const isCaching = isCachingNode(location.pathname)
-
-  useEffect(() => {
-    !isCaching && pageManager.init(routeKey); // 挂载 stores
-    return () => { isCaching && pageManager.clear(routeKey); } // 清除stores
-  }, []);
+  !isCaching && pageManager.init(routeKey); // 挂载 stores
 
   const page = (() => {
+    const intl = useIntl(); // 国际化组件
     return (
       <>
         {schema?.view && schema.view.map((config: View, index) => {
@@ -66,5 +63,5 @@ export default observer(() => {
     );
   })();
 
-  return <PageContainer {...schema.container}>{page}</PageContainer>;
+  return <PageContainer {...schema?.container}>{page}</PageContainer>;
 });

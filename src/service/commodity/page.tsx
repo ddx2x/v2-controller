@@ -176,6 +176,19 @@ const table: View = {
                     title: '库存',
                 },
             ],
+            moreMenuButton: (record) => [{
+                btkind: 'descriptions',
+                fold: true,
+                dataSource: {
+                    id: '这是一段文本columns',
+                    date: '20200809',
+                    money: '1212100',
+                    state: 'closed',
+                    state2: 'open',
+                    ...record
+                },
+                ...detail
+            },]
         },
     },
     moreMenuButton: (record) => [
