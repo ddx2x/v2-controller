@@ -60,7 +60,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       merge(this.ctx, { page, size, sort });
     }
 
-    this.api.list(this.ctx).
+    this.api.list(undefined, this.ctx).
       then((items) => {
         items.forEach(object => {
           if (!object) return;
@@ -86,7 +86,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   @action load = async (query?: Query) => {
     const q = this.querys(query);
     this.api
-      .list(q)
+      .list(undefined, q)
       .then((items) => this.data.replace(items))
       .finally(() => {
         this.isLoaded.set(true);
@@ -95,7 +95,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action create = async (partial?: Partial<T>, query?: Query): Promise<T> => {
     const q = this.querys(query);
-    const newItem = await this.api.create(partial, q);
+    const newItem = await this.api.create(undefined, partial, q);
     this.data.replace([...this.data, newItem]);
     return newItem;
   };
@@ -109,8 +109,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   }
 
   @action remove = async (id: string) => {
-    const q = this.querys({ id: id });
-    this.api.delete(q).then(() => {
+    this.api.delete(id).then(() => {
       this.data.filter((item) => item.uid === id);
     });
   };

@@ -10,7 +10,8 @@ export declare type MoreButtonType = (
   { btkind: 'descriptions' } & DescriptionsProps | // 详情页
   { btkind: 'form'; } & FormProps | // 表单
   { btkind: 'link'; } & { link: string, title: string } | // 跳转
-  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } // 确认框自定义操作
+  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } | // 确认框自定义操作
+  { btkind: 'editable'; } & {title?: string}
 ) & { fold?: boolean } // 放入折叠框
 
 export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonType[], columns: any[]): any[] => {
@@ -21,7 +22,7 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
     title: '操作',
     valueType: 'option',
     fixed: 'right',
-    render: (_: any, record: any) => {
+    render: (text: any, record: any, _: any, action: any) => {
       let notFold: any[] = []
       let items: any[] = []
 
@@ -54,6 +55,16 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
                   <Button type='link' size='small' block onClick={(e) => e.stopPropagation()}>{item.title}</Button>
                 </Popconfirm>
               )
+            case 'editable':
+              return <Button
+                type='link' size='small' block
+                key="editable"
+                onClick={() => {
+                  action?.startEditable?.(record.uid);
+                }}
+              >
+                {item.title || '编辑' }
+              </Button>
             default:
               return <Button type='link' size='small' block>请定义操作</Button>
           }
