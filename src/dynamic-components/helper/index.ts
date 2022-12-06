@@ -1,2 +1,2 @@
 export * from './randomKey';
-export * from './wait'
+export * from './wait';

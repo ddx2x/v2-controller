@@ -4,7 +4,7 @@ import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
-import type { Location } from "history";
+import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -18,18 +18,22 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   triggerText?: string;
   triggerButtonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (form: FormInstance<unknown> | undefined, values: any, handleClose: () => void) => boolean;
+  onFinish?: (
+    form: FormInstance<unknown> | undefined,
+    values: any,
+    handleClose: () => void,
+  ) => boolean;
   intl?: IntlShape; // 国际化
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>
-  ) => void
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>
-  ) => void
-};
+    mount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance | undefined>,
+    ) => void;
+  };
 
 export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const {
@@ -50,9 +54,9 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const formRef = useRef<ProFormInstance>();
 
   useEffect(() => {
-    formRef && mount && mount(location, formRef)
-    return () => formRef && unMount && unMount(location, formRef)
-  }, [])
+    formRef && mount && mount(location, formRef);
+    return () => formRef && unMount && unMount(location, formRef);
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -106,11 +110,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
         return (
           <>
             {dom}
-            <Affix
-              style={{ position: 'absolute', right: 120 }}
-              offsetTop={120}
-              offsetBottom={110}
-            >
+            <Affix style={{ position: 'absolute', right: 120 }} offsetTop={120} offsetBottom={110}>
               <Space>{submitter}</Space>
             </Affix>
           </>
@@ -178,7 +178,6 @@ StepForm.defaultProps = {
   submitTimeout: 2000,
   width: '50%',
 };
-
 
 export const useStepsForm = (props: StepFormProps): [React.ReactNode, {}] => {
   return [<StepForm {...props} />, {}];

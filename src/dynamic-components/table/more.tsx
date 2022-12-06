@@ -7,15 +7,22 @@ import { randomKey } from '../helper';
 
 // 更多按钮
 export declare type MoreButtonType = (
-  { btkind: 'descriptions' } & DescriptionsProps | // 详情页
-  { btkind: 'form'; } & FormProps | // 表单
-  { btkind: 'link'; } & { link: string, title: string } | // 跳转
-  { btkind: 'confirm'; } & { onClick: (e?: React.MouseEvent) => void, title: string, text?: string } | // 确认框自定义操作
-  { btkind: 'editable'; } & {title?: string}
-) & { fold?: boolean } // 放入折叠框
+  | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
+  | ({ kind: 'form' } & FormProps) // 表单
+  | ({ kind: 'link' } & { link: string; title: string }) // 跳转
+  | ({ kind: 'confirm' } & {
+      onClick: (e?: React.MouseEvent) => void;
+      title: string;
+      text?: string;
+    }) // 确认框自定义操作
+  | ({ kind: 'editable' } & { title?: string })
+) & { collapse?: boolean }; // 放入折叠框
 
-export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonType[], columns: any[]): any[] => {
-  columns = columns.filter(item => item.dataIndex != 'more')
+export const injectTableOperate = (
+  moreMenuButton: (record: any) => MoreButtonType[],
+  columns: any[],
+): any[] => {
+  columns = columns.filter((item) => item.dataIndex != 'more');
 
   columns.push({
     dataIndex: 'more',
@@ -23,24 +30,24 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
     valueType: 'option',
     fixed: 'right',
     render: (text: any, record: any, _: any, action: any) => {
-      let notFold: any[] = []
-      let items: any[] = []
+      let notcollapse: any[] = [];
+      let items: any[] = [];
 
-      moreMenuButton(record).map(item => {
+      moreMenuButton(record).map((item) => {
         let label = (() => {
-          switch (item.btkind) {
+          switch (item.kind) {
             case 'descriptions':
-              const [descriptionDom] = useDescriptions({ ...item })
-              return descriptionDom
+              const [descriptionDom] = useDescriptions({ ...item });
+              return descriptionDom;
             case 'form':
-              const [formDom] = useForm({ ...item })
-              return formDom
+              const [formDom] = useForm({ ...item });
+              return formDom;
             case 'link':
               return (
-                <Button type='link' size='small' block>
+                <Button type="link" size="small" block>
                   <Link to={item.link}>{item.title}</Link>
                 </Button>
-              )
+              );
             case 'confirm':
               return (
                 <Popconfirm
@@ -52,32 +59,44 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
                   onConfirm={(e) => item.onClick(e)}
                   onCancel={(e) => e?.stopPropagation()}
                 >
-                  <Button type='link' size='small' block onClick={(e) => e.stopPropagation()}>{item.title}</Button>
+                  <Button type="link" size="small" block onClick={(e) => e.stopPropagation()}>
+                    {item.title}
+                  </Button>
                 </Popconfirm>
-              )
+              );
             case 'editable':
-              return <Button
-                type='link' size='small' block
-                key="editable"
-                onClick={() => {
-                  action?.startEditable?.(record.uid);
-                }}
-              >
-                {item.title || '编辑' }
-              </Button>
+              return (
+                <Button
+                  type="link"
+                  size="small"
+                  block
+                  key="editable"
+                  onClick={() => {
+                    action?.startEditable?.(record.uid);
+                  }}
+                >
+                  {item.title || '编辑'}
+                </Button>
+              );
             default:
-              return <Button type='link' size='small' block>请定义操作</Button>
+              return (
+                <Button type="link" size="small" block>
+                  请定义操作
+                </Button>
+              );
           }
-        })()
+        })();
 
-        item.fold ? items.push({ label: label, key: randomKey(5, { numbers: false }) }) : notFold.push(label)
-      })
+        item.collapse
+          ? items.push({ label: label, key: randomKey(5, { numbers: false }) })
+          : notcollapse.push(label);
+      });
       return (
         <>
           <Space>
-            {notFold.map(item => item)}
+            {notcollapse.map((item) => item)}
             <Dropdown menu={{ items }}>
-              <a onClick={e => e.preventDefault()}>
+              <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   操作
                   <DownOutlined />
@@ -86,8 +105,8 @@ export const injectTableOperate = (moreMenuButton: (record: any) => MoreButtonTy
             </Dropdown>
           </Space>
         </>
-      )
+      );
     },
-  })
-  return columns
-}
+  });
+  return columns;
+};

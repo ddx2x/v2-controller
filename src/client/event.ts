@@ -4,19 +4,19 @@ import type { ObjectStore } from './store';
 export declare type WatchRouteQuery = {
   api: string;
   version: number;
-}
+};
 
 export declare type ObjectWatchEvent<T extends IObject> = {
   type: 'ADDED' | 'MODIFIED' | 'DELETED';
   object?: T;
   store?: ObjectStore<T>;
-}
+};
 
 export declare type ObjectWatchRouteEvent = {
   type: string;
   url: string;
   status: number;
-}
+};
 
 export type Noop = () => void;
 
@@ -26,16 +26,17 @@ export declare type WatchApi<T extends IObject, S extends ObjectStore<T>> = {
   subscribe: (...stores: S[]) => Noop;
   addListener: (store: S, ecb: EventHandle) => Noop;
   reset: () => any;
-}
+};
 
-
-export class DefaultWatchApi<T extends IObject, S extends ObjectStore<T>> implements WatchApi<T, S> {
+export class DefaultWatchApi<T extends IObject, S extends ObjectStore<T>>
+  implements WatchApi<T, S>
+{
   subscribe(...stores: S[]): Noop {
-    return () => { }
+    return () => {};
   }
   addListener(store: any, ecb: EventHandle): Noop {
-    return () => { }
+    return () => {};
   }
 
-  reset() { };
+  reset() {}
 }

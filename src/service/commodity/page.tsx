@@ -101,25 +101,25 @@ const detail: DescriptionsProps = {
 }
 
 
-// function getBrandName() {
-//     console.log("--", "");
-//     return {
-//         all: { text: '超长'.repeat(50) },
-//         open: {
-//             text: '未解决',
-//             status: 'Error',
-//         },
-//         closed: {
-//             text: '已解决',
-//             status: 'Success',
-//             disabled: true,
-//         },
-//         processing: {
-//             text: '解决中',
-//             status: 'Processing',
-//         },
-//     }
-// }
+function getBrandName() {
+    console.log("--", "");
+    return {
+        all: { text: '超长'.repeat(50) },
+        open: {
+            text: '未解决',
+            status: 'Error',
+        },
+        closed: {
+            text: '已解决',
+            status: 'Success',
+            disabled: true,
+        },
+        processing: {
+            text: '解决中',
+            status: 'Processing',
+        },
+    }
+}
 
 // 商品列表
 const table: View = {
@@ -143,11 +143,11 @@ const table: View = {
         {
             dataIndex: 'brand_name',
             title: '品牌',
-            // filters: true,
-            // onFilter: true,
-            // ellipsis: true,
-            // valueType: 'select',
-            // valueEnum: getBrandName(),
+            filters: true,
+            onFilter: true,
+            ellipsis: true,
+            valueType: 'select',
+            valueEnum: getBrandName(),
         },
     ],
     expand: {
@@ -160,7 +160,7 @@ const table: View = {
                     title: '名称'
                 },
                 {
-                    dataIndex: 'type',
+                    dataIndex: 'name',
                     title: '商品类型',
                 },
                 {
@@ -208,7 +208,7 @@ const table: View = {
         { btkind: 'form', fold: true, initialValues: record, ...eidt },
         { btkind: 'link', fold: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
         { btkind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` },
-        // { btkind: 'editable', fold: true, title: '表格编辑' }
+        { btkind: 'editable', fold: true, title: '表格编辑' }
     ],
     globalSearch: {
         onSearch: (value, setGlobalSearchOptions) => {

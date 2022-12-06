@@ -6,7 +6,6 @@ import './index.less';
 const { TabPane } = Tabs;
 
 export const Settings = () => {
-
   const [state, setState] = useSet({
     tabsKey: 'globalSettings',
     showRight: true,
@@ -37,6 +36,8 @@ export const Settings = () => {
   return showRight ? (
     <div className="right-layout relative pl2">
       <ToggleIcon />
-    </div>) :
+    </div>
+  ) : (
     <HideRightArrow />
-}
+  );
+};

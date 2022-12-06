@@ -1,5 +1,5 @@
-import type { Location } from "history";
+import type { Location } from 'history';
 
 export declare type RouterHistory = {
-  location?: Location
-}
+  location?: Location;
+};

@@ -38,7 +38,7 @@
       function (event) {
         document.readyState = 'complete';
       },
-      false
+      false,
     );
   }
 
@@ -155,7 +155,7 @@
           !valid(
             (codePoint << 6) | (octet & 63),
             bitsNeeded - 6,
-            octetsCount(bitsNeeded, codePoint)
+            octetsCount(bitsNeeded, codePoint),
           )
         ) {
           bitsNeeded = 0;
@@ -180,10 +180,7 @@
           bitsNeeded = 0;
           codePoint = REPLACER;
         }
-        if (
-          bitsNeeded !== 0 &&
-          !valid(codePoint, bitsNeeded, octetsCount(bitsNeeded, codePoint))
-        ) {
+        if (bitsNeeded !== 0 && !valid(codePoint, bitsNeeded, octetsCount(bitsNeeded, codePoint))) {
           bitsNeeded = 0;
           codePoint = REPLACER;
         }
@@ -195,12 +192,8 @@
         if (codePoint <= 0xffff) {
           string += String.fromCharCode(codePoint);
         } else {
-          string += String.fromCharCode(
-            0xd800 + ((codePoint - 0xffff - 1) >> 10)
-          );
-          string += String.fromCharCode(
-            0xdc00 + ((codePoint - 0xffff - 1) & 0x3ff)
-          );
+          string += String.fromCharCode(0xd800 + ((codePoint - 0xffff - 1) >> 10));
+          string += String.fromCharCode(0xdc00 + ((codePoint - 0xffff - 1) & 0x3ff));
         }
       }
     }
@@ -219,19 +212,14 @@
       );
     } catch (error) {
       console.debug(
-        'TextDecoder does not support streaming option. Using polyfill instead: ' +
-          error
+        'TextDecoder does not support streaming option. Using polyfill instead: ' + error,
       );
     }
     return false;
   };
 
   // IE, Edge
-  if (
-    TextDecoder == undefined ||
-    TextEncoder == undefined ||
-    !supportsStreamOption()
-  ) {
+  if (TextDecoder == undefined || TextEncoder == undefined || !supportsStreamOption()) {
     TextDecoder = TextDecoderPolyfill;
   }
 
@@ -373,11 +361,7 @@
       if (xhr != undefined) {
         // Opera 12
         if (xhr.readyState === 4) {
-          if (
-            !('onload' in xhr) ||
-            !('onerror' in xhr) ||
-            !('onabort' in xhr)
-          ) {
+          if (!('onload' in xhr) || !('onerror' in xhr) || !('onabort' in xhr)) {
             onFinish(xhr.responseText === '' ? 'error' : 'load', event);
           }
         } else if (xhr.readyState === 3) {
@@ -539,7 +523,7 @@
     onFinishCallback,
     url,
     withCredentials,
-    headers
+    headers,
   ) {
     xhr.open('GET', url);
     var offset = 0;
@@ -565,12 +549,7 @@
         var statusText = xhr.statusText;
         var contentType = xhr.getResponseHeader('Content-Type');
         var headers = xhr.getAllResponseHeaders();
-        onStartCallback(
-          status,
-          statusText,
-          contentType,
-          new HeadersPolyfill(headers)
-        );
+        onStartCallback(status, statusText, contentType, new HeadersPolyfill(headers));
       }
     };
     xhr.withCredentials = withCredentials;
@@ -599,7 +578,7 @@
     onFinishCallback,
     url,
     withCredentials,
-    headers
+    headers,
   ) {
     var reader = null;
     var controller = new AbortController();
@@ -617,7 +596,7 @@
           response.status,
           response.statusText,
           response.headers.get('Content-Type'),
-          new HeadersWrapper(response.headers)
+          new HeadersWrapper(response.headers),
         );
         // see https://github.com/promises-aplus/promises-spec/issues/179
         return new Promise(function (resolve, reject) {
@@ -629,7 +608,7 @@
                   //Note: bytes in textDecoder are ignored
                   resolve(undefined);
                 } else {
-                  var chunk = textDecoder.decode(result.value, {stream: true});
+                  var chunk = textDecoder.decode(result.value, { stream: true });
                   onProgressCallback(chunk);
                   readNextChunk();
                 }
@@ -812,8 +791,7 @@
   }
 
   function getBestXHRTransport() {
-    return (XMLHttpRequest != undefined &&
-      'withCredentials' in XMLHttpRequest.prototype) ||
+    return (XMLHttpRequest != undefined && 'withCredentials' in XMLHttpRequest.prototype) ||
       XDomainRequest == undefined
       ? new XMLHttpRequest()
       : new XDomainRequest();
@@ -825,8 +803,7 @@
   function start(es, url, options) {
     url = String(url);
     var withCredentials = Boolean(options.withCredentials);
-    var lastEventIdQueryParameterName =
-      options.lastEventIdQueryParameterName || 'lastEventId';
+    var lastEventIdQueryParameterName = options.lastEventIdQueryParameterName || 'lastEventId';
 
     var initialRetry = clampDuration(1000);
     var heartbeatTimeout = parseDuration(options.heartbeatTimeout, 45000);
@@ -841,9 +818,7 @@
       isFetchSupported && TransportOption == undefined
         ? undefined
         : new XHRWrapper(
-            TransportOption != undefined
-              ? new TransportOption()
-              : getBestXHRTransport()
+            TransportOption != undefined ? new TransportOption() : getBestXHRTransport(),
           );
     var transport =
       TransportOption != null && typeof TransportOption !== 'string'
@@ -865,11 +840,7 @@
 
     var onStart = function (status, statusText, contentType, headers) {
       if (currentState === CONNECTING) {
-        if (
-          status === 200 &&
-          contentType != undefined &&
-          contentTypeRegExp.test(contentType)
-        ) {
+        if (status === 200 && contentType != undefined && contentTypeRegExp.test(contentType)) {
           currentState = OPEN;
           wasActivity = Date.now();
           retry = initialRetry;
@@ -896,9 +867,7 @@
           } else {
             message =
               "EventSource's response has a Content-Type specifying an unsupported type: " +
-              (contentType == undefined
-                ? '-'
-                : contentType.replace(/\s+/g, ' ')) +
+              (contentType == undefined ? '-' : contentType.replace(/\s+/g, ' ')) +
               '. Aborting the connection.';
           }
           close();
@@ -945,11 +914,10 @@
                 var field = chunk.slice(fieldStart, valueStart - 1);
                 var value = chunk.slice(
                   valueStart +
-                    (valueStart < position &&
-                    chunk.charCodeAt(valueStart) === ' '.charCodeAt(0)
+                    (valueStart < position && chunk.charCodeAt(valueStart) === ' '.charCodeAt(0)
                       ? 1
                       : 0),
-                  position
+                  position,
                 );
                 if (field === 'data') {
                   dataBuffer += '\n';
@@ -1029,7 +997,7 @@
         retry = clampDuration(Math.min(initialRetry * 16, retry * 2));
 
         es.readyState = CONNECTING;
-        var event = new ErrorEvent('error', {error: error});
+        var event = new ErrorEvent('error', { error: error });
         es.dispatchEvent(event);
         fire(es, es.onerror, event);
         if (error != undefined) {
@@ -1066,8 +1034,8 @@
                   ? 'No response received.'
                   : textLength + ' chars received.') +
                 ' ' +
-                'Reconnecting.'
-            )
+                'Reconnecting.',
+            ),
           );
           if (abortController != undefined) {
             abortController.abort();
@@ -1076,7 +1044,7 @@
         } else {
           var nextHeartbeat = Math.max(
             (wasActivity || Date.now()) + heartbeatTimeout - Date.now(),
-            1
+            1,
           );
           wasActivity = false;
           timeout = setTimeout(function () {
@@ -1112,16 +1080,9 @@
             i === -1
               ? url
               : url.slice(0, i + 1) +
-                url
-                  .slice(i + 1)
-                  .replace(
-                    /(?:^|&)([^=&]*)(?:=[^&]*)?/g,
-                    function (p, paramName) {
-                      return paramName === lastEventIdQueryParameterName
-                        ? ''
-                        : p;
-                    }
-                  );
+                url.slice(i + 1).replace(/(?:^|&)([^=&]*)(?:=[^&]*)?/g, function (p, paramName) {
+                  return paramName === lastEventIdQueryParameterName ? '' : p;
+                });
           // Append the current lastEventId to the request URL.
           requestURL +=
             (url.indexOf('?') === -1 ? '?' : '&') +
@@ -1149,7 +1110,7 @@
           onFinish,
           requestURL,
           withCredentials,
-          requestHeaders
+          requestHeaders,
         );
       } catch (error) {
         close();
@@ -1182,8 +1143,7 @@
   var R = NativeEventSource;
   if (
     XMLHttpRequest != undefined &&
-    (NativeEventSource == undefined ||
-      !('withCredentials' in NativeEventSource.prototype))
+    (NativeEventSource == undefined || !('withCredentials' in NativeEventSource.prototype))
   ) {
     // Why replace a native EventSource ?
     // https://bugzilla.mozilla.org/show_bug.cgi?id=444328
@@ -1215,5 +1175,5 @@
       : typeof self !== 'undefined'
       ? self
       : this
-    : globalThis
+    : globalThis,
 );
