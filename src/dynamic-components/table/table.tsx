@@ -267,9 +267,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
       item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
 
     toolBarActions = [
-      ...notCollapseActions
+      <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
+        {notCollapseActions.map(item => item)}
+        {collapseActions.length > 0 && <CollapseMeuButton items={collapseActions} />}
+      </Space>
     ]
-    collapseActions.length > 0 && toolBarActions.push(<CollapseMeuButton items={collapseActions} />)
+
   }
 
 
