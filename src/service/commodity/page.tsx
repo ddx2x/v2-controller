@@ -197,7 +197,6 @@ const table: View = {
     toolBarAction: () => [
         {
             kind: 'descriptions',
-            // collapse: true,
             ...detail,
         },
         {
@@ -207,7 +206,6 @@ const table: View = {
         },
         {
             kind: 'link',
-            collapse: true,
             link: `/commdity/list/add`,
             title: '新增',
         },
@@ -245,6 +243,8 @@ const table: View = {
         },
         { kind: 'editable', collapse: true, title: '表格编辑' },
     ],
+
+
     globalSearch: {
         onSearch: (value, setGlobalSearchOptions) => {
             commdityStore.search({ text: value || '', offset: 0, limit: 10 }).then((res) => {

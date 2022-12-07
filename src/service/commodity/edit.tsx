@@ -431,7 +431,7 @@ export const editAggregateView: View = {
 };
 
 
-pageManager.register('commdity.add', {
+pageManager.register('commdity.list.add', {
     page: {
         view: [editView],
         container: {
@@ -449,7 +449,6 @@ pageManager.register('commdity.list.edit', {
         view: [editView],
         container: {
             keepAlive: false,
-            useBreadcrumb: true,
             header: {
                 title: '商品信息 编辑',
             },
