@@ -1,4 +1,5 @@
 import { ExpandableConfig } from 'antd/lib/table/interface';
+import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { Table, TableProps } from '../table';
 
@@ -9,7 +10,7 @@ export declare type ExpandRowProps = {
 
 export declare type ExpandedConfig = ExpandableConfig<any> & ExpandRowProps;
 
-const ExpandRow: React.FC<ExpandRowProps> = (props) => {
+const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
   const [dataSource, setDataSource] = useState<any>([]);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const ExpandRow: React.FC<ExpandRowProps> = (props) => {
   }
 
   return null;
-};
+});
 
 // 扩展
 export const expandModule = (props: ExpandedConfig): ExpandableConfig<any> => {

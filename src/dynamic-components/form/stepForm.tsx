@@ -1,4 +1,4 @@
-import type { ProFormInstance } from '@ant-design/pro-components';
+import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
@@ -8,6 +8,7 @@ import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
+import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
@@ -24,6 +25,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
     handleClose: () => void,
   ) => boolean;
   intl?: IntlShape; // 国际化
+  routeContext?: RouteContextType;
 } & RouterHistory & {
     mount?: (
       location: Location | undefined,
@@ -47,6 +49,8 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     submitTimeout,
     onFinish,
     width,
+    //
+    routeContext,
     ...rest
   } = props;
   // ref
@@ -110,9 +114,9 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
         return (
           <>
             {dom}
-            <Affix style={{ position: 'absolute', right: 120 }} offsetTop={120} offsetBottom={110}>
+            <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
-            </Affix>
+            </FooterToolbar>
           </>
         );
     }

@@ -1,4 +1,4 @@
-import { BetaSchemaForm, ProFormInstance, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProFormInstance, ProProvider, RouteContextType } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -25,6 +25,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
     values: any,
   ) => boolean;
   intl?: IntlShape; // 国际化
+  routeContext?: RouteContextType;
 } & RouterHistory & {
     mount?: (
       location: Location | undefined,

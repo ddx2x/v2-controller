@@ -1,4 +1,4 @@
-import type { ActionType, ProListProps } from '@ant-design/pro-components';
+import type { ActionType, ProListProps, RouteContextType } from '@ant-design/pro-components';
 import { FooterToolbar } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
@@ -16,6 +16,7 @@ export type ListProps = ProListProps & {
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
+  routeContext?: RouteContextType;
 } & RouterHistory & {
     mount?: (
       location: Location | undefined,

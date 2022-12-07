@@ -4,6 +4,7 @@ import {
   ProDescriptionsItemProps,
   ProDescriptionsProps,
   ProProvider,
+  RouteContextType,
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -34,6 +35,7 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   width?: string | number;
   items?: DescriptionsItem[]; // 自定义类型
   intl?: IntlShape;
+  routeContext?: RouteContextType;
 } & RouterHistory & {
     mount?: (
       location: Location | undefined,

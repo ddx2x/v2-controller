@@ -156,6 +156,10 @@ const table: View = {
     table: {
       columns: [
         {
+          dataIndex: 'uid',
+          title: 'uid',
+        },
+        {
           dataIndex: 'name',
           title: '名称',
         },
@@ -175,7 +179,7 @@ const table: View = {
       moreMenuButton: (record) => [
         {
           kind: 'descriptions',
-          collapse: true,
+          tableMenu: true,
           dataSource: {
             id: '这是一段文本columns',
             date: '20200809',
@@ -186,13 +190,14 @@ const table: View = {
           },
           ...detail,
         },
+        { kind: 'editable', tableMenu: true, title: '表格编辑' },
       ],
     },
   },
   moreMenuButton: (record) => [
     {
       kind: 'descriptions',
-      collapse: true,
+      collapseTableMenu: true,
       dataSource: {
         id: '这是一段文本columns',
         date: '20200809',
@@ -203,20 +208,26 @@ const table: View = {
       },
       ...detail,
     },
-    { kind: 'form', collapse: true, initialValues: record, ...eidt },
+    {
+      kind: 'form',
+      collapseTableMenu: true,
+      initialValues: record,
+      ...eidt
+    },
     {
       kind: 'link',
-      collapse: true,
+      collapseTableMenu: true,
       link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
       title: '全量编辑',
     },
     {
       kind: 'confirm',
+      tableMenu: true,
       onClick: () => message.info('删除成功'),
       title: '删除',
       text: `确认删除${record.name}`,
     },
-    { kind: 'editable', fold: true, title: '表格编辑' },
+    { kind: 'editable', tableMenu: true, title: '表格编辑' },
   ],
   globalSearch: {
     onSearch: (value, setGlobalSearchOptions) => {

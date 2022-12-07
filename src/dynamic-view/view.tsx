@@ -1,6 +1,8 @@
 import NoFoundPage from '@/pages/404';
+import { RouteContext } from '@ant-design/pro-components';
 import { useIntl, useLocation } from '@umijs/max';
 import { observer } from 'mobx-react';
+import { useContext } from 'react';
 import { isCachingNode, PageContainer } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
@@ -38,6 +40,8 @@ export default observer(() => {
 
   const page = (() => {
     const intl = useIntl(); // 国际化组件
+    const routeContext = useContext(RouteContext);
+
     return (
       <>
         {schema?.view &&
@@ -48,15 +52,15 @@ export default observer(() => {
 
             switch (kind) {
               case 'table':
-                return <Table {...(props as TableProps)} intl={intl} />;
+                return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
               case 'list':
-                return <List {...(props as ListProps)} intl={intl} />;
+                return <List {...(props as ListProps)} intl={intl} routeContext={routeContext} />;
               case 'form':
-                return <Form {...(props as FormProps)} intl={intl} />;
+                return <Form {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
               case 'stepForm':
-                return <StepForm {...(props as StepFormProps)} modal="Form" intl={intl} />;
+                return <StepForm {...(props as StepFormProps)} modal="Form" intl={intl} routeContext={routeContext} />;
               case 'descriptions':
-                return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} />;
+                return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
             }
           })}
       </>
