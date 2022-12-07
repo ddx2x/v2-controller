@@ -197,7 +197,6 @@ const table: View = {
   toolBarAction: () => [
     {
       kind: 'descriptions',
-      // collapse: true,
       ...detail,
     },
     {
@@ -207,7 +206,6 @@ const table: View = {
     },
     {
       kind: 'link',
-      collapse: true,
       link: `/commdity/list/add`,
       title: '新增',
     },

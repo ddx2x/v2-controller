@@ -33,6 +33,14 @@ export default [
         component: './dynamic-view',
         routes: [
           {
+            name: '商品新增',
+            path: '/commdity/list/add',
+            icon: 'setting',
+            component: './dynamic-view',
+            parentKeys: ['/commdity/list'],
+            hideInMenu: true,
+          },
+          {
             name: '商品编辑',
             path: '/commdity/list/edit',
             icon: 'setting',
