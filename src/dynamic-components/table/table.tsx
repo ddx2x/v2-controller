@@ -5,9 +5,8 @@ import {
   Button, Card, Space, TablePaginationConfig
 } from 'antd';
 import type { Location } from 'history';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
@@ -27,6 +26,7 @@ export declare type TableProps = Omit<
   loading?: any;
   dataSource?: any;
   moreMenuButton?: (record?: any, action?: any) => MoreButtonType[]; // 更多操作
+  toolBarAction?: () => MoreButtonType[];
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onNext?: (
@@ -87,6 +87,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     columns,
     expand,
     moreMenuButton,
+    toolBarAction,
     virtualList,
     loading,
     dataSource,
@@ -230,33 +231,21 @@ export const Table: React.FC<TableProps> = observer((props) => {
   };
 
   // 更多操作 按钮
-
-
-  let toolBarAction = observable.array<ReactNode>([])
-
-  if (newColumns) {
-    const [optionsHideInTable, setOptionsHideInTable] = useState(false)
+  let optionsGroup = []
+  if (moreMenuButton && newColumns) {
     newColumns = newColumns.filter((item) => item.dataIndex != 'more');
     newColumns.push({
       dataIndex: 'more',
       title: '操作',
       valueType: 'option',
       fixed: 'right',
-      hideInTable: optionsHideInTable,
       render: (text: any, record: any, _: any, action: any) => {
-        let optionsGroup = operationGroup(moreMenuButton, record, action)
+        optionsGroup = operationGroup(moreMenuButton, record, action)
 
         let notCollapseTableMenu = optionsGroup.filter(
-          item => item.tableMenu == true && item.collapseTableMenu == false).map(item => item.label)
+          item => item.collapse == false).map(item => item.label)
         let collapseTableMenu = optionsGroup.filter(
-          item => item.tableMenu == true && item.collapseTableMenu == true).map(item => { return { label: item.label, key: item.key } })
-
-        toolBarAction.replace(optionsGroup.filter(item => item.toolBarAction == true).map(item => item.label))
-
-        if (notCollapseTableMenu.length == 0 && collapseTableMenu.length == 0) {
-          setOptionsHideInTable(true)
-          return
-        }
+          item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
 
         return (
           <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
@@ -266,6 +255,21 @@ export const Table: React.FC<TableProps> = observer((props) => {
         )
       }
     })
+  }
+
+  let toolBarActions: React.ReactNode[] = []
+  if (toolBarAction) {
+    let actionOptionsGroup = operationGroup(toolBarAction, null, null, 'primary', 'small')
+
+    let notCollapseActions = actionOptionsGroup.filter(
+      item => item.collapse == false).map(item => item.label)
+    let collapseActions = actionOptionsGroup.filter(
+      item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
+
+    toolBarActions = [
+      ...notCollapseActions
+    ]
+    collapseActions.length > 0 && toolBarActions.push(<CollapseMeuButton items={collapseActions} />)
   }
 
 
@@ -329,7 +333,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
         tableRender={tableRender}
         toolbar={{
           ...toolbar,
-          // actions: toJS(toolBarAction)
+          actions: toolBarActions
         }}
         onRow={(record) => {
           return {
@@ -347,9 +351,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
 Table.defaultProps = {
   type: 'list',
   virtualList: false,
-  // editable: {
-  //   type: 'multiple',
-  // },
+  editable: {
+    type: 'multiple',
+  },
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,

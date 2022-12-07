@@ -194,10 +194,27 @@ const table: View = {
       ],
     },
   },
+  toolBarAction: () => [
+    {
+      kind: 'descriptions',
+      // collapse: true,
+      ...detail,
+    },
+    {
+      kind: 'form',
+      collapse: true,
+      ...eidt
+    },
+    {
+      kind: 'link',
+      collapse: true,
+      link: `/commdity/list/add`,
+      title: '新增',
+    },
+  ],
   moreMenuButton: (record) => [
     {
       kind: 'descriptions',
-      collapseTableMenu: true,
       dataSource: {
         id: '这是一段文本columns',
         date: '20200809',
@@ -210,24 +227,23 @@ const table: View = {
     },
     {
       kind: 'form',
-      collapseTableMenu: true,
+      collapse: true,
       initialValues: record,
       ...eidt
     },
     {
       kind: 'link',
-      collapseTableMenu: true,
+      collapse: true,
       link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
       title: '全量编辑',
     },
     {
       kind: 'confirm',
-      tableMenu: true,
       onClick: () => message.info('删除成功'),
       title: '删除',
       text: `确认删除${record.name}`,
     },
-    { kind: 'editable', tableMenu: true, title: '表格编辑' },
+    { kind: 'editable', collapse: true, title: '表格编辑' },
   ],
   globalSearch: {
     onSearch: (value, setGlobalSearchOptions) => {
@@ -252,7 +268,12 @@ const table: View = {
 };
 
 pageManager.register('commdity.list', {
-  page: { view: [table] },
+  page: {
+    view: [table],
+    container: {
+
+    }
+  },
   stores: [
     {
       store: commdityAggregateStore,

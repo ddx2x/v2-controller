@@ -1,6 +1,8 @@
 import { DownOutlined } from '@ant-design/icons';
 import { Link } from '@umijs/max';
-import { Button, Dropdown, MenuProps, message, Popconfirm, Space } from 'antd';
+import { Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
+import { ButtonSize } from 'antd/es/button';
+import { ButtonType } from 'antd/lib/button';
 import { DescriptionsProps, useDescriptions } from '../descriptions';
 import { FormProps, useForm } from '../form';
 import { randomKey } from '../helper';
@@ -18,60 +20,65 @@ export declare type MoreButtonType = (
   | ({ kind: 'editable' } & { title?: string })
 )
   & {
-    tableMenu?: boolean, // 放入菜单
-    collapseTableMenu?: boolean;
-    toolBarAction?: boolean,
-    collapseToolBarAction?: boolean
-  }; // 放入折叠框
+    collapse?: boolean, // // 放入折叠菜单
+  };
 
 
 export const operationGroup = (
   moreMenuButton: ((record?: any, action?: any) => MoreButtonType[]) | undefined,
   record: any = {},
-  action: any = null
+  action: any = null,
+  triggerButtonType?: ButtonType,
+  triggerButtonSize?: ButtonSize
 ): ({
   label: React.ReactNode;
   trigeer: () => void;
   key: string;
-  tableMenu: true;
-  collapseTableMenu: boolean;
-  toolBarAction: boolean;
-  collapseToolBarAction: boolean;
+  collapse?: boolean;
 })[] => {
 
   if (!moreMenuButton) return []
   let options = moreMenuButton(record, action).map((item) => {
+    const collapse = item.collapse || false
     const rest = {
       key: randomKey(5, { numbers: false }),
-      tableMenu: item.tableMenu || true,
-      collapseTableMenu: item.collapseTableMenu || false,
-      toolBarAction: item.toolBarAction || false,
-      collapseToolBarAction: item.collapseToolBarAction || false
+      collapse
     }
 
     // descriptions
     if (item.kind == 'descriptions') {
-      const [descriptionDom] = useDescriptions({ ...item });
-      // return {
-      //   label: descriptionDom,
-      //   trigeer: () => { },
-      //   ...rest
-      // }
+      const [descriptionDom] = useDescriptions({
+        ...item,
+        triggerButtonType: collapse ? 'link' : triggerButtonType || 'link',
+        triggerButtonSize: triggerButtonSize || 'small'
+      });
+      return {
+        label: descriptionDom,
+        trigeer: () => { },
+        ...rest
+      }
     }
     // form
     if (item.kind == 'form') {
-      const [formDom] = useForm({ ...item });
-      // return {
-      //   label: formDom,
-      //   trigeer: () => { },
-      //   ...rest
-      // };
+      const [formDom] = useForm({
+        ...item,
+        triggerButtonType: collapse ? 'link' : triggerButtonType || 'link',
+        triggerButtonSize: triggerButtonSize || 'small'
+      });
+      return {
+        label: formDom,
+        trigeer: () => { },
+        ...rest
+      };
     }
     // link
     if (item.kind == 'link') {
       return {
         label: (
-          <Button type="link" size="small" block>
+          <Button
+            type={collapse ? 'link' : triggerButtonType || 'link'}
+            size={triggerButtonSize || 'small'}
+            block>
             <Link to={item.link}>{item.title}</Link>
           </Button>
         ),
@@ -92,7 +99,11 @@ export const operationGroup = (
             onConfirm={(e) => item.onClick(e)}
             onCancel={(e) => e?.stopPropagation()}
           >
-            <Button type="link" size="small" block onClick={(e) => e.stopPropagation()}>
+            <Button
+              type={collapse ? 'link' : triggerButtonType || 'link'}
+              size={triggerButtonSize || 'small'}
+              block
+              onClick={(e) => e.stopPropagation()}>
               {item.title}
             </Button>
           </Popconfirm>
@@ -106,8 +117,8 @@ export const operationGroup = (
       return {
         label: (
           <Button
-            type="link"
-            size="small"
+            type={collapse ? 'link' : triggerButtonType || 'link'}
+            size={triggerButtonSize || 'small'}
             block
             key="editable"
             onClick={() => {
@@ -115,7 +126,7 @@ export const operationGroup = (
             }}
           >
             {item.title || '编辑'}
-          </Button>
+          </Button >
         ),
         trigeer: () => { },
         ...rest
@@ -123,7 +134,11 @@ export const operationGroup = (
     }
     return {
       label: (
-        <Button type="link" size="small" block>
+        <Button
+          type={collapse ? 'link' : triggerButtonType || 'link'}
+          size={triggerButtonSize || 'small'}
+          block
+        >
           请定义操作
         </Button>
       ),
@@ -141,7 +156,7 @@ export const CollapseMeuButton: React.FC<{ items: MenuProps['items'] }> = (props
     <Dropdown menu={{ items }}>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>
         操作
-        <DownOutlined sizes={'small'}/>
+        <DownOutlined sizes={'small'} />
       </Button>
     </Dropdown>
   )
