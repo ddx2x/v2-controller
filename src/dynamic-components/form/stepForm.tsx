@@ -178,7 +178,9 @@ StepForm.defaultProps = {
       resetText: '取消',
     },
   },
-  size: 'small',
+  grid: true,
+  rowProps: { gutter: 8 },
+  size: 'large',
   submitTimeout: 2000,
   width: '50%',
 };

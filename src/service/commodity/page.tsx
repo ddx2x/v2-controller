@@ -241,7 +241,7 @@ const table: View = {
       kind: 'implement',
       collapse: true,
       title: '表格编辑',
-      onClick() {  record.uid && action?.startEditable?.(record?.uid) },
+      onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
     },
   ],
   onNext: (actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 } }),

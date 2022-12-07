@@ -1,7 +1,7 @@
 import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
-class Commodity extends IObject {
+export class Commodity extends IObject {
   name?: string;
   images?: any[];
   type?: number; // 重命名为type

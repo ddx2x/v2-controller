@@ -57,9 +57,13 @@ export const editView: View = {
         location?.search &&
             formRef.current?.setFieldsValue({ name: location?.search })
     },
+
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
+
+    width: "20%",
+
     steps: [
         { title: '基本信息' },
         { title: '交付设置' },
@@ -237,6 +241,8 @@ export const editView: View = {
     ],
 };
 
+
+
 pageManager.register('commdity.list.add', {
     page: {
         view: [editView],
@@ -257,6 +263,140 @@ pageManager.register('commdity.list.edit', {
             keepAlive: false,
             header: {
                 title: '商品信息 编辑',
+            },
+        }
+    },
+    stores: [],
+});
+
+export let types: Object = {
+    title: '商品类型',
+    dataIndex: 'types',
+    valueType: 'radio',
+    initialValue: ['1'],
+    valueEnum: {
+        1: '实物商品（物流发货）',
+        2: '实物商品（跨境海淘）',
+        3: '虚拟商品（通用）',
+        4: '虚拟商品（付费券）',
+    },
+};
+
+export const editAggregateView: View = {
+    kind: 'stepForm',
+    mount: (location, formRef) => {
+        console.log('location?.search', location?.search, formRef);
+
+        let data = location?.search.split("?")[1] || "";
+
+        console.log("parse ", parse(data));
+        location?.search &&
+            formRef.current?.setFieldsValue({})
+    },
+
+    unMount: (location, formRef) => {
+        formRef.current?.resetFields()
+    },
+
+    width: "100%",
+
+    steps: [
+        { title: '基本信息' },
+        { title: '交付设置' },
+        { title: '图文详情' },
+    ],
+    columns: [
+        [
+            types,
+            {
+                title: '销售渠道',
+                dataIndex: 'salesChannels',
+                valueType: 'checkbox',
+                initialValue: ['1', '2'],
+                valueEnum: {
+                    1: '线上销售',
+                    2: '线下销售',
+                },
+                formItemProps: {
+                    rules: [
+                        {
+                            required: true,
+                            message: '此项为必填项',
+                        },
+                    ],
+                },
+            },
+            {
+                title: '销售模式',
+                dataIndex: 'salesModel',
+                valueType: 'radio',
+                initialValue: [],
+                valueEnum: {
+                    1: '现货销售',
+                    2: '预售模式（商家设置商品预售数量，各门店需自行修改预售数量）',
+                    3: '抽签模式',
+                },
+            },
+            {
+                title: '商品名称',
+                dataIndex: 'name',
+                valueType: 'text',
+                fieldProps: {
+                    placeholder: '请输入商品的名称',
+                },
+                formItemProps: {
+                    rules: [
+                        {
+                            required: true,
+                            min: 2,
+                            max: 64,
+                            message: '此项为必填项,最小2个字符,最大64个字符',
+                        },
+                    ],
+                },
+                width: "40%",
+            },
+            {
+                title: '商品标语',
+                dataIndex: 'idiom',
+                valueType: 'text',
+                width: "40%",
+            },
+            {
+                title: '单位',
+                dataIndex: 'unit',
+                valueType: 'select',
+                valueEnum: {
+                    kg: '千克',
+                    g: '克',
+                },
+                width: "40%",
+            },
+        ],
+        [
+            {
+                title: '配送方式',
+                dataIndex: 'deliveryMethod',
+                initialValue: [1],
+                valueType: 'checkbox',
+                valueEnum: {
+                    1: '商家配送',
+                    2: '到店自提',
+                },
+                width: "40%",
+            },
+        ],
+        [],
+    ],
+};
+
+pageManager.register('commdity.list.aggregate_edit', {
+    page: {
+        view: [editAggregateView],
+        container: {
+            keepAlive: true,
+            header: {
+                title: '商品编辑',
             },
         }
     },
