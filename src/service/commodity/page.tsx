@@ -214,35 +214,35 @@ const table: View = {
     title: '商品列表',
   },
   moreMenuButton: (record, action) => [
-    // {
-    //   kind: 'descriptions',
-    //   dataSource: record,
-    //   ...detail,
-    // },
-    // {
-    //   kind: 'form',
-    //   collapse: true,
-    //   initialValues: record,
-    //   ...eidt
-    // },
-    // {
-    //   kind: 'link',
-    //   collapse: true,
-    //   link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
-    //   title: '全量编辑',
-    // },
-    // {
-    //   kind: 'confirm',
-    //   onClick: () => message.info('删除成功'),
-    //   title: '删除',
-    //   text: `确认删除${record.name}`,
-    // },
-    // {
-    //   kind: 'implement',
-    //   collapse: true,
-    //   title: '表格编辑',
-    //   onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
-    // },
+    {
+      kind: 'descriptions',
+      dataSource: record,
+      ...detail,
+    },
+    {
+      kind: 'form',
+      collapse: true,
+      initialValues: record,
+      ...eidt
+    },
+    {
+      kind: 'link',
+      collapse: true,
+      link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
+      title: '全量编辑',
+    },
+    {
+      kind: 'confirm',
+      onClick: () => message.info('删除成功'),
+      title: '删除',
+      text: `确认删除${record.name}`,
+    },
+    {
+      kind: 'implement',
+      collapse: true,
+      title: '表格编辑',
+      onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
+    },
   ],
   onNext: (actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
   onSubmit: (params) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
