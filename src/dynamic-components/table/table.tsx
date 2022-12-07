@@ -4,6 +4,7 @@ import {
   Button, Space, TablePaginationConfig
 } from 'antd';
 import type { Location } from 'history';
+import lodash from 'lodash';
 import { observable, ObservableMap } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -81,7 +82,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     scrollHeight,
     // 工具栏
     toolBarRender,
-    toolbar,
     // 按钮操作
     moreMenuButton,
     toolBarAction,
@@ -230,7 +230,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
       fixed: 'right',
       hideInTable: optionColumnsHide,
       render: (text: any, record: any, index: any, action: any) => {
-        let [dom, _] = menuButtonGroup(moreMenuButton ? moreMenuButton(record, action) : [])
+        let buttons = moreMenuButton ? moreMenuButton(record, action) : []
+        buttons.length < 1 && setOptionColumnsHide(true)
+        let [dom, _] = menuButtonGroup(buttons)
         !dom && setOptionColumnsHide(true)
         return dom
       }
@@ -240,6 +242,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // 工具栏操作
   let [dom, _] = menuButtonGroup(toolBarAction ? toolBarAction() : [])
   let toolBarActions = [dom]
+
 
   let defaultConfig = {
     columns: newColumns,
@@ -252,21 +255,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   // 合并配置
-  Object.assign(rest, defaultConfig)
-  configMap.forEach((value, key) => {
-    if (!rest[key]) {
-      rest[key] = value;
-      return
-    }
-    if (Array.isArray(rest[key]) && Array.isArray(value)) {
-      rest[key].concat(value)
-      return
-    }
-    if (typeof rest[key] == 'object' && typeof value == 'object') {
-      rest[key] = Object.assign(rest[key], value)
-      return
-    }
-  })
+  lodash.merge(rest, defaultConfig)
+  lodash.merge(rest, Object.fromEntries(configMap))
 
   return (
     <ProTable
