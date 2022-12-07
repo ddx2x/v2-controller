@@ -361,6 +361,6 @@ Table.defaultProps = {
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
   useBatchDelete: true,
-  options: { density: true, reload: true, fullScreen: false },
+  options: { density: true, reload: false, fullScreen: false },
   columns: [],
 };

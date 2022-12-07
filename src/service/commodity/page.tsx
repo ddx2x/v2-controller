@@ -2,8 +2,9 @@ import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { SearchLabel } from '@/service/search.label';
-import { message } from 'antd';
-import { commdityAggregateStore, commdityStore } from './store';
+import { Col, message, Tag } from 'antd';
+import { stringify } from 'querystring';
+import { commdityAggregateStore, commdityStore, Commodity } from './store';
 
 const eidt: FormProps = {
     triggerText: '编辑',
@@ -101,26 +102,6 @@ const detail: DescriptionsProps = {
     ],
 };
 
-function getBrandName() {
-    console.log('--', '');
-    return {
-        all: { text: '超长'.repeat(50) },
-        open: {
-            text: '未解决',
-            status: 'Error',
-        },
-        closed: {
-            text: '已解决',
-            status: 'Success',
-            disabled: true,
-        },
-        processing: {
-            text: '解决中',
-            status: 'Processing',
-        },
-    };
-}
-
 // 商品列表
 const table: View = {
     kind: 'table',
@@ -143,11 +124,22 @@ const table: View = {
         {
             dataIndex: 'brand_name',
             title: '品牌',
-            filters: true,
-            onFilter: true,
-            ellipsis: true,
-            valueType: 'select',
-            valueEnum: getBrandName(),
+        },
+        {
+            dataIndex: 'sale_channels',
+            title: '销售渠道',
+            render: (_, record: Commodity) => (
+                <>
+                    {record.sale_channels?.map((item) => (
+                        <Col>
+                            <Tag key={item} >
+                                {item == "1" ? "线上" : "线下"}
+                            </Tag>
+                        </Col>
+
+                    ))}
+                </>
+            )
         },
     ],
     expand: {
@@ -156,16 +148,8 @@ const table: View = {
         table: {
             columns: [
                 {
-                    dataIndex: 'uid',
-                    title: 'uid',
-                },
-                {
                     dataIndex: 'name',
                     title: '名称',
-                },
-                {
-                    dataIndex: 'sale_channels',
-                    title: '销售渠道',
                 },
                 {
                     dataIndex: 'price',
@@ -190,20 +174,11 @@ const table: View = {
                     },
                     ...detail,
                 },
-                { kind: 'editable', tableMenu: true, title: '表格编辑' },
+                // { kind: 'editable', tableMenu: true, title: '表格编辑' },
             ],
         },
     },
     toolBarAction: () => [
-        {
-            kind: 'descriptions',
-            ...detail,
-        },
-        {
-            kind: 'form',
-            collapse: true,
-            ...eidt
-        },
         {
             kind: 'link',
             link: `/commdity/list/add`,
@@ -223,17 +198,17 @@ const table: View = {
             },
             ...detail,
         },
-        {
-            kind: 'form',
-            collapse: true,
-            initialValues: record,
-            ...eidt
-        },
+        // {
+        //     kind: 'form',
+        //     collapse: true,
+        //     initialValues: record,
+        //     ...eidt
+        // },
         {
             kind: 'link',
             collapse: true,
-            link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
-            title: '全量编辑',
+            link: `/commdity/list/aggregate_edit?` + stringify({ uid: record.uid }),
+            title: '编辑',
         },
         {
             kind: 'confirm',
@@ -241,7 +216,6 @@ const table: View = {
             title: '删除',
             text: `确认删除${record.name}`,
         },
-        { kind: 'editable', collapse: true, title: '表格编辑' },
     ],
 
 
