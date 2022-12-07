@@ -347,9 +347,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
 Table.defaultProps = {
   type: 'list',
   virtualList: false,
-  editable: {
-    type: 'multiple',
-  },
+  // editable: {
+  //   type: 'multiple',
+  // },
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
