@@ -32,10 +32,7 @@ export class IObject implements ObjectData {
 
 export class SearchObject {
   uid: string = '';
-  name: string = '';
-  title: string = '';
-  brand_name: string = '';
-  image: string = '';
+  [key: string]: any;
 
   constructor(data: ObjectData) {
     Object.assign(this, data);
