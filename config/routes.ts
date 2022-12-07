@@ -98,7 +98,7 @@ export default [
       },
 
       {
-        name: '积分',
+        name: '会员权益',
         path: '/customer/integral',
         icon: 'setting',
         component: './dynamic-view',
@@ -108,10 +108,22 @@ export default [
   },
 
   {
-    name: '门店',
+    name: '店铺',
     path: '/door',
     icon: 'team',
     routes: [
+      {
+        name: '个性装修',
+        path: '/door/furnish',
+        component: './dynamic-view',
+        routes: [],
+      },
+      {
+        name: '系统页面',
+        path: '/door/main',
+        component: './dynamic-view',
+        routes: [],
+      },
       {
         name: '门店列表',
         path: '/door/list',
@@ -143,6 +155,20 @@ export default [
       {
         name: '配送设置',
         path: '/settings/logistics',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [],
+      },
+      {
+        name: '订单配置',
+        path: '/settings/order',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [],
+      },
+      {
+        name: '帐号权限',
+        path: '/settings/permissions',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
