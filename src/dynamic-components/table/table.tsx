@@ -1,49 +1,19 @@
-import { ActionType, ProCard, ProTable, ProTableProps } from '@ant-design/pro-components';
+import { ActionType, ProCard, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
   AutoComplete,
-  Button,
-  ButtonProps,
-  Card,
-  Radio,
-  RadioProps,
-  Space,
-  Switch,
-  SwitchProps,
-  TablePaginationConfig
+  Button, Card, Space, TablePaginationConfig
 } from 'antd';
 import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
+import { FooterToolbar } from '../footer';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
-import { injectTableOperate, MoreButtonType } from './more';
+import { CollapseMeuButton, MoreButtonType, operationGroup } from './more';
 
-export declare type ExtraAction =
-  | ({ valueType: 'button' } & ButtonProps)
-  | ({ valueType: 'switch' } & SwitchProps)
-  | ({ valueType?: 'radio' } & RadioProps);
-
-export const extraAction = (item: ExtraAction) => {
-  switch (item.valueType) {
-    case 'button':
-      return <Button {...item} />;
-    case 'switch':
-      return <Switch {...item} />;
-    case 'radio':
-      return <Radio {...item} />;
-    default:
-      return null;
-  }
-};
-
-export const extraActionArray = (items: ExtraAction[]) => {
-  return items?.map((item) => {
-    return extraAction(item);
-  });
-};
 
 const defaulScrollHeight = 1000;
 
@@ -51,11 +21,14 @@ export declare type TableProps = Omit<
   ProTableProps<any, any>,
   'dataSource' | 'loading' | 'expandable' | 'pagination'
 > & {
+  intl?: IntlShape; // 国际化
+  routeContext?: RouteContextType;
   loading?: any;
   dataSource?: any;
+  moreMenuButton?: (record?: any, action?: any) => MoreButtonType[]; // 更多操作
+  toolBarAction?: () => MoreButtonType[];
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
-  moreMenuButton?: (record: any) => MoreButtonType[];
   onNext?: (
     actionRef?: React.MutableRefObject<ActionType | undefined>,
     params?: { page: number; size: number },
@@ -63,7 +36,6 @@ export declare type TableProps = Omit<
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  intl?: IntlShape; // 国际化
   pagination?: Omit<TablePaginationConfig, 'total'> & {
     total?: () => number | number;
   };
@@ -96,16 +68,6 @@ export declare type TableProps = Omit<
     record: any,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
   ) => void; // 双击行
-  onRowMouseEnter?: (
-    event: React.MouseEvent,
-    record: any,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 鼠标触碰行
-  onRowMouseLeave?: (
-    event: React.MouseEvent,
-    record: any,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 鼠标离开行
 } & RouterHistory & {
   mount?: (
     location: Location | undefined,
@@ -125,6 +87,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     columns,
     expand,
     moreMenuButton,
+    toolBarAction,
     virtualList,
     loading,
     dataSource,
@@ -132,7 +95,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     scrollHeight,
     headerTitle,
     toolBarRender,
-    intl,
+    toolbar,
     //
     pagination,
     useBatchDelete,
@@ -143,14 +106,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 鼠标事件
     onRowClick,
     onRowDoubleClick,
-    onRowMouseEnter,
-    onRowMouseLeave,
+    // hook
+    intl,
+    routeContext,
     ...rest
   } = props;
   // ref
   const actionRef = useRef<ActionType>();
-
-  console.log('dataSource....', dataSource, loading);
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -194,39 +156,39 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 全局搜索
   const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any; value: any }[]>([]);
-  // 更多操作 按钮
-  if (moreMenuButton && newColumns) {
-    newColumns = injectTableOperate(moreMenuButton, newColumns);
-  }
 
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [search, setSearch] = useState(!globalSearch);
 
-  const tableAlertOptionRender = () => {
-    return (
-      <Space size={6}>
-        <Button
-          type="link"
-          onClick={async () => {
-            batchDelete && batchDelete(selectedRowKeys);
-            setSelectedRowKeys([]);
-            actionRef.current?.reloadAndRest?.();
-          }}
-        >
-          <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
-        </Button>
-        <Button
-          type="link"
-          onClick={async () => {
-            setSelectedRowKeys([]);
-          }}
-        >
-          <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
-        </Button>
-      </Space>
-    );
+  // 提示操作按钮
+  const Footer: React.FC = () => {
+    return selectedRowKeys.length > 0 ? (
+      <FooterToolbar routeContext={routeContext || {}}>
+        <Space size={6}>
+          <Button
+            type="link"
+            onClick={async () => {
+              batchDelete && batchDelete(selectedRowKeys);
+              setSelectedRowKeys([]);
+              actionRef.current?.reloadAndRest?.();
+            }}
+          >
+            <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+          </Button>
+          <Button
+            type="link"
+            onClick={async () => {
+              setSelectedRowKeys([]);
+            }}
+          >
+            <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
+          </Button>
+        </Space>
+      </FooterToolbar>
+    ) : null;
   };
 
+  // 加载更多按钮
   const LoadMore: React.FC = () => {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
@@ -241,6 +203,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+  // 表单渲染
   const tableRender = (
     props: ProTableProps<any, any, 'text'>,
     defaultDom: JSX.Element,
@@ -259,12 +222,59 @@ export const Table: React.FC<TableProps> = observer((props) => {
     }
 
     return (
-      <div>
+      <>
         <div ref={virtualList ? setContainer : null}>{defaultDom}</div>
         <LoadMore />
-      </div>
+        <Footer />
+      </>
     );
   };
+
+  // 更多操作 按钮
+  let optionsGroup = []
+  if (moreMenuButton && newColumns) {
+    newColumns = newColumns.filter((item) => item.dataIndex != 'more');
+    newColumns.push({
+      dataIndex: 'more',
+      title: '操作',
+      valueType: 'option',
+      fixed: 'right',
+      render: (text: any, record: any, _: any, action: any) => {
+        optionsGroup = operationGroup(moreMenuButton, record, action)
+
+        let notCollapseTableMenu = optionsGroup.filter(
+          item => item.collapse == false).map(item => item.label)
+        let collapseTableMenu = optionsGroup.filter(
+          item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
+
+        return (
+          <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
+            {notCollapseTableMenu.map(item => item)}
+            {collapseTableMenu.length > 0 && <CollapseMeuButton items={collapseTableMenu} />}
+          </Space>
+        )
+      }
+    })
+  }
+
+  let toolBarActions: React.ReactNode[] = []
+  if (toolBarAction) {
+    let actionOptionsGroup = operationGroup(toolBarAction, null, null, 'primary', 'small')
+
+    let notCollapseActions = actionOptionsGroup.filter(
+      item => item.collapse == false).map(item => item.label)
+    let collapseActions = actionOptionsGroup.filter(
+      item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
+
+    toolBarActions = [
+      <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
+        {notCollapseActions.map(item => item)}
+        {collapseActions.length > 0 && <CollapseMeuButton items={collapseActions} />}
+      </Space>
+    ]
+
+  }
+
 
   return (
     <>
@@ -304,7 +314,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
             },
           }
         }
-        tableAlertOptionRender={tableAlertOptionRender}
         // @ts-ignore
         pagination={
           pagination
@@ -321,17 +330,19 @@ export const Table: React.FC<TableProps> = observer((props) => {
         actionRef={actionRef}
         loading={typeof loading == 'function' ? loading() : loading}
         dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
-        rowSelection={dataSource && rowSelection ? rowSelection : false}
+        rowSelection={dataSource ? rowSelection : false}
         onReset={() => props.onSubmit && props.onSubmit({})}
         expandable={expand && { ...expandModule(expand) }}
         tableRender={tableRender}
+        toolbar={{
+          ...toolbar,
+          actions: toolBarActions
+        }}
         onRow={(record) => {
           return {
             onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
             onDoubleClick: (event) =>
               onRowDoubleClick && onRowDoubleClick(event, record, actionRef),
-            onMouseEnter: (event) => onRowMouseEnter && onRowMouseEnter(event, record, actionRef),
-            onMouseLeave: (event) => onRowMouseLeave && onRowMouseLeave(event, record, actionRef),
           };
         }}
         {...rest}
@@ -343,9 +354,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
 Table.defaultProps = {
   type: 'list',
   virtualList: false,
-  // editable: {
-  //   type: 'multiple',
-  // },
+  editable: {
+    type: 'multiple',
+  },
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,

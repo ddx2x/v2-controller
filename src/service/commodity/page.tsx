@@ -1,27 +1,26 @@
-import { DescriptionsProps } from '@/dynamic-components';
+import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { SearchLabel } from '@/service/search.label';
-import { Col, message, Tag } from 'antd';
-import { stringify } from 'querystring';
-import { commdityAggregateStore, commdityStore, Commodity } from './store';
+import { message } from 'antd';
+import { commdityAggregateStore, commdityStore } from './store';
 
-// const eidt: FormProps = {
-//     triggerText: '编辑',
-//     title: '编辑商品',
-//     layoutType: 'ModalForm',
-//     columns: [
-//         {
-//             title: '商品名称',
-//             dataIndex: 'sub_title',
-//         },
-//     ],
-//     onSubmit: (form, values) => {
-//         console.log(values);
-//         message.success('提交成功');
-//         return true;
-//     },
-// };
+const eidt: FormProps = {
+    triggerText: '编辑',
+    title: '编辑商品',
+    layoutType: 'ModalForm',
+    columns: [
+        {
+            title: '商品名称',
+            dataIndex: 'sub_title',
+        },
+    ],
+    onSubmit: (form, values) => {
+        console.log(values);
+        message.success('提交成功');
+        return true;
+    },
+};
 
 const detail: DescriptionsProps = {
     modal: 'Drawer',
@@ -102,6 +101,25 @@ const detail: DescriptionsProps = {
     ],
 };
 
+function getBrandName() {
+    console.log('--', '');
+    return {
+        all: { text: '超长'.repeat(50) },
+        open: {
+            text: '未解决',
+            status: 'Error',
+        },
+        closed: {
+            text: '已解决',
+            status: 'Success',
+            disabled: true,
+        },
+        processing: {
+            text: '解决中',
+            status: 'Processing',
+        },
+    };
+}
 
 // 商品列表
 const table: View = {
@@ -114,31 +132,22 @@ const table: View = {
         {
             dataIndex: 'uid',
             title: '商品标题',
-            hideInTable: true,
+            // width: 150,
+            // sorter: true,
         },
         {
             dataIndex: 'sub_title',
             title: '子标题',
+            // width: 100,
         },
         {
             dataIndex: 'brand_name',
             title: '品牌',
-        },
-        {
-            dataIndex: 'sale_channels',
-            title: '销售渠道',
-            render: (_, record: Commodity) => (
-                <>
-                    {record.sale_channels?.map((item) => (
-                        <Col>
-                            <Tag key={item} >
-                                {item == "1" ? "线上" : "线下"}
-                            </Tag>
-                        </Col>
-
-                    ))}
-                </>
-            )
+            filters: true,
+            onFilter: true,
+            ellipsis: true,
+            valueType: 'select',
+            valueEnum: getBrandName(),
         },
     ],
     expand: {
@@ -149,16 +158,18 @@ const table: View = {
                 {
                     dataIndex: 'uid',
                     title: 'uid',
-                    hideInTable: true,
                 },
                 {
                     dataIndex: 'name',
-                    title: '规格',
+                    title: '名称',
+                },
+                {
+                    dataIndex: 'sale_channels',
+                    title: '销售渠道',
                 },
                 {
                     dataIndex: 'price',
                     title: '价格',
-                    valueType: 'money',
                 },
                 {
                     dataIndex: 'stock',
@@ -168,7 +179,7 @@ const table: View = {
             moreMenuButton: (record) => [
                 {
                     kind: 'descriptions',
-                    collapse: true,
+                    tableMenu: true,
                     dataSource: {
                         id: '这是一段文本columns',
                         date: '20200809',
@@ -179,25 +190,31 @@ const table: View = {
                     },
                     ...detail,
                 },
-                {
-                    kind: 'link',
-                    collapse: true,
-                    link: `/commdity/list/edit` + '?' + stringify({ uid: record.uid }),
-                    title: '编辑',
-                },
-                {
-                    kind: 'confirm',
-                    onClick: () => message.info('删除成功'),
-                    title: '删除',
-                    text: `确认删除 "${record.uid}" `,
-                },
+                { kind: 'editable', tableMenu: true, title: '表格编辑' },
             ],
         },
     },
+    toolBarAction: () => [
+        {
+            kind: 'descriptions',
+            // collapse: true,
+            ...detail,
+        },
+        {
+            kind: 'form',
+            collapse: true,
+            ...eidt
+        },
+        {
+            kind: 'link',
+            collapse: true,
+            link: `/commdity/list/add`,
+            title: '新增',
+        },
+    ],
     moreMenuButton: (record) => [
         {
             kind: 'descriptions',
-            collapse: true,
             dataSource: {
                 id: '这是一段文本columns',
                 date: '20200809',
@@ -209,11 +226,24 @@ const table: View = {
             ...detail,
         },
         {
+            kind: 'form',
+            collapse: true,
+            initialValues: record,
+            ...eidt
+        },
+        {
             kind: 'link',
             collapse: true,
-            link: `/commdity/list/aggregate_edit` + '?' + stringify({ uid: record.uid }),
-            title: '编辑',
+            link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
+            title: '全量编辑',
         },
+        {
+            kind: 'confirm',
+            onClick: () => message.info('删除成功'),
+            title: '删除',
+            text: `确认删除${record.name}`,
+        },
+        { kind: 'editable', collapse: true, title: '表格编辑' },
     ],
     globalSearch: {
         onSearch: (value, setGlobalSearchOptions) => {
@@ -238,7 +268,12 @@ const table: View = {
 };
 
 pageManager.register('commdity.list', {
-    page: { view: [table] },
+    page: {
+        view: [table],
+        container: {
+
+        }
+    },
     stores: [
         {
             store: commdityAggregateStore,
