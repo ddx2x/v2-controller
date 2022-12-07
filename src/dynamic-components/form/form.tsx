@@ -17,8 +17,8 @@ export declare type ModalActionRefType = {
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   layoutType?: FormSchema['layoutType'];
   triggerText?: string;
-  triggerButtonType?: ButtonType;
-  triggerButtonSize?: ButtonSize;
+  buttonType?: ButtonType;
+  buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (
     formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
@@ -27,15 +27,15 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-    ) => void;
-  };
+  mount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+  ) => void;
+  unMount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+  ) => void;
+};
 
 export const Form = observer(
   React.forwardRef((props: FormProps, forwardRef) => {
@@ -44,8 +44,8 @@ export const Form = observer(
       mount,
       unMount,
       triggerText,
-      triggerButtonType,
-      triggerButtonSize,
+      buttonType,
+      buttonSize,
       submitTimeout,
       onSubmit,
       intl,
@@ -100,7 +100,7 @@ export const Form = observer(
           formRef={formRef}
           // @ts-ignore
           trigger={
-            <Button size={triggerButtonSize} type={triggerButtonType} block onClick={openModal}>
+            <Button size={buttonSize} type={buttonType} block onClick={openModal}>
               {triggerText}
             </Button>
           }
@@ -125,8 +125,8 @@ Form.defaultProps = {
   title: '新建表单',
   layoutType: 'ModalForm',
   triggerText: '新增',
-  triggerButtonType: 'link',
-  triggerButtonSize: 'small',
+  buttonType: 'link',
+  buttonSize: 'small',
   submitter: {
     searchConfig: {
       submitText: '确认',

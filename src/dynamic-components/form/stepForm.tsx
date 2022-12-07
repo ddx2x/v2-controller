@@ -1,7 +1,7 @@
 import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Affix, Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
+import { Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
@@ -17,7 +17,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
-  triggerButtonType?: ButtonType;
+  buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onFinish?: (
     form: FormInstance<unknown> | undefined,
@@ -27,15 +27,15 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance | undefined>,
-    ) => void;
-  };
+  mount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance | undefined>,
+  ) => void;
+  unMount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance | undefined>,
+  ) => void;
+};
 
 export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const {
@@ -45,7 +45,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     title,
     modal,
     triggerText,
-    triggerButtonType,
+    buttonType,
     submitTimeout,
     onFinish,
     width,
@@ -70,7 +70,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
 
   const triggerDom = () => {
     return (
-      <Button type={triggerButtonType} onClick={showModal}>
+      <Button type={buttonType} onClick={showModal}>
         {triggerText}
       </Button>
     );
@@ -169,7 +169,7 @@ StepForm.defaultProps = {
   title: '新建',
   modal: 'Form',
   triggerText: '新增',
-  triggerButtonType: 'link',
+  buttonType: 'link',
   steps: [],
   columns: [],
   submitter: {

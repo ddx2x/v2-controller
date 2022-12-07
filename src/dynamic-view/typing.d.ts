@@ -17,9 +17,9 @@ export declare type Page = { view: View[]; container?: PageContainerProps };
 export declare type Store = {
   store: ObjectStore<IObject>;
   query?: Query;
-  load: (query?: Query) => Promise<void>;
+  load?: (query?: Query) => Promise<void>;
   watch?: () => void;
-  exit: () => void;
+  exit?: () => void;
 };
 
 export declare type PageSchema<S extends Store> = {

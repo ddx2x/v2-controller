@@ -1,7 +1,6 @@
 import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
-import { SearchLabel } from '@/service/search.label';
 import { message } from 'antd';
 import { commdityAggregateStore, commdityStore } from './store';
 
@@ -102,7 +101,6 @@ const detail: DescriptionsProps = {
 };
 
 function getBrandName() {
-  console.log('--', '');
   return {
     all: { text: '超长'.repeat(50) },
     open: {
@@ -125,8 +123,11 @@ function getBrandName() {
 const table: View = {
   kind: 'table',
   rowKey: 'uid',
-  toolbar: {
-    title: '商品列表',
+  mount: (location, actionRef, configMap) => {
+    configMap?.replace({
+      laoding: commdityAggregateStore.loading,
+      dataSource: commdityAggregateStore.items,
+    })
   },
   columns: [
     {
@@ -152,8 +153,9 @@ const table: View = {
   ],
   expand: {
     kind: 'table',
-    onDataRender: (record) => commdityStore.api.list(record.uid),
+    onData: (record: any) => commdityStore.api.list(record.uid),
     table: {
+      rowKey: 'uid',
       columns: [
         {
           dataIndex: 'uid',
@@ -176,21 +178,19 @@ const table: View = {
           title: '库存',
         },
       ],
-      moreMenuButton: (record) => [
+      moreMenuButton: (record: any, action) => [
         {
           kind: 'descriptions',
-          tableMenu: true,
-          dataSource: {
-            id: '这是一段文本columns',
-            date: '20200809',
-            money: '1212100',
-            state: 'closed',
-            state2: 'open',
-            ...record,
-          },
+          dataSource: record,
           ...detail,
         },
-        { kind: 'editable', tableMenu: true, title: '表格编辑' },
+        {
+          kind: 'implement',
+          title: '表格编辑',
+          onClick(e) {
+            record.uid && action?.startEditable?.(record?.uid);
+          },
+        },
       ],
     },
   },
@@ -210,17 +210,13 @@ const table: View = {
       title: '新增',
     },
   ],
-  moreMenuButton: (record) => [
+  toolbar: {
+    title: '商品列表',
+  },
+  moreMenuButton: (record, action) => [
     {
       kind: 'descriptions',
-      dataSource: {
-        id: '这是一段文本columns',
-        date: '20200809',
-        money: '1212100',
-        state: 'closed',
-        state2: 'open',
-        ...record,
-      },
+      dataSource: record,
       ...detail,
     },
     {
@@ -241,26 +237,13 @@ const table: View = {
       title: '删除',
       text: `确认删除${record.name}`,
     },
-    { kind: 'editable', collapse: true, title: '表格编辑' },
-  ],
-  globalSearch: {
-    onSearch: (value, setGlobalSearchOptions) => {
-      commdityStore.search({ text: value || '', offset: 0, limit: 10 }).then((res) => {
-        if (!Array.isArray(res)) {
-          return;
-        }
-        const options = res.map((item) => {
-          return {
-            label: <SearchLabel key={item.uid} searchObject={item} columns={[]} />,
-            value: item.name,
-          };
-        });
-        setGlobalSearchOptions([...options]);
-      });
+    {
+      kind: 'implement',
+      collapse: true,
+      title: '表格编辑',
+      onClick() {  record.uid && action?.startEditable?.(record?.uid) },
     },
-  },
-  dataSource: () => commdityAggregateStore.items,
-  loading: () => commdityAggregateStore.loading,
+  ],
   onNext: (actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
   onSubmit: (params) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
 };
@@ -269,7 +252,7 @@ pageManager.register('commdity.list', {
   page: {
     view: [table],
     container: {
-
+      keepAlive: true
     }
   },
   stores: [

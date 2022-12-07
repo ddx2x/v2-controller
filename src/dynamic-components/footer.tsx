@@ -27,9 +27,6 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
   const baseClassName = `${prefixCls}-footer-bar`;
   const { wrapSSR, hashId } = useStyle(baseClassName);
 
-  // const value = useContext(RouteContext);
-  console.log('value', routeContext);
-
   const width = useMemo(() => {
     const { hasSiderMenu, isMobile, siderWidth } = routeContext;
     if (!hasSiderMenu) {

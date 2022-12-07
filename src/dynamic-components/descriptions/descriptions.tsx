@@ -4,7 +4,7 @@ import {
   ProDescriptionsItemProps,
   ProDescriptionsProps,
   ProProvider,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -30,22 +30,22 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
   triggerText?: string;
-  triggerButtonType?: ButtonType;
-  triggerButtonSize?: ButtonSize;
+  buttonType?: ButtonType;
+  buttonSize?: ButtonSize;
   width?: string | number;
   items?: DescriptionsItem[]; // 自定义类型
   intl?: IntlShape;
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
-  };
+  mount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>,
+  ) => void;
+  unMount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>,
+  ) => void;
+};
 
 export const Descriptions = observer(
   React.forwardRef((props: DescriptionsProps, ref) => {
@@ -58,8 +58,8 @@ export const Descriptions = observer(
       modal,
       width,
       triggerText,
-      triggerButtonSize,
-      triggerButtonType,
+      buttonSize,
+      buttonType,
       items,
       dataSource,
       ...rest
@@ -84,7 +84,7 @@ export const Descriptions = observer(
 
     const triggerDom = () => {
       return (
-        <Button size={triggerButtonSize} type={triggerButtonType} block onClick={showModal}>
+        <Button size={buttonSize} type={buttonType} block onClick={showModal}>
           {triggerText}
         </Button>
       );
@@ -157,8 +157,8 @@ export const Descriptions = observer(
 Descriptions.defaultProps = {
   modal: 'Page',
   triggerText: '详情',
-  triggerButtonType: 'link',
-  triggerButtonSize: 'small',
+  buttonType: 'link',
+  buttonSize: 'small',
   title: '详情信息',
   column: 2,
   width: '48%',

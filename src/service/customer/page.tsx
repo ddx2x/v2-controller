@@ -30,7 +30,7 @@ const table: View = {
   ],
   expand: {
     kind: 'table',
-    onDataRender: (record) => {
+    onData: (record) => {
       [record];
     },
     table: {
