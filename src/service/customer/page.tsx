@@ -36,7 +36,7 @@ const table: View = {
     table: {
       columns: [
         {
-          dataIndex: '_type',
+          dataIndex: 'type',
           title: '商品类型',
         },
         {
