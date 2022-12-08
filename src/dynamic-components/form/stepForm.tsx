@@ -17,7 +17,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
-  triggerButtonType?: ButtonType;
+  buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onFinish?: (
     form: FormInstance<unknown> | undefined,
@@ -45,7 +45,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     title,
     modal,
     triggerText,
-    triggerButtonType,
+    buttonType,
     submitTimeout,
     onFinish,
     width,
@@ -70,7 +70,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
 
   const triggerDom = () => {
     return (
-      <Button type={triggerButtonType} onClick={showModal}>
+      <Button type={buttonType} onClick={showModal}>
         {triggerText}
       </Button>
     );
@@ -169,7 +169,7 @@ StepForm.defaultProps = {
   title: '新建',
   modal: 'Form',
   triggerText: '新增',
-  triggerButtonType: 'link',
+  buttonType: 'link',
   steps: [],
   columns: [],
   submitter: {

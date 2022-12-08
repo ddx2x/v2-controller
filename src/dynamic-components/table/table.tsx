@@ -1,10 +1,11 @@
-import { ActionType, ProCard, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
+import { ActionType, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
-  AutoComplete,
-  Button, Card, Space, TablePaginationConfig
+  Button, Space, TablePaginationConfig
 } from 'antd';
 import type { Location } from 'history';
+import lodash from 'lodash';
+import { observable, ObservableMap } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -12,21 +13,16 @@ import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
-import { CollapseMeuButton, MoreButtonType, operationGroup } from './more';
-
+import { menuButtonGroup, MenuButtonType } from './more';
 
 const defaulScrollHeight = 1000;
 
-export declare type TableProps = Omit<
-  ProTableProps<any, any>,
-  'dataSource' | 'loading' | 'expandable' | 'pagination'
-> & {
-  intl?: IntlShape; // 国际化
-  routeContext?: RouteContextType;
-  loading?: any;
-  dataSource?: any;
-  moreMenuButton?: (record?: any, action?: any) => MoreButtonType[]; // 更多操作
-  toolBarAction?: () => MoreButtonType[];
+export declare type TableMap = ProTableProps<any, any>
+
+export declare type TableProps = TableMap & {
+  moreMenuButton?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
+  toolBarAction?: () => MenuButtonType[];
+  footerButton?: () => MenuButtonType[];
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onNext?: (
@@ -41,22 +37,9 @@ export declare type TableProps = Omit<
   };
   expand?: ExpandedConfig;
   expanding?: boolean;
-  // 全局搜索
-  globalSearch?: {
-    key?: string;
-    title?: string;
-    onSearch?: (
-      value: any,
-      setGlobalSearchOptions: React.Dispatch<
-        React.SetStateAction<
-          {
-            label: any;
-            value: any;
-          }[]
-        >
-      >,
-    ) => void;
-  };
+  // hook
+  intl?: IntlShape; // 国际化
+  routeContext?: RouteContextType;
   // 鼠标事件
   onRowClick?: (
     event: React.MouseEvent,
@@ -70,39 +53,42 @@ export declare type TableProps = Omit<
   ) => void; // 双击行
 } & RouterHistory & {
   mount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
+    location?: Location | undefined,
+    actionRef?: React.MutableRefObject<ActionType | undefined>,
+    configMap?: ObservableMap<any, any>
   ) => void;
   unMount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
+    location?: Location | undefined,
+    actionRef?: React.MutableRefObject<ActionType | undefined>,
+    config?: ObservableMap<any, any>
   ) => void;
 };
 
 export const Table: React.FC<TableProps> = observer((props) => {
-  const {
+
+  let {
+    // 挂载
     location,
     mount,
     unMount,
+    // 列表
+    virtualList,
+    onNext,
     columns,
+    // 展开
+    expanding,
     expand,
+    // 高度
+    scrollHeight,
+    // 工具栏
+    toolBarRender,
+    // 按钮操作
     moreMenuButton,
     toolBarAction,
-    virtualList,
-    loading,
-    dataSource,
-    onNext,
-    scrollHeight,
-    headerTitle,
-    toolBarRender,
-    toolbar,
-    //
-    pagination,
+    footerButton,
+    // 批量删除
     useBatchDelete,
     batchDelete,
-    expanding,
-    // 全局搜索
-    globalSearch,
     // 鼠标事件
     onRowClick,
     onRowDoubleClick,
@@ -111,14 +97,22 @@ export const Table: React.FC<TableProps> = observer((props) => {
     routeContext,
     ...rest
   } = props;
+
+  const configMap = observable.map<any, any>({})
+
   // ref
   const actionRef = useRef<ActionType>();
 
+  mount && mount(
+    location, actionRef, configMap
+  );
   // 页面挂载 销毁事件
   useEffect(() => {
-    actionRef && mount && mount(location, actionRef);
-    return () => actionRef && unMount && unMount(location, actionRef);
+    return () => unMount && unMount(
+      location, actionRef, configMap
+    );
   }, []);
+
 
   // 挂载 鼠标事件
   useEffect(() => {
@@ -131,8 +125,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     });
   });
 
-  //
-  let newColumns = columns;
 
   // 多选 批量删除
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -154,72 +146,65 @@ export const Table: React.FC<TableProps> = observer((props) => {
     rest.components = vComponents;
   }
 
-  // 全局搜索
-  const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any; value: any }[]>([]);
 
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  const [search, setSearch] = useState(!globalSearch);
 
   // 提示操作按钮
   const Footer: React.FC = () => {
-    return selectedRowKeys.length > 0 ? (
+    return (
       <FooterToolbar routeContext={routeContext || {}}>
         <Space size={6}>
-          <Button
-            type="link"
-            onClick={async () => {
-              batchDelete && batchDelete(selectedRowKeys);
-              setSelectedRowKeys([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
-          </Button>
-          <Button
-            type="link"
-            onClick={async () => {
-              setSelectedRowKeys([]);
-            }}
-          >
-            <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
-          </Button>
+          {selectedRowKeys.length > 0 ? (
+            <>
+              <Button
+                type="link"
+                onClick={async () => {
+                  batchDelete && batchDelete(selectedRowKeys);
+                  setSelectedRowKeys([]);
+                  actionRef.current?.reloadAndRest?.();
+                }}
+              >
+                <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+              </Button>
+              <Button
+                type="link"
+                onClick={async () => {
+                  setSelectedRowKeys([]);
+                }}
+              >
+                <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
+              </Button>
+            </>) : null}
         </Space>
       </FooterToolbar>
-    ) : null;
-  };
-
-  // 加载更多按钮
-  const LoadMore: React.FC = () => {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Button
-          style={{ width: '350px' }}
-          key="loadMore"
-          onClick={() => onNext && onNext(actionRef)}
-        >
-          加载更多
-        </Button>
-      </div>
     );
   };
 
-  // 表单渲染
+  // 表单dom渲染
   const tableRender = (
     props: ProTableProps<any, any, 'text'>,
     defaultDom: JSX.Element,
     domList: {
-      toolbar: JSX.Element | undefined;
-      alert: JSX.Element | undefined;
-      table: JSX.Element | undefined;
-    },
-  ): React.ReactNode | undefined => {
+      toolbar: JSX.Element | undefined; alert: JSX.Element | undefined; table: JSX.Element | undefined;
+    }): React.ReactNode | undefined => {
     if (expanding) {
-      return (
-        <Card bordered={false} style={{ background: '#fbfbfc' }}>
-          {domList.table}
-        </Card>
-      );
+      return defaultDom;
     }
+
+    // 加载更多按钮
+    const LoadMore: React.FC = () => {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          <Button
+            style={{ width: '350px' }}
+            key="loadMore"
+            onClick={() => onNext && onNext(actionRef)}
+          >
+            加载更多
+          </Button>
+        </div>
+      );
+    };
 
     return (
       <>
@@ -230,129 +215,73 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
+
+  // 挂载行
+  let newColumns = columns || [];
+
   // 更多操作 按钮
-  let optionsGroup = []
-  if (moreMenuButton && newColumns) {
+  if (newColumns) {
+    const [optionColumnsHide, setOptionColumnsHide] = useState(false)
     newColumns = newColumns.filter((item) => item.dataIndex != 'more');
     newColumns.push({
       dataIndex: 'more',
       title: '操作',
       valueType: 'option',
       fixed: 'right',
-      render: (text: any, record: any, _: any, action: any) => {
-        optionsGroup = operationGroup(moreMenuButton, record, action)
-
-        let notCollapseTableMenu = optionsGroup.filter(
-          item => item.collapse == false).map(item => item.label)
-        let collapseTableMenu = optionsGroup.filter(
-          item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
-
-        return (
-          <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
-            {notCollapseTableMenu.map(item => item)}
-            {collapseTableMenu.length > 0 && <CollapseMeuButton items={collapseTableMenu} />}
-          </Space>
-        )
+      hideInTable: optionColumnsHide,
+      render: (text: any, record: any, index: any, action: any) => {
+        let buttons = moreMenuButton ? moreMenuButton(record, action) : []
+        buttons.length < 1 && setOptionColumnsHide(true)
+        let [dom, _] = menuButtonGroup(buttons)
+        !dom && setOptionColumnsHide(true)
+        return dom
       }
     })
   }
 
-  let toolBarActions: React.ReactNode[] = []
-  if (toolBarAction) {
-    let actionOptionsGroup = operationGroup(toolBarAction, null, null, 'primary', 'small')
+  // 工具栏操作
+  let [dom, _] = menuButtonGroup(toolBarAction ? toolBarAction() : [])
+  let toolBarActions = [dom]
 
-    let notCollapseActions = actionOptionsGroup.filter(
-      item => item.collapse == false).map(item => item.label)
-    let collapseActions = actionOptionsGroup.filter(
-      item => item.collapse == true).map(item => { return { label: item.label, key: item.key } })
 
-    toolBarActions = [
-      <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
-        {notCollapseActions.map(item => item)}
-        {collapseActions.length > 0 && <CollapseMeuButton items={collapseActions} />}
-      </Space>
-    ]
-
+  let defaultConfig = {
+    columns: newColumns,
+    toolbar: {
+      actions: toolBarActions
+    },
+    pagination: {
+      onChange: (page: number, size: number) => onNext && onNext(actionRef, { page, size })
+    }
   }
 
+  // 合并配置
+  lodash.merge(rest, defaultConfig)
+  lodash.merge(rest, Object.fromEntries(configMap))
 
   return (
-    <>
-      {!search && globalSearch && (
-        <ProCard bordered style={{ marginBottom: '10px' }}>
-          <Space style={{ float: 'right' }}>
-            全局搜索🔍：
-            <AutoComplete
-              allowClear
-              options={globalSearchOptions}
-              placeholder={'请输入搜索文本'}
-              onSearch={async (value) => {
-                globalSearch.onSearch &&
-                  (await globalSearch.onSearch(value, setGlobalSearchOptions));
-              }}
-              style={{ width: '320px' }}
-            />
-            <Button type="primary" onClick={() => setSearch(!search)}>
-              更多筛选
-            </Button>
-          </Space>
-        </ProCard>
-      )}
-      <ProTable
-        search={
-          search && {
-            labelWidth: 80,
-            optionRender: (searchConfig, props, dom) => {
-              return [
-                ...dom,
-                globalSearch && (
-                  <Button type="primary" onClick={() => setSearch(!search)}>
-                    模糊搜索
-                  </Button>
-                ),
-              ];
-            },
-          }
-        }
-        // @ts-ignore
-        pagination={
-          pagination
-            ? {
-              ...pagination,
-              onChange: (page, size) => onNext && onNext(actionRef, { page, size }),
-              // @ts-ignore
-              total:
-                typeof pagination.total == 'function' ? pagination.total() : pagination.total,
-            }
-            : false
-        }
-        columns={newColumns}
-        actionRef={actionRef}
-        loading={typeof loading == 'function' ? loading() : loading}
-        dataSource={typeof dataSource == 'function' ? dataSource() : dataSource}
-        rowSelection={dataSource ? rowSelection : false}
-        onReset={() => props.onSubmit && props.onSubmit({})}
-        expandable={expand && { ...expandModule(expand) }}
-        tableRender={tableRender}
-        toolbar={{
-          ...toolbar,
-          actions: toolBarActions
-        }}
-        onRow={(record) => {
-          return {
-            onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
-            onDoubleClick: (event) =>
-              onRowDoubleClick && onRowDoubleClick(event, record, actionRef),
-          };
-        }}
-        {...rest}
-      />
-    </>
+    <ProTable
+      // ref
+      actionRef={actionRef}
+      // 搜索栏
+      search={{ labelWidth: 80 }}
+      onReset={() => props.onSubmit && props.onSubmit({})}
+      rowSelection={rowSelection}
+      // 扩展
+      expandable={expand && { ...expandModule(expand) }}
+      tableRender={tableRender}
+      onRow={(record) => {
+        return {
+          onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
+          onDoubleClick: (event) =>
+            onRowDoubleClick && onRowDoubleClick(event, record, actionRef),
+        };
+      }}
+      {...rest}
+    />
   );
 });
 
 Table.defaultProps = {
-  type: 'list',
   virtualList: false,
   editable: {
     type: 'multiple',

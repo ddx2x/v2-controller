@@ -31,11 +31,11 @@ export const errorConfig: RequestConfig = {
   errorConfig: {
     // 错误抛出
     errorThrower: (res) => {
-      message.error(res, 3000);
+      message.error(res);
     },
     // 错误接收及处理
     errorHandler: (error: any, opts: any) => {
-      message.error(error.message, 3000);
+      message.error(error.message);
     },
   },
 
