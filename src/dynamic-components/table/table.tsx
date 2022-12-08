@@ -1,7 +1,7 @@
 import { ActionType, ProFormInstance, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
-  Button, FormInstance, Space, TablePaginationConfig
+  Button, FormInstance, Space
 } from 'antd';
 import type { Location } from 'history';
 import lodash from 'lodash';
@@ -13,15 +13,13 @@ import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
-import { menuButtonGroup, MenuButtonType } from './more';
+import { MenuButtonGroup, MenuButtonType } from './more';
 
-const defaulScrollHeight = 1000;
+const defaulScrollHeight = '52vh';
 
-export declare type TableMap = ProTableProps<any, any>
-
-export declare type TableProps = TableMap & {
-  moreMenuButton?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
-  toolBarAction?: () => MenuButtonType[];
+export declare type TableProps = ProTableProps<any, any> & {
+  tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
+  toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
@@ -32,11 +30,8 @@ export declare type TableProps = TableMap & {
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  pagination?: Omit<TablePaginationConfig, 'total'> & {
-    total?: () => number | number;
-  };
-  expand?: ExpandedConfig;
   expanding?: boolean;
+  expand?: ExpandedConfig;
   // hook
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
@@ -84,8 +79,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 工具栏
     toolBarRender,
     // 按钮操作
-    moreMenuButton,
-    toolBarAction,
+    tableMenu,
+    toolBarMenu,
     footerButton,
     // 批量删除
     useBatchDelete,
@@ -99,7 +94,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     ...rest
   } = props;
 
-  const configMap = observable.map<any, any>({})
+  const configMap = observable.map({})
 
   // ref
   const actionRef = useRef<ActionType>();
@@ -148,8 +143,24 @@ export const Table: React.FC<TableProps> = observer((props) => {
     rest.components = vComponents;
   }
 
-
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
+  // 加载更多按钮
+  const LoadMore: React.FC = () => {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Button
+          style={{ width: '350px' }}
+          key="loadMore"
+          onClick={() => onNext && onNext(actionRef)}
+        >
+          加载更多
+        </Button>
+      </div>
+    );
+  };
+
+  let paginationDom: any = null
 
   // 提示操作按钮
   const Footer: React.FC = () => {
@@ -176,7 +187,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
               >
                 <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
               </Button>
-            </>) : null}
+            </>) : paginationDom}
         </Space>
       </FooterToolbar>
     );
@@ -193,21 +204,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       return defaultDom;
     }
 
-    // 加载更多按钮
-    const LoadMore: React.FC = () => {
-      return (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          <Button
-            style={{ width: '350px' }}
-            key="loadMore"
-            onClick={() => onNext && onNext(actionRef)}
-          >
-            加载更多
-          </Button>
-        </div>
-      );
-    };
-
     return (
       <>
         <div ref={virtualList ? setContainer : null}>{defaultDom}</div>
@@ -219,7 +215,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 挂载行
   let newColumns = columns || [];
-
   // 更多操作 按钮
   if (newColumns) {
     const [optionColumnsHide, setOptionColumnsHide] = useState(false)
@@ -231,9 +226,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
       fixed: 'right',
       hideInTable: optionColumnsHide,
       render: (text: any, record: any, index: any, action: any) => {
-        let buttons = moreMenuButton ? moreMenuButton(record, action) : []
+        let buttons = tableMenu ? tableMenu(record, action) : []
         buttons.length < 1 && setOptionColumnsHide(true)
-        let [dom, _] = menuButtonGroup(buttons)
+        // 生成菜单
+        const dom = <MenuButtonGroup menuButtons={buttons} />
         !dom && setOptionColumnsHide(true)
         return dom
       }
@@ -241,14 +237,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   // 工具栏操作
-  let [dom, _] = menuButtonGroup(toolBarAction ? toolBarAction() : [])
-  let toolBarActions = [dom]
-
+  let toolBarMenus = [<MenuButtonGroup menuButtons={toolBarMenu ? toolBarMenu() : []} />]
 
   let defaultConfig: TableProps = {
+    size: 'small',
     columns: newColumns,
     toolbar: {
-      actions: toolBarActions
+      actions: toolBarMenus
     },
     editable: {
       onSave: async (key, record) => {
@@ -279,8 +274,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
       onRow={(record) => {
         return {
           onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
-          onDoubleClick: (event) =>
-            onRowDoubleClick && onRowDoubleClick(event, record, actionRef),
+          onDoubleClick: (event) => {
+            // onRowDoubleClick && onRowDoubleClick(event, record, actionRef)
+          },
         };
       }}
       {...rest}
@@ -291,13 +287,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
 Table.defaultProps = {
   type: 'table',
   virtualList: false,
-  editable: {
-    type: 'multiple',
-  },
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
-  useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: false },
   columns: [],
+  useBatchDelete: true,
 };

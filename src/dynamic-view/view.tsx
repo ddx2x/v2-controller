@@ -46,7 +46,7 @@ export default observer(() => {
     return (
       <>
         {schema?.view &&
-          schema.view.map((config: View, index) => {
+          schema.view.map((config: View, index: number) => {
             const { kind, ...props } = config;
             props['location'] = location;
             props['key'] = index;
@@ -66,7 +66,8 @@ export default observer(() => {
             if (kind == 'descriptions') {
               return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
             }
-
+            
+            return null
           })}
       </>
     );

@@ -100,86 +100,68 @@ const detail: DescriptionsProps = {
   ],
 };
 
-function getBrandName() {
-  return {
-    all: { text: '超长'.repeat(50) },
-    open: {
-      text: '未解决',
-      status: 'Error',
-    },
-    closed: {
-      text: '已解决',
-      status: 'Success',
-      disabled: true,
-    },
-    processing: {
-      text: '解决中',
-      status: 'Processing',
-    },
-  };
-}
-
 // 商品列表
 const table: View = {
   kind: 'table',
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
-    console.log('formRef', actionRef, formRef);
-    formRef?.current?.setFields([{
-      name: 'brand_name',
-
-    }])
     configMap?.replace({
-      columns: [
-        {
-          dataIndex: 'uid',
-          title: '商品标题',
-          // width: 150,
-          // sorter: true,
-        },
-        {
-          dataIndex: 'sub_title',
-          title: '子标题',
-          // width: 100,
-        },
-        {
-          dataIndex: 'brand_name',
-          title: '品牌',
-          filters: true,
-          onFilter: true,
-          ellipsis: true,
-          valueType: 'select',
-          valueEnum: {}
-          // valueEnum: getBrandName(),
-        },
-      ],
 
+      pagination: {
+        total: commdityAggregateStore.items.length
+      },
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
     })
   },
+  toolbar: {
+    title: '商品列表',
+  },
   onColumnsStateChange: (map) => {
     console.log('map', map);
   },
-  toolBarAction: () => [
+  toolBarMenu: () => [
     {
       kind: 'descriptions',
+      key: '1',
       ...detail,
     },
     {
       kind: 'form',
+      key: '2',
       collapse: true,
       ...eidt
     },
     {
       kind: 'link',
+      key: '3',
       link: `/commdity/list/add`,
       title: '新增',
     },
   ],
-  toolbar: {
-    title: '商品列表',
-  },
+  columns: [
+    {
+      dataIndex: 'uid',
+      title: '商品标题',
+      // width: 150,
+      // sorter: true,
+    },
+    {
+      dataIndex: 'sub_title',
+      title: '子标题',
+      // width: 100,
+    },
+    {
+      dataIndex: 'brand_name',
+      title: '品牌',
+      filters: true,
+      onFilter: true,
+      ellipsis: true,
+      valueType: 'select',
+      valueEnum: {}
+      // valueEnum: getBrandName(),
+    },
+  ],
   expand: {
     kind: 'table',
     onData: (record: any) => commdityStore.api.list(record.uid),
@@ -207,14 +189,16 @@ const table: View = {
           title: '库存',
         },
       ],
-      moreMenuButton: (record: any, action: any) => [
+      tableMenu: (record: any, action: any) => [
         {
           kind: 'descriptions',
+          key: '1',
           dataSource: record,
           ...detail,
         },
         {
           kind: 'implement',
+          key: '2',
           title: '表格编辑',
           onClick() {
             record.uid && action?.startEditable?.(record?.uid);
@@ -223,32 +207,37 @@ const table: View = {
       ],
     },
   },
-  moreMenuButton: (record, action) => [
+  tableMenu: (record, action) => [
     {
       kind: 'descriptions',
+      key: 't1',
       dataSource: record,
       ...detail,
     },
     {
       kind: 'form',
+      key: 't2',
       collapse: true,
       initialValues: record,
       ...eidt
     },
     {
       kind: 'link',
+      key: 't3',
       collapse: true,
       link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
       title: '全量编辑',
     },
     {
       kind: 'confirm',
+      key: 't4',
       onClick: () => message.info('删除成功'),
       title: '删除',
       text: `确认删除${record.name}`,
     },
     {
       kind: 'implement',
+      key: 't5',
       collapse: true,
       title: '表格编辑',
       onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
