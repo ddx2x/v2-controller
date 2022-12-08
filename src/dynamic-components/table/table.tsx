@@ -1,7 +1,7 @@
-import { ActionType, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
+import { ActionType, ProFormInstance, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
-  Button, Space, TablePaginationConfig
+  Button, FormInstance, Space, TablePaginationConfig
 } from 'antd';
 import type { Location } from 'history';
 import lodash from 'lodash';
@@ -55,6 +55,7 @@ export declare type TableProps = TableMap & {
   mount?: (
     location?: Location | undefined,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
+    formRef?: React.MutableRefObject<FormInstance | undefined>,
     configMap?: ObservableMap<any, any>
   ) => void;
   unMount?: (
@@ -102,9 +103,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // ref
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
 
   mount && mount(
-    location, actionRef, configMap
+    location, actionRef, formRef, configMap
   );
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -215,7 +217,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
-
   // 挂载行
   let newColumns = columns || [];
 
@@ -244,10 +245,15 @@ export const Table: React.FC<TableProps> = observer((props) => {
   let toolBarActions = [dom]
 
 
-  let defaultConfig = {
+  let defaultConfig: TableProps = {
     columns: newColumns,
     toolbar: {
       actions: toolBarActions
+    },
+    editable: {
+      onSave: async (key, record) => {
+        console.log('editable onSave......', key, record)
+      },
     },
     pagination: {
       onChange: (page: number, size: number) => onNext && onNext(actionRef, { page, size })
@@ -262,6 +268,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     <ProTable
       // ref
       actionRef={actionRef}
+      formRef={formRef}
       // 搜索栏
       search={{ labelWidth: 80 }}
       onReset={() => props.onSubmit && props.onSubmit({})}
@@ -282,6 +289,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
 });
 
 Table.defaultProps = {
+  type: 'table',
   virtualList: false,
   editable: {
     type: 'multiple',

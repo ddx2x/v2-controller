@@ -1,3 +1,4 @@
+import { randomKey } from '@/dynamic-components/helper';
 import NoFoundPage from '@/pages/404';
 import { RouteContext } from '@ant-design/pro-components';
 import { useIntl, useLocation } from '@umijs/max';
@@ -50,22 +51,26 @@ export default observer(() => {
             props['location'] = location;
             props['key'] = index;
 
-            switch (kind) {
-              case 'table':
-                return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
-              case 'list':
-                return <List {...(props as ListProps)} intl={intl} routeContext={routeContext} />;
-              case 'form':
-                return <Form {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
-              case 'stepForm':
-                return <StepForm {...(props as StepFormProps)} modal="Form" intl={intl} routeContext={routeContext} />;
-              case 'descriptions':
-                return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
+            if (kind == 'table') {
+              return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
             }
+            if (kind == 'list') {
+              return <List {...(props as ListProps)} intl={intl} routeContext={routeContext} />;
+            }
+            if (kind == 'form') {
+              return <Form {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
+            }
+            if (kind == 'stepForm') {
+              return <StepForm {...(props as StepFormProps)} modal="Form" intl={intl} routeContext={routeContext} />;
+            }
+            if (kind == 'descriptions') {
+              return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
+            }
+
           })}
       </>
     );
   })();
 
-  return <PageContainer {...schema?.container}>{page}</PageContainer>;
+  return <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>{page}</PageContainer>;
 });

@@ -123,34 +123,63 @@ function getBrandName() {
 const table: View = {
   kind: 'table',
   rowKey: 'uid',
-  mount: (location, actionRef, configMap) => {
+  mount: (location, actionRef, formRef, configMap) => {
+    console.log('formRef', actionRef, formRef);
+    formRef?.current?.setFields([{
+      name: 'brand_name',
+
+    }])
     configMap?.replace({
+      columns: [
+        {
+          dataIndex: 'uid',
+          title: '商品标题',
+          // width: 150,
+          // sorter: true,
+        },
+        {
+          dataIndex: 'sub_title',
+          title: '子标题',
+          // width: 100,
+        },
+        {
+          dataIndex: 'brand_name',
+          title: '品牌',
+          filters: true,
+          onFilter: true,
+          ellipsis: true,
+          valueType: 'select',
+          valueEnum: {}
+          // valueEnum: getBrandName(),
+        },
+      ],
+
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
     })
   },
-  columns: [
+  onColumnsStateChange: (map) => {
+    console.log('map', map);
+  },
+  toolBarAction: () => [
     {
-      dataIndex: 'uid',
-      title: '商品标题',
-      // width: 150,
-      // sorter: true,
+      kind: 'descriptions',
+      ...detail,
     },
     {
-      dataIndex: 'sub_title',
-      title: '子标题',
-      // width: 100,
+      kind: 'form',
+      collapse: true,
+      ...eidt
     },
     {
-      dataIndex: 'brand_name',
-      title: '品牌',
-      filters: true,
-      onFilter: true,
-      ellipsis: true,
-      valueType: 'select',
-      valueEnum: getBrandName(),
+      kind: 'link',
+      link: `/commdity/list/add`,
+      title: '新增',
     },
   ],
+  toolbar: {
+    title: '商品列表',
+  },
   expand: {
     kind: 'table',
     onData: (record: any) => commdityStore.api.list(record.uid),
@@ -178,7 +207,7 @@ const table: View = {
           title: '库存',
         },
       ],
-      moreMenuButton: (record: any, action) => [
+      moreMenuButton: (record: any, action: any) => [
         {
           kind: 'descriptions',
           dataSource: record,
@@ -187,31 +216,12 @@ const table: View = {
         {
           kind: 'implement',
           title: '表格编辑',
-          onClick(e) {
+          onClick() {
             record.uid && action?.startEditable?.(record?.uid);
           },
         },
       ],
     },
-  },
-  toolBarAction: () => [
-    {
-      kind: 'descriptions',
-      ...detail,
-    },
-    {
-      kind: 'form',
-      collapse: true,
-      ...eidt
-    },
-    {
-      kind: 'link',
-      link: `/commdity/list/add`,
-      title: '新增',
-    },
-  ],
-  toolbar: {
-    title: '商品列表',
   },
   moreMenuButton: (record, action) => [
     {

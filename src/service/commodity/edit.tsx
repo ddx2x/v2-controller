@@ -61,9 +61,6 @@ export const editView: View = {
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
-
-    width: "20%",
-
     steps: [
         { title: '基本信息' },
         { title: '交付设置' },
@@ -293,13 +290,9 @@ export const editAggregateView: View = {
         location?.search &&
             formRef.current?.setFieldsValue({})
     },
-
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
-
-    width: "100%",
-
     steps: [
         { title: '基本信息' },
         { title: '交付设置' },
