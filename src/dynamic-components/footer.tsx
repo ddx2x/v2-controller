@@ -43,7 +43,7 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
 
   const dom = (
     <>
-      <div className={`${baseClassName}-left ${hashId}`}>{extra}</div> 
+      <div className={`${baseClassName}-left ${hashId}`}>{extra}</div>
       <div className={`${baseClassName}-right ${hashId}`}>{children}</div>
     </>
   );

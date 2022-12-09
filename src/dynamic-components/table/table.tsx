@@ -44,16 +44,10 @@ export declare type TableProps = ProTableProps<any, any> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
   // 鼠标事件
-  onRowClick?: (
-    event: React.MouseEvent,
-    record: any,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 单击行
-  onRowDoubleClick?: (
-    event: React.MouseEvent,
-    record: any,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 双击行
+  onRow?: {
+    mouseEvent: 'onClick' | 'onDoubleClick',
+    triggerKey: string
+  }[]
 } & RouterHistory & {
   mount?: (
     location?: Location | undefined,
@@ -93,9 +87,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 批量删除
     useBatchDelete,
     batchDelete,
-    // 鼠标事件
-    onRowClick,
-    onRowDoubleClick,
+    // 鼠标事情
+    onRow,
     // hook
     intl,
     routeContext,
@@ -108,9 +101,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(
-    location, actionRef, formRef, configMap
-  );
+  // mount && mount(
+  //   location, actionRef, formRef, configMap
+  // );
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -285,8 +278,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
 
-  // console.log('dataSource....', commdityAggregateStore.items);
-
 
   return (
     <ProTable
@@ -297,12 +288,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       scroll={{ y: scrollHeight, x: "100%" }}
       tableRender={tableRender}
       dataSource={d}
-      onRow={(record, index) => {
-        return {
-          onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
-          onDoubleClick: (event) => typeof index == 'number' && mT[index][0](),
-        };
-      }}
       pagination={false}
       {...rest}
     />
