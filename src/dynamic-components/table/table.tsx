@@ -22,7 +22,6 @@ export declare type TableProps = ProTableProps<any, any> & {
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
-  virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onNext?: (
     params?: any,
@@ -63,7 +62,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     mount,
     unMount,
     // 列表
-    virtualList,
     onNext,
     columns,
     // 展开
@@ -88,8 +86,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     ...rest
   } = props;
 
-  const [params, setParams] = useState({})
-
   const configMap = observable.map({})
   // ref
   const actionRef = useRef<ActionType>();
@@ -107,6 +103,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }, []);
 
   // 挂载 鼠标事件
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   useEffect(() => {
     window.addEventListener('mousemove', (evt: MouseEvent) => {
       if (evt.defaultPrevented || (container !== null && container.contains(evt.target as Node))) {
@@ -127,8 +124,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
-  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // 加载更多按钮
   const LoadMore: React.FC = () => {
@@ -185,6 +180,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
     domList: {
       toolbar: JSX.Element | undefined; alert: JSX.Element | undefined; table: JSX.Element | undefined;
     }): React.ReactNode | undefined => {
+
+    console.log('defaultDom', domList.table);
+
+    // document.getElementsByClassName()
+
     if (expanding) {
       return defaultDom;
     }
@@ -286,7 +286,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
 Table.defaultProps = {
   type: 'table',
-  virtualList: true,
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,

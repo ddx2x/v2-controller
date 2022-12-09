@@ -45,7 +45,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 100, sort: '{}' };
+    this.ctx = { page: 0, size: 500, sort: '{}' };
   };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
