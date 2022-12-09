@@ -63,7 +63,7 @@ const table: View = {
   tableMenu: (record) => [
     {
       kind: 'descriptions',
-      key: '1',
+      tag: '详情',
       collapse: true,
       dataSource: {
         id: '这是一段文本columns',

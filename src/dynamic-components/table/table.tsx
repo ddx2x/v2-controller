@@ -36,9 +36,9 @@ export declare type TableProps = ProTableProps<any, any> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
   // 鼠标事件
-  onRow?: {
-    mouseEvent: 'onClick' | 'onDoubleClick',
-    triggerKey: string
+  onRowEvent?: {
+    mouseEvent: "onClick" | "onDoubleClick",
+    tag: string // 按钮
   }[]
 } & RouterHistory & {
   mount?: (
@@ -79,7 +79,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     useBatchDelete,
     batchDelete,
     // 鼠标事情
-    onRow,
+    onRowEvent,
     // hook
     intl,
     routeContext,
@@ -181,10 +181,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       toolbar: JSX.Element | undefined; alert: JSX.Element | undefined; table: JSX.Element | undefined;
     }): React.ReactNode | undefined => {
 
-    console.log('defaultDom', domList.table);
-
-    // document.getElementsByClassName()
-
     if (expanding) {
       return defaultDom;
     }
@@ -200,7 +196,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 挂载行
   let newColumns = columns || [];
-  let [mT, setMT] = useState<(() => void)[][]>([])
+  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
+  let [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
   // 更多操作 按钮
   if (newColumns) {
     newColumns = newColumns.filter((item) => item.dataIndex != 'more');
@@ -209,9 +206,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
       title: '操作',
       valueType: 'option',
       fixed: 'right',
+      hideInTable: optionColumnsHide,
       render: (text: any, record: any, index: any, action: any) => {
         let buttons = tableMenu ? tableMenu(record, action) : []
-        // buttons.length < 1 && setOptionColumnsHide(true)
+        buttons.length < 1 && setOptionColumnsHide(true)
         // 生成菜单
         const dom = (
           <MenuButtonGroup
@@ -220,7 +218,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
             gT={T => { mT[index] = T; setMT(mT) }}
           />
         )
-        // !dom && setOptionColumnsHide(true)
+        !dom && setOptionColumnsHide(true)
         return dom
       }
     })
@@ -234,6 +232,23 @@ export const Table: React.FC<TableProps> = observer((props) => {
     />
   ]
 
+
+  // 点击事件
+  let onRow: TableProps['onRow'] = (data: any, index: any) => {
+    let event = {}
+    onRowEvent && onRowEvent.forEach((item) => {
+      event[item.mouseEvent] = () => {
+
+        if (typeof index == 'number') {
+          console.log('index', index, item.tag, mT[index].filter(m => m.tag == item.tag)[0]);
+          mT[index].filter(m => m.tag == item.tag)[0].func()
+        }
+      }
+    })
+    return event
+  }
+
+
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
@@ -243,6 +258,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }, []);
 
   let defaultConfig: TableProps = {
+    onRow,
     size: 'small',
     columns: newColumns,
     components: vComponents,

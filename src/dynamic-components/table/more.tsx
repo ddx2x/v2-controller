@@ -1,6 +1,6 @@
 import { DownOutlined } from '@ant-design/icons';
 import { Link } from '@umijs/max';
-import { Button, Dropdown, MenuProps, Popconfirm, Space } from 'antd';
+import { Button, Dropdown, MenuProps, message, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
 import React, { useRef } from 'react';
@@ -16,11 +16,11 @@ export declare type MenuButton = {
 } | null
 
 // 更多按钮
-export declare type MenuButtonType = { collapse?: boolean, key: string } & (
+export declare type MenuButtonType = { tag: string, collapse?: boolean; } & (
   | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
   | ({ kind: 'form' } & FormProps) // 表单
   | ({ kind: 'link' } & { link: string; title: string }) // 跳转
-  | ({ kind: 'implement' } & { title?: string; onClick?: ((e?: React.MouseEvent) => void) | undefined; })
+  | ({ kind: 'implement' } & { title: string; onClick?: ((e?: React.MouseEvent) => void) | undefined; })
   | ({ kind: 'confirm' } & { title: string; text?: string; onClick?: ((e?: React.MouseEvent) => void) | undefined; }) // 确认框自定义操作
 )
 
@@ -58,7 +58,7 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
   const { items } = props
   return (
-    <Dropdown menu={{ items }}>
+    <Dropdown menu={{ items }} forceRender>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>
         操作
         <DownOutlined sizes={'small'} />
@@ -71,7 +71,7 @@ export declare type MenuButtonGroupProps = {
   menuButtons: MenuButtonType[] | undefined,
   buttonType?: ButtonType,
   buttonSize?: ButtonSize
-  gT?: (T: (() => void)[]) => void
+  gT?: (T: ({ tag: string, func: () => void })[]) => void
 }
 
 export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
@@ -80,9 +80,10 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
 
   let labels: React.ReactNode[] = []
   let collapseLabels: { label: React.ReactNode, key: string }[] = []
-  let T: (() => void)[] = []
+  let T: ({ tag: string, func: () => void })[] = []
 
   menuButtons.forEach((item) => {
+    const tag = item.tag
     const key = randomKey(5, { numbers: true })
     const collapse = item.collapse || false
     const bt = collapse ? 'link' : buttonType || 'link'
@@ -91,41 +92,42 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
     let label = (() => {
       if (item.kind == 'descriptions') {
         const descriptionsDomRef = useRef<DescriptionsRef>();
-        T.push(() => descriptionsDomRef.current?.open())
+        T.push({ tag: tag, func: () => descriptionsDomRef.current?.open() })
         return (
-          <Descriptions ref={descriptionsDomRef} buttonType={bt} buttonSize={bs} {...item} />
+          <Descriptions key={key} ref={descriptionsDomRef} buttonType={bt} buttonSize={bs} {...item} />
         )
       }
       if (item.kind == 'form') {
         const formDomRef = useRef<FormRef>();
-        T.push(() => formDomRef.current?.open())
+        T.push({ tag: tag, func: () => formDomRef.current?.open() })
         return (
-          <Form ref={formDomRef} buttonType={bt} buttonSize={bs} {...item} />
+          <Form key={key} ref={formDomRef} buttonType={bt} buttonSize={bs} {...item} />
         )
       }
       if (item.kind == 'link') {
-        T.push(() => { })
+        T.push({ tag: tag, func: () => message.info('没有实现该功能') })
         return (
-          <Button type={bt} size={bs} block>
+          <Button key={key} type={bt} size={bs} block>
             <Link to={item.link}>{item.title}</Link>
           </Button>
         )
       }
       if (item.kind == 'confirm') {
-        T.push(() => { })
+        T.push({ tag: tag, func: () => message.info('没有实现该功能') })
         return (
           <ConfirmButton
-            buttonType={bt} buttonSize={bs}
-            key={randomKey(5, { numbers: false })}
+            key={key}
+            buttonType={bt}
+            buttonSize={bs}
             title={item.title} text={item.text}
             onClick={item.onClick}
           />
         )
       }
       if (item.kind == 'implement') {
-        T.push(() => item.onClick)
+        T.push({ tag: tag, func: () => item.onClick && item.onClick() })
         return (
-          <Button type={bt} size={bs} block onClick={item.onClick} >
+          <Button key={key} type={bt} size={bs} block onClick={item.onClick} >
             {item.title || '编辑'}
           </Button >
         )

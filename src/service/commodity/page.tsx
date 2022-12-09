@@ -119,18 +119,18 @@ const table: View = {
   toolBarMenu: () => [
     {
       kind: 'descriptions',
-      key: '1',
+      tag: '详情',
       ...detail,
     },
     {
       kind: 'form',
-      key: '2',
+      tag: '编辑',
       collapse: true,
       ...eidt
     },
     {
       kind: 'link',
-      key: '3',
+      tag: '新增',
       link: `/commdity/list/add`,
       title: '新增',
     },
@@ -188,13 +188,13 @@ const table: View = {
       tableMenu: (record: any, action: any) => [
         {
           kind: 'descriptions',
-          key: '1',
+          tag: '详情',
           dataSource: record,
           ...detail,
         },
         {
           kind: 'implement',
-          key: '2',
+          tag: '表格编辑',
           title: '表格编辑',
           onClick() {
             record.uid && action?.startEditable?.(record?.uid);
@@ -206,28 +206,28 @@ const table: View = {
   tableMenu: (record, action) => [
     {
       kind: 'descriptions',
-      key: 't1',
       dataSource: record,
+      tag: '详情',
       ...detail,
     },
     {
       kind: 'form',
-      key: 't2',
+      tag: '编辑',
       collapse: true,
       initialValues: record,
       ...eidt
     },
     {
       kind: 'link',
-      key: 't3',
       collapse: true,
       link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`,
+      tag: '全量编辑',
       title: '全量编辑',
     },
     {
       kind: 'confirm',
-      key: 't4',
       onClick: () => message.info('删除成功'),
+      tag: '删除',
       title: '删除',
       text: `确认删除${record.name}`,
     },
@@ -235,12 +235,18 @@ const table: View = {
       kind: 'implement',
       key: 't5',
       collapse: true,
+      tag: '表格编辑',
       title: '表格编辑',
       onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
     },
   ],
+  onRowEvent: [
+    {
+      mouseEvent: 'onDoubleClick',
+      tag: '详情'
+    }
+  ],
   onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
-  scrollHeight: '90vh'
 };
 
 pageManager.register('commdity.list', {
