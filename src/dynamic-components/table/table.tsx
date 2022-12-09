@@ -95,9 +95,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  // mount && mount(
-  //   location, actionRef, formRef, configMap
-  // );
+  mount && mount(
+    location, actionRef, formRef, configMap
+  );
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -257,9 +257,10 @@ export const Table: React.FC<TableProps> = observer((props) => {
     expandable: {
       ...expandModule(expand ? expand : null)
     },
-    // search: {
-    //   labelWidth: 80,
-    // },
+    search: {
+      labelWidth: 80,
+    },
+    tableRender,
     pagination: {
       onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef)
     },
@@ -278,8 +279,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       formRef={formRef}
       rowSelection={rowSelection}
       scroll={{ y: scrollHeight, x: "100%" }}
-      tableRender={tableRender}
-      pagination={false}
       {...rest}
     />
   );

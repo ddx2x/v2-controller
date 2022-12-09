@@ -106,7 +106,7 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
     configMap?.replace({
-      // pagination: false,
+      pagination: false,
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
     })
