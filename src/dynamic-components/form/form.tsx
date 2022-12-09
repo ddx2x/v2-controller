@@ -10,8 +10,8 @@ import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export declare type ModalActionRefType = {
-  openModal: () => void;
+export declare type FormRef = {
+  open: () => void;
 };
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {

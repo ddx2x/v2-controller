@@ -15,8 +15,8 @@ import { IntlShape } from 'react-intl';
 import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
 
-export declare type DescriptionsActionRef = {
-  open?: () => void;
+export declare type DescriptionsRef = {
+  open: () => void;
 };
 
 export declare type DescriptionsItem = ProDescriptionsItemProps & {
@@ -26,7 +26,6 @@ export declare type DescriptionsItem = ProDescriptionsItemProps & {
 // https://next-procomponents.ant.design/components/descriptions
 
 export declare type DescriptionsProps = ProDescriptionsProps & {
-  pageActionRef?: React.MutableRefObject<DescriptionsActionRef | undefined>;
   modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
   triggerText?: string;
@@ -50,7 +49,6 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
 export const Descriptions = observer(
   React.forwardRef((props: DescriptionsProps, forwardRef) => {
     const {
-      pageActionRef,
       location,
       mount,
       unMount,

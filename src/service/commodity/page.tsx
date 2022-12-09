@@ -106,12 +106,9 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
     configMap?.replace({
-
-      pagination: {
-        total: commdityAggregateStore.items.length
-      },
+      pagination: false,
       laoding: commdityAggregateStore.loading,
-      dataSource: commdityAggregateStore.items,
+      // dataSource: commdityAggregateStore.items,
     })
   },
   toolbar: {
@@ -243,8 +240,7 @@ const table: View = {
       onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
     },
   ],
-  onNext: (actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
-  onSubmit: (params) => commdityAggregateStore.next({ order: { brand_name: 1 } }),
+  onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
 };
 
 pageManager.register('commdity.list', {

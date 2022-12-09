@@ -4,8 +4,8 @@ import { Button, Dropdown, MenuProps, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
 import React, { useRef } from 'react';
-import { Descriptions, DescriptionsProps } from '../descriptions';
-import { Form, FormProps } from '../form';
+import { Descriptions, DescriptionsProps, DescriptionsRef } from '../descriptions';
+import { Form, FormProps, FormRef } from '../form';
 import { randomKey } from '../helper';
 
 export declare type MenuButton = {
@@ -58,7 +58,7 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
   const { items } = props
   return (
-    <Dropdown menu={{ items }} forceRender>
+    <Dropdown menu={{ items }}>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>
         操作
         <DownOutlined sizes={'small'} />
@@ -71,36 +71,40 @@ export declare type MenuButtonGroupProps = {
   menuButtons: MenuButtonType[] | undefined,
   buttonType?: ButtonType,
   buttonSize?: ButtonSize
+  gT?: (T: (() => void)[]) => void
 }
 
 export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
-  const { menuButtons, buttonType, buttonSize } = props
+  const { menuButtons, buttonType, buttonSize, gT } = props
   if (!menuButtons) return null
 
   let labels: React.ReactNode[] = []
   let collapseLabels: { label: React.ReactNode, key: string }[] = []
+  let T: (() => void)[] = []
 
   menuButtons.forEach((item) => {
+    const key = randomKey(5, { numbers: true })
     const collapse = item.collapse || false
     const bt = collapse ? 'link' : buttonType || 'link'
     const bs = buttonSize || 'small'
 
     let label = (() => {
       if (item.kind == 'descriptions') {
-        const descriptionsDomRef = useRef();
-        console.log('descriptionsDomRef', descriptionsDomRef);
+        const descriptionsDomRef = useRef<DescriptionsRef>();
+        T.push(() => descriptionsDomRef.current?.open())
         return (
           <Descriptions ref={descriptionsDomRef} buttonType={bt} buttonSize={bs} {...item} />
         )
       }
       if (item.kind == 'form') {
-        const formDomRef = useRef();
-        console.log('formDomRef', formDomRef)
+        const formDomRef = useRef<FormRef>();
+        T.push(() => formDomRef.current?.open())
         return (
           <Form ref={formDomRef} buttonType={bt} buttonSize={bs} {...item} />
         )
       }
       if (item.kind == 'link') {
+        T.push(() => { })
         return (
           <Button type={bt} size={bs} block>
             <Link to={item.link}>{item.title}</Link>
@@ -108,6 +112,7 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
         )
       }
       if (item.kind == 'confirm') {
+        T.push(() => { })
         return (
           <ConfirmButton
             buttonType={bt} buttonSize={bs}
@@ -118,6 +123,7 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
         )
       }
       if (item.kind == 'implement') {
+        T.push(() => item.onClick)
         return (
           <Button type={bt} size={bs} block onClick={item.onClick} >
             {item.title || '编辑'}
@@ -131,6 +137,8 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
       collapseLabels.push({ label, key: randomKey(5, { numbers: false }) }) :
       labels.push(label)
   })
+
+  gT && gT(T)
 
   return (
     (labels || collapseLabels) ?
