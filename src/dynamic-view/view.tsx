@@ -25,6 +25,7 @@ const trRouterKey = (path: string) => {
 };
 
 export default observer(() => {
+
   eventEmitter.on('pageManagerClear', (path: string) => {
     pageManager.clear(trRouterKey(path));
   });
@@ -66,7 +67,7 @@ export default observer(() => {
             if (kind == 'descriptions') {
               return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
             }
-            
+
             return null
           })}
       </>

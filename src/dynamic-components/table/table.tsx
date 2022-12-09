@@ -89,14 +89,15 @@ export const Table: React.FC<TableProps> = observer((props) => {
   } = props;
 
   const [params, setParams] = useState({})
+
   const configMap = observable.map({})
   // ref
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(
-    location, actionRef, formRef, configMap
-  );
+  // mount && mount(
+  //   location, actionRef, formRef, configMap
+  // );
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -241,7 +242,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     });
   }, []);
 
-
   let defaultConfig: TableProps = {
     size: 'small',
     columns: newColumns,
@@ -270,7 +270,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // 合并配置
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
-
 
   return (
     <ProTable

@@ -106,16 +106,13 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
     configMap?.replace({
-      pagination: false,
+      // pagination: false,
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
     })
   },
   toolbar: {
     title: '商品列表',
-  },
-  onColumnsStateChange: (map) => {
-    console.log('map', map);
   },
   toolBarMenu: () => [
     {
