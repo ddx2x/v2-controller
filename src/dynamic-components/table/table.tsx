@@ -16,13 +16,6 @@ import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButtonGroup, MenuButtonType } from './more';
 
-let d: any = []
-
-for (let i = 0; i < 10000; i++) {
-  d.push({ "uid": i, "sub_title": "重庆市" + i, "value": 36, "type": 2 })
-}
-
-
 const defaulScrollHeight = '52vh';
 
 export declare type TableProps = ProTableProps<any, any> & {
@@ -101,9 +94,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  // mount && mount(
-  //   location, actionRef, formRef, configMap
-  // );
+  mount && mount(
+    location, actionRef, formRef, configMap
+  );
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -287,7 +280,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       rowSelection={rowSelection}
       scroll={{ y: scrollHeight, x: "100%" }}
       tableRender={tableRender}
-      dataSource={d}
       pagination={false}
       {...rest}
     />

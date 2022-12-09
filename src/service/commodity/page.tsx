@@ -108,7 +108,7 @@ const table: View = {
     configMap?.replace({
       pagination: false,
       laoding: commdityAggregateStore.loading,
-      // dataSource: commdityAggregateStore.items,
+      dataSource: commdityAggregateStore.items,
     })
   },
   toolbar: {
