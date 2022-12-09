@@ -1,3 +1,4 @@
+import { commdityAggregateStore } from '@/service/commodity/store';
 import { ActionType, ProFormInstance, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
@@ -285,7 +286,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
 
-  // console.log('dataSource....', commdityAggregateStore.items);
+  console.log('dataSource....', commdityAggregateStore.items);
 
 
   return (

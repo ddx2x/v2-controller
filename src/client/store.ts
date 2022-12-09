@@ -45,8 +45,19 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 1000, sort: '{}' };
+    this.ctx = { page: 0, size: 10000, sort: '{}' };
   };
+
+
+  // collect items from watch-api events to avoid UI blowing up with huge streams of data
+  protected dataBuffers = observable<T>([], { deep: false });
+
+  protected bindDataBuffersUpdater = (delay = 200) => {
+    return reaction(() => this.dataBuffers.slice()[0], () => { }, {
+      delay: delay,
+    });
+  };
+
 
   @action next = async (query?: Query) => {
     const { page, size, order, ...rest } = !query ? this.ctx : query;
@@ -61,17 +72,22 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     }
     merge(this.ctx, rest)
 
-    this.api.list(undefined, this.ctx).then((items) => {
-      items.forEach((object) => {
+    this.bindDataBuffersUpdater();
+
+    this.api.list(undefined, this.ctx).then((res) => {
+      this.dataBuffers.push(...res);
+      let items = this.data.slice();
+      this.dataBuffers.clear().forEach((object) => {
         if (!object) return;
         const { uid } = object;
-        const index = this.data.findIndex((item) => item.uid === uid);
-        const item = this.data[index];
+        const index = items.findIndex((item) => item.uid === uid);
+        const item = items[index];
+
         const newItem = new this.api.objectConstructor(object);
         if (!item) {
-          this.data.push(newItem);
+          items.push(newItem);
         } else {
-          this.data.splice(index, 1, newItem);
+          items.splice(index, 1, newItem);
         }
       });
 
@@ -79,6 +95,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
         if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
       }
 
+      this.data.replace(items);
       this.isLoaded.set(true);
     });
   };
@@ -184,26 +201,3 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     this.data.replace(items);
   }
 }
-
-const isDeepEqual = (object1: any, object2: any) => {
-  const objKeys1 = Object.keys(object1);
-  const objKeys2 = Object.keys(object2);
-
-  if (objKeys1.length !== objKeys2.length) return false;
-
-  for (var key of objKeys1) {
-    const value1 = object1[key];
-    const value2 = object2[key];
-
-    const isObjects = isObject(value1) && isObject(value2);
-
-    if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-const isObject = (object: null) => {
-  return object != null && typeof object === 'object';
-};
