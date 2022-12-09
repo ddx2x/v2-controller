@@ -106,9 +106,10 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
     configMap?.replace({
-      pagination: {
-        total: commdityAggregateStore.items.length
-      },
+      // pagination: {
+      //   total: commdityAggregateStore.items.length
+      // },
+      pagination: false,
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
     })
@@ -247,6 +248,7 @@ const table: View = {
     }
   ],
   onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
+  scrollHeight: '60vh'
 };
 
 pageManager.register('commdity.list', {

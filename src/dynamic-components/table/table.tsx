@@ -182,7 +182,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     }): React.ReactNode | undefined => {
 
     if (expanding) {
-      return defaultDom;
+      return domList.table;
     }
 
     return (
@@ -232,7 +232,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     />
   ]
 
-
   // 点击事件
   let onRow: TableProps['onRow'] = (data: any, index: any) => {
     let event = {}
@@ -252,8 +251,9 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
-      vid: 'uid',
       height: scrollHeight || defaulScrollHeight,
+      debounceListRenderMS: 10000,
+      resetTopWhenDataChange: false
     });
   }, []);
 
@@ -276,7 +276,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     search: {
       labelWidth: 80,
     },
-    tableRender,
+    tableRender: tableRender,
     pagination: {
       onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef)
     },
