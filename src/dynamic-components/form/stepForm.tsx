@@ -178,11 +178,7 @@ StepForm.defaultProps = {
       resetText: '取消',
     },
   },
-  grid: true,
-  rowProps: { gutter: 8 },
-  size: 'large',
   submitTimeout: 2000,
-  width: '50%',
 };
 
 export const useStepsForm = (props: StepFormProps): [React.ReactNode, {}] => {

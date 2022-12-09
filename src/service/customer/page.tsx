@@ -4,6 +4,12 @@ import { customerStore } from './store';
 
 // 商品列表
 const table: View = {
+  mount(location, actionRef, formRef, configMap) {
+    configMap?.replace({
+      dataSource: () => customerStore.items,
+      loading: () => customerStore.loading,
+    })
+  },
   kind: 'table',
   rowKey: 'uid',
   columns: [
@@ -54,9 +60,10 @@ const table: View = {
       ],
     },
   },
-  moreMenuButton: (record) => [
+  tableMenu: (record) => [
     {
       kind: 'descriptions',
+      key: '1',
       collapse: true,
       dataSource: {
         id: '这是一段文本columns',
@@ -86,8 +93,7 @@ const table: View = {
   //             })
   //     }
   // },
-  dataSource: () => customerStore.items,
-  loading: () => customerStore.loading,
+
   onNext: (actionRef) => customerStore.next({ order: { version: 1 } }),
   onSubmit: (params) => customerStore.next({ order: { version: 1 } }),
 };

@@ -1,7 +1,7 @@
-import { ActionType, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
+import { ActionType, ProFormInstance, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import {
-  Button, Space, TablePaginationConfig
+  Button, FormInstance, Space
 } from 'antd';
 import type { Location } from 'history';
 import lodash from 'lodash';
@@ -11,32 +11,35 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
+import { randomKey } from '../helper';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
-import { menuButtonGroup, MenuButtonType } from './more';
+import { MenuButtonGroup, MenuButtonType } from './more';
 
-const defaulScrollHeight = 1000;
+let d: any = []
 
-export declare type TableMap = ProTableProps<any, any>
+for (let i = 0; i < 10000; i++) {
+  d.push({ "uid": i, "sub_title": "重庆市" + i, "value": 36, "type": 2 })
+}
 
-export declare type TableProps = TableMap & {
-  moreMenuButton?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
-  toolBarAction?: () => MenuButtonType[];
+
+const defaulScrollHeight = '52vh';
+
+export declare type TableProps = ProTableProps<any, any> & {
+  tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
+  toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   virtualList?: boolean;
   scrollHeight?: string | number; // 表格高度
   onNext?: (
+    params?: any,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
-    params?: { page: number; size: number },
   ) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
-  pagination?: Omit<TablePaginationConfig, 'total'> & {
-    total?: () => number | number;
-  };
-  expand?: ExpandedConfig;
   expanding?: boolean;
+  expand?: ExpandedConfig;
   // hook
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
@@ -55,6 +58,7 @@ export declare type TableProps = TableMap & {
   mount?: (
     location?: Location | undefined,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
+    formRef?: React.MutableRefObject<FormInstance | undefined>,
     configMap?: ObservableMap<any, any>
   ) => void;
   unMount?: (
@@ -83,8 +87,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 工具栏
     toolBarRender,
     // 按钮操作
-    moreMenuButton,
-    toolBarAction,
+    tableMenu,
+    toolBarMenu,
     footerButton,
     // 批量删除
     useBatchDelete,
@@ -98,21 +102,22 @@ export const Table: React.FC<TableProps> = observer((props) => {
     ...rest
   } = props;
 
-  const configMap = observable.map<any, any>({})
-
+  const [params, setParams] = useState({})
+  const configMap = observable.map({})
   // ref
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
 
   mount && mount(
-    location, actionRef, configMap
+    location, actionRef, formRef, configMap
   );
+
   // 页面挂载 销毁事件
   useEffect(() => {
     return () => unMount && unMount(
       location, actionRef, configMap
     );
   }, []);
-
 
   // 挂载 鼠标事件
   useEffect(() => {
@@ -136,18 +141,24 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onChange: onSelectChange,
   };
 
-  // 虚拟滚动
-  if (virtualList) {
-    const vComponents = useMemo(() => {
-      return VList({
-        height: scrollHeight || defaulScrollHeight,
-      });
-    }, []);
-    rest.components = vComponents;
-  }
-
-
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
+  // 加载更多按钮
+  const LoadMore: React.FC = () => {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Button
+          style={{ width: '350px' }}
+          key="loadMore"
+          onClick={() => onNext && onNext(actionRef)}
+        >
+          加载更多
+        </Button>
+      </div>
+    );
+  };
+
+  let paginationDom: any = null
 
   // 提示操作按钮
   const Footer: React.FC = () => {
@@ -174,7 +185,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
               >
                 <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
               </Button>
-            </>) : null}
+            </>) : paginationDom}
         </Space>
       </FooterToolbar>
     );
@@ -191,105 +202,120 @@ export const Table: React.FC<TableProps> = observer((props) => {
       return defaultDom;
     }
 
-    // 加载更多按钮
-    const LoadMore: React.FC = () => {
-      return (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          <Button
-            style={{ width: '350px' }}
-            key="loadMore"
-            onClick={() => onNext && onNext(actionRef)}
-          >
-            加载更多
-          </Button>
-        </div>
-      );
-    };
-
     return (
       <>
-        <div ref={virtualList ? setContainer : null}>{defaultDom}</div>
+        <div ref={(scrollHeight !== '100%') ? setContainer : null}>{defaultDom}</div>
         <LoadMore />
         <Footer />
       </>
     );
   };
 
-
   // 挂载行
   let newColumns = columns || [];
-
+  let [mT, setMT] = useState<(() => void)[][]>([])
   // 更多操作 按钮
   if (newColumns) {
-    const [optionColumnsHide, setOptionColumnsHide] = useState(false)
     newColumns = newColumns.filter((item) => item.dataIndex != 'more');
     newColumns.push({
       dataIndex: 'more',
       title: '操作',
       valueType: 'option',
       fixed: 'right',
-      hideInTable: optionColumnsHide,
       render: (text: any, record: any, index: any, action: any) => {
-        let buttons = moreMenuButton ? moreMenuButton(record, action) : []
-        buttons.length < 1 && setOptionColumnsHide(true)
-        let [dom, _] = menuButtonGroup(buttons)
-        !dom && setOptionColumnsHide(true)
+        let buttons = tableMenu ? tableMenu(record, action) : []
+        // buttons.length < 1 && setOptionColumnsHide(true)
+        // 生成菜单
+        const dom = (
+          <MenuButtonGroup
+            key={randomKey(5, { numbers: false })}
+            menuButtons={buttons}
+            gT={T => { mT[index] = T; setMT(mT) }}
+          />
+        )
+        // !dom && setOptionColumnsHide(true)
         return dom
       }
     })
   }
 
   // 工具栏操作
-  let [dom, _] = menuButtonGroup(toolBarAction ? toolBarAction() : [])
-  let toolBarActions = [dom]
+  let toolBarMenus = [
+    <MenuButtonGroup
+      key={randomKey(5, { numbers: false })}
+      menuButtons={toolBarMenu ? toolBarMenu() : []}
+    />
+  ]
+
+  // 虚拟滚动
+  const vComponents = useMemo(() => {
+    return VList({
+      vid: 'uid',
+      height: scrollHeight || defaulScrollHeight,
+    });
+  }, []);
 
 
-  let defaultConfig = {
+  let defaultConfig: TableProps = {
+    size: 'small',
     columns: newColumns,
+    components: vComponents,
     toolbar: {
-      actions: toolBarActions
+      actions: toolBarMenus
     },
+    editable: {
+      onSave: async (key, record) => {
+        console.log('editable onSave......', key, record)
+      },
+    },
+    expandable: {
+      ...expandModule(expand ? expand : null)
+    },
+    // search: {
+    //   labelWidth: 80,
+    // },
     pagination: {
-      onChange: (page: number, size: number) => onNext && onNext(actionRef, { page, size })
-    }
+      onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef)
+    },
+    onSubmit: (param) => onNext && onNext(param, actionRef),
+    onReset: () => props.onSubmit && props.onSubmit({}),
   }
 
   // 合并配置
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
 
+  // console.log('dataSource....', commdityAggregateStore.items);
+
+
   return (
     <ProTable
       // ref
       actionRef={actionRef}
-      // 搜索栏
-      search={{ labelWidth: 80 }}
-      onReset={() => props.onSubmit && props.onSubmit({})}
+      formRef={formRef}
       rowSelection={rowSelection}
-      // 扩展
-      expandable={expand && { ...expandModule(expand) }}
+      scroll={{ y: scrollHeight, x: "100%" }}
       tableRender={tableRender}
-      onRow={(record) => {
+      dataSource={d}
+      onRow={(record, index) => {
         return {
           onClick: (event) => onRowClick && onRowClick(event, record, actionRef),
-          onDoubleClick: (event) =>
-            onRowDoubleClick && onRowDoubleClick(event, record, actionRef),
+          onDoubleClick: (event) => typeof index == 'number' && mT[index][0](),
         };
       }}
+      pagination={false}
       {...rest}
     />
   );
 });
 
 Table.defaultProps = {
-  virtualList: false,
-  editable: {
-    type: 'multiple',
-  },
+  type: 'table',
+  virtualList: true,
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
-  useBatchDelete: true,
   options: { density: true, reload: false, fullScreen: false },
   columns: [],
+  useBatchDelete: true,
 };

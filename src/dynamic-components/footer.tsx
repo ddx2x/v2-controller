@@ -18,10 +18,11 @@ export type FooterToolbarProps = {
   prefixCls?: string;
   children?: React.ReactNode;
   routeContext: RouteContextType;
+  right?: boolean
 };
 
 export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
-  const { children, className, extra, style, renderContent, routeContext, ...restProps } = props;
+  const { children, className, extra, style, renderContent, routeContext, right, ...restProps } = props;
   const { getPrefixCls, getTargetContainer } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = props.prefixCls || getPrefixCls('pro');
   const baseClassName = `${prefixCls}-footer-bar`;
@@ -42,7 +43,7 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
 
   const dom = (
     <>
-      <div className={`${baseClassName}-left ${hashId}`}>{extra}</div>
+      <div className={`${baseClassName}-left ${hashId}`}>{extra}</div> 
       <div className={`${baseClassName}-right ${hashId}`}>{children}</div>
     </>
   );

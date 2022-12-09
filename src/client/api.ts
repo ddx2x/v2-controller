@@ -105,6 +105,8 @@ export class ObjectApi<T extends IObject = any> {
   }
 
   private parseResponse = (data: ObjectData | ObjectDataList[]): any => {
+    console.log(JSON.stringify(data));
+    
     if (!data) return;
 
     if (IObject.isObjectDataList(data)) {

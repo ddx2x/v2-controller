@@ -3,9 +3,9 @@ import { Link } from '@umijs/max';
 import { Button, Dropdown, MenuProps, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
-import React from 'react';
-import { DescriptionsProps, useDescriptions } from '../descriptions';
-import { FormProps, useForm } from '../form';
+import React, { useRef } from 'react';
+import { Descriptions, DescriptionsProps, DescriptionsRef } from '../descriptions';
+import { Form, FormProps, FormRef } from '../form';
 import { randomKey } from '../helper';
 
 export declare type MenuButton = {
@@ -16,7 +16,7 @@ export declare type MenuButton = {
 } | null
 
 // 更多按钮
-export declare type MenuButtonType = { collapse?: boolean, } & (
+export declare type MenuButtonType = { collapse?: boolean, key: string } & (
   | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
   | ({ kind: 'form' } & FormProps) // 表单
   | ({ kind: 'link' } & { link: string; title: string }) // 跳转
@@ -24,6 +24,7 @@ export declare type MenuButtonType = { collapse?: boolean, } & (
   | ({ kind: 'confirm' } & { title: string; text?: string; onClick?: ((e?: React.MouseEvent) => void) | undefined; }) // 确认框自定义操作
 )
 
+// 前置确认框
 type ConfirmButtonType = {
   onClick: ((e?: React.MouseEvent) => void) | undefined;
   title: string;
@@ -52,6 +53,8 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
   </Popconfirm>
 }
 
+
+// 下拉框
 export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
   const { items } = props
   return (
@@ -64,82 +67,85 @@ export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => 
   )
 }
 
-export const menuButtonGroup = (
-  buttons: MenuButtonType[] | undefined,
-  bt?: ButtonType,
-  bs?: ButtonSize
-): [dom: React.ReactNode, group: MenuButton[]] => {
-  if (!buttons) return [null, []]
+export declare type MenuButtonGroupProps = {
+  menuButtons: MenuButtonType[] | undefined,
+  buttonType?: ButtonType,
+  buttonSize?: ButtonSize
+  gT?: (T: (() => void)[]) => void
+}
 
-  let group = buttons.map((item) => {
+export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
+  const { menuButtons, buttonType, buttonSize, gT } = props
+  if (!menuButtons) return null
+
+  let labels: React.ReactNode[] = []
+  let collapseLabels: { label: React.ReactNode, key: string }[] = []
+  let T: (() => void)[] = []
+
+  menuButtons.forEach((item) => {
+    const key = randomKey(5, { numbers: true })
     const collapse = item.collapse || false
-    const rest = { key: randomKey(5, { numbers: false }), collapse }
-    const buttonType = collapse ? 'link' : bt || 'link'
-    const buttonSize = bs || 'small'
+    const bt = collapse ? 'link' : buttonType || 'link'
+    const bs = buttonSize || 'small'
 
-    if (item.kind == 'descriptions') {
-      const [descriptionDom] = useDescriptions({ ...item, buttonType, buttonSize });
-      return { label: descriptionDom, trigeer: () => { }, ...rest }
-    }
-    else if (item.kind == 'form') {
-      const [formDom] = useForm({ ...item, buttonType, buttonSize });
-      return { label: formDom, trigeer: () => { }, ...rest };
-    }
-    else if (item.kind == 'link') {
-      return {
-        label: (
-          <Button type={buttonType} size={buttonSize} block>
+    let label = (() => {
+      if (item.kind == 'descriptions') {
+        const descriptionsDomRef = useRef<DescriptionsRef>();
+        T.push(() => descriptionsDomRef.current?.open())
+        return (
+          <Descriptions ref={descriptionsDomRef} buttonType={bt} buttonSize={bs} {...item} />
+        )
+      }
+      if (item.kind == 'form') {
+        const formDomRef = useRef<FormRef>();
+        T.push(() => formDomRef.current?.open())
+        return (
+          <Form ref={formDomRef} buttonType={bt} buttonSize={bs} {...item} />
+        )
+      }
+      if (item.kind == 'link') {
+        T.push(() => { })
+        return (
+          <Button type={bt} size={bs} block>
             <Link to={item.link}>{item.title}</Link>
           </Button>
-        ),
-        trigeer: () => { },
-        ...rest
-      };
-    }
-    else if (item.kind == 'confirm') {
-      return {
-        label: (
+        )
+      }
+      if (item.kind == 'confirm') {
+        T.push(() => { })
+        return (
           <ConfirmButton
-            onClick={item.onClick} title={item.title} text={item.text}
-            buttonType={buttonType} buttonSize={buttonSize}
+            buttonType={bt} buttonSize={bs}
+            key={randomKey(5, { numbers: false })}
+            title={item.title} text={item.text}
+            onClick={item.onClick}
           />
-        ),
-        trigeer: () => item.onClick && item.onClick(),
-        ...rest
-      };
-    }
-    else if (item.kind == 'implement') {
-      return {
-        label: (
-          <Button type={buttonType} size={buttonSize} block onClick={item.onClick} >
+        )
+      }
+      if (item.kind == 'implement') {
+        T.push(() => item.onClick)
+        return (
+          <Button type={bt} size={bs} block onClick={item.onClick} >
             {item.title || '编辑'}
           </Button >
-        ),
-        trigeer: () => item.onClick && item.onClick(),
-        ...rest
-      };
-    }
-    else {
+        )
+      }
       return null
-    }
+    })()
+
+    label && collapse ?
+      collapseLabels.push({ label, key: randomKey(5, { numbers: false }) }) :
+      labels.push(label)
   })
 
-  let noCollapse = group.filter(
-    item => item && item.collapse == false
-  )
-  let inCollapse = group.filter(
-    item => item && item.collapse == true
-  ).map(
-    item => {
-      return item ? { label: item.label, key: item.key } : null
-    }
-  )
-  const dom = (
-    <Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
-      {noCollapse.map(item => item?.label || null)}
-      {inCollapse.length > 0 && <DropdownMenu items={inCollapse} />}
-    </Space>
-  )
+  gT && gT(T)
 
-  return [dom, group]
+  return (
+    (labels || collapseLabels) ?
+      (<Space align='center' style={{ overflowX: 'scroll', width: '100%' }}>
+        {labels.length > 0 && labels}
+        {collapseLabels.length > 0 && <DropdownMenu items={collapseLabels} />}
+      </Space>) :
+      null
+  )
 }

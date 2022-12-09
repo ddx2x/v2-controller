@@ -45,11 +45,11 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 10, sort: '{}' };
+    this.ctx = { page: 0, size: 1000, sort: '{}' };
   };
 
   @action next = async (query?: Query) => {
-    const { page, size, order } = !query ? this.ctx : query;
+    const { page, size, order, ...rest } = !query ? this.ctx : query;
     const sort = JSON.stringify(order);
 
     if (sort !== this.ctx.sort || (size && this.ctx.size !== size)) {
@@ -59,6 +59,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     if (!this.isLoaded.get()) {
       merge(this.ctx, { page, size, sort });
     }
+    merge(this.ctx, rest)
 
     this.api.list(undefined, this.ctx).then((items) => {
       items.forEach((object) => {

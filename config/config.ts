@@ -127,10 +127,5 @@ export default defineConfig({
     config.devServer.set('client', { webSocketTransport: 'ws' }).set('webSocketServer', 'ws');
 
     config.module.rule('raw-loader').test(`/\.ts$/i`).use('raw-loader').end();
-
-    // config.plugin('monaco-editor-webpack-plugin')
-    //   .use(new MonacoWebpackPlugin({
-    //     languages: ["json", "javascript", "typescript"]
-    //   }))
   },
 });

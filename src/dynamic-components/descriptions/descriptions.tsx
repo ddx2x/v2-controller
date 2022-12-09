@@ -10,13 +10,13 @@ import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
 
-export declare type DescriptionsActionRef = {
-  open?: () => void;
+export declare type DescriptionsRef = {
+  open: () => void;
 };
 
 export declare type DescriptionsItem = ProDescriptionsItemProps & {
@@ -26,7 +26,6 @@ export declare type DescriptionsItem = ProDescriptionsItemProps & {
 // https://next-procomponents.ant.design/components/descriptions
 
 export declare type DescriptionsProps = ProDescriptionsProps & {
-  pageActionRef?: React.MutableRefObject<DescriptionsActionRef | undefined>;
   modal?: 'Modal' | 'Drawer' | 'Page';
   title?: string;
   triggerText?: string;
@@ -48,9 +47,8 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
 };
 
 export const Descriptions = observer(
-  React.forwardRef((props: DescriptionsProps, ref) => {
+  React.forwardRef((props: DescriptionsProps, forwardRef) => {
     const {
-      pageActionRef,
       location,
       mount,
       unMount,
@@ -64,6 +62,13 @@ export const Descriptions = observer(
       dataSource,
       ...rest
     } = props;
+
+    useImperativeHandle(forwardRef, () => {
+      return {
+        open: () => showModal()
+      }
+    })
+
     // ref
     const actionRef = useRef<ActionType>();
 
@@ -84,7 +89,7 @@ export const Descriptions = observer(
 
     const triggerDom = () => {
       return (
-        <Button size={buttonSize} type={buttonType} block onClick={showModal}>
+        <Button size={buttonSize} type={buttonType} onClick={showModal}>
           {triggerText}
         </Button>
       );
@@ -164,7 +169,6 @@ Descriptions.defaultProps = {
   width: '48%',
 };
 
-export const useDescriptions = (props: DescriptionsProps) => {
-  const dom = <Descriptions {...props} />;
-  return [dom];
+export const useDescriptions = (props: DescriptionsProps): React.ReactNode => {
+  return <Descriptions {...props} />;
 };

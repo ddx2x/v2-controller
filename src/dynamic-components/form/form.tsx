@@ -4,14 +4,14 @@ import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from './valueTypeMap';
 
-export declare type ModalActionRefType = {
-  openModal: () => void;
+export declare type FormRef = {
+  open: () => void;
 };
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
@@ -35,6 +35,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
     location: Location | undefined,
     formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
   ) => void;
+  trigger?: () => void
 };
 
 export const Form = observer(
@@ -52,15 +53,16 @@ export const Form = observer(
       ...rest
     } = props;
 
-    // ref
-    React.useImperativeHandle(forwardRef, () => {
-      openModal: openModal;
-    });
+    useImperativeHandle(forwardRef, () => {
+      return {
+        open: () => showModal()
+      }
+    })
 
     const formRef = useRef<ProFormInstance>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-    const openModal = () => {
+    const showModal = () => {
       setModalVisible(true);
     };
 
@@ -69,9 +71,7 @@ export const Form = observer(
         mount(location, formRef);
       }
       return () => {
-        if (formRef && unMount) {
-          unMount(location, formRef);
-        }
+        if (formRef && unMount) { unMount(location, formRef); }
       };
     }, []);
 
@@ -100,11 +100,10 @@ export const Form = observer(
           formRef={formRef}
           // @ts-ignore
           trigger={
-            <Button size={buttonSize} type={buttonType} block onClick={openModal}>
+            <Button size={buttonSize} type={buttonType} block onClick={showModal}>
               {triggerText}
             </Button>
           }
-          ref={forwardRef}
           open={modalVisible}
           onOpenChange={setModalVisible}
           autoFocusFirstInput
@@ -137,7 +136,6 @@ Form.defaultProps = {
   columns: [],
 };
 
-export const useForm = (props: FormProps): [React.ReactNode] => {
-  const dom = <Form {...props} />;
-  return [dom];
+export const useForm = (props: FormProps): React.ReactNode => {
+  return <Form {...props} />;
 };

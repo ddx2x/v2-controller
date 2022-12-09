@@ -5,7 +5,7 @@ import { Table, TableProps } from '../table';
 
 export declare type ExpandRowProps = {
   record?: any;
-  onData: (record: any, index?: number, indent?: number, expanded?: boolean) => any;
+  onData?: (record: any, index?: number, indent?: number, expanded?: boolean) => any;
 } & { kind: 'table'; table: TableProps };
 
 export declare type ExpandedConfig = ExpandableConfig<any> & ExpandRowProps;
@@ -37,8 +37,9 @@ const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
 });
 
 // 扩展
-export const expandModule = (props: ExpandedConfig): ExpandableConfig<any> => {
-  const { kind, table, onData, record, ...rest } = props;
+export const expandModule = (config: ExpandedConfig | null): ExpandableConfig<any> => {
+  if (!config) return {}
+  const { kind, table, onData, record, ...rest } = config;
 
   return {
     expandedRowRender: (record) => (
