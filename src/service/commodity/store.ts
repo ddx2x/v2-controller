@@ -74,9 +74,31 @@ export const commdityAggregateStore = new CommdityAggregateStore(
   new DefaultWatchApi(),
 );
 
-export class BrandName extends IObject {}
+export class BrandName extends IObject { }
 export const brandNameApi = new ObjectApi<CommodityAggregate>({
   url: '/api/v1/brands',
-  objectConstructor: CommodityAggregate,
+  objectConstructor: BrandName,
   service: 'prod',
 });
+
+
+class BrandNameStore extends ObjectStore<BrandName> {
+  watchApi: WatchApi<BrandName, BrandNameStore>;
+  api: ObjectApi<BrandName>;
+  constructor(
+    api: ObjectApi<BrandName>,
+    watchApi: WatchApi<BrandName, BrandNameStore>,
+  ) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
+}
+
+export const watchApi = new ObjectWatchApi();
+
+export const brandNameStoreStore = new BrandNameStore(
+  brandNameApi,
+  // new DefaultWatchApi(),
+  watchApi,
+);

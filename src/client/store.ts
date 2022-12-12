@@ -15,6 +15,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract watchApi: WatchApi<T, ObjectStore<T>>;
 
   public limit: number = -1;
+  public count: number = 0; //返回的数据行
 
   private defers: Noop[] = [];
   private modifyEvtListeners: ModifyIObject<T>[] = [];
@@ -70,31 +71,34 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       merge(this.ctx, { page, size, sort });
     }
 
-    this.bindDataBuffersUpdater();
+    const disposer = this.bindDataBuffersUpdater();
 
-    this.api.list(undefined, this.ctx).then((res) => {
-      this.dataBuffers.push(...res);
-      let items = this.data.slice();
-      this.dataBuffers.forEach((object) => {
-        if (!object) return;
-        const { uid } = object;
-        const index = this.data.findIndex((item) => item.uid === uid);
-        const item = this.data[index];
-        const newItem = new this.api.objectConstructor(object);
-        if (!item) {
-          items.push(newItem);
-        } else {
-          items.splice(index, 1, newItem);
+    this.api.
+      page(this, undefined, this.ctx).
+      then((res) => {
+        this.dataBuffers.push(...res);
+        let items = this.data.slice();
+        this.dataBuffers.forEach((object) => {
+          if (!object) return;
+          const { uid } = object;
+          const index = this.data.findIndex((item) => item.uid === uid);
+          const item = this.data[index];
+          const newItem = new this.api.objectConstructor(object);
+          if (!item) {
+            items.push(newItem);
+          } else {
+            items.splice(index, 1, newItem);
+          }
+        });
+
+        if (this.ctx.size && this.data.length >= this.ctx.size) {
+          if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
         }
-      });
 
-      if (this.ctx.size && this.data.length >= this.ctx.size) {
-        if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
-      }
-
-      this.data.replace(items);
-      this.isLoaded.set(true);
-    });
+        this.data.replace(items);
+        this.isLoaded.set(true);
+      }).
+      finally(() => disposer())
   };
 
   @action load = async (query?: Query) => {

@@ -21,7 +21,7 @@ const defaulScrollHeight = '52vh';
 export declare type TableProps = ProTableProps<any, any> & {
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolBarMenu?: () => MenuButtonType[];
-  footerButton?: () => MenuButtonType[];
+  footerButton?: () =>  MenuButtonType[];
   scrollHeight?: string | number; // 表格高度
   onNext?: (
     params?: any,

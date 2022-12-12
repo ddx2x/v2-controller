@@ -3,6 +3,7 @@ import { stringify } from 'querystring';
 import { apiManager } from './manager';
 import type { IObjectConstructor } from './object';
 import { IObject } from './object';
+import { ObjectStore } from './store';
 import { autobind } from './utils';
 
 export interface JsonApiError {
@@ -25,6 +26,7 @@ export interface ObjectData {
 }
 
 export interface ObjectDataList<T = ObjectData> extends ObjectData {
+  count?: number;
   items: T[];
 }
 
@@ -68,6 +70,7 @@ export class ObjectApi<T extends IObject = any> {
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
   public version: number = 0;
+  public store: ObjectStore<T> | undefined;
 
   static parseApi(url = '') {
     const [apiBase, apiPrefix, apiVersion, apiResource] = url.match(ObjectApi.matcher) || [];
@@ -104,7 +107,7 @@ export class ObjectApi<T extends IObject = any> {
     return stringify({ item: '/' + resourcePath + '/' + version });
   }
 
-  private parseResponse = (data: ObjectData | ObjectDataList[]): any => {
+  private parseResponse = (data: ObjectData | ObjectDataList): any => {
     if (!data) return;
 
     if (IObject.isObjectDataList(data)) {
@@ -126,6 +129,14 @@ export class ObjectApi<T extends IObject = any> {
 
     return new this.objectConstructor(data);
   };
+
+  private parseResponsePage = (data: ObjectDataList): any => {
+    if (!data) return;
+    const { items, count } = data;
+    if (this.store != undefined) this.store.count = count || 0;
+    if (!items) return [];
+    return items.map((item: any) => new this.objectConstructor({ ...item }))
+  }
 
   static createLink(ref: IObjectApiLinkRef): string {
     const { apiPrefix, apiVersion, apiResource, service } = ref;
@@ -159,6 +170,11 @@ export class ObjectApi<T extends IObject = any> {
 
   list = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
+  };
+
+  page = async (store: ObjectStore<T>, parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
+    this.store = store;
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponsePage);
   };
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {

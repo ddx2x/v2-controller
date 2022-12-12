@@ -2,7 +2,7 @@ import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
-import { commdityAggregateStore, commdityStore } from './store';
+import { brandNameStoreStore, commdityAggregateStore, commdityStore } from './store';
 
 const eidt: FormProps = {
   triggerText: '编辑',
@@ -106,12 +106,32 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
     configMap?.replace({
-      // pagination: {
-      //   total: commdityAggregateStore.items.length
-      // },
-      pagination: false,
+      pagination: {
+        total: commdityAggregateStore.count,
+      },
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
+      columns: [
+        {
+          dataIndex: 'uid',
+          title: '商品标题',
+          hideInSearch: true,
+        },
+        {
+          dataIndex: 'sub_title',
+          title: '子标题',
+          hideInSearch: true,
+        },
+        {
+          dataIndex: 'brand_name',
+          title: '品牌',
+          filters: true,
+          onFilter: true,
+          ellipsis: true,
+          valueType: 'select',
+          valueEnum: brandNameStoreStore.items.map((item) => item.uid),
+        },
+      ],
     })
   },
   toolbar: {
@@ -136,29 +156,7 @@ const table: View = {
       title: '新增',
     },
   ],
-  columns: [
-    {
-      dataIndex: 'uid',
-      title: '商品标题',
-      // width: 150,
-      // sorter: true,
-    },
-    {
-      dataIndex: 'sub_title',
-      title: '子标题',
-      // width: 100,
-    },
-    {
-      dataIndex: 'brand_name',
-      title: '品牌',
-      filters: true,
-      onFilter: true,
-      ellipsis: true,
-      valueType: 'select',
-      valueEnum: {}
-      // valueEnum: getBrandName(),
-    },
-  ],
+
   expand: {
     kind: 'table',
     onData: (record: any) => commdityStore.api.list(record.uid),
@@ -168,6 +166,7 @@ const table: View = {
         {
           dataIndex: 'uid',
           title: 'uid',
+
         },
         {
           dataIndex: 'name',
@@ -248,7 +247,8 @@ const table: View = {
     }
   ],
   onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
-  scrollHeight: '60vh'
+  scrollHeight: '52vh',
+  // pagination: false,
 };
 
 pageManager.register('commdity.list', {
@@ -264,6 +264,12 @@ pageManager.register('commdity.list', {
       query: { order: { brand_name: 1 } },
       load: commdityAggregateStore.next,
       exit: commdityAggregateStore.reset,
+    },
+    {
+      store: brandNameStoreStore,
+      load: brandNameStoreStore.load,
+      watch: brandNameStoreStore.watch,
+      exit: brandNameStoreStore.reset,
     },
   ],
 });
