@@ -66,7 +66,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       this.reset();
     }
 
-    merge(this.ctx, rest)
+    // merge(this.ctx, rest)
     if (!this.isLoaded.get()) {
       merge(this.ctx, { page, size, sort });
     }

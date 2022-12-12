@@ -27,6 +27,8 @@ export declare type TableProps = ProTableProps<any, any> & {
   scrollHeight?: string | number; // 表格高度
   onNext?: (
     params?: any,
+    sort?: any,
+    filter?: any,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
   ) => void; // 虚拟滚动 加载数据
   // 批量删除
@@ -93,11 +95,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(location, actionRef, formRef, configMap);
-
+  mount && mount(location, actionRef, formRef, configMap)
   // 页面挂载 销毁事件
   useEffect(() => {
-    return () => unMount && unMount(location, actionRef, configMap);
+    return () => unMount && unMount(
+      location, actionRef, configMap)
   }, []);
 
   // 挂载 鼠标事件
@@ -111,7 +113,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
       document.body.style.overflow = 'visible';
     });
   });
-
 
   // 多选 批量删除
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -192,35 +193,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
-  // 挂载行
-  let newColumns = columns || [];
-  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
-  let [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
-  // 更多操作 按钮
-  if (newColumns) {
-    newColumns = newColumns.filter((item) => item.dataIndex != 'more');
-    newColumns.push({
-      dataIndex: 'more',
-      title: '操作',
-      valueType: 'option',
-      fixed: 'right',
-      hideInTable: optionColumnsHide,
-      render: (text: any, record: any, index: any, action: any) => {
-        let buttons = tableMenu ? tableMenu(record, action) : []
-        buttons.length < 1 && setOptionColumnsHide(true)
-        // 生成菜单
-        const dom = (
-          <MenuButtonGroup
-            key={randomKey(5, { numbers: false })}
-            menuButtons={buttons}
-            gT={T => { mT[index] = T; setMT(mT) }}
-          />
-        )
-        !dom && setOptionColumnsHide(true)
-        return dom
-      }
-    })
-  }
 
   // 工具栏操作
   let toolBarMenus = [
@@ -256,7 +228,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   let defaultConfig: TableProps = {
     onRow,
     size: 'small',
-    columns: newColumns,
     toolbar: {
       actions: toolBarMenus
     },
@@ -269,25 +240,63 @@ export const Table: React.FC<TableProps> = observer((props) => {
       ...expandModule(expand ? expand : null)
     },
     tableRender: tableRender,
-    pagination: {
-      onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef)
-    },
-    onSubmit: (param) => onNext && onNext(param, actionRef),
-    onReset: () => props.onSubmit && props.onSubmit({}),
   }
 
   // 合并配置
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
+
+  // 挂载行
+  let newColumns = rest['columns'] || columns || [];
+  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
+  let [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
+  // 更多操作 按钮
+  if (newColumns) {
+    newColumns = newColumns.filter((item: { dataIndex: string; }) => item.dataIndex != 'more');
+    newColumns.push({
+      dataIndex: 'more',
+      title: '操作',
+      valueType: 'option',
+      fixed: 'right',
+      hideInTable: optionColumnsHide,
+      render: (text: any, record: any, index: any, action: any) => {
+        let buttons = tableMenu ? tableMenu(record, action) : []
+        buttons.length < 1 && setOptionColumnsHide(true)
+        // 生成菜单
+        const dom = (
+          <MenuButtonGroup
+            key={randomKey(5, { numbers: false })}
+            menuButtons={buttons}
+            gT={T => { mT[index] = T; setMT(mT) }}
+          />
+        )
+        !dom && setOptionColumnsHide(true)
+        return dom
+      }
+    })
+  }
+
+
   lodash.merge(rest, {
     components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
     pagination: usePagination ? rest.pagination : false,
-    search: rest.search ? { labelWidth: 80 } : rest.search
+    search: rest.search ? { labelWidth: 80 } : rest.search,
+    columns: newColumns
   })
+
+  console.log('columns', newColumns);
+
 
   return (
     <ProTable
       // ref
+      columns={newColumns}
+      request={async (params, sort, filter) => {
+        console.log('request params, sort, filter........', params, sort, filter);
+        const { pageSize: size, current: page, ...prest } = params
+        onNext && onNext({ size, page, ...prest }, sort, filter, actionRef)
+        return { success: true }
+      }}
       actionRef={actionRef}
       formRef={formRef}
       rowSelection={rowSelection}

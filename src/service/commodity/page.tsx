@@ -116,33 +116,38 @@ const table: View = {
         {
           dataIndex: 'uid',
           title: '商品标题',
+          hideInTable: true,
           hideInSearch: true,
+          // editable: false
         },
         {
           dataIndex: 'sub_title',
           title: '子标题',
           hideInSearch: true,
+          editable: false
         },
         {
           dataIndex: 'sale_channels',
           title: '销售渠道',
+          // valueType: 'select',
           hideInSearch: true,
           render: (text: number[], record: CommodityAggregate, _: any, action: ActionType) => {
             const options = text.map(item => {
               return { value: item === 1 ? "线上" : "线下" }
             });
             return [
-              < Select
+              <Select
                 mode="multiple"
                 defaultValue={options}
                 options={options}
                 onChange={(item) => {
-                  const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
-                  commdityAggregateStore.
-                    update(record, partial).
-                    catch((e) => {
-                      action.reload(true);
-                    })
+                  // const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
+                  action.reload()
+                  // commdityAggregateStore.
+                  //   update(record, partial).
+                  //   catch((e) => {
+                  //     action.reload(true);
+                  //   })
                 }}
               />
             ]
@@ -160,7 +165,9 @@ const table: View = {
         },
       ],
     })
+    return configMap
   },
+
   usePagination: true,
   toolbar: {
     title: '商品列表',
@@ -196,14 +203,18 @@ const table: View = {
           title: 'uid',
           hideInSearch: true,
           hideInTable: true,
+
         },
         {
           dataIndex: 'name',
+          valueType: 'select',
           title: '单品名称',
+          editable: false,
         },
         {
           dataIndex: 'price',
           title: '价格',
+          editable: false,
         },
         {
           dataIndex: 'stock',
@@ -258,8 +269,7 @@ const table: View = {
     },
     {
       kind: 'implement',
-      key: 't5',
-      collapse: true,
+      collapse: false,
       tag: '表格编辑',
       title: '表格编辑',
       onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
@@ -286,7 +296,7 @@ pageManager.register('commdity.list', {
   stores: [
     {
       store: commdityAggregateStore,
-      query: { order: { brand_name: 1 } },
+      // query: { order: { brand_name: 1 } },
       load: commdityAggregateStore.next,
       exit: commdityAggregateStore.reset,
     },
