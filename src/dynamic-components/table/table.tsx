@@ -16,19 +16,20 @@ import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButtonGroup, MenuButtonType } from './more';
 
-const defaulScrollHeight = '52vh';
+const defaulScrollHeight = '500px';
 
 export declare type TableProps = ProTableProps<any, any> & {
+  useBatchDelete?: boolean; // 开启批量删除
+  usePagination?: boolean; // 开启分页
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolBarMenu?: () => MenuButtonType[];
-  footerButton?: () =>  MenuButtonType[];
+  footerButton?: () => MenuButtonType[];
   scrollHeight?: string | number; // 表格高度
   onNext?: (
     params?: any,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
   ) => void; // 虚拟滚动 加载数据
   // 批量删除
-  useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   expanding?: boolean;
   expand?: ExpandedConfig;
@@ -57,6 +58,9 @@ export declare type TableProps = ProTableProps<any, any> & {
 export const Table: React.FC<TableProps> = observer((props) => {
 
   let {
+    // 批量删除
+    useBatchDelete,
+    usePagination,
     // 挂载
     location,
     mount,
@@ -75,8 +79,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     tableMenu,
     toolBarMenu,
     footerButton,
-    // 批量删除
-    useBatchDelete,
     batchDelete,
     // 鼠标事情
     onRowEvent,
@@ -91,15 +93,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(
-    location, actionRef, formRef, configMap
-  );
+  mount && mount(location, actionRef, formRef, configMap);
 
   // 页面挂载 销毁事件
   useEffect(() => {
-    return () => unMount && unMount(
-      location, actionRef, configMap
-    );
+    return () => unMount && unMount(location, actionRef, configMap);
   }, []);
 
   // 挂载 鼠标事件
@@ -182,13 +180,13 @@ export const Table: React.FC<TableProps> = observer((props) => {
     }): React.ReactNode | undefined => {
 
     if (expanding) {
-      return domList.table;
+      return defaultDom;
     }
 
     return (
       <>
         <div ref={(scrollHeight !== '100%') ? setContainer : null}>{defaultDom}</div>
-        <LoadMore />
+        {!usePagination && <LoadMore />}
         <Footer />
       </>
     );
@@ -237,16 +235,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
     let event = {}
     onRowEvent && onRowEvent.forEach((item) => {
       event[item.mouseEvent] = () => {
-
         if (typeof index == 'number') {
-          console.log('index', index, item.tag, mT[index].filter(m => m.tag == item.tag)[0]);
-          mT[index].filter(m => m.tag == item.tag)[0].func()
+          const voidFs = mT[index].filter(m => m.tag == item.tag)
+          voidFs.length > 0 && voidFs[0].func()
         }
       }
     })
     return event
   }
-
 
   // 虚拟滚动
   const vComponents = useMemo(() => {
@@ -261,7 +257,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onRow,
     size: 'small',
     columns: newColumns,
-    components: vComponents,
     toolbar: {
       actions: toolBarMenus
     },
@@ -272,9 +267,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     },
     expandable: {
       ...expandModule(expand ? expand : null)
-    },
-    search: {
-      labelWidth: 80,
     },
     tableRender: tableRender,
     pagination: {
@@ -287,6 +279,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
   // 合并配置
   lodash.merge(rest, defaultConfig)
   lodash.merge(rest, Object.fromEntries(configMap))
+  lodash.merge(rest, {
+    components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
+    pagination: usePagination ? rest.pagination : false,
+    search: rest.search ? { labelWidth: 80 } : rest.search
+  })
 
   return (
     <ProTable
@@ -301,11 +298,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
 });
 
 Table.defaultProps = {
-  type: 'table',
+  useBatchDelete: true,
+  usePagination: false,
+
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
   options: { density: true, reload: false, fullScreen: false },
   columns: [],
-  useBatchDelete: true,
 };

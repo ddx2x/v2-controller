@@ -134,6 +134,7 @@ const table: View = {
       ],
     })
   },
+  usePagination: true,
   toolbar: {
     title: '商品列表',
   },
@@ -156,12 +157,12 @@ const table: View = {
       title: '新增',
     },
   ],
-
   expand: {
     kind: 'table',
     onData: (record: any) => commdityStore.api.list(record.uid),
     table: {
       rowKey: 'uid',
+      search: false,
       columns: [
         {
           dataIndex: 'uid',
@@ -247,7 +248,6 @@ const table: View = {
     }
   ],
   onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
-  scrollHeight: '52vh',
   // pagination: false,
 };
 
