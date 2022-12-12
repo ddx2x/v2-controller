@@ -1,8 +1,9 @@
 import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
-import { message } from 'antd';
-import { brandNameStoreStore, commdityAggregateStore, commdityStore } from './store';
+import { ActionType } from '@ant-design/pro-components';
+import { message, Select } from 'antd';
+import { brandNameStoreStore, commdityAggregateStore, commdityStore, CommodityAggregate } from './store';
 
 const eidt: FormProps = {
   triggerText: '编辑',
@@ -86,15 +87,15 @@ const detail: DescriptionsProps = {
       title: '操作',
       valueType: 'option',
       render: () => [
-        <a target="_blank" rel="noopener noreferrer" key="link">
-          链路
-        </a>,
-        <a target="_blank" rel="noopener noreferrer" key="warning">
-          报警
-        </a>,
-        <a target="_blank" rel="noopener noreferrer" key="view">
-          查看
-        </a>,
+        // <a target="_blank" rel="noopener noreferrer" key="link">
+        //   链路
+        // </a>,
+        // <a target="_blank" rel="noopener noreferrer" key="warning">
+        //   报警
+        // </a>,
+        // <a target="_blank" rel="noopener noreferrer" key="view">
+        //   查看
+        // </a>,
       ],
     },
   ],
@@ -123,13 +124,39 @@ const table: View = {
           hideInSearch: true,
         },
         {
+          dataIndex: 'sale_channels',
+          title: '销售渠道',
+          hideInSearch: true,
+          render: (text: number[], record: CommodityAggregate, _: any, action: ActionType) => {
+            const options = text.map(item => {
+              return { value: item === 1 ? "线上" : "线下" }
+            });
+            return [
+              < Select
+                mode="multiple"
+                defaultValue={options}
+                options={options}
+                onChange={(item) => {
+                  const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
+                  commdityAggregateStore.
+                    update(record, partial).
+                    catch((e) => {
+                      action.reload(true);
+                    })
+                }}
+              />
+            ]
+          },
+        },
+        {
           dataIndex: 'brand_name',
           title: '品牌',
           filters: true,
           onFilter: true,
           ellipsis: true,
           valueType: 'select',
-          valueEnum: brandNameStoreStore.items.map((item) => item.uid),
+          valueEnum: brandNameStoreStore.items.map(
+            (item) => item.uid),
         },
       ],
     })
@@ -161,21 +188,18 @@ const table: View = {
     kind: 'table',
     onData: (record: any) => commdityStore.api.list(record.uid),
     table: {
+      options: false,
       rowKey: 'uid',
-      search: false,
       columns: [
         {
           dataIndex: 'uid',
           title: 'uid',
-
+          hideInSearch: true,
+          hideInTable: true,
         },
         {
           dataIndex: 'name',
-          title: '名称',
-        },
-        {
-          dataIndex: 'sale_channels',
-          title: '销售渠道',
+          title: '单品名称',
         },
         {
           dataIndex: 'price',
@@ -248,6 +272,7 @@ const table: View = {
     }
   ],
   onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
+  scrollHeight: '52vh',
   // pagination: false,
 };
 

@@ -39,10 +39,11 @@ class CommdityStore extends ObjectStore<Commodity> {
 export const objectWatchApi = new ObjectWatchApi();
 export const commdityStore = new CommdityStore(commdityApi, objectWatchApi);
 
-class CommodityAggregate extends IObject {
+export class CommodityAggregate extends IObject {
   sub_title?: string;
   image?: string;
   brand_name?: string;
+  sale_channels?: number[];
 
   constructor(data: CommodityAggregate) {
     super(data);

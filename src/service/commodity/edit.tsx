@@ -61,6 +61,7 @@ export const editView: View = {
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
+    
     steps: [
         { title: '基本信息' },
         { title: '交付设置' },
