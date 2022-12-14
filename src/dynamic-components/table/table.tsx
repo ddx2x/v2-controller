@@ -252,7 +252,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 更多操作 按钮
   newColumns = newColumns.filter((item: { dataIndex: string; }) => item.dataIndex != 'more');
-  newColumns.push({
+  const moreColumns = {
     dataIndex: 'more',
     title: '操作',
     valueType: 'option',
@@ -272,8 +272,16 @@ export const Table: React.FC<TableProps> = observer((props) => {
       !dom && setOptionColumnsHide(true)
       return dom
     }
-  })
+  };
 
+  newColumns.push(moreColumns);
+
+  merge(rest, {
+    components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
+    pagination: usePagination ? rest.pagination : false,
+    search: rest.search ? { labelWidth: 80 } : rest.search,
+    columns: newColumns
+  })
 
   async function request(params: any, sort: {}, filter: {}) {
     const { pageSize: size, current: current, ...more } = params
@@ -283,13 +291,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, actionRef);
     return response
   }
-
-  merge(rest, {
-    components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
-    pagination: usePagination ? rest.pagination : false,
-    search: rest.search ? { labelWidth: 80 } : rest.search,
-    columns: newColumns
-  })
 
   return (
     <ProTable

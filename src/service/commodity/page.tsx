@@ -126,28 +126,8 @@ const table: View = {
         {
           dataIndex: 'sale_channels',
           title: '销售渠道',
+          valueType: "checkbox",
           hideInSearch: true,
-          // render: (text: number[], record: CommodityAggregate, _: any, action: ActionType) => {
-          //   const options = text.map(item => {
-          //     return { value: item === 1 ? "线上" : "线下" }
-          //   });
-          //   return [
-          //     <Select
-          //       mode="multiple"
-          //       defaultValue={options}
-          //       options={options}
-          //       onChange={(item) => {
-          //         // const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
-          //         action.reload()
-          //         // commdityAggregateStore.
-          //         //   update(record, partial).
-          //         //   catch((e) => {
-          //         //     action.reload(true);
-          //         //   })
-          //       }}
-          //     />
-          //   ]
-          // },
         },
         {
           dataIndex: 'brand_name',
@@ -168,17 +148,6 @@ const table: View = {
     title: '商品列表',
   },
   toolBarMenu: () => [
-    {
-      kind: 'descriptions',
-      tag: '详情',
-      ...detail,
-    },
-    {
-      kind: 'form',
-      tag: '编辑',
-      collapse: true,
-      ...eidt
-    },
     {
       kind: 'link',
       tag: '新增',
@@ -265,8 +234,8 @@ const table: View = {
     {
       kind: 'implement',
       collapse: false,
-      tag: '表格编辑',
-      title: '表格编辑',
+      tag: '编辑',
+      title: '编辑',
       onClick(e) { record.uid && action?.startEditable?.(record?.uid) },
     },
   ],
@@ -276,8 +245,8 @@ const table: View = {
       tag: '详情'
     }
   ],
-  onNext: (params, actionRef) => commdityAggregateStore.next({ limit: { page: 0, size: 10 }, sort: { brand_name: 1 }, ...params }),
-  scrollHeight: '52vh',
+  onNext: (params) => commdityAggregateStore.next({ limit: { page: 0, size: 10 }, sort: { brand_name: 1 }, ...params }),
+  // scrollHeight: '52vh',
   // pagination: false,
 };
 
