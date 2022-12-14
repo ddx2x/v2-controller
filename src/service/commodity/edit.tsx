@@ -149,7 +149,7 @@ pageManager.register('commdity.list.add', {
         container: {
             keepAlive: true,
             header: {
-                title: '商品新增',
+                title: '单品新增',
             },
         }
     },
@@ -191,7 +191,7 @@ pageManager.register('commdity.list.edit', {
         container: {
             keepAlive: false,
             header: {
-                title: '商品编辑',
+                title: '单品编辑',
             },
         }
     },
@@ -199,4 +199,45 @@ pageManager.register('commdity.list.edit', {
 });
 
 
+
+export const aggregateAddView: View = {
+    kind: 'stepForm',
+    mount: (location, formRef) => {
+        console.log('location?.search', location?.search, formRef);
+        let data = location?.search.split("?")[1] || "";
+        console.log("parse ", parse(data));
+        location?.search &&
+            formRef.current?.setFieldsValue({})
+    },
+
+    unMount: (location, formRef) => {
+        formRef.current?.resetFields()
+    },
+
+    steps: steps,
+    columns: [
+        [
+            commodityName,
+            commodityType,
+            salesChannels,
+            salesModel,
+            commodityPrice,
+        ],
+        [deliveryMethod],
+        [],
+    ],
+};
+
+pageManager.register('commdity.list.aggregate_add', {
+    page: {
+        view: [aggregateAddView],
+        container: {
+            keepAlive: false,
+            header: {
+                title: '商品添加',
+            },
+        }
+    },
+    stores: [],
+});
 

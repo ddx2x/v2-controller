@@ -33,7 +33,7 @@ export default [
         component: './dynamic-view',
         routes: [
           {
-            name: '商品新增',
+            name: '单品新增',
             path: '/commdity/list/add',
             icon: 'setting',
             component: './dynamic-view',
@@ -41,7 +41,7 @@ export default [
             hideInMenu: true,
           },
           {
-            name: '商品编辑',
+            name: '单品编辑',
             path: '/commdity/list/edit',
             icon: 'setting',
             component: './dynamic-view',
@@ -50,7 +50,7 @@ export default [
           },
           {
             name: '商品编辑',
-            path: '/commdity/list/aggregate_edit',
+            path: '/commdity/list/aggregate_add',
             icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/commdity/list'],

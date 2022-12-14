@@ -65,7 +65,7 @@ const table: View = {
     {
       kind: 'link',
       tag: '新增',
-      link: `/commdity/list/add`,
+      link: `/commdity/list/aggregate_add`,
       title: '新增',
     },
   ],
@@ -109,10 +109,18 @@ const table: View = {
         },
         {
           kind: 'link',
-          collapse: true,
+          // collapse: true,
           link: `/commdity/list/edit` + `?` + stringify({ uid: record.uid }),
           tag: '编辑',
           title: '编辑',
+        },
+      ],
+      toolBarMenu: () => [
+        {
+          kind: 'link',
+          tag: '新增',
+          link: `/commdity/list/add`,
+          title: '新增',
         },
       ],
     },
