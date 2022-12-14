@@ -92,11 +92,10 @@ export class BrandNameStore extends ObjectStore<BrandName> {
     this.watchApi = watchApi;
   }
 
-  getOptions() {
-    const res = Object.fromEntries(this.items.map(item => ({ [item.uid]: { text: item.uid } })));
-    console.log("get options", res);
-
-    return res
+  selectOptions() {
+    return this.items.reduce((accumulator, value) => {
+      return { ...accumulator, [value.uid]: { text: value.uid } };
+    }, {});
   }
 }
 
