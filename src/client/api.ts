@@ -44,17 +44,34 @@ export declare type SearchQuery = {
 
 export declare type Parameter = string | number;
 
+const isObject = (object: Object) => {
+  return object != null && typeof object === "object";
+};
+
+export const isDeepEqual = (object1: Object, object2: Object) => {
+  const objKeys1 = Object.keys(object1);
+  const objKeys2 = Object.keys(object2);
+  if (objKeys1.length !== objKeys2.length) return false;
+  for (var key of objKeys1) {
+    const value1 = object1[key];
+    const value2 = object2[key];
+    const isObjects = isObject(value1) && isObject(value2);
+    if ((isObjects && !isDeepEqual(value1, value2)) ||
+      (!isObjects && value1 !== value2)
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export declare type Query = {
-  id?: string;
-  page?: number;
-  size?: number;
-  order?: { [key: string]: any };
-  sort?: string;
-  resourceVersion?: number;
-  timeoutSeconds?: number;
-  watch?: boolean | number;
-  continue?: string; // might be used with ?limit from second reques
-  path?: string; // label update datastructure field
+  limit?: {
+    page: number;
+    size: number;
+  },
+  sort?: { [key: string]: any };
+  filter?: { [key: string]: any };
   [key: string]: any;
 };
 
@@ -143,7 +160,7 @@ export class ObjectApi<T extends IObject = any> {
     return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
   }
 
-  searchUrl = (query?: Partial<Query>) => {
+  searchUrl = (query?: Partial<SearchQuery>) => {
     const { apiPrefix, apiVersion, apiResource } = this;
     const service = 'search';
     const resourcePath = ObjectApi.createLink({
@@ -157,23 +174,23 @@ export class ObjectApi<T extends IObject = any> {
 
   getUrl = (parameter?: Parameter, query?: Partial<Query>, op?: string) => {
     const { service, apiPrefix, apiVersion, apiResource } = this;
-    let resourcePath = ObjectApi.createLink({
-      service,
-      apiPrefix,
-      apiVersion,
-      apiResource,
-    });
+    let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
+    let obj = {};
+    if (query?.limit) obj["limit"] = JSON.stringify(query.limit)
+    if (query?.sort) obj["sort"] = JSON.stringify(query.sort)
+    if (query?.filter) obj["filter"] = JSON.stringify(query.filter)
+
     if (parameter) resourcePath = resourcePath + '/' + parameter;
-    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(query) : '');
-    return '/' + resourcePath + (query ? `?` + stringify(query) : '');
+    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(obj) : '');
+
+    return '/' + resourcePath + (query ? `?` + stringify(obj) : '');
   };
 
   list = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
-  page = async (store: ObjectStore<T>, parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
-    this.store = store;
+  page = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponsePage);
   };
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import type { ObjectApi, Query, SearchQuery } from './api';
+import { isDeepEqual, ObjectApi, Query, SearchQuery } from './api';
 import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -46,7 +46,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     this.data.clear();
     this.isLoaded.set(false);
-    this.ctx = { page: 0, size: 500, sort: '{}' };
+    this.ctx = { limit: { page: 0, size: 1 }, sort: {} };
   };
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
@@ -59,46 +59,51 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   };
 
   @action next = async (query?: Query) => {
-    const { page, size, order, ...rest } = !query ? this.ctx : query;
-    const sort = JSON.stringify(order);
+    const { limit, sort, filter, ...rest } = !query ? this.ctx : query;
+    if (limit === undefined || sort === undefined) return;
 
-    if (sort !== this.ctx.sort || (size && this.ctx.size !== size)) {
+    if ((!isDeepEqual(sort, this.ctx.sort || {})) ||
+      (limit.size != this.ctx.limit?.size) ||
+      (
+        filter === undefined || !isDeepEqual(filter, this.ctx.filter || {})
+      )) {
       this.reset();
     }
 
-    // merge(this.ctx, rest)
-    if (!this.isLoaded.get()) {
-      merge(this.ctx, { page, size, sort });
-    }
+    merge(this.ctx, { limit, sort, filter }, rest)
 
     const disposer = this.bindDataBuffersUpdater();
+    this.api.store = this;
 
     this.api.
-      page(this, undefined, this.ctx).
+      page(undefined, this.ctx).
       then((res) => {
         this.dataBuffers.push(...res);
         let items = this.data.slice();
-        this.dataBuffers.forEach((object) => {
-          if (!object) return;
-          const { uid } = object;
-          const index = this.data.findIndex((item) => item.uid === uid);
-          const item = this.data[index];
-          const newItem = new this.api.objectConstructor(object);
-          if (!item) {
-            items.push(newItem);
-          } else {
-            items.splice(index, 1, newItem);
-          }
-        });
-
+        this.dataBuffers.clear().
+          forEach(
+            (object) => {
+              if (!object) return;
+              const { uid } = object;
+              const index = this.data.findIndex((item) => item.uid === uid);
+              const item = this.data[index];
+              const newItem = new this.api.objectConstructor(object);
+              if (!item) {
+                items.push(newItem);
+              } else {
+                items.splice(index, 1, newItem);
+              }
+            });
         if (this.ctx.size && this.data.length >= this.ctx.size) {
-          if (this.ctx.page != undefined) merge(this.ctx, { page: this.data.length / this.ctx.size });
+          if (this.ctx.page != undefined) merge(this.ctx, { page: Math.ceil(this.data.length / this.ctx.size) });
         }
 
         this.data.replace(items);
         this.isLoaded.set(true);
       }).
-      finally(() => disposer())
+      finally(() =>
+        disposer()
+      )
   };
 
   @action load = async (query?: Query) => {
