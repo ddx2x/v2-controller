@@ -1,9 +1,8 @@
 import { DescriptionsProps, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
-import { ActionType } from '@ant-design/pro-components';
-import { message, Select } from 'antd';
-import { brandNameStoreStore, commdityAggregateStore, commdityStore, CommodityAggregate } from './store';
+import { message } from 'antd';
+import { brandNameStoreStore, commdityAggregateStore, commdityStore } from './store';
 
 const eidt: FormProps = {
   triggerText: '编辑',
@@ -115,10 +114,8 @@ const table: View = {
       columns: [
         {
           dataIndex: 'uid',
-          title: '商品标题',
-          hideInTable: true,
+          title: '商品标题(SPU)',
           hideInSearch: true,
-          // editable: false
         },
         {
           dataIndex: 'sub_title',
@@ -129,29 +126,28 @@ const table: View = {
         {
           dataIndex: 'sale_channels',
           title: '销售渠道',
-          // valueType: 'select',
           hideInSearch: true,
-          render: (text: number[], record: CommodityAggregate, _: any, action: ActionType) => {
-            const options = text.map(item => {
-              return { value: item === 1 ? "线上" : "线下" }
-            });
-            return [
-              <Select
-                mode="multiple"
-                defaultValue={options}
-                options={options}
-                onChange={(item) => {
-                  // const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
-                  action.reload()
-                  // commdityAggregateStore.
-                  //   update(record, partial).
-                  //   catch((e) => {
-                  //     action.reload(true);
-                  //   })
-                }}
-              />
-            ]
-          },
+          // render: (text: number[], record: CommodityAggregate, _: any, action: ActionType) => {
+          //   const options = text.map(item => {
+          //     return { value: item === 1 ? "线上" : "线下" }
+          //   });
+          //   return [
+          //     <Select
+          //       mode="multiple"
+          //       defaultValue={options}
+          //       options={options}
+          //       onChange={(item) => {
+          //         // const partial: Partial<CommodityAggregate> = { sale_channels: [1] };
+          //         action.reload()
+          //         // commdityAggregateStore.
+          //         //   update(record, partial).
+          //         //   catch((e) => {
+          //         //     action.reload(true);
+          //         //   })
+          //       }}
+          //     />
+          //   ]
+          // },
         },
         {
           dataIndex: 'brand_name',
@@ -160,8 +156,7 @@ const table: View = {
           onFilter: true,
           ellipsis: true,
           valueType: 'select',
-          valueEnum: brandNameStoreStore.items.map(
-            (item) => item.uid),
+          valueEnum: brandNameStoreStore.selectOptions(),
         },
       ],
     })
@@ -230,8 +225,8 @@ const table: View = {
         },
         {
           kind: 'implement',
-          tag: '表格编辑',
-          title: '表格编辑',
+          tag: '编辑',
+          title: '编辑',
           onClick() {
             record.uid && action?.startEditable?.(record?.uid);
           },
@@ -281,7 +276,7 @@ const table: View = {
       tag: '详情'
     }
   ],
-  onNext: (params, actionRef) => commdityAggregateStore.next({ order: { brand_name: 1 }, ...params }),
+  onNext: (params, actionRef) => commdityAggregateStore.next({ limit: { page: 0, size: 10 }, sort: { brand_name: 1 }, ...params }),
   scrollHeight: '52vh',
   // pagination: false,
 };
@@ -296,7 +291,7 @@ pageManager.register('commdity.list', {
   stores: [
     {
       store: commdityAggregateStore,
-      // query: { order: { brand_name: 1 } },
+      query: { limit: { page: 0, size: 10 }, sort: { brand_name: 1 } },
       load: commdityAggregateStore.next,
       exit: commdityAggregateStore.reset,
     },

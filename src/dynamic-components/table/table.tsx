@@ -4,7 +4,7 @@ import {
   Button, FormInstance, Space
 } from 'antd';
 import type { Location } from 'history';
-import lodash from 'lodash';
+import { merge } from 'lodash';
 import { observable, ObservableMap } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -90,12 +90,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
     ...rest
   } = props;
 
-  const configMap = observable.map({})
-  // ref
+  const configMap = observable.map({});
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
   mount && mount(location, actionRef, formRef, configMap)
+
   // 页面挂载 销毁事件
   useEffect(() => {
     return () => unMount && unMount(
@@ -195,7 +195,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
 
   // 工具栏操作
-  let toolBarMenus = [
+  const toolBarMenus = [
     <MenuButtonGroup
       key={randomKey(5, { numbers: false })}
       menuButtons={toolBarMenu ? toolBarMenu() : []}
@@ -203,13 +203,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
   ]
 
   // 点击事件
-  let onRow: TableProps['onRow'] = (data: any, index: any) => {
+  const onRow: TableProps['onRow'] = (data: any, index: any) => {
     let event = {}
     onRowEvent && onRowEvent.forEach((item) => {
       event[item.mouseEvent] = () => {
         if (typeof index == 'number') {
-          const voidFs = mT[index].filter(m => m.tag == item.tag)
-          voidFs.length > 0 && voidFs[0].func()
+          mT[index].filter(m => m.tag == item.tag).forEach(f => f.func())
         }
       }
     })
@@ -225,16 +224,14 @@ export const Table: React.FC<TableProps> = observer((props) => {
     });
   }, []);
 
-  let defaultConfig: TableProps = {
+  const defaultConfig: Partial<TableProps> = {
     onRow,
-    size: 'small',
+    // size: 'small',
     toolbar: {
       actions: toolBarMenus
     },
     editable: {
-      onSave: async (key, record) => {
-        console.log('editable onSave......', key, record)
-      },
+      onSave: async (key, record) => { },
     },
     expandable: {
       ...expandModule(expand ? expand : null)
@@ -243,60 +240,61 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   // 合并配置
-  lodash.merge(rest, defaultConfig)
-  lodash.merge(rest, Object.fromEntries(configMap))
+  merge(rest, defaultConfig)
+  merge(rest, Object.fromEntries(configMap))
+
+
+  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
+  const [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
 
   // 挂载行
   let newColumns = rest['columns'] || columns || [];
-  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
-  let [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
+
   // 更多操作 按钮
-  if (newColumns) {
-    newColumns = newColumns.filter((item: { dataIndex: string; }) => item.dataIndex != 'more');
-    newColumns.push({
-      dataIndex: 'more',
-      title: '操作',
-      valueType: 'option',
-      fixed: 'right',
-      hideInTable: optionColumnsHide,
-      render: (text: any, record: any, index: any, action: any) => {
-        let buttons = tableMenu ? tableMenu(record, action) : []
-        buttons.length < 1 && setOptionColumnsHide(true)
-        // 生成菜单
-        const dom = (
-          <MenuButtonGroup
-            key={randomKey(5, { numbers: false })}
-            menuButtons={buttons}
-            gT={T => { mT[index] = T; setMT(mT) }}
-          />
-        )
-        !dom && setOptionColumnsHide(true)
-        return dom
-      }
-    })
+  newColumns = newColumns.filter((item: { dataIndex: string; }) => item.dataIndex != 'more');
+  newColumns.push({
+    dataIndex: 'more',
+    title: '操作',
+    valueType: 'option',
+    fixed: 'right',
+    hideInTable: optionColumnsHide,
+    render: (text: any, record: any, index: any, action: any) => {
+      let buttons = tableMenu ? tableMenu(record, action) : []
+      buttons.length < 1 && setOptionColumnsHide(true)
+      // 生成菜单
+      const dom = (
+        <MenuButtonGroup
+          key={randomKey(5, { numbers: false })}
+          menuButtons={buttons}
+          gT={T => { mT[index] = T; setMT(mT) }}
+        />
+      )
+      !dom && setOptionColumnsHide(true)
+      return dom
+    }
+  })
+
+
+  async function request(params: any, sort: {}, filter: {}) {
+    const { pageSize: size, current: current, ...more } = params
+    const response = { success: true };
+    const order = sort;
+    const page = current - 1;
+    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, actionRef);
+    return response
   }
 
-
-  lodash.merge(rest, {
+  merge(rest, {
     components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
     pagination: usePagination ? rest.pagination : false,
     search: rest.search ? { labelWidth: 80 } : rest.search,
     columns: newColumns
   })
 
-  console.log('columns', newColumns);
-
-
   return (
     <ProTable
-      // ref
       columns={newColumns}
-      request={async (params, sort, filter) => {
-        console.log('request params, sort, filter........', params, sort, filter);
-        const { pageSize: size, current: page, ...prest } = params
-        onNext && onNext({ size, page, ...prest }, sort, filter, actionRef)
-        return { success: true }
-      }}
+      request={request}
       actionRef={actionRef}
       formRef={formRef}
       rowSelection={rowSelection}
@@ -309,7 +307,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 Table.defaultProps = {
   useBatchDelete: true,
   usePagination: false,
-
   expanding: false,
   cardBordered: true,
   scrollHeight: defaulScrollHeight,
