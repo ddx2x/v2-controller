@@ -32,6 +32,11 @@ const table: View = {
           dataIndex: 'sale_channels',
           title: '销售渠道',
           valueType: "checkbox",
+          ellipsis: true,
+          valueEnum: {
+            1: '线上',
+            2: '线下',
+          },
           hideInSearch: true,
         },
         {
