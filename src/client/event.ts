@@ -22,21 +22,20 @@ export type Noop = () => void;
 
 export type EventHandle = <T extends IObject>(evt: ObjectWatchEvent<T>) => void;
 
-export declare type WatchApi<T extends IObject, S extends ObjectStore<T>> = {
-  subscribe: (...stores: S[]) => Noop;
-  addListener: (store: S, ecb: EventHandle) => Noop;
+export declare type WatchApi<T extends IObject> = {
+  subscribe: <S extends ObjectStore<T>>(...stores: S[]) => Noop;
+  addListener: <S extends ObjectStore<T>>(store: S, ecb: EventHandle) => Noop;
   reset: () => any;
 };
 
-export class DefaultWatchApi<T extends IObject, S extends ObjectStore<T>>
-  implements WatchApi<T, S>
+export class DefaultWatchApi<T extends IObject> implements WatchApi<T>
 {
-  subscribe(...stores: S[]): Noop {
-    return () => {};
+  subscribe<S extends ObjectStore<T>>(...stores: S[]): Noop {
+    return () => { };
   }
-  addListener(store: any, ecb: EventHandle): Noop {
-    return () => {};
+  addListener<S extends ObjectStore<T>>(store: S, ecb: EventHandle): Noop {
+    return () => { };
   }
 
-  reset() {}
+  reset() { }
 }
