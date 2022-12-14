@@ -25,6 +25,7 @@ export declare type TableProps = ProTableProps<any, any> & {
   toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   scrollHeight?: string | number; // 表格高度
+  editable?: (rows: any) => Promise<any>;
   onNext?: (
     params?: any,
     sort?: any,
@@ -64,6 +65,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     useBatchDelete,
     usePagination,
     // 挂载
+    editable,
     location,
     mount,
     unMount,
@@ -230,9 +232,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     toolbar: {
       actions: toolBarMenus
     },
-    editable: {
-      onSave: async (key, record) => { },
-    },
+    editable: editable,
     expandable: {
       ...expandModule(expand ? expand : null)
     },
