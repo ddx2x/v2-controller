@@ -20,7 +20,7 @@ export class Commodity extends IObject {
   }
 }
 
-const commdityApi = new ObjectApi<Commodity>({
+export const commodityApi = new ObjectApi<Commodity>({
   url: '/api/v1/commodity',
   objectConstructor: Commodity,
   service: 'prod',
@@ -37,7 +37,7 @@ class CommdityStore extends ObjectStore<Commodity> {
 }
 
 export const objectWatchApi = new ObjectWatchApi();
-export const commdityStore = new CommdityStore(commdityApi, objectWatchApi);
+export const commodityStore = new CommdityStore(commodityApi, objectWatchApi);
 
 export class CommodityAggregate extends IObject {
   sub_title?: string;

@@ -1,16 +1,24 @@
 import { pageManager, View } from '@/dynamic-view';
 import { ProFormColumnsType, StepFormProps } from '@ant-design/pro-components';
+import { merge } from 'lodash';
 import { parse } from 'querystring';
+import { Commodity, commodityApi } from './store';
 
-let steps: StepFormProps[] = [
+let aggregateSteps: StepFormProps[] = [
     { title: '基本信息' },
     { title: '交付设置' },
     { title: '图文详情' }
 ]
+let singleSteps: StepFormProps[] = [
+    { title: '商品信息' },
+    { title: '单品信息' },
+    { title: '图文详情' }
+]
+
 
 let commodityType: ProFormColumnsType = {
     title: '商品类型',
-    dataIndex: 'types',
+    dataIndex: 'type',
     valueType: 'radio',
     initialValue: 1,
     valueEnum: {
@@ -72,7 +80,6 @@ let commodityName: ProFormColumnsType = {
     title: '商品名称',
     dataIndex: 'name',
     valueType: 'text',
-    width: '400px',
     fieldProps: {
         placeholder: '请输入商品的名称',
     },
@@ -116,6 +123,24 @@ let deliveryMethod: ProFormColumnsType = {
     },
 };
 
+let singleName: ProFormColumnsType = {
+    title: '单品名称',
+    dataIndex: 'name',
+    valueType: 'text',
+    fieldProps: {
+        placeholder: '请输入单品的名称',
+    },
+    formItemProps: {
+        rules: [
+            {
+                required: true,
+                message: '此项为必填项',
+            },
+        ],
+    },
+};
+
+
 export const singleAddView: View = {
     kind: 'stepForm',
     mount: (location, formRef) => {
@@ -123,22 +148,22 @@ export const singleAddView: View = {
         let data = location?.search.split("?")[1] || "";
         console.log("parse ", parse(data));
         location?.search &&
-            formRef.current?.setFieldsValue({})
+            formRef.current?.setFieldsValue({ commodityName: data })
     },
 
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
-    steps: steps,
+    steps: singleSteps,
     columns: [
         [
-            commodityName,
-            commodityType,
-            salesChannels,
-            salesModel,
-            commodityPrice,
+            merge(commodityName, { readonly: true }),
+            merge(commodityType, { readonly: true }),
+            merge(salesChannels, { readonly: true }),
+            merge(salesModel, { readonly: true }),
+            merge(commodityPrice, { readonly: true })
         ],
-        [deliveryMethod],
+        [singleName],
         [],
     ],
 };
@@ -157,30 +182,42 @@ pageManager.register('commdity.list.add', {
 });
 
 
+export declare type Query = {
+    name?: string
+};
+
 export const singleEditView: View = {
     kind: 'stepForm',
     mount: (location, formRef) => {
         console.log('location?.search', location?.search, formRef);
         let data = location?.search.split("?")[1] || "";
-        console.log("parse ", parse(data));
-        location?.search &&
-            formRef.current?.setFieldsValue({})
+        let query: Query = parse(data);
+        commodityApi.get(query.name).
+            then((item: Commodity) => {
+                location?.search &&
+                    formRef.current?.
+                        setFieldsValue({
+                            name: item.name,
+                            types: item.type,
+                        })
+            })
     },
 
     unMount: (location, formRef) => {
         formRef.current?.resetFields()
     },
 
-    steps: steps,
+    steps: singleSteps,
     columns: [
         [
-            commodityName,
-            commodityType,
-            salesChannels,
-            salesModel,
-            commodityPrice,
+            merge(commodityName, { readonly: true }),
+            merge(commodityType, { readonly: true }),
+            merge(salesChannels, { readonly: true }),
+            merge(salesModel, { readonly: true }),
+            merge(commodityPrice, { readonly: true })
+
         ],
-        [deliveryMethod],
+        [singleName],
         [],
     ],
 };
@@ -214,7 +251,7 @@ export const aggregateAddView: View = {
         formRef.current?.resetFields()
     },
 
-    steps: steps,
+    steps: aggregateSteps,
     columns: [
         [
             commodityName,

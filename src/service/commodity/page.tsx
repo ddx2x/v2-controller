@@ -3,7 +3,7 @@ import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { stringify } from 'querystring';
 import { detail } from './detail';
-import { brandNameStoreStore, commdityAggregateStore, commdityStore } from './store';
+import { brandNameStoreStore, commdityAggregateStore, Commodity, commodityStore } from './store';
 
 // 商品列表
 const table: View = {
@@ -71,7 +71,7 @@ const table: View = {
   ],
   expand: {
     kind: 'table',
-    onData: (record: any) => commdityStore.api.list(record.uid),
+    onData: (record: any) => commodityStore.api.list(undefined, { filter: { title: record.uid } }),
     table: {
       options: false,
       rowKey: 'uid',
@@ -100,7 +100,7 @@ const table: View = {
           title: '库存',
         },
       ],
-      tableMenu: (record: any, action: any) => [
+      tableMenu: (record: Commodity, action: any) => [
         {
           kind: 'descriptions',
           tag: '详情',
@@ -109,8 +109,8 @@ const table: View = {
         },
         {
           kind: 'link',
-          // collapse: true,
-          link: `/commdity/list/edit` + `?` + stringify({ uid: record.uid }),
+          collapse: true,
+          link: `/commdity/list/edit` + `?` + stringify({ name: record.name }),
           tag: '编辑',
           title: '编辑',
         },
