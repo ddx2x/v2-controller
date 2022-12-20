@@ -18,11 +18,12 @@ export type FooterToolbarProps = {
   prefixCls?: string;
   children?: React.ReactNode;
   routeContext: RouteContextType;
-  right?: boolean
+  right?: boolean;
 };
 
 export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
-  const { children, className, extra, style, renderContent, routeContext, right, ...restProps } = props;
+  const { children, className, extra, style, renderContent, routeContext, right, ...restProps } =
+    props;
   const { getPrefixCls, getTargetContainer } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = props.prefixCls || getPrefixCls('pro');
   const baseClassName = `${prefixCls}-footer-bar`;
@@ -39,7 +40,12 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
     }
     return isMobile ? '100%' : `calc(100% - ${siderWidth}px)`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeContext.collapsed, routeContext.hasSiderMenu, routeContext.isMobile, routeContext.siderWidth]);
+  }, [
+    routeContext.collapsed,
+    routeContext.hasSiderMenu,
+    routeContext.isMobile,
+    routeContext.siderWidth,
+  ]);
 
   const dom = (
     <>
@@ -51,7 +57,7 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
   /** 告诉 props 是否存在 footerBar */
   useEffect(() => {
     if (!routeContext || !routeContext?.setHasFooterToolbar) {
-      return () => { };
+      return () => {};
     }
     routeContext?.setHasFooterToolbar(true);
     return () => {
@@ -68,19 +74,16 @@ export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
     >
       {renderContent
         ? renderContent(
-          {
-            ...props,
-            ...routeContext,
-            leftWidth: width,
-          },
-          dom,
-        )
+            {
+              ...props,
+              ...routeContext,
+              leftWidth: width,
+            },
+            dom,
+          )
         : dom}
     </div>
   );
 
-  return renderDom
-
+  return renderDom;
 };
-
-

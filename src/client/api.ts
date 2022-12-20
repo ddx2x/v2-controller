@@ -45,7 +45,7 @@ export declare type SearchQuery = {
 export declare type Parameter = string | number;
 
 const isObject = (object: Object) => {
-  return object != null && typeof object === "object";
+  return object != null && typeof object === 'object';
 };
 
 export const isDeepEqual = (object1: Object, object2: Object) => {
@@ -56,9 +56,7 @@ export const isDeepEqual = (object1: Object, object2: Object) => {
     const value1 = object1[key];
     const value2 = object2[key];
     const isObjects = isObject(value1) && isObject(value2);
-    if ((isObjects && !isDeepEqual(value1, value2)) ||
-      (!isObjects && value1 !== value2)
-    ) {
+    if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
       return false;
     }
   }
@@ -69,7 +67,7 @@ export declare type Query = {
   limit?: {
     page: number;
     size: number;
-  },
+  };
   sort?: { [key: string]: any };
   filter?: { [key: string]: any };
   [key: string]: any;
@@ -152,8 +150,8 @@ export class ObjectApi<T extends IObject = any> {
     const { items, count } = data;
     if (this.store != undefined) this.store.count = count || 0;
     if (!items) return [];
-    return items.map((item: any) => new this.objectConstructor({ ...item }))
-  }
+    return items.map((item: any) => new this.objectConstructor({ ...item }));
+  };
 
   static createLink(ref: IObjectApiLinkRef): string {
     const { apiPrefix, apiVersion, apiResource, service } = ref;
@@ -176,9 +174,9 @@ export class ObjectApi<T extends IObject = any> {
     const { service, apiPrefix, apiVersion, apiResource } = this;
     let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
     let obj = {};
-    if (query?.limit) obj["limit"] = JSON.stringify(query.limit)
-    if (query?.sort) obj["sort"] = JSON.stringify(query.sort)
-    if (query?.filter) obj["filter"] = JSON.stringify(query.filter)
+    if (query?.limit) obj['limit'] = JSON.stringify(query.limit);
+    if (query?.sort) obj['sort'] = JSON.stringify(query.sort);
+    if (query?.filter) obj['filter'] = JSON.stringify(query.filter);
 
     if (parameter) resourcePath = resourcePath + '/' + parameter;
     if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(obj) : '');
@@ -191,7 +189,9 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   page = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
-    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponsePage);
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
+      this.parseResponsePage,
+    );
   };
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {

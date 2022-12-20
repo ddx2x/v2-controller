@@ -47,7 +47,6 @@ export declare type globalSearch = {
 };
 
 export const SkuSearch: React.FC<globalSearch> = (props) => {
-
   // onSearch: (value, setGlobalSearchOptions) => {
   //   commdityStore.search({ text: value || '', offset: 0, limit: 10 }).then((res) => {
   //     if (!Array.isArray(res)) {
@@ -63,7 +62,7 @@ export const SkuSearch: React.FC<globalSearch> = (props) => {
   //   });
   // }
 
-  const { onSearch } = props
+  const { onSearch } = props;
   // 全局搜索
   const [globalSearchOptions, setGlobalSearchOptions] = useState<{ label: any; value: any }[]>([]);
 
@@ -80,5 +79,5 @@ export const SkuSearch: React.FC<globalSearch> = (props) => {
         style={{ width: '320px' }}
       />
     </Space>
-  )
-}
+  );
+};

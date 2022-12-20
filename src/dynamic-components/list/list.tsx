@@ -1,4 +1,10 @@
-import type { ActionType, FormInstance, ProFormInstance, ProListProps, RouteContextType } from '@ant-design/pro-components';
+import type {
+  ActionType,
+  FormInstance,
+  ProFormInstance,
+  ProListProps,
+  RouteContextType,
+} from '@ant-design/pro-components';
 import { Button } from 'antd';
 import type { Location } from 'history';
 import lodash from 'lodash';
@@ -19,32 +25,28 @@ export type ListProps = ProListProps & {
   toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   scrollHeight?: string | number; // 表格高度
-  onNext?: (
-    params?: any,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 虚拟滚动 加载数据
+  onNext?: (params?: any, actionRef?: React.MutableRefObject<ActionType | undefined>) => void; // 虚拟滚动 加载数据
   // 批量删除
   useBatchDelete?: boolean; // 开启批量删除
   batchDelete?: (selectedRowKeys: React.Key[]) => void; // 批量删除回调函数
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
-    formRef?: React.MutableRefObject<FormInstance | undefined>,
-    configMap?: ObservableMap<any, any>
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
-    formRef?: React.MutableRefObject<FormInstance | undefined>,
-    configMap?: ObservableMap<any, any>
-  ) => void;
-};
+    mount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+      formRef?: React.MutableRefObject<FormInstance | undefined>,
+      configMap?: ObservableMap<any, any>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+      formRef?: React.MutableRefObject<FormInstance | undefined>,
+      configMap?: ObservableMap<any, any>,
+    ) => void;
+  };
 
 export const List: React.FC<ListProps> = observer((props) => {
-
   const {
     location,
     mount,
@@ -59,20 +61,16 @@ export const List: React.FC<ListProps> = observer((props) => {
   } = props;
 
   // ref
-  const configMap = observable.map({})
+  const configMap = observable.map({});
   // ref
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(
-    location, actionRef, formRef, configMap
-  );
+  mount && mount(location, actionRef, formRef, configMap);
 
   // 页面挂载 销毁事件
   useEffect(() => {
-    return () => unMount && unMount(
-      location, actionRef, formRef, configMap
-    );
+    return () => unMount && unMount(location, actionRef, formRef, configMap);
   }, []);
 
   // 挂载 鼠标事件
@@ -86,8 +84,6 @@ export const List: React.FC<ListProps> = observer((props) => {
       document.body.style.overflow = 'visible';
     });
   });
-
-
 
   // 加载更多按钮
   const LoadMore: React.FC = () => {
@@ -117,21 +113,21 @@ export const List: React.FC<ListProps> = observer((props) => {
     components: vComponents,
     editable: {
       onSave: async (key, record) => {
-        console.log('editable onSave......', key, record)
+        console.log('editable onSave......', key, record);
       },
     },
     search: {
       labelWidth: 80,
     },
     pagination: {
-      onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef)
+      onChange: (page: number, size: number) => onNext && onNext({ page, size }, actionRef),
     },
     onReset: () => props.onSubmit && props.onSubmit({}),
-  }
+  };
 
   // 合并配置
-  lodash.merge(rest, defaultConfig)
-  lodash.merge(rest, Object.fromEntries(configMap))
+  lodash.merge(rest, defaultConfig);
+  lodash.merge(rest, Object.fromEntries(configMap));
 
   return (
     <ProList

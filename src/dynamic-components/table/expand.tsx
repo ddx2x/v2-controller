@@ -11,7 +11,7 @@ export declare type ExpandRowProps = {
 export declare type ExpandedConfig = ExpandableConfig<any> & ExpandRowProps;
 
 const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
-  const { kind, record, table, onData } = props
+  const { kind, record, table, onData } = props;
   const [dataSource, setDataSource] = useState<any>([]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
         expanding={true}
         cardBordered={false}
         cardProps={{
-          style: { background: '#fbfbfc'}
+          style: { background: '#fbfbfc' },
         }}
         dataSource={dataSource}
       />
@@ -38,7 +38,7 @@ const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
 
 // 扩展
 export const expandModule = (config: ExpandedConfig | null): ExpandableConfig<any> => {
-  if (!config) return {}
+  if (!config) return {};
   const { kind, table, onData, record, ...rest } = config;
 
   return {

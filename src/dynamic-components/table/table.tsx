@@ -1,8 +1,12 @@
-import { ActionType, ProFormInstance, ProTable, ProTableProps, RouteContextType } from '@ant-design/pro-components';
-import { FormattedMessage } from '@umijs/max';
 import {
-  Button, FormInstance, Space
-} from 'antd';
+  ActionType,
+  ProFormInstance,
+  ProTable,
+  ProTableProps,
+  RouteContextType,
+} from '@ant-design/pro-components';
+import { FormattedMessage } from '@umijs/max';
+import { Button, FormInstance, Space } from 'antd';
 import type { Location } from 'history';
 import { merge } from 'lodash';
 import { observable, ObservableMap } from 'mobx';
@@ -41,25 +45,24 @@ export declare type TableProps = ProTableProps<any, any> & {
   routeContext?: RouteContextType;
   // 鼠标事件
   onRowEvent?: {
-    mouseEvent: "onClick" | "onDoubleClick",
-    tag: string // 按钮
-  }[]
+    mouseEvent: 'onClick' | 'onDoubleClick';
+    tag: string; // 按钮
+  }[];
 } & RouterHistory & {
-  mount?: (
-    location?: Location | undefined,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-    formRef?: React.MutableRefObject<FormInstance | undefined>,
-    configMap?: ObservableMap<any, any>
-  ) => void;
-  unMount?: (
-    location?: Location | undefined,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-    config?: ObservableMap<any, any>
-  ) => void;
-};
+    mount?: (
+      location?: Location | undefined,
+      actionRef?: React.MutableRefObject<ActionType | undefined>,
+      formRef?: React.MutableRefObject<FormInstance | undefined>,
+      configMap?: ObservableMap<any, any>,
+    ) => void;
+    unMount?: (
+      location?: Location | undefined,
+      actionRef?: React.MutableRefObject<ActionType | undefined>,
+      config?: ObservableMap<any, any>,
+    ) => void;
+  };
 
 export const Table: React.FC<TableProps> = observer((props) => {
-
   let {
     // 批量删除
     useBatchDelete,
@@ -96,12 +99,12 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(location, actionRef, formRef, configMap)
+  mount && mount(location, actionRef, formRef, configMap);
 
   // 页面挂载 销毁事件
   useEffect(() => {
-    return () => unMount && unMount(
-      location, actionRef, configMap)
+    // return () => unMount && unMount(
+    //   location, actionRef, configMap)
   }, []);
 
   // 挂载 鼠标事件
@@ -141,7 +144,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
-  let paginationDom: any = null
+  let paginationDom: any = null;
 
   // 提示操作按钮
   const Footer: React.FC = () => {
@@ -166,9 +169,15 @@ export const Table: React.FC<TableProps> = observer((props) => {
                   setSelectedRowKeys([]);
                 }}
               >
-                <FormattedMessage id="pages.searchTable.cancelSelection" defaultMessage="取消选择" />
+                <FormattedMessage
+                  id="pages.searchTable.cancelSelection"
+                  defaultMessage="取消选择"
+                />
               </Button>
-            </>) : paginationDom}
+            </>
+          ) : (
+            paginationDom
+          )}
         </Space>
       </FooterToolbar>
     );
@@ -179,50 +188,52 @@ export const Table: React.FC<TableProps> = observer((props) => {
     props: ProTableProps<any, any, 'text'>,
     defaultDom: JSX.Element,
     domList: {
-      toolbar: JSX.Element | undefined; alert: JSX.Element | undefined; table: JSX.Element | undefined;
-    }): React.ReactNode | undefined => {
-
+      toolbar: JSX.Element | undefined;
+      alert: JSX.Element | undefined;
+      table: JSX.Element | undefined;
+    },
+  ): React.ReactNode | undefined => {
     if (expanding) {
       return defaultDom;
     }
 
     return (
       <>
-        <div ref={(scrollHeight !== '100%') ? setContainer : null}>{defaultDom}</div>
+        <div ref={scrollHeight !== '100%' ? setContainer : null}>{defaultDom}</div>
         {!usePagination && <LoadMore />}
         <Footer />
       </>
     );
   };
 
-
   // 工具栏操作
   const toolBarMenus = [
     <MenuButtonGroup
       key={randomKey(5, { numbers: false })}
       menuButtons={toolBarMenu ? toolBarMenu() : []}
-    />
-  ]
+    />,
+  ];
 
   // 点击事件
   const onRow: TableProps['onRow'] = (data: any, index: any) => {
-    let event = {}
-    onRowEvent && onRowEvent.forEach((item) => {
-      event[item.mouseEvent] = () => {
-        if (typeof index == 'number') {
-          mT[index].filter(m => m.tag == item.tag).forEach(f => f.func())
-        }
-      }
-    })
-    return event
-  }
+    let event = {};
+    onRowEvent &&
+      onRowEvent.forEach((item) => {
+        event[item.mouseEvent] = () => {
+          if (typeof index == 'number') {
+            mT[index].filter((m) => m.tag == item.tag).forEach((f) => f.func());
+          }
+        };
+      });
+    return event;
+  };
 
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
       height: scrollHeight || defaulScrollHeight,
       debounceListRenderMS: 10000,
-      resetTopWhenDataChange: false
+      resetTopWhenDataChange: false,
     });
   }, []);
 
@@ -230,28 +241,27 @@ export const Table: React.FC<TableProps> = observer((props) => {
     onRow,
     // size: 'small',
     toolbar: {
-      actions: toolBarMenus
+      actions: toolBarMenus,
     },
     editable: editable,
     expandable: {
-      ...expandModule(expand ? expand : null)
+      ...expandModule(expand ? expand : null),
     },
     tableRender: tableRender,
-  }
+  };
 
   // 合并配置
-  merge(rest, defaultConfig)
-  merge(rest, Object.fromEntries(configMap))
+  merge(rest, defaultConfig);
+  merge(rest, Object.fromEntries(configMap));
 
-
-  const [optionColumnsHide, setOptionColumnsHide] = useState(false)
-  const [mT, setMT] = useState<({ tag: string, func: () => void })[][]>([])
+  const [optionColumnsHide, setOptionColumnsHide] = useState(false);
+  const [mT, setMT] = useState<{ tag: string; func: () => void }[][]>([]);
 
   // 挂载行
   let newColumns = rest['columns'] || columns || [];
 
   // 更多操作 按钮
-  newColumns = newColumns.filter((item: { dataIndex: string; }) => item.dataIndex != 'more');
+  newColumns = newColumns.filter((item: { dataIndex: string }) => item.dataIndex != 'more');
   const moreColumns = {
     dataIndex: 'more',
     title: '操作',
@@ -259,37 +269,40 @@ export const Table: React.FC<TableProps> = observer((props) => {
     fixed: 'right',
     hideInTable: optionColumnsHide,
     render: (text: any, record: any, index: any, action: any) => {
-      let buttons = tableMenu ? tableMenu(record, action) : []
-      buttons.length < 1 && setOptionColumnsHide(true)
+      let buttons = tableMenu ? tableMenu(record, action) : [];
+      buttons.length < 1 && setOptionColumnsHide(true);
       // 生成菜单
       const dom = (
         <MenuButtonGroup
           key={randomKey(5, { numbers: false })}
           menuButtons={buttons}
-          gT={T => { mT[index] = T; setMT(mT) }}
+          gT={(T) => {
+            mT[index] = T;
+            setMT(mT);
+          }}
         />
-      )
-      !dom && setOptionColumnsHide(true)
-      return dom
-    }
+      );
+      !dom && setOptionColumnsHide(true);
+      return dom;
+    },
   };
 
   newColumns.push(moreColumns);
 
   merge(rest, {
-    components: (rest.dataSource && rest.dataSource.length > 10) ? vComponents : undefined,
+    components: rest.dataSource && rest.dataSource.length > 10 ? vComponents : undefined,
     pagination: usePagination ? rest.pagination : false,
     search: rest.search ? { labelWidth: 80 } : rest.search,
-    columns: newColumns
-  })
+    columns: newColumns,
+  });
 
   async function request(params: any, sort: {}, filter: {}) {
-    const { pageSize: size, current: current, ...more } = params
+    const { pageSize: size, current: current, ...more } = params;
     const response = { success: true };
     const order = sort;
     const page = current - 1;
     onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, actionRef);
-    return response
+    return response;
   }
 
   return (
@@ -299,7 +312,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
       actionRef={actionRef}
       formRef={formRef}
       rowSelection={rowSelection}
-      scroll={{ y: scrollHeight, x: "100%" }}
+      scroll={{ y: scrollHeight, x: '100%' }}
       {...rest}
     />
   );

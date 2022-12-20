@@ -20,5 +20,5 @@ export const monacoEditorField: React.FC<MonacoEditorFieldProps> = (props) => {
     return () => editor.dispose();
   }, []);
 
-  return <div id="monaco-editor" style={{ width: width || '100%', height: height || '100%' }} />;
+  return <div id="monaco-editor" style={{ width: width || '100%', height: height || '200px' }} />;
 };

@@ -1,4 +1,9 @@
-import { BetaSchemaForm, ProFormInstance, ProProvider, RouteContextType } from '@ant-design/pro-components';
+import {
+  BetaSchemaForm,
+  ProFormInstance,
+  ProProvider,
+  RouteContextType,
+} from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -27,16 +32,16 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-  ) => void;
-  trigger?: () => void
-};
+    mount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+    ) => void;
+    trigger?: () => void;
+  };
 
 export const Form = observer(
   React.forwardRef((props: FormProps, forwardRef) => {
@@ -55,9 +60,9 @@ export const Form = observer(
 
     useImperativeHandle(forwardRef, () => {
       return {
-        open: () => showModal()
-      }
-    })
+        open: () => showModal(),
+      };
+    });
 
     const formRef = useRef<ProFormInstance>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -71,7 +76,9 @@ export const Form = observer(
         mount(location, formRef);
       }
       return () => {
-        if (formRef && unMount) { unMount(location, formRef); }
+        if (formRef && unMount) {
+          unMount(location, formRef);
+        }
       };
     }, []);
 

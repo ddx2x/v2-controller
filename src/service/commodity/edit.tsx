@@ -1,280 +1,298 @@
 import { pageManager, View } from '@/dynamic-view';
 import { ProFormColumnsType, StepFormProps } from '@ant-design/pro-components';
-import { merge } from 'lodash';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
 
 let aggregateSteps: StepFormProps[] = [
-    { title: '基本信息' },
-    { title: '交付设置' },
-    { title: '图文详情' }
-]
+	{ title: '基本信息' },
+	{ title: '交付设置' },
+	{ title: '图文详情' },
+];
 let singleSteps: StepFormProps[] = [
-    { title: '商品信息' },
-    { title: '单品信息' },
-    { title: '图文详情' }
-]
-
+	{ title: '商品信息' },
+	{ title: '单品信息' },
+	{ title: '图文详情' },
+];
 
 let commodityType: ProFormColumnsType = {
-    title: '商品类型',
-    dataIndex: 'type',
-    valueType: 'radio',
-    initialValue: 1,
-    valueEnum: {
-        1: '实物商品（物流发货）',
-        2: '实物商品（跨境海淘）',
-        3: '虚拟商品 （通用）',
-        4: '虚拟商品 （付费券）',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '商品类型',
+	dataIndex: 'type',
+	valueType: 'radio',
+	initialValue: 1,
+	valueEnum: {
+		1: '实物商品（物流发货）',
+		2: '实物商品（跨境海淘）',
+		3: '虚拟商品 （通用）',
+		4: '虚拟商品 （付费券）',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
 let salesChannels: ProFormColumnsType = {
-    title: '销售渠道',
-    dataIndex: 'salesChannels',
-    valueType: 'checkbox',
-    initialValue: [],
-    valueEnum: {
-        1: '线上销售',
-        2: '线下销售',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '销售渠道',
+	dataIndex: 'salesChannels',
+	valueType: 'checkbox',
+	initialValue: [],
+	valueEnum: {
+		1: '线上销售',
+		2: '线下销售',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
 let salesModel: ProFormColumnsType = {
-    title: '销售模式',
-    dataIndex: 'salesModel',
-    valueType: 'radio',
-    initialValue: 1,
-    valueEnum: {
-        1: '现货销售',
-        2: '预售模式（商家设置商品预售数量，各门店需自行修改预售数量）',
-        3: '抽签模式',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '销售模式',
+	dataIndex: 'salesModel',
+	valueType: 'radio',
+	initialValue: 1,
+	valueEnum: {
+		1: '现货销售',
+		2: '预售模式（商家设置商品预售数量，各门店需自行修改预售数量）',
+		3: '抽签模式',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
 let commodityName: ProFormColumnsType = {
-    title: '商品名称',
-    dataIndex: 'name',
-    valueType: 'text',
-    fieldProps: {
-        placeholder: '请输入商品的名称',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '商品名称',
+	dataIndex: 'name',
+	valueType: 'text',
+	fieldProps: {
+		placeholder: '请输入商品的名称',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
-let commodityPrice: ProFormColumnsType = {
-    title: '商品图片',
-    dataIndex: 'images',
-    valueType: 'imageUpload',
-    tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
-    fieldProps: {
-        name: 'upload',
-        action: '/api/images/upload',
-    },
+let commodityPrice = {
+	title: '商品图片',
+	dataIndex: 'images',
+	valueType: 'imageUpload',
+	tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
+	fieldProps: {
+		name: 'upload',
+		action: '/api/images/upload',
+	},
 };
 
 let deliveryMethod: ProFormColumnsType = {
-    title: '配送方式',
-    dataIndex: 'deliveryMethod',
-    initialValue: [1, 2],
-    valueType: 'checkbox',
-    valueEnum: {
-        1: '商家配送',
-        2: '到店自提',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '配送方式',
+	dataIndex: 'deliveryMethod',
+	initialValue: [1, 2],
+	valueType: 'checkbox',
+	valueEnum: {
+		1: '商家配送',
+		2: '到店自提',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
 let singleName: ProFormColumnsType = {
-    title: '单品名称',
-    dataIndex: 'name',
-    valueType: 'text',
-    fieldProps: {
-        placeholder: '请输入单品的名称',
-    },
-    formItemProps: {
-        rules: [
-            {
-                required: true,
-                message: '此项为必填项',
-            },
-        ],
-    },
+	title: '单品名称',
+	dataIndex: 'name',
+	valueType: 'text',
+	fieldProps: {
+		placeholder: '请输入单品的名称',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
 };
 
-
 export const singleAddView: View = {
-    kind: 'stepForm',
-    mount: (location, formRef) => {
-        console.log('location?.search', location?.search, formRef);
-        let data = location?.search.split("?")[1] || "";
-        console.log("parse ", parse(data));
-        location?.search &&
-            formRef.current?.setFieldsValue({ commodityName: data })
-    },
-
-    unMount: (location, formRef) => {
-        formRef.current?.resetFields()
-    },
-    steps: singleSteps,
-    columns: [
-        [
-            merge(commodityName, { readonly: true }),
-            merge(commodityType, { readonly: true }),
-            merge(salesChannels, { readonly: true }),
-            merge(salesModel, { readonly: true }),
-            merge(commodityPrice, { readonly: true })
-        ],
-        [singleName],
-        [],
-    ],
+	kind: 'stepForm',
+	mount: (location, formRef) => {
+		console.log('location?.search', location?.search, formRef);
+		let data = location?.search.split('?')[1] || '';
+		console.log('parse ', parse(data));
+		location?.search && formRef.current?.setFieldsValue({ commodityName: data });
+	},
+	unMount: (location, formRef) => {
+		formRef.current?.resetFields();
+	},
+	steps: singleSteps,
+	columns: [
+		[
+			// commodityName,
+			// commodityType,
+			// salesChannels,
+			// salesModel,
+			// commodityPrice
+		],
+		[
+			// singleName
+		],
+		[],
+	],
 };
 
 pageManager.register('commdity.list.add', {
-    page: {
-        view: [singleAddView],
-        container: {
-            keepAlive: true,
-            header: {
-                title: '单品新增',
-            },
-        }
-    },
-    stores: [],
+	page: {
+		view: [singleAddView],
+		container: {
+			keepAlive: true,
+			header: {
+				title: '单品新增',
+			},
+		},
+	},
+	stores: [],
 });
 
-
 export declare type Query = {
-    name?: string
+	name?: string;
 };
 
 export const singleEditView: View = {
-    kind: 'stepForm',
-    mount: (location, formRef) => {
-        console.log('location?.search', location?.search, formRef);
-        let data = location?.search.split("?")[1] || "";
-        let query: Query = parse(data);
-        commodityApi.get(query.name).
-            then((item: Commodity) => {
-                location?.search &&
-                    formRef.current?.
-                        setFieldsValue({
-                            name: item.name,
-                            types: item.type,
-                        })
-            })
-    },
-
-    unMount: (location, formRef) => {
-        formRef.current?.resetFields()
-    },
-
-    steps: singleSteps,
-    columns: [
-        [
-            merge(commodityName, { readonly: true }),
-            merge(commodityType, { readonly: true }),
-            merge(salesChannels, { readonly: true }),
-            merge(salesModel, { readonly: true }),
-            merge(commodityPrice, { readonly: true })
-
-        ],
-        [singleName],
-        [],
-    ],
+	kind: 'stepForm',
+	mount: (location, formRef) => {
+		console.log('location?.search', location?.search, formRef);
+		let data = location?.search.split('?')[1] || '';
+		let query: Query = parse(data);
+		commodityApi.get(query.name).then((item: Commodity) => {
+			location?.search &&
+				formRef.current?.setFieldsValue({
+					name: item.name,
+					types: item.type,
+				});
+		});
+	},
+	unMount: (location, formRef) => {
+		formRef.current?.resetFields();
+	},
+	steps: singleSteps,
+	columns: [
+		[
+			{
+				title: '地图',
+				dataIndex: 'map',
+				valueType: 'map',
+			},
+			// commodityName,
+			// commodityType,
+			// salesChannels,
+			// salesModel,
+			// commodityPrice
+		],
+		[],
+		[],
+	],
 };
 
 pageManager.register('commdity.list.edit', {
-    page: {
-        view: [singleEditView],
-        container: {
-            keepAlive: false,
-            header: {
-                title: '单品编辑',
-            },
-        }
-    },
-    stores: [],
+	page: {
+		view: [singleEditView],
+		container: {
+			keepAlive: false,
+			header: {
+				title: '单品编辑',
+			},
+		},
+	},
+	stores: [],
 });
 
-
-
 export const aggregateAddView: View = {
-    kind: 'stepForm',
-    mount: (location, formRef) => {
-        console.log('location?.search', location?.search, formRef);
-        let data = location?.search.split("?")[1] || "";
-        console.log("parse ", parse(data));
-        location?.search &&
-            formRef.current?.setFieldsValue({})
-    },
+	kind: 'stepForm',
+	mount: (location, formRef) => {
+		console.log('location?.search', location?.search, formRef);
+		let data = location?.search.split('?')[1] || '';
+		console.log('parse ', parse(data));
+		// location?.search && formRef.current?.setFieldsValue({});
+		formRef.current?.setFieldsValue({
+			editor: '12345',
+			map: '广州市天河区时代E-PARK'
+		})
+	},
+	unMount: (location, formRef) => {
+		formRef.current?.resetFields();
+	},
+	shouldUpdate: false,
+	steps: aggregateSteps,
+	columns: [
+		[
+			{
+				title: '编辑器',
+				dataIndex: 'editor',
+				valueType: 'monacoEditor',
+			},
+			{
+				title: '地图定位',
+				dataIndex: 'map',
+				valueType: 'map',
+				fieldProps: (form: any) => {
+					if (!form.getFieldValue('address') && form.getFieldValue('map')) {
+						form.setFieldValue('address', form.getFieldValue('map'))
+					}
+				}
+			},
+			{
+				title: '地址',
+				dataIndex: 'address',
+				valueType: 'text',
 
-    unMount: (location, formRef) => {
-        formRef.current?.resetFields()
-    },
-
-    steps: aggregateSteps,
-    columns: [
-        [
-            commodityName,
-            commodityType,
-            salesChannels,
-            salesModel,
-            commodityPrice,
-        ],
-        [deliveryMethod],
-        [],
-    ],
+			},
+			// commodityName,
+			// commodityType,
+			// salesChannels,
+			// salesModel,
+			// commodityPrice,
+		],
+		[
+			// deliveryMethod
+		],
+		[],
+	],
 };
 
 pageManager.register('commdity.list.aggregate_add', {
-    page: {
-        view: [aggregateAddView],
-        container: {
-            keepAlive: false,
-            header: {
-                title: '商品添加',
-            },
-        }
-    },
-    stores: [],
+	page: {
+		view: [aggregateAddView],
+		container: {
+			keepAlive: false,
+			header: {
+				title: '商品添加',
+			},
+		},
+	},
+	stores: [],
 });
-

@@ -27,15 +27,15 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>,
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>,
-  ) => void;
-};
+    mount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      formRef: React.MutableRefObject<ProFormInstance | undefined>,
+    ) => void;
+  };
 
 export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const {

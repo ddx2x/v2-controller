@@ -26,12 +26,12 @@ const table: View = {
           dataIndex: 'sub_title',
           title: '子标题',
           hideInSearch: true,
-          editable: false
+          editable: false,
         },
         {
           dataIndex: 'sale_channels',
           title: '销售渠道',
-          valueType: "checkbox",
+          valueType: 'checkbox',
           ellipsis: true,
           valueEnum: {
             1: '线上',
@@ -49,13 +49,7 @@ const table: View = {
           valueEnum: brandNameStoreStore.selectOptions(),
         },
       ],
-    })
-    return configMap
-  },
-  editable: {
-    onSave: async (key, record) => {
-      await console.log(key, record)
-    },
+    });
   },
   usePagination: true,
   toolbar: {
@@ -82,7 +76,6 @@ const table: View = {
           title: 'uid',
           hideInSearch: true,
           hideInTable: true,
-
         },
         {
           dataIndex: 'name',
@@ -143,10 +136,15 @@ const table: View = {
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情'
-    }
+      tag: '详情',
+    },
   ],
-  onNext: (params) => commdityAggregateStore.next({ limit: { page: 0, size: 10 }, sort: { brand_name: 1 }, ...params }),
+  onNext: (params) =>
+    commdityAggregateStore.next({
+      limit: { page: 0, size: 10 },
+      sort: { brand_name: 1 },
+      ...params,
+    }),
   scrollHeight: '52vh',
   pagination: false,
 };
@@ -154,9 +152,6 @@ const table: View = {
 pageManager.register('commdity.list', {
   page: {
     view: [table],
-    container: {
-      keepAlive: true
-    }
   },
   stores: [
     {

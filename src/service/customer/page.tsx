@@ -8,7 +8,7 @@ const table: View = {
     configMap?.replace({
       dataSource: () => customerStore.items,
       loading: () => customerStore.loading,
-    })
+    });
   },
   kind: 'table',
   rowKey: 'uid',

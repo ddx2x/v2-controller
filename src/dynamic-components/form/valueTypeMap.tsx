@@ -1,19 +1,18 @@
 import type { ProRenderFieldPropsType } from '@ant-design/pro-components';
-import React from 'react';
 
 class ValueTypeMapStore {
   stores: Record<string, ProRenderFieldPropsType> = {};
 
-  registerValueType = (valueType: Record<string, React.FC<any>>) => {
+  registerValueType = (valueType: Record<string, any>) => {
     let vT: Record<string, ProRenderFieldPropsType> = {};
     // 自定义组件 注册
     Object.entries(valueType).map(
       ([key, Component]) =>
         (vT[key] = {
-          render: (text, props) => {
+        render: (text, props) => {
             return <Component {...props} {...props?.fieldProps} />;
           },
-          renderFormItem: (props) => {
+        renderFormItem: (_, props) => {
             return <Component {...props} {...props?.fieldProps} />;
           },
         }),

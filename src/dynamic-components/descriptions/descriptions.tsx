@@ -4,7 +4,7 @@ import {
   ProDescriptionsItemProps,
   ProDescriptionsProps,
   ProProvider,
-  RouteContextType
+  RouteContextType,
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
@@ -36,15 +36,15 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   intl?: IntlShape;
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    actionRef: React.MutableRefObject<ActionType | undefined>,
-  ) => void;
-};
+    mount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+    ) => void;
+    unMount?: (
+      location: Location | undefined,
+      actionRef: React.MutableRefObject<ActionType | undefined>,
+    ) => void;
+  };
 
 export const Descriptions = observer(
   React.forwardRef((props: DescriptionsProps, forwardRef) => {
@@ -65,9 +65,9 @@ export const Descriptions = observer(
 
     useImperativeHandle(forwardRef, () => {
       return {
-        open: () => showModal()
-      }
-    })
+        open: () => showModal(),
+      };
+    });
 
     // ref
     const actionRef = useRef<ActionType>();

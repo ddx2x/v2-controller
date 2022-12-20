@@ -25,7 +25,6 @@ const trRouterKey = (path: string) => {
 };
 
 export default observer(() => {
-
   eventEmitter.on('pageManagerClear', (path: string) => {
     pageManager.clear(trRouterKey(path));
   });
@@ -62,17 +61,35 @@ export default observer(() => {
               return <Form {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'stepForm') {
-              return <StepForm {...(props as StepFormProps)} modal="Form" intl={intl} routeContext={routeContext} />;
+              return (
+                <StepForm
+                  {...(props as StepFormProps)}
+                  modal="Form"
+                  intl={intl}
+                  routeContext={routeContext}
+                />
+              );
             }
             if (kind == 'descriptions') {
-              return <Descriptions modal="Page" {...(props as DescriptionsProps)} intl={intl} routeContext={routeContext} />;
+              return (
+                <Descriptions
+                  modal="Page"
+                  {...(props as DescriptionsProps)}
+                  intl={intl}
+                  routeContext={routeContext}
+                />
+              );
             }
 
-            return null
+            return null;
           })}
       </>
     );
   })();
 
-  return <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>{page}</PageContainer>;
+  return (
+    <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>
+      {page}
+    </PageContainer>
+  );
 });
