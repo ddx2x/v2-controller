@@ -91,16 +91,7 @@ let commodityName: ProFormColumnsType = {
 	},
 };
 
-let commodityPrice = {
-	title: '商品图片',
-	dataIndex: 'images',
-	valueType: 'imageUpload',
-	tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
-	fieldProps: {
-		name: 'upload',
-		action: '/api/images/upload',
-	},
-};
+
 
 let deliveryMethod: ProFormColumnsType = {
 	title: '配送方式',
@@ -152,7 +143,7 @@ export const singleAddView: View = {
 	steps: singleSteps,
 	columns: [
 		[
-			// commodityName,
+			commodityName,
 			// commodityType,
 			// salesChannels,
 			// salesModel,
@@ -207,11 +198,20 @@ export const singleEditView: View = {
 				dataIndex: 'map',
 				valueType: 'map',
 			},
-			// commodityName,
-			// commodityType,
-			// salesChannels,
-			// salesModel,
-			// commodityPrice
+			commodityName,
+			commodityType,
+			salesChannels,
+			salesModel,
+			{
+				title: '商品图片',
+				dataIndex: 'images',
+				valueType: 'imageUpload',
+				tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
+				fieldProps: {
+					name: 'upload',
+					action: '/api/images/upload',
+				},
+			}
 		],
 		[],
 		[],
@@ -240,7 +240,7 @@ export const aggregateAddView: View = {
 		// location?.search && formRef.current?.setFieldsValue({});
 		formRef.current?.setFieldsValue({
 			editor: '12345',
-			map: '广州市天河区时代E-PARK'
+			map: '广州市天河区时代E-PARK',
 		})
 	},
 	unMount: (location, formRef) => {
@@ -250,10 +250,19 @@ export const aggregateAddView: View = {
 	steps: aggregateSteps,
 	columns: [
 		[
+			commodityName,
+			commodityType,
+			salesChannels,
+			salesModel,
 			{
-				title: '编辑器',
-				dataIndex: 'editor',
-				valueType: 'monacoEditor',
+				title: '商品图片',
+				dataIndex: 'images',
+				valueType: 'imageUpload',
+				tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
+				fieldProps: {
+					name: 'upload',
+					action: '/api/images/upload',
+				},
 			},
 			{
 				title: '地图定位',
@@ -269,13 +278,7 @@ export const aggregateAddView: View = {
 				title: '地址',
 				dataIndex: 'address',
 				valueType: 'text',
-
 			},
-			// commodityName,
-			// commodityType,
-			// salesChannels,
-			// salesModel,
-			// commodityPrice,
 		],
 		[
 			// deliveryMethod
