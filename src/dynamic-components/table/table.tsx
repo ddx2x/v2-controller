@@ -101,11 +101,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   mount && mount(location, actionRef, formRef, configMap);
 
-  // 页面挂载 销毁事件
-  useEffect(() => {
-    // return () => unMount && unMount(
-    //   location, actionRef, configMap)
-  }, []);
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -255,7 +250,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   merge(rest, Object.fromEntries(configMap));
 
   const [optionColumnsHide, setOptionColumnsHide] = useState(false);
-  const [mT, setMT] = useState<{ tag: string; func: () => void }[][]>([]);
+  const mT = observable.array<{ tag: string; func: () => void }[]>()
 
   // 挂载行
   let newColumns = rest['columns'] || columns || [];
@@ -278,7 +273,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           menuButtons={buttons}
           gT={(T) => {
             mT[index] = T;
-            setMT(mT);
+            // setMT(mT);
           }}
         />
       );

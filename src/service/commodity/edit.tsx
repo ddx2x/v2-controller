@@ -1,20 +1,21 @@
+import { FormColumnsType } from '@/dynamic-components';
 import { pageManager, View } from '@/dynamic-view';
-import { ProFormColumnsType, StepFormProps } from '@ant-design/pro-components';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
 
-let aggregateSteps: StepFormProps[] = [
+let aggregateSteps = [
 	{ title: '基本信息' },
 	{ title: '交付设置' },
 	{ title: '图文详情' },
 ];
-let singleSteps: StepFormProps[] = [
+
+let singleSteps = [
 	{ title: '商品信息' },
 	{ title: '单品信息' },
 	{ title: '图文详情' },
 ];
 
-let commodityType: ProFormColumnsType = {
+let commodityType: FormColumnsType = {
 	title: '商品类型',
 	dataIndex: 'type',
 	valueType: 'radio',
@@ -35,7 +36,7 @@ let commodityType: ProFormColumnsType = {
 	},
 };
 
-let salesChannels: ProFormColumnsType = {
+let salesChannels: FormColumnsType = {
 	title: '销售渠道',
 	dataIndex: 'salesChannels',
 	valueType: 'checkbox',
@@ -54,7 +55,7 @@ let salesChannels: ProFormColumnsType = {
 	},
 };
 
-let salesModel: ProFormColumnsType = {
+let salesModel: FormColumnsType = {
 	title: '销售模式',
 	dataIndex: 'salesModel',
 	valueType: 'radio',
@@ -74,7 +75,7 @@ let salesModel: ProFormColumnsType = {
 	},
 };
 
-let commodityName: ProFormColumnsType = {
+let commodityName: FormColumnsType = {
 	title: '商品名称',
 	dataIndex: 'name',
 	valueType: 'text',
@@ -93,7 +94,7 @@ let commodityName: ProFormColumnsType = {
 
 
 
-let deliveryMethod: ProFormColumnsType = {
+let deliveryMethod: FormColumnsType = {
 	title: '配送方式',
 	dataIndex: 'deliveryMethod',
 	initialValue: [1, 2],
@@ -112,7 +113,7 @@ let deliveryMethod: ProFormColumnsType = {
 	},
 };
 
-let singleName: ProFormColumnsType = {
+let singleName: FormColumnsType = {
 	title: '单品名称',
 	dataIndex: 'name',
 	valueType: 'text',
@@ -129,6 +130,18 @@ let singleName: ProFormColumnsType = {
 	},
 };
 
+
+let bMap: FormColumnsType = {
+	title: '地图定位',
+	dataIndex: 'map',
+	valueType: 'map',
+	fieldProps: (form: any) => {
+		if (!form.getFieldValue('address') && form.getFieldValue('map')) {
+			form.setFieldValue('address', form.getFieldValue('map'))
+		}
+	}
+}
+
 export const singleAddView: View = {
 	kind: 'stepForm',
 	mount: (location, formRef) => {
@@ -144,13 +157,13 @@ export const singleAddView: View = {
 	columns: [
 		[
 			commodityName,
-			// commodityType,
-			// salesChannels,
-			// salesModel,
+			commodityType,
+			salesChannels,
+			salesModel,
 			// commodityPrice
 		],
 		[
-			// singleName
+			singleName
 		],
 		[],
 	],
@@ -264,16 +277,7 @@ export const aggregateAddView: View = {
 					action: '/api/images/upload',
 				},
 			},
-			{
-				title: '地图定位',
-				dataIndex: 'map',
-				valueType: 'map',
-				fieldProps: (form: any) => {
-					if (!form.getFieldValue('address') && form.getFieldValue('map')) {
-						form.setFieldValue('address', form.getFieldValue('map'))
-					}
-				}
-			},
+			bMap,
 			{
 				title: '地址',
 				dataIndex: 'address',
@@ -281,7 +285,7 @@ export const aggregateAddView: View = {
 			},
 		],
 		[
-			// deliveryMethod
+			deliveryMethod
 		],
 		[],
 	],

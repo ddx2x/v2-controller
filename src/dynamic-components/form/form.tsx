@@ -84,11 +84,11 @@ export const Form = observer(
 
     switch (props.layoutType) {
       case 'ModalForm':
-        rest['modalProps'] = {
+        rest['modalprops'] = {
           destroyOnClose: true,
         };
       case 'DrawerForm':
-        rest['drawerProps'] = {
+        rest['drawerprops'] = {
           destroyOnClose: true,
         };
     }

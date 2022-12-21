@@ -69,7 +69,6 @@ const table: View = {
     table: {
       options: false,
       rowKey: 'uid',
-
       columns: [
         {
           dataIndex: 'uid',
@@ -123,7 +122,20 @@ const table: View = {
       kind: 'descriptions',
       dataSource: record,
       tag: '详情',
+      collapse: "true",
       ...detail,
+    },
+    {
+      kind: 'form',
+      title: '编辑',
+      triggerText: '编辑',
+      tag: '编辑',
+      collapse: "true",
+      columns: [{
+        title: '标题',
+        dataIndex: 'title',
+        valueType: 'text'
+      }]
     },
     {
       kind: 'confirm',
@@ -132,11 +144,12 @@ const table: View = {
       title: '删除',
       text: `确认删除` + record.name,
     },
+
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      tag: '编辑',
     },
   ],
   onNext: (params) =>

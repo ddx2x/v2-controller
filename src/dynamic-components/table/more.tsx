@@ -3,6 +3,7 @@ import { Link } from '@umijs/max';
 import { Button, Dropdown, MenuProps, message, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
+import { observer } from 'mobx-react';
 import React, { useRef } from 'react';
 import { Descriptions, DescriptionsProps, DescriptionsRef } from '../descriptions';
 import { Form, FormProps, FormRef } from '../form';
@@ -16,7 +17,7 @@ export declare type MenuButton = {
 } | null;
 
 // 更多按钮
-export declare type MenuButtonType = { tag: string; collapse?: boolean } & (
+export declare type MenuButtonType = { tag: string; collapse?: boolean | string } & (
   | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
   | ({ kind: 'form' } & FormProps) // 表单
   | ({ kind: 'link' } & { link: string; title: string }) // 跳转
@@ -158,7 +159,7 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
 
   return labels || collapseLabels ? (
     <Space align="center" style={{ overflowX: 'scroll', width: '100%' }}>
-      {labels.length > 0 && labels}
+      {labels.length > 0 && labels.map(item => item)}
       {collapseLabels.length > 0 && <DropdownMenu items={collapseLabels} />}
     </Space>
   ) : null;

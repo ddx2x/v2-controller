@@ -1,3 +1,5 @@
+import { ProFormColumnsType } from '@ant-design/pro-components';
+
 export * from './fields';
 export * from './form';
 export * from './stepForm';
@@ -46,3 +48,6 @@ export const ProFieldValueTypeKeys = [
   'formList',
   'formSet',
 ];
+
+
+export declare type FormColumnsType = ProFormColumnsType<any, 'text'>
