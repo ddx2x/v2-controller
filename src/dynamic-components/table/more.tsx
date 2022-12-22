@@ -3,7 +3,6 @@ import { Link } from '@umijs/max';
 import { Button, Dropdown, MenuProps, message, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
-import { observer } from 'mobx-react';
 import React, { useRef } from 'react';
 import { Descriptions, DescriptionsProps, DescriptionsRef } from '../descriptions';
 import { Form, FormProps, FormRef } from '../form';
@@ -81,11 +80,11 @@ export declare type MenuButtonGroupProps = {
   menuButtons: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
-  gT?: (T: { tag: string; func: () => void }[]) => void;
+  hooks?: (T: { tag: string; func: () => void }[]) => void;
 };
 
 export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
-  const { menuButtons, buttonType, buttonSize, gT } = props;
+  const { menuButtons, buttonType, buttonSize, hooks } = props;
   if (!menuButtons) return null;
 
   let labels: React.ReactNode[] = [];
@@ -155,7 +154,7 @@ export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
       : labels.push(label);
   });
 
-  gT && gT(T);
+  hooks && hooks(T);
 
   return labels || collapseLabels ? (
     <Space align="center" style={{ overflowX: 'scroll', width: '100%' }}>

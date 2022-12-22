@@ -24,10 +24,10 @@ export type FooterToolbarProps = {
 export const FooterToolbar: React.FC<FooterToolbarProps> = (props) => {
   const { children, className, extra, style, renderContent, routeContext, right, ...restProps } =
     props;
-  const { getPrefixCls, getTargetContainer } = useContext(ConfigProvider.ConfigContext);
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = props.prefixCls || getPrefixCls('pro');
   const baseClassName = `${prefixCls}-footer-bar`;
-  const { wrapSSR, hashId } = useStyle(baseClassName);
+  const { hashId } = useStyle(baseClassName);
 
   const width = useMemo(() => {
     const { hasSiderMenu, isMobile, siderWidth } = routeContext;

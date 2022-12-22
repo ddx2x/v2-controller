@@ -1,6 +1,7 @@
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
+import { DataNode } from 'antd/lib/tree';
 import { stringify } from 'querystring';
 import { detail } from './detail';
 import { brandNameStoreStore, commdityAggregateStore, Commodity, commodityStore } from './store';
@@ -10,10 +11,41 @@ const table: View = {
   kind: 'table',
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
+
+    const x = 3;
+    const y = 2;
+    const z = 1;
+    const defaultData: DataNode[] = [];
+
+    const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
+      const preKey = _preKey || '0';
+      const tns = _tns || defaultData;
+
+      const children: React.Key[] = [];
+      for (let i = 0; i < x; i++) {
+        const key = `${preKey}-${i}`;
+        tns.push({ title: key, key });
+        if (i < y) {
+          children.push(key);
+        }
+      }
+      if (_level < 0) {
+        return tns;
+      }
+      const level = _level - 1;
+      children.forEach((key, index) => {
+        tns[index].children = [];
+        return generateData(level, key, tns[index].children);
+      });
+    };
+    generateData(z);
+
+
     configMap?.replace({
-      pagination: {
-        total: commdityAggregateStore.count,
-      },
+      // pagination: {
+      //   total: commdityAggregateStore.count,
+      // },
+      treeData: defaultData,
       laoding: commdityAggregateStore.loading,
       dataSource: commdityAggregateStore.items,
       columns: [
@@ -52,6 +84,8 @@ const table: View = {
     });
   },
   usePagination: true,
+
+  useSiderTree: true,
   toolbar: {
     title: '商品列表',
   },
@@ -158,8 +192,6 @@ const table: View = {
       sort: { brand_name: 1 },
       ...params,
     }),
-  scrollHeight: '52vh',
-  pagination: false,
 };
 
 pageManager.register('commdity.list', {

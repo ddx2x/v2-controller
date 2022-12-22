@@ -48,7 +48,7 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   const { height, width, value, onChange } = props;
 
   useEffect(() => {
-    mapGeocoder(mapRef.current.map, value)
+    value && mapGeocoder(mapRef.current.map, value)
   }, [value, mapRef?.current?.map])
 
   return (

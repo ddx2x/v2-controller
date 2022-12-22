@@ -22,8 +22,8 @@ const ExpandRow: React.FC<ExpandRowProps> = observer((props) => {
     return (
       <Table
         {...table}
-        search={false}
-        expanding={true}
+        useSearch={false}
+        isExpandNode={true}
         cardBordered={false}
         cardProps={{
           style: { background: '#fbfbfc' },
