@@ -28,13 +28,13 @@ export declare type WatchApi<T extends IObject> = {
   reset: () => any;
 };
 
-export class DefaultWatchApi<T extends IObject> implements WatchApi<T> {
+export class DefaultWatchApi<T extends IObject = any> implements WatchApi<T> {
   subscribe<S extends ObjectStore<T>>(...stores: S[]): Noop {
-    return () => {};
+    return () => { };
   }
   addListener<S extends ObjectStore<T>>(store: S, ecb: EventHandle): Noop {
-    return () => {};
+    return () => { };
   }
 
-  reset() {}
+  reset() { }
 }

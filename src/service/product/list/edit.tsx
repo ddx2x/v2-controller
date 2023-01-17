@@ -291,7 +291,7 @@ export const aggregateAddView: View = {
 	],
 };
 
-pageManager.register('commdity.list.aggregate_add', {
+pageManager.register('product.list.aggregate_add', {
 	page: {
 		view: [aggregateAddView],
 		container: {

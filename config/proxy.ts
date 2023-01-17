@@ -20,7 +20,7 @@ export default {
       changeOrigin: true,
       logger: console,
     },
-    '/prod/**': {
+    '/product-t/**': {
       target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,

@@ -182,7 +182,7 @@ const table: View = {
     }),
 };
 
-pageManager.register('commdity.list', {
+pageManager.register('product.list', {
   page: {
     view: [table],
   },

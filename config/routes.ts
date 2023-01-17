@@ -23,41 +23,63 @@ export default [
   },
   {
     name: '商品',
-    path: '/commdity',
+    path: '/product',
     icon: 'compass',
     routes: [
       {
         name: '商品列表',
-        path: '/commdity/list',
+        path: '/product/list',
         icon: 'setting',
         component: './dynamic-view',
         routes: [
           {
             name: '单品新增',
-            path: '/commdity/list/add',
+            path: '/product/list/add',
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/commdity/list'],
+            parentKeys: ['/product/list'],
             hideInMenu: true,
           },
           {
             name: '单品编辑',
-            path: '/commdity/list/edit',
+            path: '/product/list/edit',
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/commdity/list'],
+            parentKeys: ['/product/list'],
             hideInMenu: true,
           },
           {
             name: '商品编辑',
-            path: '/commdity/list/aggregate_add',
+            path: '/product/list/aggregate_add',
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/commdity/list'],
+            parentKeys: ['/product/list'],
             hideInMenu: true,
           },
         ],
       },
+      {
+        name: '商品分类',
+        path: '/product/category',
+        icon: 'setting',
+        component: './dynamic-view',
+        routes: [
+          {
+            name: '商品属性',
+            path: '/product/category/attribute',
+            icon: 'setting',
+            component: './dynamic-view',
+            parentKeys: ['/product/category'],
+            hideInMenu: true,
+          },
+        ]
+      },
+      {
+        name: '商品品牌',
+        path: '/product/brand',
+        icon: 'setting',
+        component: './dynamic-view',
+      }
     ],
   },
 

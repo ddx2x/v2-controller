@@ -55,7 +55,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   protected bindDataBuffersUpdater = (delay = 200) => {
     return reaction(
       () => this.dataBuffers.slice()[0],
-      () => {},
+      () => { },
       {
         delay: delay,
       },

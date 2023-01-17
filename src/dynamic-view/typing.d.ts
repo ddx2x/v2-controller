@@ -14,15 +14,15 @@ export declare type View =
 
 export declare type Page = { view: View[]; container?: PageContainerProps };
 
-export declare type Store = {
-  store: ObjectStore<IObject>;
+export declare type Store<S extends ObjectStore<IObject>> = {
+  store: S;
   query?: Query;
   load?: (query?: Query) => Promise<void>;
   watch?: () => void;
   exit?: () => void;
 };
 
-export declare type PageSchema<S extends Store> = {
+export declare type PageSchema<S extends Store = any> = {
   page: Page;
   stores?: S[];
 };
