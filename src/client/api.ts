@@ -21,6 +21,7 @@ export interface IObjectApiLinkRef {
 
 export interface ObjectData {
   uid: string;
+  _id: string;
   kind: string;
   version: number;
 }

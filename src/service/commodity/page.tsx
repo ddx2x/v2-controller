@@ -12,33 +12,33 @@ const table: View = {
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
 
-    const x = 3;
-    const y = 2;
-    const z = 1;
+    // const x = 3;
+    // const y = 2;
+    // const z = 1;
     const defaultData: DataNode[] = [];
 
-    const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
-      const preKey = _preKey || '0';
-      const tns = _tns || defaultData;
+    // const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
+    //   const preKey = _preKey || '0';
+    //   const tns = _tns || defaultData;
 
-      const children: React.Key[] = [];
-      for (let i = 0; i < x; i++) {
-        const key = `${preKey}-${i}`;
-        tns.push({ title: key, key });
-        if (i < y) {
-          children.push(key);
-        }
-      }
-      if (_level < 0) {
-        return tns;
-      }
-      const level = _level - 1;
-      children.forEach((key, index) => {
-        tns[index].children = [];
-        return generateData(level, key, tns[index].children);
-      });
-    };
-    generateData(z);
+    //   const children: React.Key[] = [];
+    //   for (let i = 0; i < x; i++) {
+    //     const key = `${preKey}-${i}`;
+    //     tns.push({ title: key, key });
+    //     if (i < y) {
+    //       children.push(key);
+    //     }
+    //   }
+    //   if (_level < 0) {
+    //     return tns;
+    //   }
+    //   const level = _level - 1;
+    //   children.forEach((key, index) => {
+    //     tns[index].children = [];
+    //     return generateData(level, key, tns[index].children);
+    //   });
+    // };
+    // generateData(z);
 
 
     configMap?.replace({
@@ -74,8 +74,8 @@ const table: View = {
         {
           dataIndex: 'brand_name',
           title: '品牌',
-          filters: true,
-          onFilter: true,
+          // filters: true,
+          // onFilter: true,
           ellipsis: true,
           valueType: 'select',
           valueEnum: brandNameStoreStore.selectOptions(),
@@ -85,7 +85,7 @@ const table: View = {
   },
   usePagination: true,
 
-  useSiderTree: true,
+  // useSiderTree: true,
   toolbar: {
     title: '商品列表',
   },
@@ -160,18 +160,6 @@ const table: View = {
       ...detail,
     },
     {
-      kind: 'form',
-      title: '编辑',
-      triggerText: '编辑',
-      tag: '编辑',
-      collapse: "true",
-      columns: [{
-        title: '标题',
-        dataIndex: 'title',
-        valueType: 'text'
-      }]
-    },
-    {
       kind: 'confirm',
       onClick: () => message.info('删除成功'),
       tag: '删除',
@@ -183,7 +171,7 @@ const table: View = {
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '编辑',
+      tag: '详情',
     },
   ],
   onNext: (params) =>

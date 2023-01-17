@@ -6,11 +6,16 @@ export type IObjectConstructor<T extends IObject = any> = new (
 
 export class IObject implements ObjectData {
   uid: string = '';
+  _id: string = '';
   kind: string = '';
   version: number = 0;
 
   constructor(data: ObjectData) {
     Object.assign(this, data);
+  }
+
+  getUid = (): string => {
+    return this.uid != '' ? this.uid : this._id
   }
 
   static isObjectData(data: any): data is ObjectData {
