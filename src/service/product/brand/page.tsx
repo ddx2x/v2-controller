@@ -119,7 +119,7 @@ const table: View = {
   onNext: (params) =>
     brandStore.next({
       limit: { page: 0, size: 10 },
-      sort: { brand_name: 1 },
+      sort: { version: 1 },
       ...params,
     }),
 };
