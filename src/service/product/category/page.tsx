@@ -4,61 +4,56 @@ import { message } from 'antd';
 import { categoryStore } from './store';
 
 const table: View = {
-  kind: 'table',
+  store: categoryStore,
+  kind: 'storeTable',
   rowKey: 'uid',
-  mount: (location, actionRef, formRef, configMap) => {
-    configMap?.replace({
-      pagination: {
-        total: 1,
-      },
-      laoding: categoryStore.loading,
-      dataSource: categoryStore.items,
-      columns: [
-        {
-          dataIndex: 'uid',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'uid',
-          title: '类型名称',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'product_count',
-          title: '商品数量',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'product_unit',
-          title: '商品单位',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'nav_status',
-          title: '导航栏显示',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'show_status',
-          title: '是否显示',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'sort',
-          title: '排序',
-          hideInSearch: true,
-          editable: false,
-        },
-      ],
-    });
-  },
   usePagination: true,
+  pagination: {
+    total: 1,
+  },
+  columns: [
+    {
+      dataIndex: 'uid',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'uid',
+      title: '类型名称',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'product_count',
+      title: '商品数量',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'product_unit',
+      title: '商品单位',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'nav_status',
+      title: '导航栏显示',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'show_status',
+      title: '是否显示',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'sort',
+      title: '排序',
+      hideInSearch: true,
+      editable: false,
+    },
+  ],
   toolbar: {
     title: '数据列表',
   },
@@ -75,6 +70,7 @@ const table: View = {
       kind: 'descriptions',
       dataSource: record,
       tag: '详情',
+      columns: [],
       collapse: "true",
     },
     {
@@ -84,7 +80,6 @@ const table: View = {
       title: '删除',
       text: `确认删除` + record.name,
     },
-
   ],
   onRowEvent: [
     {

@@ -4,13 +4,8 @@ import { customerStore } from './store';
 
 // 商品列表
 const table: View = {
-  mount(location, actionRef, formRef, configMap) {
-    configMap?.replace({
-      dataSource: () => customerStore.items,
-      loading: () => customerStore.loading,
-    });
-  },
-  kind: 'table',
+  kind: 'storeTable',
+  store: customerStore,
   rowKey: 'uid',
   columns: [
     {
@@ -36,7 +31,7 @@ const table: View = {
   ],
   expand: {
     kind: 'table',
-    onData: (record) => {
+    onData: (record: any) => {
       [record];
     },
     table: {
@@ -60,7 +55,7 @@ const table: View = {
       ],
     },
   },
-  tableMenu: (record) => [
+  tableMenu: (record: any) => [
     {
       kind: 'descriptions',
       tag: '详情',

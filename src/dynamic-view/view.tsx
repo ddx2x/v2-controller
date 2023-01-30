@@ -11,7 +11,7 @@ import type { FormProps, StepFormProps } from '../dynamic-components/form';
 import { Form, StepForm } from '../dynamic-components/form';
 import type { ListProps } from '../dynamic-components/list';
 import { List } from '../dynamic-components/list';
-import type { TableProps } from '../dynamic-components/table';
+import { StoreTable, TableProps } from '../dynamic-components/table';
 import { Table } from '../dynamic-components/table';
 import { eventEmitter } from './event';
 import { pageManager } from './manager';
@@ -51,6 +51,9 @@ export default observer(() => {
             props['location'] = location;
             props['key'] = index;
 
+            if (kind == 'storeTable') {
+              return <StoreTable {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
+            }
             if (kind == 'table') {
               return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
             }

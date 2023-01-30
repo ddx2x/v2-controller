@@ -66,6 +66,8 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 // 下拉框
 export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
   const { items } = props;
+  console.log('items', items);
+  
   return (
     <Dropdown menu={{ items }} forceRender>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>

@@ -8,7 +8,8 @@ import { brandNameStoreStore, commdityAggregateStore, Commodity, commodityStore 
 
 // 商品列表
 const table: View = {
-  kind: 'table',
+  store: commdityAggregateStore,
+  kind: 'storeTable',
   rowKey: 'uid',
   mount: (location, actionRef, formRef, configMap) => {
 

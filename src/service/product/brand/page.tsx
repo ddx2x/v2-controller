@@ -4,84 +4,76 @@ import { message } from 'antd';
 import { brandStore } from './store';
 
 const table: View = {
-  kind: 'table',
+  kind: 'storeTable',
+  store: brandStore,
   rowKey: 'uid',
-  mount: (location, actionRef, formRef, configMap) => {
-    configMap?.replace({
-      pagination: {
-        total: 1,
-      },
-      laoding: brandStore.loading,
-      dataSource: brandStore.items,
-      columns: [
-        {
-          dataIndex: 'uid',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'uid',
-          title: '名称',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'first_letter',
-          title: '首字母',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'sort',
-          title: '排序',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'factory_status',
-          title: '制造商',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'show_status',
-          title: '品牌',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'product_count',
-          title: '商品数',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'product_comment_count',
-          title: '评论数',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'logo',
-          title: '品牌logo',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'big_pic',
-          title: '专区大图',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'big_pic',
-          title: '专区大图',
-          hideInSearch: true,
-          editable: false,
-        },
-      ],
-    });
-  },
+  columns: [
+    {
+      dataIndex: 'uid',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'uid',
+      title: '名称',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'first_letter',
+      title: '首字母',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'sort',
+      title: '排序',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'factory_status',
+      title: '制造商',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'show_status',
+      title: '品牌',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'product_count',
+      title: '商品数',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'product_comment_count',
+      title: '评论数',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'logo',
+      title: '品牌logo',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'big_pic',
+      title: '专区大图',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'big_pic',
+      title: '专区大图',
+      hideInSearch: true,
+      editable: false,
+    },
+  ],
   usePagination: true,
   toolbar: {
     title: '数据列表',
@@ -132,8 +124,8 @@ pageManager.register('product.brand', {
     {
       store: brandStore,
       query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: brandStore.next,
-      exit: brandStore.load,
+      load: brandStore.load,
+      exit: brandStore.reset,
     }
   ],
 });

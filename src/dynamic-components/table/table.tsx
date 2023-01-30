@@ -5,11 +5,10 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Button, FormInstance, Input, Space, Tree } from 'antd';
+import { Button, Input, Space, Tree } from 'antd';
 import { DataNode, EventDataNode } from 'antd/lib/tree';
-import type { Location } from 'history';
 import { merge } from 'lodash';
-import { observable, ObservableMap } from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -35,8 +34,6 @@ const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
   return parentKey!;
 };
 
-
-
 const defaulScrollHeight = '500px';
 
 export declare type TableProps = Omit<ProTableProps<any, any>, 'pagination' | 'onRow' | 'search'> & {
@@ -50,13 +47,14 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'pagination' | 'o
   toolBarMenu?: () => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
+  // 虚拟滚动 加载数据
   onNext?: (
     params?: any,
     sort?: any,
     filter?: any,
     treeSelectedNode?: any,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
-  ) => void; // 虚拟滚动 加载数据
+  ) => void;
   // 批量删除
   batchDelete?: (selectedRows: any) => void; // 批量删除回调函数
   isExpandNode?: boolean;
@@ -69,19 +67,7 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'pagination' | 'o
     mouseEvent: 'onClick' | 'onDoubleClick';
     tag: string; // 按钮
   }[];
-} & RouterHistory & {
-  mount?: (
-    location?: Location | undefined,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-    formRef?: React.MutableRefObject<FormInstance | undefined>,
-    configMap?: ObservableMap<any, any>,
-  ) => void;
-  unMount?: (
-    location?: Location | undefined,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-    config?: ObservableMap<any, any>,
-  ) => void;
-};
+} & RouterHistory;
 
 export const Table: React.FC<TableProps> = observer((props) => {
   let {
@@ -94,8 +80,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 挂载
     editable,
     location,
-    mount,
-    unMount,
     // 列表
     onNext,
     columns,
@@ -124,7 +108,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const formRef = useRef<ProFormInstance>();
   const [treeSelectedNode, setTreeSelectedNode] = useState<EventDataNode<DataNode>>()
 
-  mount && mount(location, actionRef, formRef, configMap)
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);

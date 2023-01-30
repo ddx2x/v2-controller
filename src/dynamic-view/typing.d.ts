@@ -3,9 +3,10 @@ import type { PageContainerProps } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
 import type { ListProps } from '../dynamic-components/list';
-import type { TableProps } from '../dynamic-components/table';
+import type { StoreTableProps, TableProps } from '../dynamic-components/table';
 
 export declare type View =
+  | ({ kind: 'storeTable' } & StoreTableProps)
   | ({ kind: 'table' } & TableProps)
   | ({ kind: 'list' } & ListProps)
   | ({ kind: 'form' } & FormProps)

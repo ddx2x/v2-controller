@@ -1,6 +1,6 @@
 import { Page, PageSchema, Store } from './typing';
 
-class PageManager<S extends Store> {
+class PageManager<S extends Store<any>> {
   private stores = new Map<string, PageSchema<S>>();
 
   init = (key: string) =>
