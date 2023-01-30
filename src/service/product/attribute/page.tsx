@@ -6,7 +6,7 @@ import { productAttributeStore } from './store';
 const table: View = {
   kind: 'table',
   rowKey: 'uid',
-  mount: (location, actionRef, formRef, configMap) => {
+  mount: (location: any, actionRef: any, formRef: any, configMap: any) => {
     configMap?.replace({
       pagination: {
         total: 1,
@@ -70,7 +70,7 @@ const table: View = {
       title: '新增',
     },
   ],
-  tableMenu: (record, action) => [
+  tableMenu: (record: any, action: any) => [
     {
       kind: 'descriptions',
       dataSource: record,
@@ -92,7 +92,7 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params) =>
+  onNext: (params: any) =>
     productAttributeStore.next({
       limit: { page: 0, size: 10 },
       sort: { brand_name: 1 },

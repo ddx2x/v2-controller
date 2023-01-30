@@ -65,7 +65,7 @@ const table: View = {
       title: '新增',
     },
   ],
-  tableMenu: (record, action) => [
+  tableMenu: (record: any, action: any) => [
     {
       kind: 'descriptions',
       dataSource: record,
@@ -87,7 +87,7 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params) =>
+  onNext: (params:any) =>
     categoryStore.next({
       limit: { page: 0, size: 10 },
       sort: { brand_name: 1 },

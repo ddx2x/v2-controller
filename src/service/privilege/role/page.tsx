@@ -1,78 +1,31 @@
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
-import { brandStore } from './store';
+import { roleStore } from './store';
 
 const table: View = {
   kind: 'storeTable',
-  store: brandStore,
+  store: roleStore,
   rowKey: 'uid',
   columns: [
     {
       dataIndex: 'uid',
+      title: 'id',
       hideInSearch: true,
       editable: false,
     },
     {
-      dataIndex: 'uid',
-      title: '名称',
+      dataIndex: 'is_super_admin',
+      title: '是否超级管理员',
       hideInSearch: true,
       editable: false,
     },
     {
-      dataIndex: 'first_letter',
-      title: '首字母',
+      dataIndex: 'privilege_ids',
+      title: '权限ids',
       hideInSearch: true,
       editable: false,
-    },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'factory_status',
-      title: '制造商',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'show_status',
-      title: '品牌',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'product_count',
-      title: '商品数',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'product_comment_count',
-      title: '评论数',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'logo',
-      title: '品牌logo',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'big_pic',
-      title: '专区大图',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'big_pic',
-      title: '专区大图',
-      hideInSearch: true,
-      editable: false,
-    },
+    }
   ],
   usePagination: true,
   toolbar: {
@@ -109,23 +62,23 @@ const table: View = {
     },
   ],
   onNext: (params: any) =>
-    brandStore.next({
+    roleStore.next({
       limit: { page: 0, size: 10 },
       sort: { version: 1 },
       ...params,
     }),
 };
 
-pageManager.register('product.brand', {
+pageManager.register('privilege.role', {
   page: {
     view: [table],
   },
   stores: [
     {
-      store: brandStore,
+      store: roleStore,
       query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: brandStore.load,
-      exit: brandStore.reset,
+      load: roleStore.load,
+      exit: roleStore.reset,
     }
   ],
 });

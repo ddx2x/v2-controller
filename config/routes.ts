@@ -156,6 +156,35 @@ export default [
   },
 
   {
+    name: '权限管理',
+    path: '/privilege',
+    icon: 'setting',
+    routes: [
+      {
+        name: '用户',
+        path: '/privilege/user',
+        icon: 'user',
+        component: './dynamic-view',
+        routes: [],
+      },
+      {
+        name: '角色',
+        path: '/privilege/role',
+        icon: 'role',
+        component: './dynamic-view',
+        routes: [],
+      },
+      {
+        name: '资源',
+        path: '/privilege/resource',
+        icon: 'resource',
+        component: './dynamic-view',
+        routes: [],
+      }
+    ],
+  },
+
+  {
     name: '设置',
     path: '/settings',
     icon: 'setting',
@@ -187,14 +216,7 @@ export default [
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
-      },
-      {
-        name: '帐号权限',
-        path: '/settings/permissions',
-        icon: 'setting',
-        component: './dynamic-view',
-        routes: [],
-      },
+      }
     ],
   },
 ];
