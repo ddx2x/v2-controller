@@ -73,12 +73,12 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params: any) =>
-    userStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
-      ...params,
-    }),
+  // onNext: (params: any) =>
+  //   userStore.next({
+  //     limit: { page: 0, size: 10 },
+  //     sort: { version: 1 },
+  //     ...params,
+  //   }),
 };
 
 pageManager.register('privilege.user', {

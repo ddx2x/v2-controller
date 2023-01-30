@@ -10,7 +10,7 @@ const table: View = {
   columns: [
     {
       dataIndex: 'uid',
-      title: 'id',
+      title: '角色',
       hideInSearch: true,
       editable: false,
     },
@@ -61,12 +61,12 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params: any) =>
-    roleStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
-      ...params,
-    }),
+  // onNext: (params: any) =>
+  //   roleStore.next({
+  //     limit: { page: 0, size: 10 },
+  //     sort: { version: 1 },
+  //     ...params,
+  //   }),
 };
 
 pageManager.register('privilege.role', {
