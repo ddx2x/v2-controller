@@ -21,7 +21,7 @@ const table: View = {
         },
         {
           dataIndex: 'uid',
-          title: '品牌名称',
+          title: '名称',
           hideInSearch: true,
           editable: false,
         },
@@ -39,13 +39,13 @@ const table: View = {
         },
         {
           dataIndex: 'factory_status',
-          title: '显示制造商',
+          title: '制造商',
           hideInSearch: true,
           editable: false,
         },
         {
           dataIndex: 'show_status',
-          title: '显示品牌',
+          title: '品牌',
           hideInSearch: true,
           editable: false,
         },
@@ -133,7 +133,7 @@ pageManager.register('product.brand', {
       store: brandStore,
       query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
       load: brandStore.next,
-      exit: brandStore.reset,
+      exit: brandStore.load,
     }
   ],
 });

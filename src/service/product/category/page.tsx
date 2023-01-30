@@ -108,7 +108,7 @@ pageManager.register('product.category', {
     {
       store: categoryStore,
       query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: categoryStore.next,
+      load: categoryStore.load,
       exit: categoryStore.reset,
     }
   ],
