@@ -1,4 +1,4 @@
-import { FormColumnsType } from '@/dynamic-components';
+import { FormColumnsType, StepFormProps } from '@/dynamic-components';
 import { pageManager, View } from '@/dynamic-view';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
@@ -186,8 +186,7 @@ export declare type Query = {
 	name?: string;
 };
 
-export const singleEditView: View = {
-	kind: 'stepForm',
+export const singleEditView: StepFormProps = {
 	mount: (location, formRef) => {
 		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
@@ -233,7 +232,7 @@ export const singleEditView: View = {
 
 pageManager.register('commdity.list.edit', {
 	page: {
-		view: [singleEditView],
+		view: [{ kind: 'stepForm', ...singleEditView }],
 		container: {
 			keepAlive: false,
 			header: {

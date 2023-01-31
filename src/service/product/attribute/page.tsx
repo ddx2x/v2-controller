@@ -1,63 +1,54 @@
+import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { productAttributeStore } from './store';
 
-const table: View = {
-  kind: 'table',
+const attributeStoretable: StoreTableProps = {
+  store: productAttributeStore,
   rowKey: 'uid',
-  mount: (location: any, actionRef: any, formRef: any, configMap: any) => {
-    configMap?.replace({
-      pagination: {
-        total: 1,
-      },
-      laoding: productAttributeStore.loading,
-      dataSource: productAttributeStore.items,
-      columns: [
-        {
-          dataIndex: 'uid',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'name',
-          title: '属性名称',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'category_id',
-          title: '商品类型',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'select_type',
-          title: '是否多选',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'input_type',
-          title: '录入方式',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'input_select_list',
-          title: '可选值列表',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'sort',
-          title: '排序',
-          hideInSearch: true,
-          editable: false,
-        },
-      ],
-    });
-  },
+  columns: [
+    {
+      dataIndex: 'uid',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'name',
+      title: '属性名称',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'category_id',
+      title: '商品类型',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'select_type',
+      title: '是否多选',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'input_type',
+      title: '录入方式',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'input_select_list',
+      title: '可选值列表',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'sort',
+      title: '排序',
+      hideInSearch: true,
+      editable: false,
+    },
+  ],
   usePagination: true,
   toolbar: {
     title: '数据列表',
@@ -70,7 +61,7 @@ const table: View = {
       title: '新增',
     },
   ],
-  tableMenu: (record: any, action: any) => [
+  tableMenu: (record, action) => [
     {
       kind: 'descriptions',
       dataSource: record,
@@ -102,7 +93,7 @@ const table: View = {
 
 pageManager.register('product.category.attribute', {
   page: {
-    view: [table],
+    view: [{ kind: 'storeTable', ...attributeStoretable }],
   },
   stores: [
     {

@@ -1,89 +1,78 @@
+import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import { stringify } from 'querystring';
 import { detail } from './detail';
 import { brandNameStoreStore, commdityAggregateStore, Commodity, commodityStore } from './store';
 
+
+// const x = 3;
+// const y = 2;
+// const z = 1;
+const defaultData: DataNode[] = [];
+
+// const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
+//   const preKey = _preKey || '0';
+//   const tns = _tns || defaultData;
+
+//   const children: React.Key[] = [];
+//   for (let i = 0; i < x; i++) {
+//     const key = `${preKey}-${i}`;
+//     tns.push({ title: key, key });
+//     if (i < y) {
+//       children.push(key);
+//     }
+//   }
+//   if (_level < 0) {
+//     return tns;
+//   }
+//   const level = _level - 1;
+//   children.forEach((key, index) => {
+//     tns[index].children = [];
+//     return generateData(level, key, tns[index].children);
+//   });
+// };
+// generateData(z);
+
 // 商品列表
-const table: View = {
+const commdityAggregateTable: StoreTableProps = {
   store: commdityAggregateStore,
-  kind: 'storeTable',
   rowKey: 'uid',
-  mount: (location, actionRef, formRef, configMap) => {
-
-    // const x = 3;
-    // const y = 2;
-    // const z = 1;
-    const defaultData: DataNode[] = [];
-
-    // const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
-    //   const preKey = _preKey || '0';
-    //   const tns = _tns || defaultData;
-
-    //   const children: React.Key[] = [];
-    //   for (let i = 0; i < x; i++) {
-    //     const key = `${preKey}-${i}`;
-    //     tns.push({ title: key, key });
-    //     if (i < y) {
-    //       children.push(key);
-    //     }
-    //   }
-    //   if (_level < 0) {
-    //     return tns;
-    //   }
-    //   const level = _level - 1;
-    //   children.forEach((key, index) => {
-    //     tns[index].children = [];
-    //     return generateData(level, key, tns[index].children);
-    //   });
-    // };
-    // generateData(z);
-
-
-    configMap?.replace({
-      // pagination: {
-      //   total: commdityAggregateStore.count,
-      // },
-      treeData: defaultData,
-      laoding: commdityAggregateStore.loading,
-      dataSource: commdityAggregateStore.items,
-      columns: [
-        {
-          dataIndex: 'uid',
-          title: '商品标题(SPU)',
-          hideInSearch: true,
-        },
-        {
-          dataIndex: 'sub_title',
-          title: '子标题',
-          hideInSearch: true,
-          editable: false,
-        },
-        {
-          dataIndex: 'sale_channels',
-          title: '销售渠道',
-          valueType: 'checkbox',
-          ellipsis: true,
-          valueEnum: {
-            1: '线上',
-            2: '线下',
-          },
-          hideInSearch: true,
-        },
-        {
-          dataIndex: 'brand_name',
-          title: '品牌',
-          // filters: true,
-          // onFilter: true,
-          ellipsis: true,
-          valueType: 'select',
-          valueEnum: brandNameStoreStore.selectOptions(),
-        },
-      ],
-    });
-  },
+  treeData: defaultData,
+  columns: [
+    {
+      dataIndex: 'uid',
+      title: '商品标题(SPU)',
+      hideInSearch: true,
+    },
+    {
+      dataIndex: 'sub_title',
+      title: '子标题',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'sale_channels',
+      title: '销售渠道',
+      valueType: 'checkbox',
+      ellipsis: true,
+      valueEnum: {
+        1: '线上',
+        2: '线下',
+      },
+      hideInSearch: true,
+    },
+    {
+      dataIndex: 'brand_name',
+      title: '品牌',
+      // filters: true,
+      // onFilter: true,
+      ellipsis: true,
+      valueType: 'select',
+      valueEnum: brandNameStoreStore.selectOptions(),
+    },
+  ],
   usePagination: true,
 
   // useSiderTree: true,
@@ -185,7 +174,7 @@ const table: View = {
 
 pageManager.register('product.list', {
   page: {
-    view: [table],
+    view: [{ kind: 'storeTable', ...commdityAggregateTable }],
   },
   stores: [
     {

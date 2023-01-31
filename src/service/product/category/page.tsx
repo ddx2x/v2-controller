@@ -3,7 +3,7 @@ import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { categoryStore } from './store';
 
-const table: StoreTableProps = {
+const categoryStoreTable: StoreTableProps = {
   store: categoryStore,
   rowKey: 'uid',
   usePagination: true,
@@ -89,7 +89,7 @@ const table: StoreTableProps = {
 
 pageManager.register('product.category', {
   page: {
-    view: [{ kind: 'storeTable', ...table }],
+    view: [{ kind: 'storeTable', ...categoryStoreTable }],
   },
   stores: [
     {

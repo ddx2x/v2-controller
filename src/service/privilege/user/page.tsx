@@ -1,10 +1,9 @@
+import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { userStore } from './store';
 
-const table: View = {
-  kind: 'storeTable',
+const userStoreTable: StoreTableProps = {
   store: userStore,
   rowKey: 'uid',
   columns: [
@@ -83,7 +82,7 @@ const table: View = {
 
 pageManager.register('privilege.user', {
   page: {
-    view: [table],
+    view: [{ kind: 'storeTable', ...userStoreTable }],
   },
   stores: [
     {
