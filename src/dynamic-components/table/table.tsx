@@ -4,8 +4,8 @@ import {
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
 import { FormattedMessage } from '@umijs/max';
-import { Button, Input, Space, Tree } from 'antd';
-import { DataNode, EventDataNode } from 'antd/lib/tree';
+import { Button, Space } from 'antd';
+import { DataNode } from 'antd/lib/tree';
 import { merge } from 'lodash';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -15,23 +15,8 @@ import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
-import { MenuButtonGroup, MenuButtonType } from './more';
-
-// 🌲树父节点
-const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
-  let parentKey: React.Key;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey!;
-};
+import { MenuButton, MenuButtonType } from './menu-button';
+import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
@@ -71,6 +56,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'paginati
 
 export const Table: React.FC<TableProps> = observer((props) => {
   let {
+    treeData,
     value,
     // 批量删除
     useSearch,
@@ -105,10 +91,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     ...rest
   } = props;
 
-  const configMap = observable.map({});
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
-  const [treeSelectedNode, setTreeSelectedNode] = useState<EventDataNode<DataNode>>()
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -184,44 +168,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
     // 侧边搜索树🌲
     if (useSiderTree) {
-      const [treeExpandedKeys, setTreeExpandedKeys] = useState<React.Key[]>([]);
-      const [treeSearchValue, setTreeSearchValue] = useState('');
-      const [autoExpandParent, setAutoExpandParent] = useState(true);
-
-      const treeDataList: { key: React.Key; title: string }[] = [];
-      const generateList = (data: DataNode[]) => {
-        for (let i = 0; i < data.length; i++) {
-          const node = data[i];
-          const { key } = node;
-          treeDataList.push({ key, title: key as string });
-          if (node.children) {
-            generateList(node.children);
-          }
-        }
-      };
-
-      generateList(rest['treeData'] || []);
-
-      const onTreeExpand = (newExpandedKeys: React.Key[]) => {
-        setTreeExpandedKeys(newExpandedKeys);
-        setAutoExpandParent(false);
-      }
-
-      const onTreeSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // 树搜索框搜索值
-        const { value } = e.target;
-        const newExpandedKeys = treeDataList.map((item) => {
-          if (typeof item.title !== 'string') return null
-          if (item.title.indexOf(value) > -1) {
-            return getParentKey(item.key, rest['treeData'] || []);
-          }
-          return null;
-        })
-          .filter((item, i, self) => item && self.indexOf(item) === i);
-        setTreeExpandedKeys(newExpandedKeys as React.Key[]);
-        setTreeSearchValue(value);
-        setAutoExpandParent(true);
-      };
 
       const withTreeWidth = useMemo(() => {
         const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
@@ -241,50 +187,11 @@ export const Table: React.FC<TableProps> = observer((props) => {
         routeContext?.siderWidth,
       ]);
 
-      const treeData = useMemo(() => {
-        let tD = rest['treeData'] || []
-        const loop = (data: DataNode[]): DataNode[] =>
-          data.map((item) => {
-            const strTitle = item.title as string;
-            const index = strTitle.indexOf(treeSearchValue);
-            const beforeStr = strTitle.substring(0, index);
-            const afterStr = strTitle.slice(index + treeSearchValue.length);
-            const title =
-              index > -1 ? (
-                <span>
-                  {beforeStr}
-                  <span className="site-tree-search-value">{treeSearchValue}</span>
-                  {afterStr}
-                </span>
-              ) : (
-                <span>{strTitle}</span>
-              );
-            if (item.children) {
-              return { title, key: item.key, children: loop(item.children) };
-            }
-
-            return {
-              title,
-              key: item.key,
-            };
-          });
-        return loop(tD);
-      }, [treeSearchValue]);
-
       return (
         <>
           <div style={{ display: 'flex' }}>
             <ProCard bordered style={{ width: 249, marginRight: 7 }}>
-              <Input style={{ marginBottom: 8 }} placeholder="搜索" onChange={onTreeSearchChange} />
-              <Tree
-                blockNode
-                showLine
-                treeData={treeData}
-                onExpand={onTreeExpand}
-                expandedKeys={treeExpandedKeys}
-                autoExpandParent={autoExpandParent}
-                onSelect={(_: any, { node }) => { setTreeSelectedNode(node); actionRef.current?.reload() }}
-              />
+              <Tree treeData={treeData || []} />
             </ProCard>
             <div ref={setContainer} style={{ width: withTreeWidth }}>
               {defaultDom}
@@ -319,7 +226,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 工具栏操作
     toolbar: {
       actions: [
-        <MenuButtonGroup menuButtons={toolBarMenu ? toolBarMenu() : []} />
+        <MenuButton menus={toolBarMenu ? toolBarMenu() : []} />
       ],
     },
     expandable: {
@@ -334,7 +241,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   if (useTableMoreOption) {
     const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
-
     // 更多操作 按钮
     newColumns = newColumns.filter((item: { dataIndex: string }) => item.dataIndex != 'more');
     const moreColumns = {
@@ -344,8 +250,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
       fixed: 'right',
       render: (text: any, record: any, index: any, action: any) => {
         return (
-          <MenuButtonGroup
-            menuButtons={tableMenu ? tableMenu(record, action) : []}
+          <MenuButton
+            menus={tableMenu ? tableMenu(record, action) : []}
             hooks={(T) => { optionHooks[index] = T }}
           />
         )
@@ -353,7 +259,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     };
     newColumns.push(moreColumns);
 
-    // 绑定点击事件
+    // 绑定点击事件 单击 双击
     rest['onRow'] = (_: any, index: number) => {
       let events = {};
       onRowEvent &&
@@ -370,7 +276,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
   // 合并配置
   merge(rest, defaultConfig);
-  merge(rest, Object.fromEntries(configMap));
   merge(rest, {
     components: rest.dataSource && rest.dataSource.length > 10 ? vComponents : undefined,
     pagination: usePagination ? {
@@ -383,7 +288,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     const { pageSize: size, current: current, ...more } = params;
     const order = sort;
     const page = current - 1;
-    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, treeSelectedNode, actionRef);
+    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, null, actionRef);
     return { success: true };
   }
 

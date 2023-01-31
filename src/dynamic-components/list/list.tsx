@@ -3,7 +3,7 @@ import type {
   FormInstance,
   ProFormInstance,
   ProListProps,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import type { Location } from 'history';
@@ -14,7 +14,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { RouterHistory } from '../router';
-import { MenuButtonType } from '../table/more';
+import { MenuButtonType } from '../table/menu-button';
 
 import { ProList } from './proList';
 
@@ -32,19 +32,19 @@ export type ListProps = ProListProps & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-      formRef?: React.MutableRefObject<FormInstance | undefined>,
-      configMap?: ObservableMap<any, any>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-      formRef?: React.MutableRefObject<FormInstance | undefined>,
-      configMap?: ObservableMap<any, any>,
-    ) => void;
-  };
+  mount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>,
+    formRef?: React.MutableRefObject<FormInstance | undefined>,
+    configMap?: ObservableMap<any, any>,
+  ) => void;
+  unMount?: (
+    location: Location | undefined,
+    actionRef: React.MutableRefObject<ActionType | undefined>,
+    formRef?: React.MutableRefObject<FormInstance | undefined>,
+    configMap?: ObservableMap<any, any>,
+  ) => void;
+};
 
 export const List: React.FC<ListProps> = observer((props) => {
   const {

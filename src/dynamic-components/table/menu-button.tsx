@@ -77,22 +77,22 @@ export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => 
   );
 };
 
-export declare type MenuButtonGroupProps = {
-  menuButtons: MenuButtonType[] | undefined;
+export declare type MenuButtonProps = {
+  menus: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
   hooks?: (T: { tag: string; func: () => void }[]) => void;
 };
 
-export const MenuButtonGroup: React.FC<MenuButtonGroupProps> = (props) => {
-  const { menuButtons, buttonType, buttonSize, hooks } = props;
-  if (!menuButtons) return null;
+export const MenuButton: React.FC<MenuButtonProps> = (props) => {
+  const { menus, buttonType, buttonSize, hooks } = props;
+  if (!menus) return null;
 
   let labels: React.ReactNode[] = [];
   let collapseLabels: { label: React.ReactNode; key: string }[] = [];
   let T: { tag: string; func: () => void }[] = [];
 
-  menuButtons.forEach((item) => {
+  menus.forEach((item) => {
     const tag = item.tag;
     const key = randomKey(5, { numbers: true });
     const collapse = item.collapse || false;
