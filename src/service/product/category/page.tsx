@@ -14,11 +14,6 @@ const table: View = {
   columns: [
     {
       dataIndex: 'uid',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'uid',
       title: '类型名称',
       hideInSearch: true,
       editable: false,
@@ -87,12 +82,12 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params:any) =>
-    categoryStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { brand_name: 1 },
-      ...params,
-    }),
+  // onNext: (params:any) =>
+  //   categoryStore.next({
+  //     limit: { page: 0, size: 10 },
+  //     sort: { brand_name: 1 },
+  //     ...params,
+  //   }),
 };
 
 pageManager.register('product.category', {

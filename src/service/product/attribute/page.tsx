@@ -66,7 +66,7 @@ const table: View = {
     {
       kind: 'link',
       tag: '新增',
-      link: `/product/brand/add`,
+      link: `/product/attribute/add`,
       title: '新增',
     },
   ],
@@ -92,12 +92,12 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params: any) =>
-    productAttributeStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { brand_name: 1 },
-      ...params,
-    }),
+  // onNext: (params: any) =>
+  //   productAttributeStore.next({
+  //     limit: { page: 0, size: 10 },
+  //     sort: { brand_name: 1 },
+  //     ...params,
+  //   }),
 };
 
 pageManager.register('product.category.attribute', {

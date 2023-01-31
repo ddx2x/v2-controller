@@ -10,11 +10,6 @@ const table: View = {
   columns: [
     {
       dataIndex: 'uid',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'uid',
       title: '名称',
       hideInSearch: true,
       editable: false,
@@ -22,7 +17,6 @@ const table: View = {
     {
       dataIndex: 'first_letter',
       title: '首字母',
-      hideInSearch: true,
       editable: false,
     },
     {
@@ -33,15 +27,17 @@ const table: View = {
     },
     {
       dataIndex: 'factory_status',
-      title: '制造商',
+      title: '显示制造商',
       hideInSearch: true,
       editable: false,
+      valueType: 'switch',
     },
     {
       dataIndex: 'show_status',
-      title: '品牌',
+      title: '显示品牌',
       hideInSearch: true,
       editable: false,
+      valueType: 'switch',
     },
     {
       dataIndex: 'product_count',
@@ -60,6 +56,7 @@ const table: View = {
       title: '品牌logo',
       hideInSearch: true,
       editable: false,
+      valueType: 'image',
     },
     {
       dataIndex: 'big_pic',
@@ -68,8 +65,8 @@ const table: View = {
       editable: false,
     },
     {
-      dataIndex: 'big_pic',
-      title: '专区大图',
+      dataIndex: 'lookup_down',
+      title: '查看下级',
       hideInSearch: true,
       editable: false,
     },
@@ -108,12 +105,12 @@ const table: View = {
       tag: '详情',
     },
   ],
-  onNext: (params: any) =>
-    brandStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
-      ...params,
-    }),
+  // onNext: (params: any) =>
+  //   brandStore.next({
+  //     limit: { page: 0, size: 10 },
+  //     sort: { version: 1 },
+  //     ...params,
+  //   }),
 };
 
 pageManager.register('product.brand', {
