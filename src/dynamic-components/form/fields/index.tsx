@@ -1,12 +1,11 @@
 import { Table } from '@/dynamic-components/table';
-import { EditableProTable } from '@ant-design/pro-components';
-import { TableProps } from '../../table';
 import { Form, FormProps } from '../form';
 import { valueTypeMapStore } from '../valueTypeMap';
 import { bMap } from './baiduMap';
 import { cardField, CardFieldProps } from './card';
 import { imageUploadField, ImageUploadFieldProps } from './imageUpload';
 import { monacoEditorField, MonacoEditorFieldProps } from './monacoEditor';
+import { tagField } from './tag';
 import { videoUploadField, VideoUploadFieldProps } from './videoUpload';
 
 declare module '@ant-design/pro-utils' {
@@ -15,22 +14,22 @@ declare module '@ant-design/pro-utils' {
     imageUpload: ImageUploadFieldProps;
     videoUpload: VideoUploadFieldProps;
     monacoEditor: MonacoEditorFieldProps;
-    table: TableProps;
-    // editTable: EditTableProps;
     form: FormProps;
     map: any;
+    tag: any;
   }
 }
 
+// 注册两种主件 第一项为只读 第二项为编辑组件
 const valueTypeMap = {
-  card: cardField,
-  imageUpload: imageUploadField,
-  videoUpload: videoUploadField,
-  editTable: EditableProTable,
-  monacoEditor: monacoEditorField,
-  table: Table,
-  form: Form,
-  map: bMap,
+  card: [cardField, cardField],
+  imageUpload: [imageUploadField, imageUploadField],
+  videoUpload: [videoUploadField, videoUploadField],
+  monacoEditor: [monacoEditorField, monacoEditorField],
+  table: [Table, Table],
+  form: [Form, Form],
+  map: [bMap, bMap],
+  tag: [tagField, tagField]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);

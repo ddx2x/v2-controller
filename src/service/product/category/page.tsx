@@ -25,18 +25,49 @@ const categoryStoreTable: StoreTableProps = {
       title: '商品单位',
       hideInSearch: true,
       editable: false,
+      valueType: 'tag',
+      valueEnum: {
+        '辆': {
+          status: 'success',
+        },
+        '件': {
+          status: 'error',
+        },
+      },
     },
     {
       dataIndex: 'nav_status',
       title: '导航栏显示',
       hideInSearch: true,
       editable: false,
+      valueType: 'select',
+      valueEnum: {
+        0: {
+          text: '未启用',
+          status: 'Error',
+        },
+        1: {
+          text: '已启用',
+          status: 'Processing',
+        },
+      },
     },
     {
       dataIndex: 'show_status',
       title: '是否显示',
       hideInSearch: true,
       editable: false,
+      valueType: 'select',
+      valueEnum: {
+        1: {
+          text: '未显示',
+          status: 'Error',
+        },
+        0: {
+          text: '已显示',
+          status: 'Success',
+        },
+      },
     },
     {
       dataIndex: 'sort',

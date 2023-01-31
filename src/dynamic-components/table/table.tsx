@@ -13,6 +13,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
+import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menu-button';
@@ -70,7 +71,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     location,
     // 列表
     onNext,
-    columns,
     // 展开
     isExpandNode,
     expand,
@@ -235,16 +235,35 @@ export const Table: React.FC<TableProps> = observer((props) => {
     tableRender: tableRender,
   };
 
-
   // 挂载行
-  let newColumns = rest['columns'] || columns || [];
+  let newColumns = rest['columns'] || [];
+  newColumns = newColumns.filter((item) => item.dataIndex != 'menuButton');
+
+  let customValueTypeKeys = Object.keys(valueTypeMapStore.stores)
+  // 挂载自定义类型 valueType
+  newColumns = newColumns.map(
+    item => {
+      if (typeof item.valueType == 'string' && customValueTypeKeys.includes(item.valueType)) {
+        let render = valueTypeMapStore.stores[item.valueType].render as any
+        return {
+          ...item,
+          renderFormItem: (dom, { defaultRender }) => {
+            return defaultRender(dom);
+          },
+          render: (dom: any, record) => {
+            return render(dom?.props.text, { ...dom?.props || {}, value: dom.props.text }, dom)
+          }
+        }
+      }
+      return item
+    }
+  )
 
   if (useTableMoreOption) {
     const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
     // 更多操作 按钮
-    newColumns = newColumns.filter((item: { dataIndex: string }) => item.dataIndex != 'more');
-    const moreColumns = {
-      dataIndex: 'more',
+    newColumns.push({
+      dataIndex: 'menuButton',
       title: '操作',
       editable: false,
       fixed: 'right',
@@ -256,8 +275,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           />
         )
       },
-    };
-    newColumns.push(moreColumns);
+    });
 
     // 绑定点击事件 单击 双击
     rest['onRow'] = (_: any, index: number) => {
