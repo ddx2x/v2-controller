@@ -12,7 +12,7 @@ export declare type SearchLabelProps = FormProps & {
 
 export const SearchLabel = (props: SearchLabelProps) => {
   const { searchObject, ...rest } = props;
-  const [form] = useForm(rest);
+  const form = useForm(rest);
   return (
     <>
       <Divider orientation="left" plain>
