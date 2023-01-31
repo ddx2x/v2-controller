@@ -1,16 +1,12 @@
+import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { categoryStore } from './store';
 
-const table: View = {
+const table: StoreTableProps = {
   store: categoryStore,
-  kind: 'storeTable',
   rowKey: 'uid',
   usePagination: true,
-  pagination: {
-    total: 1,
-  },
   columns: [
     {
       dataIndex: 'uid',
@@ -49,6 +45,7 @@ const table: View = {
       editable: false,
     },
   ],
+  editableValuesChange: (record) => { console.log(record) },
   toolbar: {
     title: '数据列表',
   },
@@ -92,7 +89,7 @@ const table: View = {
 
 pageManager.register('product.category', {
   page: {
-    view: [table],
+    view: [{ kind: 'storeTable', ...table }],
   },
   stores: [
     {

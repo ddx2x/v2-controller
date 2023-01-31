@@ -21,14 +21,14 @@ export declare type MenuButtonType = { tag: string; collapse?: boolean | string 
   | ({ kind: 'form' } & FormProps) // 表单
   | ({ kind: 'link' } & { link: string; title: string }) // 跳转
   | ({ kind: 'implement' } & {
-      title: string;
-      onClick?: ((e?: React.MouseEvent) => void) | undefined;
-    })
+    title: string;
+    onClick?: ((e?: React.MouseEvent) => void) | undefined;
+  })
   | ({ kind: 'confirm' } & {
-      title: string;
-      text?: string;
-      onClick?: ((e?: React.MouseEvent) => void) | undefined;
-    })
+    title: string;
+    text?: string;
+    onClick?: ((e?: React.MouseEvent) => void) | undefined;
+  })
 ); // 确认框自定义操作
 
 // 前置确认框
@@ -66,8 +66,7 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 // 下拉框
 export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
   const { items } = props;
-  console.log('items', items);
-  
+
   return (
     <Dropdown menu={{ items }} forceRender>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>

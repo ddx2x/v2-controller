@@ -12,7 +12,6 @@ export class Brand extends IObject {
     big_pic: string | undefined
     brand_story: string | undefined
 
-
     constructor(data: Brand) {
         super(data);
         Object.assign(this, data);

@@ -1,9 +1,8 @@
 import {
-  ActionType, ProCard, ProFormInstance,
-  ProTable,
-  ProTableProps,
+  ActionType, EditableProTable, ProCard, ProFormInstance, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
+import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
 import { FormattedMessage } from '@umijs/max';
 import { Button, Input, Space, Tree } from 'antd';
 import { DataNode, EventDataNode } from 'antd/lib/tree';
@@ -36,12 +35,13 @@ const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<ProTableProps<any, any>, 'pagination' | 'onRow' | 'search'> & {
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'pagination' | 'onRow' | 'search'> & {
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单才对
   usePagination?: boolean; // 开启分页
   useSiderTree?: boolean; // 侧边树
+  editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolBarMenu?: () => MenuButtonType[];
@@ -71,14 +71,16 @@ export declare type TableProps = Omit<ProTableProps<any, any>, 'pagination' | 'o
 
 export const Table: React.FC<TableProps> = observer((props) => {
   let {
+    value,
     // 批量删除
     useSearch,
     useBatchDelete,
     useTableMoreOption,
     usePagination,
     useSiderTree,
+    // 表格编辑
+    editableValuesChange,
     // 挂载
-    editable,
     location,
     // 列表
     onNext,
@@ -108,7 +110,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const formRef = useRef<ProFormInstance>();
   const [treeSelectedNode, setTreeSelectedNode] = useState<EventDataNode<DataNode>>()
 
-
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -127,22 +128,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     preserveSelectedRowKeys: true,
     onChange: (_: any, selectedRows: any) => setSelectedRows(selectedRows),
   };
-
-  // 加载更多按钮
-  const LoadMore: React.FC = () => {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Button
-          style={{ width: '350px' }}
-          key="loadMore"
-          onClick={() => onNext && onNext(actionRef)}
-        >
-          加载更多
-        </Button>
-      </div>
-    );
-  };
-
 
   // 提示操作按钮
   const Footer: React.FC = () => {
@@ -303,7 +288,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
             </ProCard>
             <div ref={setContainer} style={{ width: withTreeWidth }}>
               {defaultDom}
-              {!usePagination && <LoadMore />}
             </div>
           </div>
           <Footer />
@@ -316,7 +300,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     return (
       <>
         <div ref={tableHeight !== '100%' ? setContainer : null}>{defaultDom}</div>
-        {!usePagination && <LoadMore />}
         <Footer />
       </>
     );
@@ -339,7 +322,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
         <MenuButtonGroup menuButtons={toolBarMenu ? toolBarMenu() : []} />
       ],
     },
-    editable: editable,
     expandable: {
       ...expandModule(expand ? expand : null),
     },
@@ -358,7 +340,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     const moreColumns = {
       dataIndex: 'more',
       title: '操作',
-      valueType: 'option',
+      editable: false,
       fixed: 'right',
       render: (text: any, record: any, index: any, action: any) => {
         return (
@@ -405,14 +387,31 @@ export const Table: React.FC<TableProps> = observer((props) => {
     return { success: true };
   }
 
+  const recordCreatorPosition = 'hidden'
+
   return (
-    <ProTable
+    <EditableProTable
+      recordCreatorProps={
+        recordCreatorPosition !== 'hidden'
+          ? {
+            position: recordCreatorPosition as 'top',
+            record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
+          }
+          : false
+      }
       columns={newColumns}
+      value={value}
       request={request}
       actionRef={actionRef}
       formRef={formRef}
       rowSelection={rowSelection}
       scroll={{ y: tableHeight, x: '100%' }}
+      editable={{
+        type: 'multiple',
+        editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
+        actionRender: () => { return [] },
+        onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+      }}
       {...rest}
     />
   );

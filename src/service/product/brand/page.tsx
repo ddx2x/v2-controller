@@ -1,12 +1,15 @@
+import { StoreTableProps } from '@/dynamic-components/table';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
 import { brandStore } from './store';
 
-const table: View = {
-  kind: 'storeTable',
+const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
+  usePagination: true,
+  toolbar: {
+    title: '数据列表',
+  },
   columns: [
     {
       dataIndex: 'uid',
@@ -29,14 +32,12 @@ const table: View = {
       dataIndex: 'factory_status',
       title: '显示制造商',
       hideInSearch: true,
-      editable: false,
       valueType: 'switch',
     },
     {
       dataIndex: 'show_status',
       title: '显示品牌',
       hideInSearch: true,
-      editable: false,
       valueType: 'switch',
     },
     {
@@ -71,10 +72,7 @@ const table: View = {
       editable: false,
     },
   ],
-  usePagination: true,
-  toolbar: {
-    title: '数据列表',
-  },
+  editableValuesChange: (record) => { console.log(record) },
   toolBarMenu: () => [
     {
       kind: 'link',
@@ -83,13 +81,7 @@ const table: View = {
       title: '新增',
     },
   ],
-  tableMenu: (record: any, action: any) => [
-    {
-      kind: 'descriptions',
-      dataSource: record,
-      tag: '详情',
-      collapse: "true",
-    },
+  tableMenu: (record, action) => [
     {
       kind: 'confirm',
       onClick: () => message.info('删除成功'),
@@ -97,12 +89,11 @@ const table: View = {
       title: '删除',
       text: `确认删除` + record.name,
     },
-
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      tag: '表单编辑',
     },
   ],
   // onNext: (params: any) =>
@@ -115,7 +106,7 @@ const table: View = {
 
 pageManager.register('product.brand', {
   page: {
-    view: [table],
+    view: [{ kind: 'storeTable', ...brandStoreTable }],
   },
   stores: [
     {
