@@ -8,7 +8,7 @@ export declare type CardProps = FormProps & ProFieldFCRenderProps & {
 export const Card: React.FC<CardProps> = (props) => {
   const { value, proCardProps, fieldProps, ...rest } = props;
 
-  const formDom = useForm({
+  const form = useForm({
     submitter: false,
     layoutType: 'Form',
     initialValues: value || {},
@@ -16,5 +16,5 @@ export const Card: React.FC<CardProps> = (props) => {
     ...rest,
   });
 
-  return <ProCard {...proCardProps}>{formDom}</ProCard>;
+  return <ProCard {...proCardProps}>{form}</ProCard>;
 };

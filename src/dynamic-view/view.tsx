@@ -2,7 +2,6 @@ import { randomKey } from '@/dynamic-components/helper';
 import NoFoundPage from '@/pages/404';
 import { RouteContext } from '@ant-design/pro-components';
 import { useIntl, useLocation } from '@umijs/max';
-import { observer } from 'mobx-react';
 import { useContext } from 'react';
 import { isCachingNode, PageContainer } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
@@ -24,7 +23,7 @@ const trRouterKey = (path: string) => {
     .join('.');
 };
 
-export default observer(() => {
+export default () => {
   eventEmitter.on('pageManagerClear', (path: string) => {
     pageManager.clear(trRouterKey(path));
   });
@@ -95,4 +94,4 @@ export default observer(() => {
       {page}
     </PageContainer>
   );
-});
+};

@@ -37,7 +37,7 @@ const defaultData: DataNode[] = [];
 
 // 商品列表
 const commdityAggregateTable: StoreTableProps = {
-   // useSiderTree: true,
+  // useSiderTree: true,
   toolbarTitle: '商品列表',
   store: commdityAggregateStore,
   rowKey: 'uid',
@@ -79,9 +79,9 @@ const commdityAggregateTable: StoreTableProps = {
   toolBarMenu: () => [
     {
       kind: 'link',
-      tag: '新增',
+      tag: '单品新增',
+      title: '单品新增',
       link: `/product/list/aggregate_add`,
-      title: '新增',
     },
   ],
   expand: {
@@ -122,18 +122,10 @@ const commdityAggregateTable: StoreTableProps = {
         },
         {
           kind: 'link',
-          collapse: true,
-          link: `/product/list/aggregate_edit` + `?` + stringify({ name: record.name }),
           tag: '编辑',
           title: '编辑',
-        },
-      ],
-      toolBarMenu: () => [
-        {
-          kind: 'link',
-          tag: '新增',
-          link: `/product/list/aggregate_add`,
-          title: '新增',
+          collapse: true,
+          link: `/product/list/aggregate_edit` + `?` + stringify({ name: record.name }),
         },
       ],
     },

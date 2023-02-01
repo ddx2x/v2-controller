@@ -7,7 +7,6 @@ import { FormattedMessage } from '@umijs/max';
 import { Button, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -20,8 +19,7 @@ import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<EditableProTableProps<any, any>, 'onRow' | 'search'> & {
-
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' | 'search'> & {
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单才对
@@ -55,7 +53,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'onRow' |
   }[];
 } & RouterHistory;
 
-export const Table: React.FC<TableProps> = observer((props) => {
+export const Table: React.FC<TableProps> = (props) => {
   let {
     columns,
     treeData,
@@ -336,7 +334,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
       />
     </ProProvider.Provider>
   );
-});
+};
 
 Table.defaultProps = {
   useSearch: true,

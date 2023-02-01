@@ -92,8 +92,6 @@ let commodityName: FormColumnsType = {
 	},
 };
 
-
-
 let deliveryMethod: FormColumnsType = {
 	title: '配送方式',
 	dataIndex: 'deliveryMethod',
@@ -142,48 +140,11 @@ let bMap: FormColumnsType = {
 	}
 }
 
-export const singleAddStepForm: StepFormProps = {
-	onMount: (location, formRef) => {
-		let data = location?.search.split('?')[1] || '';
-		location?.search && formRef.current?.setFieldsValue({ commodityName: data });
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
-	},
-	steps: singleSteps,
-	columns: [
-		[
-			commodityName,
-			commodityType,
-			salesChannels,
-			salesModel,
-			// commodityPrice
-		],
-		[
-			singleName
-		],
-		[],
-	],
-};
-
-pageManager.register('commdity.list.add', {
-	page: {
-		view: [{ kind: 'stepForm', ...singleAddStepForm }],
-		container: {
-			keepAlive: true,
-			header: {
-				title: '单品新增',
-			},
-		},
-	},
-	stores: [],
-});
-
 export declare type Query = {
 	name?: string;
 };
 
-export const singleEditView: StepFormProps = {
+const singleEditView: StepFormProps = {
 	onMount: (location, formRef) => {
 		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
@@ -240,12 +201,10 @@ pageManager.register('commdity.list.aggregate_edit', {
 	stores: [],
 });
 
-export const aggregateAddStepForm: StepFormProps = {
+const aggregateAddStepForm: StepFormProps = {
 	onMount: (location, formRef) => {
-		formRef.current?.setFieldsValue({
-			// map: '广州市天河区时代E-PARK',
-			address: '广州市天河区时代E-PARK'
-		})
+		formRef.current?.setFieldValue('name', '广州市天河区时代E-PARK')
+		console.log(formRef.current?.getFieldValue('name'))
 	},
 	unMount: (location, formRef) => {
 		formRef.current?.resetFields();
@@ -286,9 +245,9 @@ pageManager.register('product.list.aggregate_add', {
 	page: {
 		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
 		container: {
-			keepAlive: false,
+			keepAlive: true,
 			header: {
-				title: '商品添加',
+				title: '单品新增',
 			},
 		},
 	},

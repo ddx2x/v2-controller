@@ -8,7 +8,6 @@ import type {
 import type { Location } from 'history';
 import lodash from 'lodash';
 import { ObservableMap } from 'mobx';
-import { observer } from 'mobx-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
@@ -45,7 +44,7 @@ export type ListProps = ProListProps & {
   ) => void;
 };
 
-export const List: React.FC<ListProps> = observer((props) => {
+export const List: React.FC<ListProps> = (props) => {
   const {
     location,
     onMount,
@@ -117,7 +116,7 @@ export const List: React.FC<ListProps> = observer((props) => {
       {...rest}
     />
   );
-});
+};
 
 List.defaultProps = {
   pagination: false,

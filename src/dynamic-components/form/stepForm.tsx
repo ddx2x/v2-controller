@@ -5,7 +5,6 @@ import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
@@ -14,6 +13,8 @@ import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
+  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
@@ -22,12 +23,9 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   onFinish?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
-} & RouterHistory & {
-  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
-  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
-};
+} & RouterHistory;
 
-export const StepForm: React.FC<StepFormProps> = observer((props) => {
+export const StepForm: React.FC<StepFormProps> = (props) => {
   const {
     location,
     onMount,
@@ -39,7 +37,6 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     submitTimeout,
     onFinish,
     width,
-    //
     routeContext,
     ...rest
   } = props;
@@ -51,11 +48,9 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => { setIsModalOpen(true) };
 
   const triggerDom = () => {
     return (
@@ -111,12 +106,15 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     }
   };
 
+  console.log('initialValues', rest['columns']);
+
+
   const stepsForm = () => {
     return (
       <ProProvider.Provider
         value={{
           ...useContext(ProProvider),
-          valueTypeMap: valueTypeMapStore.stores,
+          valueTypeMap: valueTypeMapStore.stores
         }}
       >
         <BetaSchemaForm
@@ -149,7 +147,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     default:
       return <>{stepsForm()}</>;
   }
-});
+};
 
 StepForm.defaultProps = {
   title: '新建',

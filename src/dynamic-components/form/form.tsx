@@ -8,7 +8,6 @@ import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
-import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
@@ -20,9 +19,12 @@ export declare type FormRef = {
 };
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
+  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
+  trigger?: () => void;
   layoutType?: FormSchema['layoutType'];
   triggerText?: string;
-  buttonType?: ButtonType;
+  buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (
@@ -31,13 +33,9 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   ) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
-} & RouterHistory & {
-  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
-  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
-  trigger?: () => void;
-};
+} & RouterHistory
 
-export const Form = observer(
+export const Form =
   React.forwardRef((props: FormProps, forwardRef) => {
     const {
       location,
@@ -53,9 +51,7 @@ export const Form = observer(
     } = props;
 
     useImperativeHandle(forwardRef, () => {
-      return {
-        open: () => showModal(),
-      };
+      return { open: () => showModal() };
     });
 
     const formRef = useRef<ProFormInstance>();
@@ -68,10 +64,7 @@ export const Form = observer(
       };
     }, []);
 
-    const showModal = () => {
-      setModalVisible(true);
-    };
-
+    const showModal = () => { setModalVisible(true) };
 
     switch (props.layoutType) {
       case 'ModalForm':
@@ -115,8 +108,8 @@ export const Form = observer(
         />
       </ProProvider.Provider>
     );
-  }),
-);
+  }
+  );
 
 Form.defaultProps = {
   title: '新建表单',

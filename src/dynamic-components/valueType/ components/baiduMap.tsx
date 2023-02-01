@@ -38,14 +38,13 @@ export function mapGeocoder(map: any, address: string, handle?: () => void) {
 export declare type BaiduMapProps = ProFieldFCRenderProps & {
   height?: number | string;
   width?: number | string;
-  useRetrieval?: boolean;
 };
 
 export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   const mapRef = useRef<any>(null);
   const [inputValue, setInputValue] = useState('');
 
-  const { useRetrieval, height, width, value, fieldProps } = props;
+  const { height, width, value, fieldProps } = props;
 
   useEffect(() => {
     value && mapGeocoder(mapRef.current.map, value)
@@ -59,29 +58,25 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
       zoom={10}
     >
       {/* 地址检索 */}
-      {useRetrieval ? (
-        <>
-          <Input
-            size="small"
-            id="locatoinSearch"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="请搜索并选择地址"
-            style={{ position: 'absolute', top: '15px', left: '10px', width: '50%', zIndex: 50 }}
-          />
-          <AutoComplete
-            input={'locatoinSearch'}
-            onConfirm={(e: any) => {
-              const c = e?.item.value;
-              const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
-              mapGeocoder(mapRef.current.map, l, () => {
-                setInputValue(l);
-                fieldProps && fieldProps.onChange(l);
-              });
-            }}
-          />
-        </>
-      ) : null}
+      <Input
+        size="small"
+        id="locatoinSearch"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="请搜索并选择地址"
+        style={{ position: 'absolute', top: '15px', left: '10px', width: '50%', zIndex: 50 }}
+      />
+      <AutoComplete
+        input={'locatoinSearch'}
+        onConfirm={(e: any) => {
+          const c = e?.item.value;
+          const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
+          mapGeocoder(mapRef.current.map, l, () => {
+            setInputValue(l);
+            fieldProps && fieldProps.onChange(l);
+          });
+        }}
+      />
       <ZoomControl map={mapRef?.current?.map} />
     </Map>
   );
@@ -91,7 +86,7 @@ export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
-  return <BMap useRetrieval {...props} />
+  return <BMap  {...props} />
 }
 
 export const BMapRender: React.FC<BaiduMapProps> = (props) => {
