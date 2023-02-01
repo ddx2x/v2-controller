@@ -48,7 +48,6 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => { setIsModalOpen(true) };
 
@@ -105,9 +104,6 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         );
     }
   };
-
-  console.log('initialValues', rest['columns']);
-
 
   const stepsForm = () => {
     return (

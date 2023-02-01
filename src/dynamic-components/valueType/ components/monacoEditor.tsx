@@ -8,7 +8,7 @@ export declare type MonacoEditorProps = monaco.editor.IStandaloneEditorConstruct
 };
 
 export const MonacoEditor: React.FC<MonacoEditorProps> = (props) => {
-  const { width, height, value, fieldProps, ...rest } = props;
+  const { width, height, value, onChange, ...rest } = props;
 
   useEffect(() => {
     const el = document.getElementById('monaco-editor');

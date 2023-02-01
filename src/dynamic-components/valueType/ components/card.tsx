@@ -6,13 +6,13 @@ export declare type CardProps = FormProps & ProFieldFCRenderProps & {
 };
 
 export const Card: React.FC<CardProps> = (props) => {
-  const { value, proCardProps, fieldProps, ...rest } = props;
+  const { value, proCardProps, onChange, ...rest } = props;
 
   const form = useForm({
     submitter: false,
     layoutType: 'Form',
     initialValues: value || {},
-    onValuesChange: (_: any, values: any) => fieldProps && fieldProps.onChange({ ...values }),
+    onValuesChange: (_: any, values: any) => onChange && onChange({ ...values }),
     ...rest,
   });
 

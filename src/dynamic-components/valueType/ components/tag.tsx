@@ -11,10 +11,7 @@ const TagIcon = {
   'stop': <MinusCircleOutlined />
 }
 
-export declare type TagProps = ProFieldFCRenderProps & {
-  value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
-}
+export declare type TagProps = ProFieldFCRenderProps 
 
 // 编辑
 export const TagRenderFormItem: React.FC<TagProps> = (props) => {

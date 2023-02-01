@@ -13,7 +13,7 @@ export declare type VideoUploadProps = UploadProps & ProFieldFCRenderProps & {
 };
 
 export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
-  const { name, listType, newMode, maxNumber, buttonText, action, value, fieldProps, ...rest } = props;
+  const { name, listType, newMode, maxNumber, buttonText, action, value, onChange, ...rest } = props;
   const fileList = value?.fileList || [];
 
   // 图片预览
@@ -37,7 +37,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
     fileList
       .filter((item) => item.uid == info.file.uid)
       .map((item) => (item.url = '/media/file/' + item.name));
-    fieldProps && fieldProps.onChange({ fileList: fileList });
+    onChange && onChange({ fileList: fileList });
   };
 
   const button = <Button icon={<UploadOutlined />}>{buttonText || '上传视频'}</Button>;

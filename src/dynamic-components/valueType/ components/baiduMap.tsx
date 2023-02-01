@@ -44,7 +44,7 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   const mapRef = useRef<any>(null);
   const [inputValue, setInputValue] = useState('');
 
-  const { height, width, value, fieldProps } = props;
+  const { height, width, value, onChange } = props;
 
   useEffect(() => {
     value && mapGeocoder(mapRef.current.map, value)
@@ -73,7 +73,7 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
           const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
           mapGeocoder(mapRef.current.map, l, () => {
             setInputValue(l);
-            fieldProps && fieldProps.onChange(l);
+            onChange && onChange(l);
           });
         }}
       />
@@ -86,6 +86,8 @@ export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
+  console.log(props);
+
   return <BMap  {...props} />
 }
 

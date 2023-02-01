@@ -13,7 +13,7 @@ class ValueTypeMapStore {
           return <Render {...props} value={text} />;
         },
         renderFormItem: (text, props) => {
-          return <RenderFormItem {...props}  />;
+          return <RenderFormItem {...props} {...props.fieldProps}  />;
         },
       }),
     );

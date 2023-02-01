@@ -1,4 +1,4 @@
-import { FormColumnsType, StepFormProps } from '@/dynamic-components';
+import { FormColumnsType, FormProps, StepFormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
@@ -203,7 +203,7 @@ pageManager.register('commdity.list.aggregate_edit', {
 
 const aggregateAddStepForm: StepFormProps = {
 	onMount: (location, formRef) => {
-		formRef.current?.setFieldValue('name', '广州市天河区时代E-PARK')
+		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 		console.log(formRef.current?.getFieldValue('name'))
 	},
 	unMount: (location, formRef) => {
@@ -238,6 +238,22 @@ const aggregateAddStepForm: StepFormProps = {
 			deliveryMethod
 		],
 		[],
+	],
+};
+
+const aggregateAddStepForm2: FormProps = {
+	onMount: (location, formRef) => {
+		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
+	},
+	unMount: (location, formRef) => {
+		formRef.current?.resetFields();
+	},
+	layoutType: 'Form',
+	shouldUpdate: false,
+	columns: [
+		commodityName,
+		commodityType,
+		bMap
 	],
 };
 

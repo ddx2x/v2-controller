@@ -13,7 +13,7 @@ export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { name, listType, newMode, buttonText, maxNumber, value, fieldProps, ...rest } = props;
+  const { name, listType, newMode, buttonText, maxNumber, value, onChange, ...rest } = props;
 
   const fileList = value?.fileList || [];
 
@@ -38,7 +38,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     fileList
       .filter((item) => item.uid == info.file.uid)
       .map((item) => (item.url = '/media/file/' + item.name));
-    fieldProps && fieldProps.onChange({ fileList: fileList });
+    onChange && onChange({ fileList: fileList });
   };
 
   // 按钮
