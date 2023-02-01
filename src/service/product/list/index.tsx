@@ -1,3 +1,4 @@
 export * from './detail';
-export * from './edit';
+export * from './form';
 export * from './page';
+export * from './store';

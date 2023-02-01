@@ -12,7 +12,7 @@ import type { Location } from 'history';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { valueTypeMapStore } from '../form';
+import { valueTypeMapStore } from '../valueType';
 import { RouterHistory } from '../router';
 
 export declare type DescriptionsRef = {

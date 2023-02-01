@@ -3,7 +3,7 @@ import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
 import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video-react';
-import { getBase64, handleBeforeUpload } from './utils';
+import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
 export declare type VideoUploadFieldProps = UploadProps & {
   maxNumber?: number;

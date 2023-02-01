@@ -10,7 +10,7 @@ export declare type MonacoEditorFieldProps = monaco.editor.IStandaloneEditorCons
 
 export const monacoEditorField: React.FC<MonacoEditorFieldProps> = (props) => {
   const { width, height, value, onChange, ...rest } = props;
-
+  
   useEffect(() => {
     const el = document.getElementById('monaco-editor');
     if (!el) return;

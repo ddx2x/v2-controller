@@ -1,6 +1,5 @@
 import { ProCard, ProCardProps } from '@ant-design/pro-components';
-import { useForm } from '..';
-import { FormProps } from '../form';
+import { FormProps, useForm } from '../../form';
 
 export declare type CardFieldProps = FormProps & {
   proCardProps?: ProCardProps;

@@ -2,7 +2,7 @@ import {
   BetaSchemaForm,
   ProFormInstance,
   ProProvider,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
@@ -13,7 +13,7 @@ import React, { useContext, useEffect, useImperativeHandle, useRef, useState } f
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
-import { valueTypeMapStore } from './valueTypeMap';
+import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type FormRef = {
   open: () => void;
@@ -32,16 +32,16 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-    ) => void;
-    trigger?: () => void;
-  };
+  mount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+  ) => void;
+  unMount?: (
+    location: Location | undefined,
+    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+  ) => void;
+  trigger?: () => void;
+};
 
 export const Form = observer(
   React.forwardRef((props: FormProps, forwardRef) => {

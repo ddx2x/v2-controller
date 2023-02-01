@@ -16,8 +16,8 @@ const Settings: LayoutSettings & {
   fixSiderbar: true,
   colorWeak: false,
   title: 'v2xx',
-  pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  pwa: true,
+  logo: '/giraffe-svgrepo-com.svg',
   iconfontUrl: '',
 };
 

@@ -34,7 +34,7 @@ export default [
         routes: [
           {
             name: '单品新增',
-            path: '/product/list/add',
+            path: '/product/list/aggregate_add',
             icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/list'],
@@ -42,15 +42,7 @@ export default [
           },
           {
             name: '单品编辑',
-            path: '/product/list/edit',
-            icon: 'setting',
-            component: './dynamic-view',
-            parentKeys: ['/product/list'],
-            hideInMenu: true,
-          },
-          {
-            name: '商品编辑',
-            path: '/product/list/aggregate_add',
+            path: '/product/list/aggregate_edit',
             icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/list'],

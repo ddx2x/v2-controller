@@ -14,7 +14,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { RouterHistory } from '../router';
-import { MenuButtonType } from '../table/menu-button';
+import { MenuButtonType } from '../table/menuButton';
 
 import { ProList } from './proList';
 

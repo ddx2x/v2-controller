@@ -1,5 +1,5 @@
 import { FormColumnsType, StepFormProps } from '@/dynamic-components';
-import { pageManager, View } from '@/dynamic-view';
+import { pageManager } from '@/dynamic-view';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
 
@@ -142,12 +142,9 @@ let bMap: FormColumnsType = {
 	}
 }
 
-export const singleAddView: View = {
-	kind: 'stepForm',
+export const singleAddStepForm: StepFormProps = {
 	mount: (location, formRef) => {
-		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
-		console.log('parse ', parse(data));
 		location?.search && formRef.current?.setFieldsValue({ commodityName: data });
 	},
 	unMount: (location, formRef) => {
@@ -171,7 +168,7 @@ export const singleAddView: View = {
 
 pageManager.register('commdity.list.add', {
 	page: {
-		view: [singleAddView],
+		view: [{ kind: 'stepForm', ...singleAddStepForm }],
 		container: {
 			keepAlive: true,
 			header: {
@@ -230,7 +227,7 @@ export const singleEditView: StepFormProps = {
 	],
 };
 
-pageManager.register('commdity.list.edit', {
+pageManager.register('commdity.list.aggregate_edit', {
 	page: {
 		view: [{ kind: 'stepForm', ...singleEditView }],
 		container: {
@@ -243,12 +240,9 @@ pageManager.register('commdity.list.edit', {
 	stores: [],
 });
 
-export const aggregateAddView: View = {
-	kind: 'stepForm',
+export const aggregateAddStepForm: StepFormProps = {
 	mount: (location, formRef) => {
-		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
-		console.log('parse ', parse(data));
 		// location?.search && formRef.current?.setFieldsValue({});
 		formRef.current?.setFieldsValue({
 			editor: '12345',
@@ -292,7 +286,7 @@ export const aggregateAddView: View = {
 
 pageManager.register('product.list.aggregate_add', {
 	page: {
-		view: [aggregateAddView],
+		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
 		container: {
 			keepAlive: false,
 			header: {

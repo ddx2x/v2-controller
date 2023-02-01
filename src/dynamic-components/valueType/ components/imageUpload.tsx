@@ -3,7 +3,7 @@ import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
-import { getBase64, handleBeforeUpload } from './utils';
+import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
 export declare type ImageUploadFieldProps = UploadProps & {
   maxNumber?: number;
