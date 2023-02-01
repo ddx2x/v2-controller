@@ -22,6 +22,7 @@ import { Tree } from './tree';
 const defaulScrollHeight = '500px';
 
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'pagination' | 'onRow' | 'search'> & {
+
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单才对
@@ -30,7 +31,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'paginati
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
-  toolBarMenu?: () => MenuButtonType[];
+  toolBarMenu?: (selectedRows?: any) => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
   // 虚拟滚动 加载数据
@@ -168,7 +169,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
 
     // 侧边搜索树🌲
     if (useSiderTree) {
-
       const withTreeWidth = useMemo(() => {
         const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
         if (!hasSiderMenu) {
@@ -212,7 +212,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     );
   };
 
-
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
@@ -222,11 +221,17 @@ export const Table: React.FC<TableProps> = observer((props) => {
     });
   }, []);
 
+  console.log('selectedRows...', selectedRows);
+
+  const getSelectedRows = () => {
+    return selectedRows
+  }
+
   const defaultConfig: Partial<TableProps> = {
     // 工具栏操作
     toolbar: {
       actions: [
-        <MenuButton menus={toolBarMenu ? toolBarMenu() : []} />
+        <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(getSelectedRows) : []} />
       ],
     },
     expandable: {
@@ -270,6 +275,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
       render: (text: any, record: any, index: any, action: any) => {
         return (
           <MenuButton
+            dropDownTitle='操作'
             menus={tableMenu ? tableMenu(record, action) : []}
             hooks={(T) => { optionHooks[index] = T }}
           />

@@ -80,12 +80,22 @@ const categoryStoreTable: StoreTableProps = {
   toolbar: {
     title: '数据列表',
   },
-  toolBarMenu: () => [
+  toolBarMenu: (getSelectedRows) => [
     {
       kind: 'link',
       tag: '新增',
-      link: `/product/brand/add`,
       title: '新增',
+      link: `/product/brand/add`,
+    },
+    {
+      kind: 'implement',
+      tag: '商品上架',
+      title: '商品上架',
+      onClick: (e) => {
+        console.log('selectedRows', getSelectedRows());
+        message.info('商品上架')
+      },
+      collapse: true
     },
   ],
   tableMenu: (record: any, action: any) => [
@@ -110,6 +120,7 @@ const categoryStoreTable: StoreTableProps = {
       tag: '详情',
     },
   ],
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
   // onNext: (params:any) =>
   //   categoryStore.next({
   //     limit: { page: 0, size: 10 },

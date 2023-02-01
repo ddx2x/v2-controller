@@ -64,13 +64,13 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 };
 
 // 下拉框
-export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => {
-  const { items } = props;
+export const DropdownMenu: React.FC<{ title: string | undefined, items: MenuProps['items'] }> = (props) => {
+  const { title, items } = props;
 
   return (
     <Dropdown menu={{ items }} forceRender>
       <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>
-        操作
+        {title || '操作'}
         <DownOutlined sizes={'small'} />
       </Button>
     </Dropdown>
@@ -78,6 +78,7 @@ export const DropdownMenu: React.FC<{ items: MenuProps['items'] }> = (props) => 
 };
 
 export declare type MenuButtonProps = {
+  dropDownTitle?: string
   menus: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
@@ -85,7 +86,7 @@ export declare type MenuButtonProps = {
 };
 
 export const MenuButton: React.FC<MenuButtonProps> = (props) => {
-  const { menus, buttonType, buttonSize, hooks } = props;
+  const { dropDownTitle, menus, buttonType, buttonSize, hooks } = props;
   if (!menus) return null;
 
   let labels: React.ReactNode[] = [];
@@ -160,7 +161,7 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
   return labels || collapseLabels ? (
     <Space align="center" style={{ overflowX: 'scroll', width: '100%' }}>
       {labels.length > 0 && labels.map(item => item)}
-      {collapseLabels.length > 0 && <DropdownMenu items={collapseLabels} />}
+      {collapseLabels.length > 0 && <DropdownMenu title={dropDownTitle} items={collapseLabels} />}
     </Space>
   ) : null;
 };
