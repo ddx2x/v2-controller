@@ -12,9 +12,9 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
-  pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  title: 'v2xx',
+  pwa: true,
+  logo: '/giraffe-svgrepo-com.svg',
   iconfontUrl: '',
 };
 

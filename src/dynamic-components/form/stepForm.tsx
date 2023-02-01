@@ -1,7 +1,7 @@
 import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
+import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
@@ -19,28 +19,18 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   triggerText?: string;
   buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (
-    form: FormInstance<unknown> | undefined,
-    values: any,
-    handleClose: () => void,
-  ) => boolean;
+  onFinish?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>,
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance | undefined>,
-  ) => void;
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
+  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
 };
 
 export const StepForm: React.FC<StepFormProps> = observer((props) => {
   const {
     location,
-    mount,
+    onMount,
     unMount,
     title,
     modal,
@@ -53,12 +43,11 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     routeContext,
     ...rest
   } = props;
-  // ref
-  const [form] = AntdForm.useForm();
+
   const formRef = useRef<ProFormInstance>();
 
   useEffect(() => {
-    formRef && mount && mount(location, formRef);
+    formRef && onMount && onMount(location, formRef);
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
@@ -133,16 +122,13 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
         <BetaSchemaForm
           // @ts-ignore
           formRef={formRef}
-          // @ts-ignore
-          form={form}
-          // @ts-ignore
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
           layoutType="StepsForm"
           onFinish={async (values) => {
             if (!onFinish) return false;
             await waitTime(submitTimeout);
-            return onFinish(form, values, handleClose);
+            return onFinish(formRef, values, handleClose);
           }}
           {...rest}
         />

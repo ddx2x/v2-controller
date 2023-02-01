@@ -36,21 +36,15 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   intl?: IntlShape;
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
+    onMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
+    unMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
   };
 
 export const Descriptions = observer(
   React.forwardRef((props: DescriptionsProps, forwardRef) => {
     const {
       location,
-      mount,
+      onMount,
       unMount,
       title,
       modal,
@@ -73,7 +67,7 @@ export const Descriptions = observer(
     const actionRef = useRef<ActionType>();
 
     useEffect(() => {
-      actionRef && mount && mount(location, actionRef);
+      actionRef && onMount && onMount(location, actionRef);
       return () => actionRef && unMount && unMount(location, actionRef);
     }, []);
 

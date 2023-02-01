@@ -1,7 +1,7 @@
 import { Table } from '@/dynamic-components/table';
 import { Form, FormProps } from '../../form';
 import { valueTypeMapStore } from '../valueTypeMap';
-import { BMapRender, BMapRenderFormItem, BaiduMapProps } from './baiduMap';
+import { BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
 import { cardField, CardFieldProps } from './card';
 import { imageUploadField, ImageUploadFieldProps } from './imageUpload';
 import { monacoEditorField, MonacoEditorFieldProps } from './monacoEditor';

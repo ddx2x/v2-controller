@@ -143,7 +143,7 @@ let bMap: FormColumnsType = {
 }
 
 export const singleAddStepForm: StepFormProps = {
-	mount: (location, formRef) => {
+	onMount: (location, formRef) => {
 		let data = location?.search.split('?')[1] || '';
 		location?.search && formRef.current?.setFieldsValue({ commodityName: data });
 	},
@@ -184,7 +184,7 @@ export declare type Query = {
 };
 
 export const singleEditView: StepFormProps = {
-	mount: (location, formRef) => {
+	onMount: (location, formRef) => {
 		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
 		let query: Query = parse(data);
@@ -241,12 +241,10 @@ pageManager.register('commdity.list.aggregate_edit', {
 });
 
 export const aggregateAddStepForm: StepFormProps = {
-	mount: (location, formRef) => {
-		let data = location?.search.split('?')[1] || '';
-		// location?.search && formRef.current?.setFieldsValue({});
+	onMount: (location, formRef) => {
 		formRef.current?.setFieldsValue({
-			editor: '12345',
-			map: '广州市天河区时代E-PARK',
+			// map: '广州市天河区时代E-PARK',
+			address: '广州市天河区时代E-PARK'
 		})
 	},
 	unMount: (location, formRef) => {

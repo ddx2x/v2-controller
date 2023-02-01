@@ -5,7 +5,6 @@ import type {
   ProListProps,
   RouteContextType
 } from '@ant-design/pro-components';
-import { Button } from 'antd';
 import type { Location } from 'history';
 import lodash from 'lodash';
 import { observable, ObservableMap } from 'mobx';
@@ -32,7 +31,7 @@ export type ListProps = ProListProps & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
+  onMount?: (
     location: Location | undefined,
     actionRef: React.MutableRefObject<ActionType | undefined>,
     formRef?: React.MutableRefObject<FormInstance | undefined>,
@@ -49,7 +48,7 @@ export type ListProps = ProListProps & {
 export const List: React.FC<ListProps> = observer((props) => {
   const {
     location,
-    mount,
+    onMount,
     unMount,
     dataSource,
     onNext,
@@ -66,7 +65,7 @@ export const List: React.FC<ListProps> = observer((props) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  mount && mount(location, actionRef, formRef, configMap);
+  onMount && onMount(location, actionRef, formRef, configMap);
 
   // 页面挂载 销毁事件
   useEffect(() => {
@@ -85,21 +84,6 @@ export const List: React.FC<ListProps> = observer((props) => {
     });
   });
 
-  // 加载更多按钮
-  const LoadMore: React.FC = () => {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Button
-          style={{ width: '350px' }}
-          key="loadMore"
-          onClick={() => onNext && onNext(actionRef)}
-        >
-          加载更多
-        </Button>
-      </div>
-    );
-  };
-
   // 虚拟滚动
   const vComponents = useMemo(() => {
     return VList({
@@ -112,9 +96,7 @@ export const List: React.FC<ListProps> = observer((props) => {
     size: 'small',
     components: vComponents,
     editable: {
-      onSave: async (key, record) => {
-        console.log('editable onSave......', key, record);
-      },
+      onSave: async (key, record) => { },
     },
     search: {
       labelWidth: 80,

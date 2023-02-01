@@ -32,14 +32,8 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory & {
-  mount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-  ) => void;
-  unMount?: (
-    location: Location | undefined,
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-  ) => void;
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
+  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
   trigger?: () => void;
 };
 
@@ -47,7 +41,7 @@ export const Form = observer(
   React.forwardRef((props: FormProps, forwardRef) => {
     const {
       location,
-      mount,
+      onMount,
       unMount,
       triggerText,
       buttonType,
@@ -67,20 +61,17 @@ export const Form = observer(
     const formRef = useRef<ProFormInstance>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
+    useEffect(() => {
+      formRef && onMount && onMount(location, formRef);
+      return () => {
+        formRef && unMount && unMount(location, formRef);
+      };
+    }, []);
+
     const showModal = () => {
       setModalVisible(true);
     };
 
-    useEffect(() => {
-      if (formRef && mount) {
-        mount(location, formRef);
-      }
-      return () => {
-        if (formRef && unMount) {
-          unMount(location, formRef);
-        }
-      };
-    }, []);
 
     switch (props.layoutType) {
       case 'ModalForm':

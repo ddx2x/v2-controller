@@ -1,3 +1,4 @@
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Input, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { AutoComplete, Map, MapApiLoaderHOC, ZoomControl } from 'react-bmapgl/dist';
@@ -34,19 +35,18 @@ export function mapGeocoder(map: any, address: string, handle?: () => void) {
   );
 }
 
-export declare type BaiduMapProps = {
+export declare type BaiduMapProps = ProFieldFCRenderProps & {
   height?: number | string;
   width?: number | string;
   useRetrieval?: boolean;
   value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
 };
 
 export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   const mapRef = useRef<any>(null);
   const [inputValue, setInputValue] = useState('');
 
-  const { useRetrieval, height, width, value, onChange } = props;
+  const { useRetrieval, height, width, value, fieldProps } = props;
 
   useEffect(() => {
     value && mapGeocoder(mapRef.current.map, value)
@@ -77,7 +77,7 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
               const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
               mapGeocoder(mapRef.current.map, l, () => {
                 setInputValue(l);
-                onChange && onChange(l);
+                fieldProps && fieldProps.onChange(l);
               });
             }}
           />
@@ -88,14 +88,16 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   );
 };
 
-const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
+export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
+  console.log('props', props);
   return <BMap useRetrieval {...props} />
 }
 
 export const BMapRender: React.FC<BaiduMapProps> = (props) => {
+  console.log('props', props);
   return <BMap {...props} />
 }
 
