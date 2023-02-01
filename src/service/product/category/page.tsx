@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { categoryStore } from './store';
 
 const categoryStoreTable: StoreTableProps = {
+  toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
   usePagination: true,
@@ -31,7 +32,8 @@ const categoryStoreTable: StoreTableProps = {
           status: 'success',
         },
         '件': {
-          status: 'error',
+          status: 'processing',
+          icon: 'processing'
         },
       },
     },
@@ -77,10 +79,7 @@ const categoryStoreTable: StoreTableProps = {
     },
   ],
   editableValuesChange: (record) => { console.log(record) },
-  toolbar: {
-    title: '数据列表',
-  },
-  toolBarMenu: (getSelectedRows) => [
+  toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
       tag: '新增',
@@ -89,11 +88,27 @@ const categoryStoreTable: StoreTableProps = {
     },
     {
       kind: 'implement',
-      tag: '商品上架',
-      title: '商品上架',
+      tag: '批量商品上架',
+      title: '批量商品上架',
       onClick: (e) => {
-        console.log('selectedRows', getSelectedRows());
-        message.info('商品上架')
+        console.log('批量商品上架 selectedRows', selectedRows);
+        if (selectedRows.length <= 0) {
+          message.warning('请批量选择商品'); return
+        }
+        message.info('批量商品上架成功')
+      },
+      collapse: true
+    },
+    {
+      kind: 'implement',
+      tag: '批量商品下架',
+      title: '批量商品下架',
+      onClick: (e) => {
+        console.log('批量商品下架 selectedRows', selectedRows);
+        if (selectedRows.length <= 0) {
+          message.warning('请批量选择商品'); return
+        }
+        message.info('批量商品下架成功')
       },
       collapse: true
     },

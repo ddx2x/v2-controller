@@ -6,7 +6,6 @@ import { EditableProTableProps } from '@ant-design/pro-table/es/components/Edita
 import { FormattedMessage } from '@umijs/max';
 import { Button, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
-import { merge } from 'lodash';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -31,6 +30,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'paginati
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
+  toolbarTitle?: string;
   toolBarMenu?: (selectedRows?: any) => MenuButtonType[];
   footerButton?: () => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
@@ -78,6 +78,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
     // 高度
     tableHeight,
     // 工具栏
+    toolbarTitle,
     toolBarRender,
     // 按钮操作
     tableMenu,
@@ -111,7 +112,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const rowSelection = {
     preserveSelectedRowKeys: true,
-    onChange: (_: any, selectedRows: any) => setSelectedRows(selectedRows),
+    onChange: (_: any, selectedRows: any) => { setSelectedRows(selectedRows) },
   };
 
   // 提示操作按钮
@@ -221,24 +222,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
     });
   }, []);
 
-  console.log('selectedRows...', selectedRows);
 
-  const getSelectedRows = () => {
-    return selectedRows
-  }
 
-  const defaultConfig: Partial<TableProps> = {
-    // 工具栏操作
-    toolbar: {
-      actions: [
-        <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(getSelectedRows) : []} />
-      ],
-    },
-    expandable: {
-      ...expandModule(expand ? expand : null),
-    },
-    tableRender: tableRender,
-  };
 
   // 挂载行
   let newColumns = rest['columns'] || [];
@@ -298,16 +283,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
     }
   }
 
-  // 合并配置
-  merge(rest, defaultConfig);
-  merge(rest, {
-    components: rest.dataSource && rest.dataSource.length > 10 ? vComponents : undefined,
-    pagination: usePagination ? {
-    } : false,
-    search: useSearch ? { labelWidth: 80 } : false,
-    columns: newColumns,
-  });
-
   const request = async (params: any, sort: {}, filter: {}) => {
     const { pageSize: size, current: current, ...more } = params;
     const order = sort;
@@ -317,7 +292,6 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   const recordCreatorPosition = 'hidden'
-
   return (
     <EditableProTable
       recordCreatorProps={
@@ -328,6 +302,7 @@ export const Table: React.FC<TableProps> = observer((props) => {
           }
           : false
       }
+      components={value && value.length > 10 ? vComponents : undefined}
       columns={newColumns}
       value={value}
       request={request}
@@ -340,6 +315,17 @@ export const Table: React.FC<TableProps> = observer((props) => {
         editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
         actionRender: () => { return [] },
         onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+      }}
+      search={{ labelWidth: 80 }}
+      toolbar={{
+        title: toolbarTitle,
+        actions: [
+          <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows) : []} />
+        ],
+      }}
+      tableRender={tableRender}
+      expandable={{
+        ...expandModule(expand ? expand : null)
       }}
       {...rest}
     />

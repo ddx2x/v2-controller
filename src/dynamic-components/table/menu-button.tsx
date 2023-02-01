@@ -79,6 +79,7 @@ export const DropdownMenu: React.FC<{ title: string | undefined, items: MenuProp
 
 export declare type MenuButtonProps = {
   dropDownTitle?: string
+  args?: any
   menus: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
