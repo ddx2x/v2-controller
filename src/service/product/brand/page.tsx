@@ -6,7 +6,6 @@ import { brandStore } from './store';
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
-  usePagination: true,
   toolbar: {
     title: '数据列表',
   },

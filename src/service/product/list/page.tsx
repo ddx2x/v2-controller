@@ -73,8 +73,6 @@ const commdityAggregateTable: StoreTableProps = {
       valueEnum: brandNameStoreStore.selectOptions(),
     },
   ],
-  usePagination: true,
-
   // useSiderTree: true,
   toolbar: {
     title: '商品列表',

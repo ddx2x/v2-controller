@@ -26,7 +26,6 @@ const roleStoreTable: StoreTableProps = {
       editable: false,
     }
   ],
-  usePagination: true,
   toolbar: {
     title: '数据列表',
   },

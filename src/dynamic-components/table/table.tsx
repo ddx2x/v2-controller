@@ -20,12 +20,11 @@ import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<EditableProTableProps<any, any>, 'pagination' | 'onRow' | 'search'> & {
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'onRow' | 'search'> & {
 
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单才对
-  usePagination?: boolean; // 开启分页
   useSiderTree?: boolean; // 侧边树
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
@@ -58,13 +57,13 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'paginati
 
 export const Table: React.FC<TableProps> = observer((props) => {
   let {
+    columns,
     treeData,
     value,
     // 批量删除
     useSearch,
     useBatchDelete,
     useTableMoreOption,
-    usePagination,
     useSiderTree,
     // 表格编辑
     editableValuesChange,
@@ -223,10 +222,8 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }, []);
 
 
-
-
   // 挂载行
-  let newColumns = rest['columns'] || [];
+  let newColumns = columns || [];
   newColumns = newColumns.filter((item) => item.dataIndex != 'menuButton');
 
   let customValueTypeKeys = Object.keys(valueTypeMapStore.stores)
@@ -336,7 +333,6 @@ Table.defaultProps = {
   useSearch: true,
   useBatchDelete: true,
   useTableMoreOption: true,
-  usePagination: false,
   isExpandNode: false,
   cardBordered: true,
   tableHeight: defaulScrollHeight,

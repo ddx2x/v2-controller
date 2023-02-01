@@ -49,10 +49,7 @@ const attributeStoretable: StoreTableProps = {
       editable: false,
     },
   ],
-  usePagination: true,
-  toolbar: {
-    title: '数据列表',
-  },
+  toolbarTitle: '数据列表',
   toolBarMenu: () => [
     {
       kind: 'link',
