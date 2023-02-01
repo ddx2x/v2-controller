@@ -8,6 +8,7 @@ import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { Button } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
+import { delay } from 'lodash';
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../helper/wait';
@@ -56,11 +57,10 @@ export const Form =
     });
 
     const formRef = useRef<ProFormInstance>();
-    const [submitter, setSubmitter] = useState(null)
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     useEffect(() => {
-      formRef && onMount && onMount(location, formRef);
+      delay(() => formRef && onMount && onMount(location, formRef), 10);
       return () => {
         formRef && unMount && unMount(location, formRef);
       };

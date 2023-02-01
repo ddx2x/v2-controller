@@ -5,6 +5,7 @@ import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
+import { delay } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
@@ -44,7 +45,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
   const formRef = useRef<ProFormInstance>();
 
   useEffect(() => {
-    formRef && onMount && onMount(location, formRef);
+    delay(() => formRef && onMount && onMount(location, formRef), 10);
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 

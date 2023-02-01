@@ -204,7 +204,6 @@ pageManager.register('commdity.list.aggregate_edit', {
 const aggregateAddStepForm: StepFormProps = {
 	onMount: (location, formRef) => {
 		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
-		console.log(formRef.current?.getFieldValue('name'))
 	},
 	unMount: (location, formRef) => {
 		formRef.current?.resetFields();
