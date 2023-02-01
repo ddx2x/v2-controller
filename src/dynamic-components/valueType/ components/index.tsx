@@ -2,20 +2,20 @@ import { Table } from '@/dynamic-components/table';
 import { Form, FormProps } from '../../form';
 import { valueTypeMapStore } from '../valueTypeMap';
 import { BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
-import { cardField, CardFieldProps } from './card';
-import { imageUploadField, ImageUploadFieldProps } from './imageUpload';
-import { monacoEditorField, MonacoEditorFieldProps } from './monacoEditor';
+import { Card, CardProps } from './card';
+import { ImageUploadRenderFormItem, ImageUploadRender, ImageUploadProps } from './imageUpload';
+import { MonacoEditorRenderFormItem, MonacoEditorRender, MonacoEditorProps } from './monacoEditor';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
-import { videoUploadField, VideoUploadFieldProps } from './videoUpload';
+import { VideoUploadRender, VideoUploadRenderFormItem, VideoUploadProps } from './videoUpload';
 
 declare module '@ant-design/pro-utils' {
   interface ProFieldValueTypeWithFieldProps {
     tag: TagProps;
     map: BaiduMapProps;
-    card: CardFieldProps;
-    imageUpload: ImageUploadFieldProps;
-    videoUpload: VideoUploadFieldProps;
-    monacoEditor: MonacoEditorFieldProps;
+    imageUpload: ImageUploadProps;
+    videoUpload: VideoUploadProps;
+    monacoEditor: MonacoEditorProps;
+    card: CardProps;
     form: FormProps;
   }
 }
@@ -24,10 +24,10 @@ declare module '@ant-design/pro-utils' {
 const valueTypeMap = {
   tag: [TagRender, TagRenderFormItem],
   map: [BMapRender, BMapRenderFormItem],
-  card: [cardField, cardField],
-  imageUpload: [imageUploadField, imageUploadField],
-  videoUpload: [videoUploadField, videoUploadField],
-  monacoEditor: [monacoEditorField, monacoEditorField],
+  imageUpload: [ImageUploadRender, ImageUploadRenderFormItem],
+  videoUpload: [VideoUploadRender, VideoUploadRenderFormItem],
+  monacoEditor: [MonacoEditorRender, MonacoEditorRenderFormItem],
+  card: [Card, Card],
   table: [Table, Table],
   form: [Form, Form],
 };

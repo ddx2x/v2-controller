@@ -1,20 +1,18 @@
-import { ProCard, ProCardProps } from '@ant-design/pro-components';
+import { ProCard, ProCardProps, ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { FormProps, useForm } from '../../form';
 
-export declare type CardFieldProps = FormProps & {
+export declare type CardProps = FormProps & ProFieldFCRenderProps & {
   proCardProps?: ProCardProps;
-  value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
 };
 
-export const cardField: React.FC<CardFieldProps> = (props) => {
-  const { value, onChange, proCardProps, ...rest } = props;
+export const Card: React.FC<CardProps> = (props) => {
+  const { value, proCardProps, fieldProps, ...rest } = props;
 
   const formDom = useForm({
     submitter: false,
     layoutType: 'Form',
     initialValues: value || {},
-    onValuesChange: (_: any, values: any) => onChange && onChange({ ...values }),
+    onValuesChange: (_: any, values: any) => fieldProps && fieldProps.onChange({ ...values }),
     ...rest,
   });
 

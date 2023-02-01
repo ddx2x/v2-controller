@@ -7,7 +7,7 @@ import type {
 } from '@ant-design/pro-components';
 import type { Location } from 'history';
 import lodash from 'lodash';
-import { observable, ObservableMap } from 'mobx';
+import { ObservableMap } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -60,16 +60,15 @@ export const List: React.FC<ListProps> = observer((props) => {
   } = props;
 
   // ref
-  const configMap = observable.map({});
+
   // ref
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
 
-  onMount && onMount(location, actionRef, formRef, configMap);
 
   // 页面挂载 销毁事件
   useEffect(() => {
-    return () => unMount && unMount(location, actionRef, formRef, configMap);
+    return () => unMount && unMount(location, actionRef, formRef);
   }, []);
 
   // 挂载 鼠标事件
@@ -109,11 +108,9 @@ export const List: React.FC<ListProps> = observer((props) => {
 
   // 合并配置
   lodash.merge(rest, defaultConfig);
-  lodash.merge(rest, Object.fromEntries(configMap));
 
   return (
     <ProList
-      // ref
       actionRef={actionRef}
       formRef={formRef}
       showActions="hover"

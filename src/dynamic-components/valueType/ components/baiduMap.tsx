@@ -39,7 +39,6 @@ export declare type BaiduMapProps = ProFieldFCRenderProps & {
   height?: number | string;
   width?: number | string;
   useRetrieval?: boolean;
-  value?: any;
 };
 
 export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
@@ -92,12 +91,10 @@ export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
-  console.log('props', props);
   return <BMap useRetrieval {...props} />
 }
 
 export const BMapRender: React.FC<BaiduMapProps> = (props) => {
-  console.log('props', props);
   return <BMap {...props} />
 }
 
