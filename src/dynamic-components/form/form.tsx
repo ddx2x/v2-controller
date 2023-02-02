@@ -74,6 +74,9 @@ export const Form =
         rest['drawerprops'] = { destroyOnClose: true };
       case 'Form':
       default:
+        rest['submitter'] = {
+          searchConfig: { resetText: '重置' }
+        }
         rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
           return (
             <>
