@@ -21,7 +21,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   triggerText?: string;
   buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory;
@@ -36,32 +36,31 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     triggerText,
     buttonType,
     submitTimeout,
-    onFinish,
+    onSubmit,
     width,
     routeContext,
     ...rest
   } = props;
 
   const formRef = useRef<ProFormInstance>();
+  const init = () => {
+    delay(() => formRef && onMount && onMount(location, formRef), 10);
+  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleShow = () => { setIsModalOpen(true); init() };
+  const handleClose = () => { setIsModalOpen(false) };
 
   useEffect(() => {
-    delay(() => formRef && onMount && onMount(location, formRef), 10);
+    modal == 'Form' && init()
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => { setIsModalOpen(true) };
-
   const triggerDom = () => {
     return (
-      <Button type={buttonType} onClick={showModal}>
+      <Button type={buttonType} onClick={handleShow}>
         {triggerText}
       </Button>
     );
-  };
-
-  const handleClose = () => {
-    setIsModalOpen(false);
   };
 
   const stepsFormRender = (dom: React.ReactNode, submitter: React.ReactNode) => {
@@ -121,9 +120,9 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
           autoFocusFirstInput
           layoutType="StepsForm"
           onFinish={async (values) => {
-            if (!onFinish) return false;
+            if (!onSubmit) return false;
             await waitTime(submitTimeout);
-            return onFinish(formRef, values, handleClose);
+            return onSubmit(formRef, values, handleClose);
           }}
           {...rest}
         />

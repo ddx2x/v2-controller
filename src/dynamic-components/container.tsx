@@ -1,6 +1,6 @@
 import type {
   PageContainerProps as ProPageContainerProps,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
@@ -54,6 +54,13 @@ export const Container: React.FC<ContainerProps> = (props) => {
       return undefined;
     }
     if (breadcrumb) return breadcrumb;
+    // 面包屑第一项为当前页
+    (context.breadcrumb?.routes || []).
+      map((item, index) => {
+        if (index == 0) { item.path = '#' }
+        return item
+      })
+
     return context.breadcrumb;
   };
 

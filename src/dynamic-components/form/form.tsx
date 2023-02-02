@@ -5,12 +5,13 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Button } from 'antd';
+import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
@@ -28,10 +29,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (
-    formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-    values: any,
-  ) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory
@@ -52,31 +50,40 @@ export const Form =
       ...rest
     } = props;
 
-    useImperativeHandle(forwardRef, () => {
-      return { open: () => showModal() };
-    });
+    useImperativeHandle(forwardRef, () => { return { open: () => handleShow() } });
 
     const formRef = useRef<ProFormInstance>();
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const init = () => {
+      delay(() => formRef && onMount && onMount(location, formRef), 10);
+    }
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const handleShow = () => { setIsModalOpen(true); init() };
+    const handleClose = () => { setIsModalOpen(false) };
 
     useEffect(() => {
-      delay(() => formRef && onMount && onMount(location, formRef), 10);
+      props.layoutType == 'Form' && init()
       return () => {
         formRef && unMount && unMount(location, formRef);
       };
     }, []);
 
-    const showModal = () => { setModalVisible(true) };
-
     switch (props.layoutType) {
       case 'ModalForm':
-        rest['modalprops'] = {
-          destroyOnClose: true,
-        };
+        rest['modalprops'] = { destroyOnClose: true };
       case 'DrawerForm':
-        rest['drawerprops'] = {
-          destroyOnClose: true,
-        };
+        rest['drawerprops'] = { destroyOnClose: true };
+      case 'Form':
+      default:
+        rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
+          return (
+            <>
+              {dom}
+              <FooterToolbar routeContext={routeContext || {}}>
+                <Space>{submitter}</Space>
+              </FooterToolbar>
+            </>
+          )
+        }
     }
 
     const proProviderValues = useContext(ProProvider);
@@ -93,16 +100,16 @@ export const Form =
           formRef={formRef}
           // @ts-ignore
           trigger={
-            <Button size={buttonSize} type={buttonType} block onClick={showModal}>
+            <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
               {triggerText}
             </Button>
           }
-          open={modalVisible}
-          onOpenChange={setModalVisible}
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
           autoFocusFirstInput
           onFinish={async (values) => {
             if (!onSubmit) return false;
-            const b = onSubmit(formRef, values);
+            const b = onSubmit(formRef, values, handleClose);
             await waitTime(submitTimeout);
             return b;
           }}
