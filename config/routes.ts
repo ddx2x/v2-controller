@@ -197,8 +197,8 @@ export default [
         routes: [],
       },
       {
-        name: '网店设置',
-        path: '/settings/door',
+        name: '商品设置',
+        path: '/settings/product',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
