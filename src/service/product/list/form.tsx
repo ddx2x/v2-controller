@@ -240,6 +240,11 @@ const aggregateAddStepForm: StepFormProps = {
 		],
 		[],
 	],
+	onSubmit: (formRef, values, handleClose) => {
+		console.log('values', values);
+		handleClose();
+		return true
+	}
 };
 
 // kind: form
@@ -257,14 +262,18 @@ const aggregateAddStepForm2: FormProps = {
 		commodityType,
 		bMap
 	],
+	onSubmit: (formRef, values, handleClose) => {
+		handleClose();
+		return true
+	}
 };
 
 pageManager.register('product.list.aggregate_add', {
 	page: {
-		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
-		// view: [{ kind: 'form', ...aggregateAddStepForm2 }],
+		// view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
+		view: [{ kind: 'form', ...aggregateAddStepForm2 }],
 		container: {
-			keepAlive: true,
+			keepAlive: false,
 			header: {
 				title: '单品新增',
 			},

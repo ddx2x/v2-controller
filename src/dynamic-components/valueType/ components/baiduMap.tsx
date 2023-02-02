@@ -86,8 +86,6 @@ export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
-  console.log(props);
-
   return <BMap  {...props} />
 }
 

@@ -23,6 +23,7 @@ export default [
   },
   {
     name: '商品',
+    href: null,
     path: '/product',
     icon: 'compass',
     routes: [
