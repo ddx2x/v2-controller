@@ -201,6 +201,8 @@ pageManager.register('commdity.list.aggregate_edit', {
 	stores: [],
 });
 
+
+// kind: stepForm
 const aggregateAddStepForm: StepFormProps = {
 	onMount: (location, formRef) => {
 		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
@@ -240,6 +242,7 @@ const aggregateAddStepForm: StepFormProps = {
 	],
 };
 
+// kind: form
 const aggregateAddStepForm2: FormProps = {
 	onMount: (location, formRef) => {
 		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
@@ -259,6 +262,7 @@ const aggregateAddStepForm2: FormProps = {
 pageManager.register('product.list.aggregate_add', {
 	page: {
 		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
+		// view: [{ kind: 'form', ...aggregateAddStepForm2 }],
 		container: {
 			keepAlive: true,
 			header: {
