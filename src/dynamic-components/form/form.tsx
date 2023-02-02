@@ -69,8 +69,10 @@ export const Form =
 
     switch (props.layoutType) {
       case 'ModalForm':
+        rest['onOpenChange'] = setIsModalOpen
         rest['modalprops'] = { destroyOnClose: true };
       case 'DrawerForm':
+        rest['onOpenChange'] = setIsModalOpen
         rest['drawerprops'] = { destroyOnClose: true };
       case 'Form':
       default:
@@ -108,7 +110,6 @@ export const Form =
             </Button>
           }
           open={isModalOpen}
-          onOpenChange={setIsModalOpen}
           autoFocusFirstInput
           onFinish={async (values) => {
             if (!onSubmit) return false;
