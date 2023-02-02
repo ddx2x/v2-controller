@@ -1,19 +1,19 @@
 import { UploadOutlined } from '@ant-design/icons';
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { useState } from 'react';
 import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video-react';
-import { getBase64, handleBeforeUpload } from './utils';
+import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
-export declare type VideoUploadFieldProps = UploadProps & {
+export declare type VideoUploadProps = UploadProps & ProFieldFCRenderProps & {
+  newMode?: boolean;
   maxNumber?: number;
   buttonText?: string;
-  value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
 };
 
-export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
-  const { maxNumber, buttonText, name, listType, action, value, onChange, ...rest } = props;
+export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
+  const { name, listType, newMode, maxNumber, buttonText, action, value, onChange, ...rest } = props;
   const fileList = value?.fileList || [];
 
   // 图片预览
@@ -54,7 +54,7 @@ export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
         onChange={handleChange}
         {...rest}
       >
-        {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
+        {newMode && typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
       </Upload>
       <Modal
         destroyOnClose
@@ -73,3 +73,13 @@ export const videoUploadField: React.FC<VideoUploadFieldProps> = (props) => {
     </>
   );
 };
+
+
+
+export const VideoUploadRender: React.FC<VideoUploadProps> = (props) => {
+  return <VideoUpload {...props} />
+}
+
+export const VideoUploadRenderFormItem: React.FC<VideoUploadProps> = (props) => {
+  return <VideoUpload {...props} newMode />
+}

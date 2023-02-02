@@ -7,13 +7,13 @@ class ValueTypeMapStore {
     let vT: Record<string, ProRenderFieldPropsType> = {};
     // 自定义组件 注册
     Object.entries(valueType).map(
-      ([key, [ReadComponent, EditComponent]]) =>
+      ([key, [Render, RenderFormItem]]) =>
       (vT[key] = {
-        renderFormItem: (text, props, dom) => {
-          return <ReadComponent {...props} {...props?.fieldProps} />;
+        render: (text, props) => {
+          return <Render {...props} value={text} />;
         },
-        render: (text, props, dom) => {
-          return <EditComponent {...props} {...props?.fieldProps} />;
+        renderFormItem: (text, props) => {
+          return <RenderFormItem {...props} {...props.fieldProps}  />;
         },
       }),
     );

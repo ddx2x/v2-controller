@@ -4,8 +4,6 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({

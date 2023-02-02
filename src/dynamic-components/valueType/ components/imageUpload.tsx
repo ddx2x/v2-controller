@@ -1,19 +1,19 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
-import { getBase64, handleBeforeUpload } from './utils';
+import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
-export declare type ImageUploadFieldProps = UploadProps & {
+export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
+  newMode?: boolean
   maxNumber?: number;
   buttonText?: string;
-  value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
 };
 
-export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
-  const { buttonText, name, listType, maxNumber, value, onChange, ...rest } = props;
+export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
+  const { name, listType, newMode, buttonText, maxNumber, value, onChange, ...rest } = props;
 
   const fileList = value?.fileList || [];
 
@@ -63,7 +63,7 @@ export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
           onChange={handleChange}
           {...rest}
         >
-          {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
+          {newMode && typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
         </Upload>
       </ImgCrop>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
@@ -72,3 +72,12 @@ export const imageUploadField: React.FC<ImageUploadFieldProps> = (props) => {
     </>
   );
 };
+
+
+export const ImageUploadRender: React.FC<ImageUploadProps> = (props) => {
+  return <ImageUpload {...props} />
+}
+
+export const ImageUploadRenderFormItem: React.FC<ImageUploadProps> = (props) => {
+  return <ImageUpload {...props} newMode />
+}

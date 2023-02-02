@@ -4,16 +4,15 @@ import {
   ProDescriptionsItemProps,
   ProDescriptionsProps,
   ProProvider,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
-import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
+import { valueTypeMapStore } from '../valueType';
 
 export declare type DescriptionsRef = {
   open: () => void;
@@ -36,127 +35,120 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   intl?: IntlShape;
   routeContext?: RouteContextType;
 } & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      actionRef: React.MutableRefObject<ActionType | undefined>,
-    ) => void;
+  onMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
+  unMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
+};
+
+export const Descriptions = React.forwardRef((props: DescriptionsProps, forwardRef) => {
+  const {
+    location,
+    onMount,
+    unMount,
+    title,
+    modal,
+    width,
+    triggerText,
+    buttonSize,
+    buttonType,
+    items,
+    dataSource,
+    ...rest
+  } = props;
+
+  useImperativeHandle(forwardRef, () => {
+    return {
+      open: () => showModal(),
+    };
+  });
+
+  // ref
+  const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    actionRef && onMount && onMount(location, actionRef);
+    return () => actionRef && unMount && unMount(location, actionRef);
+  }, []);
+
+  const proProviderValues = useContext(ProProvider);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
   };
 
-export const Descriptions = observer(
-  React.forwardRef((props: DescriptionsProps, forwardRef) => {
-    const {
-      location,
-      mount,
-      unMount,
-      title,
-      modal,
-      width,
-      triggerText,
-      buttonSize,
-      buttonType,
-      items,
-      dataSource,
-      ...rest
-    } = props;
+  const triggerDom = () => {
+    return (
+      <Button size={buttonSize} type={buttonType} onClick={showModal}>
+        {triggerText}
+      </Button>
+    );
+  };
 
-    useImperativeHandle(forwardRef, () => {
-      return {
-        open: () => showModal(),
-      };
-    });
+  const Page = () => {
+    return (
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
+        }}
+      >
+        <ProDescriptions actionRef={actionRef} dataSource={dataSource} {...rest}>
+          {items &&
+            items.map((item) => {
+              const { value, valueType, dataIndex, key, ...rest } = item;
+              const dKey = dataIndex || key || '';
+              return (
+                <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>
+                  {value ? value : dataSource && dKey ? dataSource[String(dKey)] : ''}
+                </ProDescriptions.Item>
+              );
+            })}
+          {props.children}
+        </ProDescriptions>
+      </ProProvider.Provider>
+    );
+  };
 
-    // ref
-    const actionRef = useRef<ActionType>();
-
-    useEffect(() => {
-      actionRef && mount && mount(location, actionRef);
-      return () => actionRef && unMount && unMount(location, actionRef);
-    }, []);
-
-    const proProviderValues = useContext(ProProvider);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-      setIsModalOpen(true);
-    };
-    const handleClose = () => {
-      setIsModalOpen(false);
-    };
-
-    const triggerDom = () => {
+  switch (modal) {
+    case 'Modal':
       return (
-        <Button size={buttonSize} type={buttonType} onClick={showModal}>
-          {triggerText}
-        </Button>
+        <>
+          {triggerDom()}
+          <Modal
+            title={title}
+            width={width}
+            onCancel={handleClose}
+            open={isModalOpen}
+            destroyOnClose
+          >
+            {Page()}
+          </Modal>
+        </>
       );
-    };
-
-    const Page = () => {
+    case 'Drawer':
       return (
-        <ProProvider.Provider
-          value={{
-            ...proProviderValues,
-            valueTypeMap: valueTypeMapStore.stores,
-          }}
-        >
-          <ProDescriptions actionRef={actionRef} dataSource={dataSource} {...rest}>
-            {items &&
-              items.map((item) => {
-                const { value, valueType, dataIndex, key, ...rest } = item;
-                const dKey = dataIndex || key || '';
-                return (
-                  <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>
-                    {value ? value : dataSource && dKey ? dataSource[String(dKey)] : ''}
-                  </ProDescriptions.Item>
-                );
-              })}
-            {props.children}
-          </ProDescriptions>
-        </ProProvider.Provider>
+        <>
+          {triggerDom()}
+          <Drawer
+            title={title}
+            width={width}
+            placement="right"
+            onClose={handleClose}
+            open={isModalOpen}
+            destroyOnClose
+          >
+            {Page()}
+          </Drawer>
+        </>
       );
-    };
-
-    switch (modal) {
-      case 'Modal':
-        return (
-          <>
-            {triggerDom()}
-            <Modal
-              title={title}
-              width={width}
-              onCancel={handleClose}
-              open={isModalOpen}
-              destroyOnClose
-            >
-              {Page()}
-            </Modal>
-          </>
-        );
-      case 'Drawer':
-        return (
-          <>
-            {triggerDom()}
-            <Drawer
-              title={title}
-              width={width}
-              placement="right"
-              onClose={handleClose}
-              open={isModalOpen}
-              destroyOnClose
-            >
-              {Page()}
-            </Drawer>
-          </>
-        );
-      case 'Page':
-      default:
-        return Page();
-    }
-  }),
+    case 'Page':
+    default:
+      return Page();
+  }
+}
 );
 
 Descriptions.defaultProps = {

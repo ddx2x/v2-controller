@@ -1,5 +1,5 @@
 import {
-  ActionType, EditableProTable, ProCard, ProFormInstance, ProTableProps,
+  ActionType, EditableProTable, ProCard, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -7,21 +7,19 @@ import { FormattedMessage } from '@umijs/max';
 import { Button, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
-import { valueTypeMapStore } from '../form';
 import { RouterHistory } from '../router';
+import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
-import { MenuButton, MenuButtonType } from './menu-button';
+import { MenuButton, MenuButtonType } from './menuButton';
 import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<EditableProTableProps<any, any>, 'onRow' | 'search'> & {
-
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' | 'search'> & {
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单才对
@@ -55,7 +53,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'onRow' |
   }[];
 } & RouterHistory;
 
-export const Table: React.FC<TableProps> = observer((props) => {
+export const Table: React.FC<TableProps> = (props) => {
   let {
     columns,
     treeData,
@@ -226,25 +224,25 @@ export const Table: React.FC<TableProps> = observer((props) => {
   let newColumns = columns || [];
   newColumns = newColumns.filter((item) => item.dataIndex != 'menuButton');
 
-  let customValueTypeKeys = Object.keys(valueTypeMapStore.stores)
-  // 挂载自定义类型 valueType
-  newColumns = newColumns.map(
-    item => {
-      if (typeof item.valueType == 'string' && customValueTypeKeys.includes(item.valueType)) {
-        let render = valueTypeMapStore.stores[item.valueType].render as any
-        return {
-          ...item,
-          renderFormItem: (dom, { defaultRender }) => {
-            return defaultRender(dom);
-          },
-          render: (dom: any, record) => {
-            return render(dom?.props.text, { ...dom?.props || {}, value: dom.props.text }, dom)
-          }
-        }
-      }
-      return item
-    }
-  )
+  // let customValueTypeKeys = Object.keys(valueTypeMapStore.stores)
+  // // 挂载自定义类型 valueType
+  // newColumns = newColumns.map(
+  //   item => {
+  //     if (typeof item.valueType == 'string' && customValueTypeKeys.includes(item.valueType)) {
+  //       let render = valueTypeMapStore.stores[item.valueType].render as any
+  //       return {
+  //         ...item,
+  //         renderFormItem: (dom, { defaultRender }) => {
+  //           return defaultRender(dom);
+  //         },
+  //         render: (dom: any, record) => {
+  //           return render(dom?.props.text, { ...dom?.props || {}, value: dom.props.text }, dom)
+  //         }
+  //       }
+  //     }
+  //     return item
+  //   }
+  // )
 
   if (useTableMoreOption) {
     const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
@@ -289,45 +287,54 @@ export const Table: React.FC<TableProps> = observer((props) => {
   }
 
   const recordCreatorPosition = 'hidden'
+  const proProviderValues = useContext(ProProvider);
+
   return (
-    <EditableProTable
-      recordCreatorProps={
-        recordCreatorPosition !== 'hidden'
-          ? {
-            position: recordCreatorPosition as 'top',
-            record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
-          }
-          : false
-      }
-      components={value && value.length > 10 ? vComponents : undefined}
-      columns={newColumns}
-      value={value}
-      request={request}
-      actionRef={actionRef}
-      formRef={formRef}
-      rowSelection={rowSelection}
-      scroll={{ y: tableHeight, x: '100%' }}
-      editable={{
-        type: 'multiple',
-        editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
-        actionRender: () => { return [] },
-        onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+    <ProProvider.Provider
+      value={{
+        ...proProviderValues,
+        valueTypeMap: valueTypeMapStore.stores,
       }}
-      search={{ labelWidth: 80 }}
-      toolbar={{
-        title: toolbarTitle,
-        actions: [
-          <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows) : []} />
-        ],
-      }}
-      tableRender={tableRender}
-      expandable={{
-        ...expandModule(expand ? expand : null)
-      }}
-      {...rest}
-    />
+    >
+      <EditableProTable
+        recordCreatorProps={
+          recordCreatorPosition !== 'hidden'
+            ? {
+              position: recordCreatorPosition as 'top',
+              record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
+            }
+            : false
+        }
+        components={value && value.length > 10 ? vComponents : undefined}
+        columns={newColumns}
+        value={value}
+        request={request}
+        actionRef={actionRef}
+        formRef={formRef}
+        rowSelection={rowSelection}
+        scroll={{ y: tableHeight, x: '100%' }}
+        editable={{
+          type: 'multiple',
+          editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
+          actionRender: () => { return [] },
+          onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+        }}
+        search={{ labelWidth: 80 }}
+        toolbar={{
+          title: toolbarTitle,
+          actions: [
+            <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows) : []} />
+          ],
+        }}
+        tableRender={tableRender}
+        expandable={{
+          ...expandModule(expand ? expand : null)
+        }}
+        {...rest}
+      />
+    </ProProvider.Provider>
   );
-});
+};
 
 Table.defaultProps = {
   useSearch: true,

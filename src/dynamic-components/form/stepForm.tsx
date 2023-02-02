@@ -1,46 +1,35 @@
 import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Drawer, Form as AntdForm, FormInstance, Modal, Space } from 'antd';
+import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import { observer } from 'mobx-react';
+import { delay } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
 import { RouterHistory } from '../router';
-import { valueTypeMapStore } from './valueTypeMap';
+import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
+  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
   buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onFinish?: (
-    form: FormInstance<unknown> | undefined,
-    values: any,
-    handleClose: () => void,
-  ) => boolean;
+  onFinish?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
-} & RouterHistory & {
-    mount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance | undefined>,
-    ) => void;
-    unMount?: (
-      location: Location | undefined,
-      formRef: React.MutableRefObject<ProFormInstance | undefined>,
-    ) => void;
-  };
+} & RouterHistory;
 
-export const StepForm: React.FC<StepFormProps> = observer((props) => {
+export const StepForm: React.FC<StepFormProps> = (props) => {
   const {
     location,
-    mount,
+    onMount,
     unMount,
     title,
     modal,
@@ -49,24 +38,19 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     submitTimeout,
     onFinish,
     width,
-    //
     routeContext,
     ...rest
   } = props;
-  // ref
-  const [form] = AntdForm.useForm();
+
   const formRef = useRef<ProFormInstance>();
 
   useEffect(() => {
-    formRef && mount && mount(location, formRef);
+    delay(() => formRef && onMount && onMount(location, formRef), 10);
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  const showModal = () => { setIsModalOpen(true) };
 
   const triggerDom = () => {
     return (
@@ -127,22 +111,19 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
       <ProProvider.Provider
         value={{
           ...useContext(ProProvider),
-          valueTypeMap: valueTypeMapStore.stores,
+          valueTypeMap: valueTypeMapStore.stores
         }}
       >
         <BetaSchemaForm
           // @ts-ignore
           formRef={formRef}
-          // @ts-ignore
-          form={form}
-          // @ts-ignore
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
           layoutType="StepsForm"
           onFinish={async (values) => {
             if (!onFinish) return false;
             await waitTime(submitTimeout);
-            return onFinish(form, values, handleClose);
+            return onFinish(formRef, values, handleClose);
           }}
           {...rest}
         />
@@ -163,7 +144,7 @@ export const StepForm: React.FC<StepFormProps> = observer((props) => {
     default:
       return <>{stepsForm()}</>;
   }
-});
+};
 
 StepForm.defaultProps = {
   title: '新建',

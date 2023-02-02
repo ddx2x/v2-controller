@@ -1,5 +1,5 @@
-import { FormColumnsType, StepFormProps } from '@/dynamic-components';
-import { pageManager, View } from '@/dynamic-view';
+import { FormColumnsType, FormProps, StepFormProps } from '@/dynamic-components';
+import { pageManager } from '@/dynamic-view';
 import { parse } from 'querystring';
 import { Commodity, commodityApi } from './store';
 
@@ -92,8 +92,6 @@ let commodityName: FormColumnsType = {
 	},
 };
 
-
-
 let deliveryMethod: FormColumnsType = {
 	title: '配送方式',
 	dataIndex: 'deliveryMethod',
@@ -142,52 +140,12 @@ let bMap: FormColumnsType = {
 	}
 }
 
-export const singleAddView: View = {
-	kind: 'stepForm',
-	mount: (location, formRef) => {
-		console.log('location?.search', location?.search, formRef);
-		let data = location?.search.split('?')[1] || '';
-		console.log('parse ', parse(data));
-		location?.search && formRef.current?.setFieldsValue({ commodityName: data });
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
-	},
-	steps: singleSteps,
-	columns: [
-		[
-			commodityName,
-			commodityType,
-			salesChannels,
-			salesModel,
-			// commodityPrice
-		],
-		[
-			singleName
-		],
-		[],
-	],
-};
-
-pageManager.register('commdity.list.add', {
-	page: {
-		view: [singleAddView],
-		container: {
-			keepAlive: true,
-			header: {
-				title: '单品新增',
-			},
-		},
-	},
-	stores: [],
-});
-
 export declare type Query = {
 	name?: string;
 };
 
-export const singleEditView: StepFormProps = {
-	mount: (location, formRef) => {
+const singleEditView: StepFormProps = {
+	onMount: (location, formRef) => {
 		console.log('location?.search', location?.search, formRef);
 		let data = location?.search.split('?')[1] || '';
 		let query: Query = parse(data);
@@ -230,7 +188,7 @@ export const singleEditView: StepFormProps = {
 	],
 };
 
-pageManager.register('commdity.list.edit', {
+pageManager.register('commdity.list.aggregate_edit', {
 	page: {
 		view: [{ kind: 'stepForm', ...singleEditView }],
 		container: {
@@ -243,17 +201,9 @@ pageManager.register('commdity.list.edit', {
 	stores: [],
 });
 
-export const aggregateAddView: View = {
-	kind: 'stepForm',
-	mount: (location, formRef) => {
-		console.log('location?.search', location?.search, formRef);
-		let data = location?.search.split('?')[1] || '';
-		console.log('parse ', parse(data));
-		// location?.search && formRef.current?.setFieldsValue({});
-		formRef.current?.setFieldsValue({
-			editor: '12345',
-			map: '广州市天河区时代E-PARK',
-		})
+const aggregateAddStepForm: StepFormProps = {
+	onMount: (location, formRef) => {
+		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
 	unMount: (location, formRef) => {
 		formRef.current?.resetFields();
@@ -290,13 +240,29 @@ export const aggregateAddView: View = {
 	],
 };
 
+const aggregateAddStepForm2: FormProps = {
+	onMount: (location, formRef) => {
+		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
+	},
+	unMount: (location, formRef) => {
+		formRef.current?.resetFields();
+	},
+	layoutType: 'Form',
+	shouldUpdate: false,
+	columns: [
+		commodityName,
+		commodityType,
+		bMap
+	],
+};
+
 pageManager.register('product.list.aggregate_add', {
 	page: {
-		view: [aggregateAddView],
+		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
 		container: {
-			keepAlive: false,
+			keepAlive: true,
 			header: {
-				title: '商品添加',
+				title: '单品新增',
 			},
 		},
 	},

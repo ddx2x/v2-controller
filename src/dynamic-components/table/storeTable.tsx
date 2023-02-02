@@ -1,12 +1,11 @@
 import { ObjectStore } from '@/client'
-import { observer } from 'mobx-react'
 import { Table, TableProps } from './table'
 
 export declare type StoreTableProps = TableProps & {
   store?: ObjectStore<any>
 }
 
-export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
+export const StoreTable: React.FC<StoreTableProps> = (props) => {
   const { store, ...rest } = props;
   return <Table
     value={store?.items || []}
@@ -14,4 +13,4 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
     pagination={{ total: store?.count }}
     {...rest}
   />
-})
+}

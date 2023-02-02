@@ -1,3 +1,4 @@
+import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Input, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { AutoComplete, Map, MapApiLoaderHOC, ZoomControl } from 'react-bmapgl/dist';
@@ -34,11 +35,9 @@ export function mapGeocoder(map: any, address: string, handle?: () => void) {
   );
 }
 
-export declare type BaiduMapProps = {
+export declare type BaiduMapProps = ProFieldFCRenderProps & {
   height?: number | string;
   width?: number | string;
-  value?: any;
-  onChange?: ((...rest: any[]) => void) | undefined;
 };
 
 export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
@@ -83,4 +82,16 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   );
 };
 
-export const bMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
+export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
+
+
+export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
+  console.log(props);
+
+  return <BMap  {...props} />
+}
+
+export const BMapRender: React.FC<BaiduMapProps> = (props) => {
+  return <BMap {...props} />
+}
+
