@@ -250,6 +250,7 @@ const aggregateAddStepForm: StepFormProps = {
 // kind: form
 const aggregateAddStepForm2: FormProps = {
 	onMount: (location, formRef) => {
+		formRef.current?.resetFields();
 		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
 	unMount: (location, formRef) => {
@@ -270,10 +271,10 @@ const aggregateAddStepForm2: FormProps = {
 
 pageManager.register('product.list.aggregate_add', {
 	page: {
-		// view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
-		view: [{ kind: 'form', ...aggregateAddStepForm2 }],
+		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
+		// view: [{ kind: 'form', ...aggregateAddStepForm2 }],
 		container: {
-			keepAlive: false,
+			keepAlive: true,
 			header: {
 				title: '单品新增',
 			},
