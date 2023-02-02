@@ -25,6 +25,11 @@ export default {
       changeOrigin: true,
       logger: console,
     },
+    '/settings/**': {
+      target: 'http://127.0.0.1:3000',
+      changeOrigin: true,
+      logger: console,
+    },
     '/base/**': {
       target: 'http://127.0.0.1:3000',
       changeOrigin: true,
