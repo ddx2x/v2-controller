@@ -179,33 +179,33 @@ export default [
 
   {
     name: '设置',
-    path: '/settings',
+    path: '/setting',
     icon: 'setting',
     routes: [
       {
         name: '商户设置',
-        path: '/settings/shop',
+        path: '/setting/shop',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '商品设置',
-        path: '/settings/product',
+        path: '/setting/product',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '配送设置',
-        path: '/settings/logistics',
+        path: '/setting/logistics',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '订单配置',
-        path: '/settings/order',
+        path: '/setting/order',
         icon: 'setting',
         component: './dynamic-view',
         routes: [],

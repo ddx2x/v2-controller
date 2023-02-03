@@ -36,7 +36,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
     let fileList = info.fileList;
     fileList
       .filter((item) => item.uid == info.file.uid)
-      .map((item) => (item.url = '/media/file/' + item.name));
+      .map((item) => (item.url = '/media-t/file/' + item.name));
     onChange && onChange({ fileList: fileList });
   };
 

@@ -31,8 +31,7 @@ const categoryStoreTable: StoreTableProps = {
           status: 'success',
         },
         '件': {
-          status: 'processing',
-          icon: 'processing'
+          status: 'success',
         },
       },
     },

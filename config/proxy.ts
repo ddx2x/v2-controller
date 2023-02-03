@@ -49,8 +49,8 @@ export default {
       target: 'http://10.200.100.200:8088',
       // changeOrigin: true,
     },
-    '/media/**': {
-      target: 'http://0.0.0.0:8080',
+    '/media-t/**': {
+      target: 'http://0.0.0.0:3000',
     },
   },
 };

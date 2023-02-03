@@ -36,6 +36,9 @@ const userStoreTable: StoreTableProps = {
       title: '锁定',
       hideInSearch: true,
       editable: false,
+      valueEnum: {
+        0:'锁定'
+      }
     },
   ],
   toolbar: {
