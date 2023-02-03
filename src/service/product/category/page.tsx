@@ -7,6 +7,7 @@ const categoryStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
+  
   columns: [
     {
       dataIndex: 'uid',
@@ -134,12 +135,6 @@ const categoryStoreTable: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
-  // onNext: (params:any) =>
-  //   categoryStore.next({
-  //     limit: { page: 0, size: 10 },
-  //     sort: { brand_name: 1 },
-  //     ...params,
-  //   }),
 };
 
 pageManager.register('product.category', {
@@ -150,7 +145,7 @@ pageManager.register('product.category', {
     {
       store: categoryStore,
       query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: categoryStore.load,
+      load: categoryStore.next,
       exit: categoryStore.reset,
     }
   ],

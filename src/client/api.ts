@@ -86,6 +86,7 @@ export class ObjectApi<T extends IObject = any> {
   static readonly matcher = /([^\/?]+)?\/(v.*?)?\/([^\/?]+).*$/;
 
   public version: number = 0;
+  public count: number = 0;
   public store: ObjectStore<T> | undefined;
 
   static parseApi(url = '') {
@@ -127,8 +128,9 @@ export class ObjectApi<T extends IObject = any> {
     if (!data) return;
 
     if (IObject.isObjectDataList(data)) {
-      const { version, items } = data;
+      const { version, count, items } = data;
       if (this.version < version) this.version = version;
+      if (this.store) this.store.count = count || 0;
       return items.map((item) => new this.objectConstructor({ ...item }));
     }
 

@@ -95,12 +95,12 @@ const brandStoreTable: StoreTableProps = {
       tag: '表单编辑',
     },
   ],
-  // onNext: (params: any) =>
-  //   brandStore.next({
-  //     limit: { page: 0, size: 10 },
-  //     sort: { version: 1 },
-  //     ...params,
-  //   }),
+  onNext: (params: any) =>
+    brandStore.next({
+      limit: { page: 0, size: 10 },
+      sort: { version: 1 },
+      ...params,
+    }),
 };
 
 pageManager.register('product.brand', {
@@ -110,8 +110,8 @@ pageManager.register('product.brand', {
   stores: [
     {
       store: brandStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: brandStore.load,
+      query: { limit: { page: 0, size: 1 }, sort: { version: 1 } },
+      load: brandStore.next,
       exit: brandStore.reset,
     }
   ],

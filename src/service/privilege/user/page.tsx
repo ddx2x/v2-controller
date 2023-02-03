@@ -30,14 +30,16 @@ const userStoreTable: StoreTableProps = {
       title: '最后登陆',
       hideInSearch: true,
       editable: false,
+      valueType: 'second',
     },
     {
       dataIndex: 'is_lock',
       title: '锁定',
       hideInSearch: true,
-      editable: false,
+      valueType: "switch",
       valueEnum: {
-        0:'锁定'
+        0: '停用',
+        1: '启用'
       }
     },
   ],
@@ -74,12 +76,6 @@ const userStoreTable: StoreTableProps = {
       tag: '详情',
     },
   ],
-  // onNext: (params: any) =>
-  //   userStore.next({
-  //     limit: { page: 0, size: 10 },
-  //     sort: { version: 1 },
-  //     ...params,
-  //   }),
 };
 
 pageManager.register('privilege.user', {
