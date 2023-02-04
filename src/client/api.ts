@@ -218,7 +218,7 @@ export class ObjectApi<T extends IObject = any> {
     query?: Query,
     op?: string,
   ): Promise<T> => {
-    return request(this.getUrl(parameter, query, op), { method: 'POST', partial }).then(
+    return request(this.getUrl(parameter, query, op), { method: 'PUT', partial }).then(
       this.parseResponse,
     );
   };

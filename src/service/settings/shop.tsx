@@ -181,29 +181,18 @@ const defaultFrom: FormProps = {
 
     ],
     onSubmit: (formRef, values, handleClose) => {
-        console.log("values", values)
-        notification.success({ message: "保存成功" });
-
-        //TODO: 这里后面的没有执行。。。
         const shop = {
             name: values.name,
-            mode: Number(values.mode),
+            mode: values.mode,
             address: values.address,
-            logo: values.fileList[0].name,
+            logo: values.logo?.fileList[0].name,
             industry: values.industry,
             recommend_door: values.recommend_door == "1",
             recommend_door_name: values.recommend_door_name,
         };
-
-        console.log("values1...................", shop)
-
-        // shopApi.update(shop).
-        //     then((_) => { notification.success({ message: "保存成功" }); })
-        //     .catch((e) => notification.error(e))
-
-        console.log("values2...................")
-
-        notification.success({ message: "保存成功2" });
+        shopApi.update(shop).
+            then((_) => { notification.success({ message: "保存成功" }); })
+            .catch((e) => notification.error(e))
 
         handleClose();
 

@@ -4,7 +4,7 @@ import { DefaultWatchApi, WatchApi } from '@/client/event';
 export class User extends IObject {
   name: string | undefined
   phone_number: string | undefined
-  login_type: number | undefined
+  login_type: number | string | undefined
   last_login_time: number | undefined
   is_lock: boolean | undefined
 

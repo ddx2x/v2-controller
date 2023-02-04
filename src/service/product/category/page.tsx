@@ -7,7 +7,7 @@ const categoryStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
-  
+  pageSize: 10,
   columns: [
     {
       dataIndex: 'uid',

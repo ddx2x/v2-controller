@@ -6,6 +6,7 @@ import { brandStore } from './store';
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
+  pageSize: 10,
   toolbar: {
     title: '数据列表',
   },
@@ -110,7 +111,7 @@ pageManager.register('product.brand', {
   stores: [
     {
       store: brandStore,
-      query: { limit: { page: 0, size: 1 }, sort: { version: 1 } },
+      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
       load: brandStore.next,
       exit: brandStore.reset,
     }

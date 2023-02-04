@@ -1,7 +1,7 @@
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
-import { privilegeStore } from './store';
+import { Privilege, privilegeStore } from './store';
 
 const table: View = {
   kind: 'storeTable',
@@ -19,6 +19,9 @@ const table: View = {
       title: '类型',
       hideInSearch: true,
       editable: false,
+      render: (text: any, record: Privilege, index: number, action: any) => {
+        return [<>{record.type == 0 ? "页面" : "数据"}</>]
+      }
     },
     {
       dataIndex: 'url',
@@ -31,12 +34,20 @@ const table: View = {
       title: '是否显示',
       hideInSearch: true,
       editable: false,
+      render: (text: any, record: Privilege, index: number, action: any) => {
+        return [<>{record.is_view ? "是" : "否"}</>]
+      }
     },
     {
       dataIndex: 'op',
-      title: '操作权限',
+      title: '操作类型',
       hideInSearch: true,
       editable: false,
+      valueEnum: {
+        1: "查看",
+        2: "修改",
+        4: "查看+修改",
+      }
     }
   ],
 
@@ -63,7 +74,7 @@ const table: View = {
       onClick: () => message.info('删除成功'),
       tag: '删除',
       title: '删除',
-      text: `确认删除` + record.name,
+      text: `确认删除` + record.uid,
     },
 
   ],
