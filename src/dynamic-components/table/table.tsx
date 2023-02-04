@@ -22,14 +22,13 @@ const defaulScrollHeight = '500px';
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' | 'search'> & {
   useSearch?: boolean // 开启搜索
   useBatchDelete?: boolean; // 开启批量删除
-  useTableMoreOption?: boolean // 开启表单才对
+  useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolbarTitle?: string;
   toolBarMenu?: (selectedRows?: any) => MenuButtonType[];
-  footerButton?: () => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
   // 虚拟滚动 加载数据
   onNext?: (
@@ -80,7 +79,6 @@ export const Table: React.FC<TableProps> = (props) => {
     // 按钮操作
     tableMenu,
     toolBarMenu,
-    footerButton,
     batchDelete,
     // 鼠标事情
     onRowEvent,
@@ -200,7 +198,6 @@ export const Table: React.FC<TableProps> = (props) => {
       )
     }
 
-
     // 原生table
     return (
       <>
@@ -223,26 +220,6 @@ export const Table: React.FC<TableProps> = (props) => {
   // 挂载行
   let newColumns = columns || [];
   newColumns = newColumns.filter((item) => item.dataIndex != 'menuButton');
-
-  // let customValueTypeKeys = Object.keys(valueTypeMapStore.stores)
-  // // 挂载自定义类型 valueType
-  // newColumns = newColumns.map(
-  //   item => {
-  //     if (typeof item.valueType == 'string' && customValueTypeKeys.includes(item.valueType)) {
-  //       let render = valueTypeMapStore.stores[item.valueType].render as any
-  //       return {
-  //         ...item,
-  //         renderFormItem: (dom, { defaultRender }) => {
-  //           return defaultRender(dom);
-  //         },
-  //         render: (dom: any, record) => {
-  //           return render(dom?.props.text, { ...dom?.props || {}, value: dom.props.text }, dom)
-  //         }
-  //       }
-  //     }
-  //     return item
-  //   }
-  // )
 
   if (useTableMoreOption) {
     const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
@@ -297,6 +274,8 @@ export const Table: React.FC<TableProps> = (props) => {
       }}
     >
       <EditableProTable
+        columns={newColumns}
+        value={value}
         recordCreatorProps={
           recordCreatorPosition !== 'hidden'
             ? {
@@ -306,8 +285,6 @@ export const Table: React.FC<TableProps> = (props) => {
             : false
         }
         components={value && value.length > 10 ? vComponents : undefined}
-        columns={newColumns}
-        value={value}
         request={request}
         actionRef={actionRef}
         formRef={formRef}

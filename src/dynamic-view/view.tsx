@@ -8,10 +8,8 @@ import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
 import { Form, StepForm } from '../dynamic-components/form';
-import type { ListProps } from '../dynamic-components/list';
-import { List } from '../dynamic-components/list';
-import { StoreTable, TableProps } from '../dynamic-components/table';
-import { Table } from '../dynamic-components/table';
+import { List, ListProps, StoreList, StoreListProps } from '../dynamic-components/list';
+import { StoreTable, StoreTableProps, Table, TableProps } from '../dynamic-components/table';
 import { eventEmitter } from './event';
 import { pageManager } from './manager';
 import { View } from './typing';
@@ -51,10 +49,13 @@ export default () => {
             props['key'] = index;
 
             if (kind == 'storeTable') {
-              return <StoreTable {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
+              return <StoreTable {...(props as StoreTableProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'table') {
               return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
+            }
+            if (kind == 'storeList') {
+              return <StoreList {...(props as StoreListProps)} intl={intl} routeContext={routeContext} />
             }
             if (kind == 'list') {
               return <List {...(props as ListProps)} intl={intl} routeContext={routeContext} />;

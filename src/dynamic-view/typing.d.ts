@@ -2,12 +2,13 @@ import type { IObject, ObjectStore, Query } from '@/client';
 import type { PageContainerProps } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
-import type { ListProps } from '../dynamic-components/list';
+import type { ListProps, StoreListProps } from '../dynamic-components/list';
 import type { StoreTableProps, TableProps } from '../dynamic-components/table';
 
 export declare type View =
   | ({ kind: 'storeTable' } & StoreTableProps)
   | ({ kind: 'table' } & TableProps)
+  | ({ kind: 'storeList' } & StoreListProps)
   | ({ kind: 'list' } & ListProps)
   | ({ kind: 'form' } & FormProps)
   | ({ kind: 'stepForm' } & StepFormProps)

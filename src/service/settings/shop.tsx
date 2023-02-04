@@ -185,7 +185,7 @@ const defaultFrom: FormProps = {
             name: values.name,
             mode: values.mode,
             address: values.address,
-            logo: values.logo?.fileList[0].name,
+            // logo: values.logo?.fileList[0].name,
             industry: values.industry,
             recommend_door: values.recommend_door == "1",
             recommend_door_name: values.recommend_door_name,

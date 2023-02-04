@@ -18,10 +18,10 @@ const writeLog = (log: AxiosResponse) => {
  * pro 自带的错误处理， 可以在这里做自己的改动
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const errorConfig: RequestConfig = {
+export const requestConfig: RequestConfig = {
   headers: {
     'Cache-Control': 'no-transform',
-    // 'Content-Type': 'application/json'
+    'Content-Type': 'application/json'
   },
   transformResponse: (data) => {
     try {
