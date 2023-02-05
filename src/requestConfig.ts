@@ -1,6 +1,7 @@
 ﻿import type { AxiosResponse, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message } from 'antd';
+import { extend } from 'umi-request'
 
 const writeLog = (log: AxiosResponse) => {
   const { config, ...params } = log;
@@ -41,12 +42,10 @@ export const requestConfig: RequestConfig = {
       message.error(error.message);
     },
   },
-
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 拦截请求配置，进行个性化处理。
-      return config;
+      return config
     },
   ],
   // 响应拦截器
@@ -58,3 +57,10 @@ export const requestConfig: RequestConfig = {
     },
   ],
 };
+
+
+export const request = extend({
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});

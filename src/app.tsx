@@ -5,7 +5,7 @@ import {
   MenuDataItem,
   PageLoading,
   SettingDrawer,
-  Settings as LayoutSettings,
+  Settings as LayoutSettings
 } from '@ant-design/pro-components';
 import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
 import { Button, Input, Popconfirm, Space } from 'antd';
@@ -16,7 +16,7 @@ import { eventEmitter } from './dynamic-view';
 import { requestConfig } from './requestConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+const loginPath = '/login';
 
 // 搜索过滤菜单
 const filterByMenuDate = (data: MenuDataItem[], keyWord: string): MenuDataItem[] =>
@@ -156,11 +156,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // ],
     links: isDev
       ? [
-          // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-          //   <LinkOutlined />
-          //   <span>OpenAPI 文档</span>
-          // </Link>,
-        ]
+        // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+        //   <LinkOutlined />
+        //   <span>OpenAPI 文档</span>
+        // </Link>,
+      ]
       : [],
     // 自定义菜单
     collapsed: collapsed,
@@ -220,6 +220,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ...initialState?.settings,
   };
 };
+
+
+// import { extend } from 'umi-request';
+
+// const request = extend({
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 
 /**
  * @name request 配置，可以配置错误处理

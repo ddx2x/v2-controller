@@ -1,15 +1,41 @@
 import Footer from '@/pages/layout/footer';
-import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  MobileOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 import {
   LoginForm,
   ProFormCaptcha,
   ProFormCheckbox,
-  ProFormText,
+  ProFormText
 } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
+import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import styles from './index.less';
+
+const Lang = () => {
+  const langClassName = useEmotionCss(({ token }) => {
+    return {
+      width: 42,
+      height: 42,
+      lineHeight: '42px',
+      position: 'fixed',
+      right: 16,
+      borderRadius: token.borderRadius,
+      ':hover': {
+        backgroundColor: token.colorBgTextHover,
+      },
+    };
+  });
+
+  return (
+    <div className={langClassName} data-lang>
+      {SelectLang && <SelectLang />}
+    </div>
+  );
+};
 
 const LoginMessage: React.FC<{
   content: string;
@@ -31,6 +57,18 @@ const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
+  const containerClassName = useEmotionCss(() => {
+    return {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+      overflow: 'auto',
+      backgroundImage:
+        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundSize: '100% 100%',
+    };
+  });
+
   const intl = useIntl();
 
   const fetchUserInfo = async () => {
@@ -45,7 +83,9 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    const toIndex = async () => {
+    try {
+      // 登录
+
       const defaultLoginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',
         defaultMessage: '登录成功！',
@@ -54,33 +94,56 @@ const Login: React.FC = () => {
       await fetchUserInfo();
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
-    };
+      return;
+    } catch (error) {
+      const defaultLoginFailureMessage = intl.formatMessage({
+        id: 'pages.login.failure',
+        defaultMessage: '登录失败，请重试！',
+      });
+      console.log(error);
+      message.error(defaultLoginFailureMessage);
+    }
   };
   // const { status, type: loginType } = userLoginState;
-  const loginType = 'account';
+  const loginType: string = 'account';
 
   return (
-    <div className={styles.container}>
-      <div className={styles.lang} data-lang>
-        {SelectLang && <SelectLang />}
-      </div>
-      <div className={styles.content}>
+    <div className={containerClassName}>
+      {/* @ts-ignore */}
+      <Helmet>
+        <title>
+          {intl.formatMessage({
+            id: 'menu.login',
+            defaultMessage: '登录页',
+          })}
+          v2cc
+        </title>
+      </Helmet>
+      <Lang />
+      <div
+        style={{
+          flex: '1',
+          padding: '32px 0',
+        }}
+      >
         <LoginForm
+          contentStyle={{
+            minWidth: 280,
+            maxWidth: '75vw',
+          }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="v2"
+          title="v2cc"
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
             autoLogin: true,
           }}
-          actions={
-            [
-              // <FormattedMessage
-              //   key="loginWith"
-              //   id="pages.login.loginWith"
-              //   defaultMessage="其他登录方式"
-              // />,
-            ]
-          }
+          actions={[
+            // <FormattedMessage
+            //   key="loginWith"
+            //   id="pages.login.loginWith"
+            //   defaultMessage="其他登录方式"
+            // />
+          ]}
           onFinish={async (values) => {
             await handleSubmit();
           }}
@@ -121,7 +184,7 @@ const Login: React.FC = () => {
                 name="username"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon} />,
+                  prefix: <UserOutlined />,
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.username.placeholder',
@@ -143,7 +206,7 @@ const Login: React.FC = () => {
                 name="password"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                  prefix: <LockOutlined />,
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.password.placeholder',
@@ -163,14 +226,14 @@ const Login: React.FC = () => {
               />
             </>
           )}
-          {/* @ts-ignore */}
+
           {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
           {type === 'mobile' && (
             <>
               <ProFormText
                 fieldProps={{
                   size: 'large',
-                  prefix: <MobileOutlined className={styles.prefixIcon} />,
+                  prefix: <MobileOutlined />,
                 }}
                 name="mobile"
                 placeholder={intl.formatMessage({
@@ -201,7 +264,7 @@ const Login: React.FC = () => {
               <ProFormCaptcha
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                  prefix: <LockOutlined />,
                 }}
                 captchaProps={{
                   size: 'large',
@@ -236,8 +299,7 @@ const Login: React.FC = () => {
                 ]}
                 onGetCaptcha={async (phone) => {
                   const result = false;
-                  // @ts-ignore
-                  if (result === false) {
+                  if (!result) {
                     return;
                   }
                   message.success('获取验证码成功！验证码为：1234');

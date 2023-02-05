@@ -1,19 +1,11 @@
-// import { request } from '@umijs/max';
+// import { request } from 'umi';
 import { stringify } from 'querystring';
 import { apiManager } from './manager';
 import type { IObjectConstructor } from './object';
 import { IObject } from './object';
 import { ObjectStore } from './store';
 import { autobind } from './utils';
-
-import { extend } from 'umi-request';
-
-const request = extend({
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
+import { request } from '../requestConfig'
 
 export interface JsonApiError {
   code?: number;
