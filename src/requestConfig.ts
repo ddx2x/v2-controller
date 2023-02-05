@@ -1,9 +1,9 @@
 ﻿import type { AxiosResponse, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message } from 'antd';
-import { extend } from 'umi-request'
+import { extend } from 'umi-request';
 
-const writeLog = (log: AxiosResponse) => {
+export const writeLog = (log: AxiosResponse) => {
   const { config, ...params } = log;
   let textStyle = 'font-weight: bold;';
   if (params.status !== 200) {
@@ -61,6 +61,9 @@ export const requestConfig: RequestConfig = {
 
 export const request = extend({
   headers: {
+    'Cache-Control': 'no-transform',
     'Content-Type': 'application/json',
   },
+  getResponse: true,
+  errorHandler: (error) => message.error(error.message),
 });
