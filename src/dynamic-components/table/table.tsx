@@ -127,7 +127,7 @@ export const Table: React.FC<TableProps> = (props) => {
               >
                 <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
               </Button>
-              <Button type="link" onClick={async () => setSelectedRows([])}>
+              <Button type="link" onClick={async () => { setSelectedRows([]); actionRef.current?.reloadAndRest?.(); }}>
                 <FormattedMessage
                   id="pages.searchTable.cancelSelection"
                   defaultMessage="取消选择"
