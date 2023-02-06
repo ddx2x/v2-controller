@@ -187,13 +187,8 @@ const defaultFrom: FormProps = {
             address: values.address,
             logo: values.logo?.fileList[0].name,
             industry: values.industry,
-<<<<<<< HEAD
             introduction: values.introduction,
             recommend_door: values.recommend_door == "1",
-=======
-            recommend_door: values.recommend_door === "1",
-            recommend_door_name: values.recommend_door_name,
->>>>>>> a0b10ca74f1378f0bd77661f02470af4f0547ba7
         };
 
         if (values.recommend_door_name != "" || values.recommend_door_name != undefined) {
