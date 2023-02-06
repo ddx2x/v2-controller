@@ -36,7 +36,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   const handleChange: UploadProps['onChange'] = (info) => {
     let fileList = info.fileList;
     fileList
-      .filter((item) => item.uid == info.file.uid)
+      .filter((item) => item.uid === info.file.uid)
       .map((item) => (item.url = '/media-t/file/' + item.name));
     onChange && onChange({ fileList: fileList });
   };

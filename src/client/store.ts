@@ -68,7 +68,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
     if (
       !isDeepEqual(sort, this.ctx.sort || {}) ||
-      limit.size != this.ctx.limit?.size ||
+      limit.size !== this.ctx.limit?.size ||
       filter === undefined ||
       !isDeepEqual(filter, this.ctx.filter || {})
     ) {
@@ -98,7 +98,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
           }
         });
         if (this.ctx.size && this.data.length >= this.ctx.size) {
-          if (this.ctx.page != undefined)
+          if (this.ctx.page !== undefined)
             merge(this.ctx, { page: Math.ceil(this.data.length / this.ctx.size) });
         }
 
@@ -124,6 +124,14 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     this.data.replace([...this.data, newItem]);
     return newItem;
   };
+
+  @action async update_one(item: T, partial: Partial<T>, fields: string[], query?: Query): Promise<T> {
+    const q = this.querys(query);
+    const newItem = await item.update(this, { fields: fields, item: partial }, q);
+    const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
+    this.data.splice(index, 1, newItem);
+    return newItem;
+  }
 
   @action async update(item: T, partial: Partial<T>, query?: Query): Promise<T> {
     const q = this.querys(query);

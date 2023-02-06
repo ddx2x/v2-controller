@@ -39,4 +39,5 @@ export const categoryApi = new ObjectApi<Category>(
 );
 
 export const categoryStore = new CategoryStore(categoryApi, new DefaultWatchApi());
+export const categoryStore2 = new CategoryStore(categoryApi, new DefaultWatchApi());
 

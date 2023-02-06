@@ -19,8 +19,7 @@ import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' | 'search'> & {
-  useSearch?: boolean // 开启搜索
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' > & {
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
@@ -35,8 +34,9 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
     params?: any,
     sort?: any,
     filter?: any,
-    treeSelectedNode?: any,
+    location?: Location | undefined,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
+    treeSelectedNode?: any
   ) => void;
   // 批量删除
   batchDelete?: (selectedRows: any) => void; // 批量删除回调函数
@@ -58,7 +58,6 @@ export const Table: React.FC<TableProps> = (props) => {
     treeData,
     value,
     // 批量删除
-    useSearch,
     useBatchDelete,
     useTableMoreOption,
     useSiderTree,
@@ -158,6 +157,7 @@ export const Table: React.FC<TableProps> = (props) => {
           ref={tableHeight !== '100%' ? setContainer : null}
           style={{ marginRight: 15, marginTop: 10, marginBottom: 10 }}
         >
+          {/* {domList.toolbar} */}
           {domList.table}
         </div>
       );
@@ -219,7 +219,7 @@ export const Table: React.FC<TableProps> = (props) => {
 
   // 挂载行
   let newColumns = columns || [];
-  newColumns = newColumns.filter((item) => item.dataIndex != 'menuButton');
+  newColumns = newColumns.filter((item) => item.dataIndex !== 'menuButton');
 
   if (useTableMoreOption) {
     const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
@@ -228,6 +228,7 @@ export const Table: React.FC<TableProps> = (props) => {
       dataIndex: 'menuButton',
       title: '操作',
       editable: false,
+      width: 200,
       fixed: 'right',
       render: (text: any, record: any, index: any, action: any) => {
         return (
@@ -259,7 +260,7 @@ export const Table: React.FC<TableProps> = (props) => {
     const { pageSize: size, current: current, ...more } = params;
     const order = sort;
     const page = current - 1;
-    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, null, actionRef);
+    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, location, actionRef, null);
     return { success: true };
   }
 
@@ -289,7 +290,7 @@ export const Table: React.FC<TableProps> = (props) => {
         actionRef={actionRef}
         formRef={formRef}
         rowSelection={rowSelection}
-        scroll={{ y: tableHeight, x: '100%' }}
+        scroll={{ y: tableHeight }}
         editable={{
           type: 'multiple',
           editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
@@ -314,7 +315,6 @@ export const Table: React.FC<TableProps> = (props) => {
 };
 
 Table.defaultProps = {
-  useSearch: true,
   useBatchDelete: true,
   useTableMoreOption: true,
   isExpandNode: false,

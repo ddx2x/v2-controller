@@ -14,20 +14,22 @@ const ExpandRow: React.FC<ExpandRowProps> = (props) => {
   const [dataSource, setDataSource] = useState<any>([]);
 
   useEffect(() => {
-    onData && onData(record).then((res: any) => setDataSource(res));
+    onData && onData(record).then((res: any) => { console.log('res', res); setDataSource(res)});
   }, []);
 
-  if (kind == 'table') {
+  console.log(dataSource, '....')
+
+  if (kind === 'table') {
     return (
       <Table
         {...table}
-        useSearch={false}
         isExpandNode={true}
         cardBordered={false}
         cardProps={{
           style: { background: '#fbfbfc' },
         }}
-        dataSource={dataSource}
+        search={false}
+        value={dataSource}
       />
     );
   }
@@ -42,7 +44,12 @@ export const expandModule = (config: ExpandedConfig | null): ExpandableConfig<an
 
   return {
     expandedRowRender: (record) => (
-      <ExpandRow kind={kind} onData={onData} table={table} record={record} />
+      <ExpandRow
+        kind={kind} 
+        onData={onData} 
+        table={table}  
+        record={record}
+      />
     ),
     ...rest,
   };

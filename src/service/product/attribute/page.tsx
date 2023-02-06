@@ -1,22 +1,35 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
+import { parse } from 'querystring';
 import { productAttributeStore } from './store';
 
 const attributeStoretable: StoreTableProps = {
   store: productAttributeStore,
   rowKey: 'uid',
+  search: false,
   columns: [
     {
       dataIndex: 'uid',
       hideInSearch: true,
       editable: false,
+      hideInTable: true,
     },
     {
       dataIndex: 'name',
-      title: '属性名称',
+      title: '名称',
       hideInSearch: true,
       editable: false,
+    },
+    {
+      dataIndex: 'type',
+      title: '类型',
+      hideInSearch: true,
+      editable: false,
+      valueEnum: {
+        0: "规格",
+        1: "参数",
+      }
     },
     {
       dataIndex: 'category_id',
@@ -29,18 +42,28 @@ const attributeStoretable: StoreTableProps = {
       title: '是否多选',
       hideInSearch: true,
       editable: false,
+      valueEnum: {
+        0: "唯一",
+        1: "单选",
+        2: "多选",
+      }
     },
     {
       dataIndex: 'input_type',
       title: '录入方式',
       hideInSearch: true,
       editable: false,
+      valueEnum: {
+        0: "手工录入",
+        1: "从列表中选取",
+      }
     },
     {
       dataIndex: 'input_select_list',
       title: '可选值列表',
       hideInSearch: true,
       editable: false,
+      valueType: 'select',
     },
     {
       dataIndex: 'sort',
@@ -80,24 +103,30 @@ const attributeStoretable: StoreTableProps = {
       tag: '详情',
     },
   ],
-  // onNext: (params: any) =>
-  //   productAttributeStore.next({
-  //     limit: { page: 0, size: 10 },
-  //     sort: { brand_name: 1 },
-  //     ...params,
-  //   }),
+  onNext: (params: any, sort, filter, location) => {
+    let data = location?.search.split('?')[1] || '';
+    let query = parse(data);
+    productAttributeStore.next({
+      limit: { page: 0, size: 10 },
+      sort: { brand_name: 1 },
+      filter: query,
+    });
+  }
 };
 
 pageManager.register('product.category.attribute', {
   page: {
     view: [{ kind: 'storeTable', ...attributeStoretable }],
+    container: {
+      keepAlive: false,
+    },
   },
   stores: [
-    {
-      store: productAttributeStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: productAttributeStore.next,
-      exit: productAttributeStore.reset,
-    }
+    // {
+    //   store: productAttributeStore,
+    //   query: { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { type: "" } },
+    //   // load: productAttributeStore.next,
+    //   exit: productAttributeStore.reset,
+    // }
   ],
 });

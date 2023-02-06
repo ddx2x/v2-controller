@@ -26,6 +26,7 @@ const userStoreTable: StoreTableProps = {
       title: '登陆类型',
       valueType: "select",
       editable: false,
+      hideInSearch: true,
       initialValue: "4",
       valueEnum: {
         1: { text: "手机", icon: "processing" },
@@ -40,7 +41,7 @@ const userStoreTable: StoreTableProps = {
       editable: false,
       valueType: 'date',
       render: (text: ReactNode, record: User, index: number, action: any) => {
-        return [<>{record.last_login_time == 0 ? "-" : unixtime2dateformat(record.last_login_time || 0)}</>]
+        return [<>{record.last_login_time === 0 ? "-" : unixtime2dateformat(record.last_login_time || 0)}</>]
       },
     },
     {
@@ -55,14 +56,16 @@ const userStoreTable: StoreTableProps = {
     },
   ],
   editableValuesChange: (record) => {
-    const src = userStore.items.find((item) => item.getUid() == record.uid);
+    const src = userStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<User> = record;
 
     if (!src) return;
-    userStore.update(src, update).then(() =>
-      notification.success({ message: "更新成功" })).catch(e => {
-        notification.error({ message: "更新失败" });
-      })
+    if (src?.is_lock !== update.is_lock) {
+      userStore.update_one(src, update, ["is_lock"]).then(() =>
+        notification.success({ message: "更新成功" })).catch((e) => {
+          notification.error({ message: "更新失败:" + e });
+        })
+    }
   },
   toolbar: {
     title: '数据列表',

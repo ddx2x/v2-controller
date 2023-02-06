@@ -160,6 +160,11 @@ const defaultFrom: FormProps = {
         shopApi.get().then(rs => {
             rs.mode = String(rs.mode);
             rs.recommend_door = String(rs.recommend_door ? 1 : 0);
+            rs.logo = {
+                fileList: [
+                    { name: rs.logo, url: "/media-t/file/" + rs.logo }
+                ]
+            }
             formRef.current?.setFieldsValue(rs);
         })
 

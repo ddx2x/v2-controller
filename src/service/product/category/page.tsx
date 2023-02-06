@@ -1,12 +1,14 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
-import { categoryStore } from './store';
+import { Category, categoryStore, categoryStore2 } from './store';
+
 
 const categoryStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
+  search: false,
   pageSize: 10,
   columns: [
     {
@@ -22,21 +24,6 @@ const categoryStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'product_unit',
-      title: '商品单位',
-      hideInSearch: true,
-      editable: false,
-      valueType: 'tag',
-      valueEnum: {
-        '辆': {
-          status: 'success',
-        },
-        '件': {
-          status: 'success',
-        },
-      },
-    },
-    {
       dataIndex: 'nav_status',
       title: '导航栏显示',
       hideInSearch: true,
@@ -45,7 +32,7 @@ const categoryStoreTable: StoreTableProps = {
       valueEnum: {
         0: {
           text: '未启用',
-          status: 'Error',
+          status: 'Processing',
         },
         1: {
           text: '已启用',
@@ -77,6 +64,99 @@ const categoryStoreTable: StoreTableProps = {
       editable: false,
     },
   ],
+
+  expand: {
+    kind: 'table',
+    onData: (record: any) => categoryStore2.api.list(undefined, { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { level: 2, full_id: record.uid } }),
+    table: {
+      options: false,
+      tableMenu: (record: Category, action: any) => [
+        {
+          kind: 'confirm',
+          onClick: () => message.info('删除成功'),
+          tag: '删除',
+          title: '删除',
+          text: `确认删除类型名称` + "'" + record.uid + "'",
+        },
+        {
+          kind: 'link',
+          title: '属性参数',
+          tag: '属性参数',
+          link: "/product/category/attribute?category_id=" + record.uid,
+        }
+      ],
+      rowKey: 'uid',
+      columns: [
+        {
+          dataIndex: 'uid',
+          title: '类型名称',
+          hideInSearch: true,
+          editable: false,
+        },
+        {
+          dataIndex: 'product_count',
+          title: '商品数量',
+          hideInSearch: true,
+          editable: false,
+        },
+        {
+          dataIndex: 'product_unit',
+          title: '商品单位',
+          hideInSearch: true,
+          editable: false,
+          valueType: 'tag',
+          valueEnum: {
+            '辆': {
+              status: 'success',
+            },
+            '件': {
+              status: 'success',
+            },
+          },
+        },
+        {
+          dataIndex: 'nav_status',
+          title: '导航栏显示',
+          hideInSearch: true,
+          editable: false,
+          valueType: 'select',
+          valueEnum: {
+            0: {
+              text: '未启用',
+              status: 'Processing',
+            },
+            1: {
+              text: '已启用',
+              status: 'Processing',
+            },
+          },
+        },
+        {
+          dataIndex: 'show_status',
+          title: '是否显示',
+          hideInSearch: true,
+          editable: false,
+          valueType: 'select',
+          valueEnum: {
+            1: {
+              text: '未显示',
+              status: 'Error',
+            },
+            0: {
+              text: '已显示',
+              status: 'Success',
+            },
+          },
+        },
+        {
+          dataIndex: 'sort',
+          title: '排序',
+          hideInSearch: true,
+          editable: false,
+        },
+      ],
+    },
+  },
   editableValuesChange: (record) => { console.log(record) },
   toolBarMenu: (selectedRows) => [
     {
@@ -144,7 +224,7 @@ pageManager.register('product.category', {
   stores: [
     {
       store: categoryStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
+      query: { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { level: 1 } },
       load: categoryStore.next,
       exit: categoryStore.reset,
     }

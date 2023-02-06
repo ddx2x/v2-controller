@@ -5,7 +5,7 @@ export class Shop extends IObject {
   name: string | undefined
   address: string | undefined
   industry: string | undefined
-  logo: string | undefined
+  logo: string | object | undefined
   introduction: string | undefined
   mode: number | string | undefined
   recommend_door: boolean | string | undefined
