@@ -83,7 +83,7 @@ let recommend_door_name_dependency: FormColumnsType = {
     valueType: 'dependency',
     name: ['recommend_door'],
     columns: ({ recommend_door }) => {
-        return recommend_door != '0' ? [recommend_door_name] : []
+        return recommend_door !== '0' ? [recommend_door_name] : []
     },
 }
 
@@ -187,11 +187,11 @@ const defaultFrom: FormProps = {
             address: values.address,
             // logo: values.logo?.fileList[0].name,
             industry: values.industry,
-            recommend_door: values.recommend_door == "1",
+            recommend_door: values.recommend_door === "1",
             recommend_door_name: values.recommend_door_name,
         };
         shopApi.update(shop).
-            then((_) => { notification.success({ message: "保存成功" }); })
+            then(() => { notification.success({ message: "保存成功" }); })
             .catch((e) => notification.error(e))
 
         handleClose();
