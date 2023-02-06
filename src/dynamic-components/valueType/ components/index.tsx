@@ -3,10 +3,10 @@ import { Form, FormProps } from '../../form';
 import { valueTypeMapStore } from '../valueTypeMap';
 import { BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
 import { Card, CardProps } from './card';
-import { ImageUploadRenderFormItem, ImageUploadRender, ImageUploadProps } from './imageUpload';
-import { MonacoEditorRenderFormItem, MonacoEditorRender, MonacoEditorProps } from './monacoEditor';
+import { ImageUploadProps, ImageUploadRender, ImageUploadRenderFormItem } from './imageUpload';
+import { MonacoEditorProps, MonacoEditorRender, MonacoEditorRenderFormItem } from './monacoEditor';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
-import { VideoUploadRender, VideoUploadRenderFormItem, VideoUploadProps } from './videoUpload';
+import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
 
 declare module '@ant-design/pro-utils' {
   interface ProFieldValueTypeWithFieldProps {

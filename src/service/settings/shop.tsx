@@ -1,7 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { shopApi } from './store';
+import { Shop, shopApi } from './store';
 
 let name: FormColumnsType = {
     title: '名称',
@@ -181,15 +181,19 @@ const defaultFrom: FormProps = {
 
     ],
     onSubmit: (formRef, values, handleClose) => {
-        const shop = {
+        let shop: Partial<Shop> = {
             name: values.name,
-            mode: values.mode,
+            mode: values.mode == "1" ? 1 : 0,
             address: values.address,
-            // logo: values.logo?.fileList[0].name,
+            logo: values.logo?.fileList[0].name,
             industry: values.industry,
+            introduction: values.introduction,
             recommend_door: values.recommend_door == "1",
-            recommend_door_name: values.recommend_door_name,
         };
+
+        if (values.recommend_door_name != "" || values.recommend_door_name != undefined) {
+            shop.recommend_door_name = values.recommend_door_name
+        }
         shopApi.update(shop).
             then((_) => { notification.success({ message: "保存成功" }); })
             .catch((e) => notification.error(e))
