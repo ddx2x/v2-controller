@@ -18,7 +18,7 @@ let singleSteps = [
 let commodityType: FormColumnsType = {
 	title: '商品类型',
 	dataIndex: 'type',
-	valueType: 'radio',
+	valueType: 'map',
 	initialValue: 1,
 	valueEnum: {
 		1: '实物商品（物流发货）',
@@ -150,12 +150,13 @@ const singleEditView: StepFormProps = {
 		let data = location?.search.split('?')[1] || '';
 		let query: Query = parse(data);
 		commodityApi.get(query.name).then((item: Commodity) => {
-			location?.search &&
+			if (location?.search) {
 				formRef.current?.setFieldsValue({
 					name: item.name,
 					types: item.type,
 				});
-		});
+			}
+		})
 	},
 	unMount: (location, formRef) => {
 		formRef.current?.resetFields();
