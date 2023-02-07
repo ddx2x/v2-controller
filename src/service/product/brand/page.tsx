@@ -56,14 +56,23 @@ const brandStoreTable: StoreTableProps = {
       dataIndex: 'logo',
       title: '品牌logo',
       hideInSearch: true,
-      editable: false,
       valueType: 'image',
+      editable: false,
+      fieldProps: {
+        width: 50,
+        alt: ''
+      }
     },
     {
       dataIndex: 'big_pic',
       title: '专区大图',
       hideInSearch: true,
+      valueType: 'image',
       editable: false,
+      fieldProps: {
+        width: 50,
+        alt: ''
+      }
     },
     {
       dataIndex: 'lookup_down',
@@ -72,6 +81,13 @@ const brandStoreTable: StoreTableProps = {
       editable: false,
     },
   ],
+  dataSourceFormatter: (items) => {
+    return items.map((item: any) => {
+      item.logo = '/media-t/file/' + item.logo;
+      item.big_pic = '/media-t/file/' + item.big_pic;
+      return item
+    })
+  },
   editableValuesChange: (record) => { console.log(record) },
   toolBarMenu: () => [
     {
