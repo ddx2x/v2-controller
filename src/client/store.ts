@@ -143,7 +143,8 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action remove = async (id: string) => {
     this.api.delete(id).then(() => {
-      this.data.filter((item) => item.uid === id);
+      const remain = this.data.filter((item) => item.uid === id);
+      this.data.replace(remain);
     });
   };
 

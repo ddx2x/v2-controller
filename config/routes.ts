@@ -58,8 +58,41 @@ export default [
         component: './dynamic-view',
         routes: [
           {
-            name: '商品属性',
+            name: '商品分类属性',
             path: '/product/category/attribute',
+            icon: 'setting',
+            component: './dynamic-view',
+            parentKeys: ['/product/category'],
+            hideInMenu: true,
+            routes: [
+              {
+                name: '商品分类属性编辑',
+                path: '/product/category/attribute/edit',
+                icon: 'setting',
+                component: './dynamic-view',
+                parentKeys: ['/product/category/attribute'],
+                hideInMenu: true,
+              },
+              {
+                name: '商品分类属性新增',
+                path: '/product/category/attribute/add',
+                icon: 'setting',
+                component: './dynamic-view',
+                parentKeys: ['/product/category/attribute'],
+                hideInMenu: true,
+              }
+            ]
+          },
+
+          {
+            path: '/product/category/add',
+            icon: 'setting',
+            component: './dynamic-view',
+            parentKeys: ['/product/category'],
+            hideInMenu: true,
+          },
+          {
+            path: '/product/category/edit',
             icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/category'],

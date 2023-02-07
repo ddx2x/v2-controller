@@ -6,7 +6,7 @@ import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
@@ -14,14 +14,14 @@ import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
-  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>, setDataObject: Dispatch<any>) => void;
   unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
   buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, handleClose: () => void) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, dataObject: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory;
@@ -42,9 +42,10 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     ...rest
   } = props;
 
+  const [dataObject, setDataObject] = useState([])
   const formRef = useRef<ProFormInstance>();
   const init = () => {
-    delay(() => formRef && onMount && onMount(location, formRef), 10);
+    delay(() => formRef && onMount && onMount(location, formRef, setDataObject), 10);
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleShow = () => { setIsModalOpen(true); init() };
@@ -122,7 +123,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
           onFinish={async (values) => {
             if (!onSubmit) return false;
             await waitTime(submitTimeout);
-            return onSubmit(formRef, values, handleClose);
+            return onSubmit(formRef, values, dataObject, handleClose);
           }}
           {...rest}
         />

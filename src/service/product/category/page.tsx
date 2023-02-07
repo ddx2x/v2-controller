@@ -163,49 +163,48 @@ const categoryStoreTable: StoreTableProps = {
       kind: 'link',
       tag: '新增',
       title: '新增',
-      link: `/product/brand/add`,
+      link: `/product/category/add`,
     },
-    {
-      kind: 'implement',
-      tag: '批量商品上架',
-      title: '批量商品上架',
-      onClick: (e) => {
-        console.log('批量商品上架 selectedRows', selectedRows);
-        if (selectedRows.length <= 0) {
-          message.warning('请批量选择商品'); return
-        }
-        message.info('批量商品上架成功')
-      },
-      collapse: true
-    },
-    {
-      kind: 'implement',
-      tag: '批量商品下架',
-      title: '批量商品下架',
-      onClick: (e) => {
-        console.log('批量商品下架 selectedRows', selectedRows);
-        if (selectedRows.length <= 0) {
-          message.warning('请批量选择商品'); return
-        }
-        message.info('批量商品下架成功')
-      },
-      collapse: true
-    },
+    // {
+    //   kind: 'implement',
+    //   tag: '批量商品上架',
+    //   title: '批量商品上架',
+    //   onClick: (e) => {
+    //     console.log('批量商品上架 selectedRows', selectedRows);
+    //     if (selectedRows.length <= 0) {
+    //       message.warning('请批量选择商品'); return
+    //     }
+    //     message.info('批量商品上架成功')
+    //   },
+    //   collapse: true
+    // },
+    // {
+    //   kind: 'implement',
+    //   tag: '批量商品下架',
+    //   title: '批量商品下架',
+    //   onClick: (e) => {
+    //     console.log('批量商品下架 selectedRows', selectedRows);
+    //     if (selectedRows.length <= 0) {
+    //       message.warning('请批量选择商品'); return
+    //     }
+    //     message.info('批量商品下架成功')
+    //   },
+    //   collapse: true
+    // },
   ],
   tableMenu: (record: any, action: any) => [
     {
-      kind: 'descriptions',
-      dataSource: record,
-      tag: '详情',
-      columns: [],
-      collapse: "true",
+      kind: 'link',
+      tag: '编辑',
+      title: '编辑',
+      link: '/product/category/edit?id=' + record.uid
     },
     {
       kind: 'confirm',
       onClick: () => message.info('删除成功'),
       tag: '删除',
       title: '删除',
-      text: `确认删除` + record.name,
+      text: `确认删除` + record.uid,
     },
   ],
   onRowEvent: [

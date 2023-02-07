@@ -4,15 +4,15 @@ import { DefaultWatchApi, WatchApi } from '@/client/event';
 export class ProductAttribute extends IObject {
     name: string | undefined
     category_id: string | undefined
-    select_type: number | undefined
-    input_type: number | undefined
+    select_type: number | string | undefined
+    input_type: number | string | undefined
     input_select_list: string[] | undefined
     sort: number | undefined
-    filter_type: number | undefined
-    search_type: number | undefined
-    related_status: number | undefined
-    hand_add_status: number | undefined
-    type: number | undefined
+    filter_type: number | string | undefined
+    search_type: number | string | undefined
+    related_status: number | string | undefined
+    hand_add_status: number | string | undefined
+    type: number | string | undefined
 
     constructor(data: ProductAttribute) {
         super(data);

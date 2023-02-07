@@ -47,14 +47,14 @@ export declare type SearchQuery = {
 export declare type Parameter = string | number;
 
 const isObject = (object: Object) => {
-  return object != null && typeof object === 'object';
+  return object !== null && typeof object === 'object';
 };
 
 export const isDeepEqual = (object1: Object, object2: Object) => {
   const objKeys1 = Object.keys(object1);
   const objKeys2 = Object.keys(object2);
   if (objKeys1.length !== objKeys2.length) return false;
-  for (var key of objKeys1) {
+  for (let key of objKeys1) {
     const value1 = object1[key];
     const value2 = object2[key];
     const isObjects = isObject(value1) && isObject(value2);
@@ -177,15 +177,16 @@ export class ObjectApi<T extends IObject = any> {
   getUrl = (parameter?: Parameter, query?: Partial<Query>, op?: string) => {
     const { service, apiPrefix, apiVersion, apiResource } = this;
     let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
-    let obj = {};
-    if (query?.limit) obj['limit'] = JSON.stringify(query.limit);
-    if (query?.sort) obj['sort'] = JSON.stringify(query.sort);
-    if (query?.filter) obj['filter'] = JSON.stringify(query.filter);
+    let queryObject = {};
+
+    if (query?.limit) queryObject['limit'] = JSON.stringify(query.limit);
+    if (query?.sort) queryObject['sort'] = JSON.stringify(query.sort);
+    if (query?.filter) queryObject['filter'] = JSON.stringify(query.filter);
 
     if (parameter) resourcePath = resourcePath + '/' + parameter;
-    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(obj) : '');
+    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(queryObject) : '');
 
-    return '/' + resourcePath + (query ? `?` + stringify(obj) : '');
+    return '/' + resourcePath + (query ? `?` + stringify(queryObject) : '');
   };
 
   list = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
@@ -201,6 +202,8 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
+    const url = this.getUrl(parameter, query, op);
+    console.log("url", url);
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
       this.parseResponse
     );

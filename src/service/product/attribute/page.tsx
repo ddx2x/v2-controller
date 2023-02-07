@@ -8,6 +8,7 @@ const attributeStoretable: StoreTableProps = {
   store: productAttributeStore,
   rowKey: 'uid',
   search: false,
+  toolbarTitle: '数据列表',
   columns: [
     {
       dataIndex: 'uid',
@@ -55,8 +56,8 @@ const attributeStoretable: StoreTableProps = {
       editable: false,
       valueEnum: {
         0: "手工录入",
-        1: "从列表中选取",
-      }
+        1: "从列表中选取"
+      },
     },
     {
       dataIndex: 'input_select_list',
@@ -72,29 +73,39 @@ const attributeStoretable: StoreTableProps = {
       editable: false,
     },
   ],
-  toolbarTitle: '数据列表',
-  toolBarMenu: () => [
-    {
-      kind: 'link',
-      tag: '新增',
-      link: `/product/attribute/add`,
-      title: '新增',
-    },
-  ],
+  toolBarMenu: (selectedRows, location) => {
+    const query = parse(location?.search.split('?')[1] || '');
+    return [
+      {
+        kind: 'link',
+        tag: '新增',
+        link: `/product/category/attribute/add?id=` + query.category_id,
+        title: '新增',
+      },
+    ]
+  },
   tableMenu: (record, action) => [
     {
-      kind: 'descriptions',
-      dataSource: record,
-      tag: '详情',
-      collapse: "true",
+      kind: 'link',
+      tag: "编辑",
+      title: "编辑",
+      link: "/product/category/attribute/edit?id=" + record.uid,
     },
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
+      onClick: () => {
+        productAttributeStore.
+          remove(record.uid).then((_) => {
+            message.info('删除成功')
+          }).catch((e) => {
+            message.error('删除失败')
+          })
+      },
       tag: '删除',
       title: '删除',
       text: `确认删除` + record.name,
     },
+
 
   ],
   onRowEvent: [
@@ -121,12 +132,5 @@ pageManager.register('product.category.attribute', {
       keepAlive: false,
     },
   },
-  stores: [
-    // {
-    //   store: productAttributeStore,
-    //   query: { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { type: "" } },
-    //   // load: productAttributeStore.next,
-    //   exit: productAttributeStore.reset,
-    // }
-  ],
+  stores: [],
 });

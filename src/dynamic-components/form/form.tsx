@@ -9,7 +9,7 @@ import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { Dispatch, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
@@ -21,7 +21,7 @@ export declare type FormRef = {
 };
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
-  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
+  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, setDataObject: Dispatch<any>) => void;
   unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance<any> | undefined>) => void;
   trigger?: () => void;
   layoutType?: FormSchema['layoutType'];
@@ -29,7 +29,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, handleClose: () => void) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any,  handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory
@@ -50,11 +50,12 @@ export const Form =
       ...rest
     } = props;
 
+    const [dataObject, setDataObject] = useState({})
     useImperativeHandle(forwardRef, () => { return { open: () => handleShow() } });
 
     const formRef = useRef<ProFormInstance>();
     const init = () => {
-      delay(() => formRef && onMount && onMount(location, formRef), 10);
+      delay(() => formRef && onMount && onMount(location, formRef, setDataObject), 10);
     }
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const handleShow = () => { setIsModalOpen(true); init() };
@@ -84,7 +85,7 @@ export const Form =
             <>
               {dom}
               <FooterToolbar routeContext={routeContext || {}}>
-                <Space>{submitter}</Space>
+                <Space>{submitter}</Space> 
               </FooterToolbar>
             </>
           )
@@ -113,7 +114,7 @@ export const Form =
           autoFocusFirstInput
           onFinish={async (values) => {
             if (!onSubmit) return false;
-            const b = onSubmit(formRef, values, handleClose);
+            const b = onSubmit(formRef, values, dataObject,  handleClose);
             await waitTime(submitTimeout);
             return b;
           }}

@@ -27,7 +27,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
   toolbarTitle?: string;
-  toolBarMenu?: (selectedRows?: any) => MenuButtonType[];
+  toolBarMenu?: (selectedRows?: any, location?: Location | undefined) => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
   // 虚拟滚动 加载数据
   onNext?: (
@@ -301,7 +301,7 @@ export const Table: React.FC<TableProps> = (props) => {
         toolbar={{
           title: toolbarTitle,
           actions: [
-            <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows) : []} />
+            <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []} />
           ],
         }}
         tableRender={tableRender}

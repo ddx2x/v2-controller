@@ -188,7 +188,7 @@ const defaultFrom: FormProps = {
     onSubmit: (formRef, values, handleClose) => {
         let shop: Partial<Shop> = {
             name: values.name,
-            mode: values.mode === "1" ? 1 : 0,
+            mode: Number(values.mode),
             address: values.address,
             logo: values.logo?.fileList[0].name,
             industry: values.industry,

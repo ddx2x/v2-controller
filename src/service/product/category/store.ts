@@ -2,17 +2,17 @@ import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export class Category extends IObject {
-    level: number | undefined
+    level: number | string | undefined
     parent_id: string | undefined
     full_id: string | undefined
     product_count: number | undefined
     product_unit: string | undefined
-    nav_status: number | undefined
-    show_status: number | undefined
+    nav_status: number | string | undefined
+    show_status: number | string | undefined
     sort: number | undefined
     icon: string | undefined
     keywords: string[] | undefined
-    description: string | undefined
+    description: string | string | undefined
 
     constructor(data: Category) {
         super(data);
