@@ -19,10 +19,11 @@ import { Tree } from './tree';
 
 const defaulScrollHeight = '500px';
 
-export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow' > & {
+export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow'> & {
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
+  dataSourceFormatter?: (items: any) => any
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
@@ -34,7 +35,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
     params?: any,
     sort?: any,
     filter?: any,
-    location?: Location | undefined,
+    location?: Location | null | undefined,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
     treeSelectedNode?: any
   ) => void;
@@ -57,6 +58,7 @@ export const Table: React.FC<TableProps> = (props) => {
     columns,
     treeData,
     value,
+    dataSourceFormatter,
     // 批量删除
     useBatchDelete,
     useTableMoreOption,
@@ -276,7 +278,7 @@ export const Table: React.FC<TableProps> = (props) => {
     >
       <EditableProTable
         columns={newColumns}
-        value={value}
+        value={dataSourceFormatter ? dataSourceFormatter(value) : value}
         recordCreatorProps={
           recordCreatorPosition !== 'hidden'
             ? {
