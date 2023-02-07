@@ -59,8 +59,8 @@ const brandStoreTable: StoreTableProps = {
       valueType: 'image',
       editable: false,
       fieldProps: {
-        width: 50,
-        alt: ''
+        width: 60,
+        height: 60
       }
     },
     {
@@ -70,8 +70,8 @@ const brandStoreTable: StoreTableProps = {
       valueType: 'image',
       editable: false,
       fieldProps: {
-        width: 50,
-        alt: ''
+        width: 60,
+        height: 60
       }
     },
     {
