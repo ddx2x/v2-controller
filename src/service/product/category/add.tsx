@@ -1,12 +1,14 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { parse } from 'querystring';
+import { categoryApi } from './store';
 
 const name: FormColumnsType = {
 	title: '类型名称',
 	dataIndex: 'uid',
 	valueType: 'text',
 	fieldProps: {
+		disabled: true,
 		placeholder: '请输入分类名称',
 	},
 	formItemProps: {
@@ -21,14 +23,31 @@ const name: FormColumnsType = {
 
 
 const parent_id: FormColumnsType = {
-	title: '上级分类的编号',
+	title: '上级',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
-	valueType: 'text',
-	fieldProps: {
-		placeholder: '请输入分类名称',
+
+	valueType: 'select',
+	fieldProps: (form: any) => {
+		if (form.getFieldValue('level') === 2) {
+			categoryApi
+				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
+				.then((rs) => {
+
+				})
+				.catch((e) => { console.log(e) })
+		}
+		return {}
 	},
 };
+
+const parent_id_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['level'],
+	columns: ({ level }) => {
+		return level === 2 ? [parent_id] : []
+	},
+}
 
 const level: FormColumnsType = {
 	title: '分类级别',
@@ -37,7 +56,8 @@ const level: FormColumnsType = {
 	initialValue: 2,
 	fieldProps: {
 		min: 1,
-		max: 2
+		max: 2,
+		
 	},
 	formItemProps: {
 		rules: [
@@ -180,7 +200,7 @@ const addForm: FormProps = {
 	columns: [
 		name,
 		level,
-		parent_id,
+		parent_id_dependency,
 		nav_status,
 		show_status,
 		sort,

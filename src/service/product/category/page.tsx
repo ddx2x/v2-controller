@@ -83,7 +83,13 @@ const categoryStoreTable: StoreTableProps = {
           title: '属性参数',
           tag: '属性参数',
           link: "/product/category/attribute?category_id=" + record.uid,
-        }
+        },
+        {
+          kind: 'link',
+          tag: '编辑',
+          title: '编辑',
+          link: '/product/category/edit?id=' + record.uid
+        },
       ],
       rowKey: 'uid',
       columns: [

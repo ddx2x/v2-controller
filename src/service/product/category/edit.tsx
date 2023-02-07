@@ -2,15 +2,15 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { parse } from 'querystring';
-import { categoryApi } from './store';
+import { categoryApi, categoryStore } from './store';
 
 const name: FormColumnsType = {
 	title: '类型名称',
 	dataIndex: 'uid',
 	valueType: 'text',
 	fieldProps: {
-		disabled: true,
 		placeholder: '请输入分类名称',
+		disabled: true,
 	},
 	formItemProps: {
 		rules: [
@@ -24,14 +24,30 @@ const name: FormColumnsType = {
 
 
 const parent_id: FormColumnsType = {
-	title: '上级分类的编号',
+	title: '上级',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
-	valueType: 'text',
-	fieldProps: {
-		placeholder: '请输入分类名称',
+	valueType: 'select',
+	fieldProps: (form: any) => {
+		if (form.getFieldValue('level') === 2) {
+			categoryStore.api
+				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
+				.then((rs) => {
+					console.log("catestore.....", rs)
+				})
+				.catch((e) => { console.log(e) })
+		}
+		return {}
 	},
 };
+
+const parent_id_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['level'],
+	columns: ({ level }) => {
+		return level === 2 ? [parent_id] : []
+	},
+}
 
 const level: FormColumnsType = {
 	title: '分类级别',
@@ -39,9 +55,9 @@ const level: FormColumnsType = {
 	valueType: 'digit',
 	initialValue: 2,
 	fieldProps: {
-		disabled: true,
 		min: 1,
-		max: 2
+		max: 2,
+		disabled: true,
 	},
 	formItemProps: {
 		rules: [
@@ -175,7 +191,7 @@ const editForm: FormProps = {
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
 		categoryApi.get(query.id).then((rs) => {
-			console.log("..........", rs);
+			console.log("category.edit" + rs);
 			rs.nav_status = String(rs.nav_status);
 			rs.show_status = String(rs.show_status);
 			formRef.current?.setFieldsValue(rs);
@@ -192,7 +208,7 @@ const editForm: FormProps = {
 	columns: [
 		name,
 		level,
-		parent_id,
+		parent_id_dependency,
 		nav_status,
 		show_status,
 		sort,
@@ -227,6 +243,9 @@ const editForm: FormProps = {
 pageManager.register('product.category.edit', {
 	page: {
 		view: [{ kind: 'form', ...editForm }],
+		container: {
+			keepAlive: false,
+		}
 	},
 	stores: [],
 });
