@@ -106,7 +106,7 @@ const sort: FormColumnsType = {
 	dataIndex: 'sort',
 	title: '排序',
 	valueType: 'digit',
-	initialValue: 99,
+	initialValue: 1,
 	fieldProps: {
 		min: 1,
 		max: 99,

@@ -1,6 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { message } from 'antd';
+import { notification } from 'antd';
 import { Category, categoryStore, categoryStore2 } from './store';
 
 
@@ -73,7 +73,11 @@ const categoryStoreTable: StoreTableProps = {
       tableMenu: (record: Category, action: any) => [
         {
           kind: 'confirm',
-          onClick: () => message.info('删除成功'),
+          onClick: () => {
+            categoryStore2.remove(record.uid)
+              .then(() => notification.success({ message: "删除成功" }))
+              .catch(e => notification.error(e))
+          },
           tag: '删除',
           title: '删除',
           text: `确认删除类型名称` + "'" + record.uid + "'",
@@ -209,9 +213,9 @@ const categoryStoreTable: StoreTableProps = {
       kind: 'confirm',
       onClick: () => {
         categoryStore.remove(record.uid).then(() => {
-          message.info('删除成功')
+          notification.info({ message: "删除成功" })
         }).catch(e => {
-          message.error(e)
+          notification.error(e)
         })
       },
       tag: '删除',
@@ -231,6 +235,9 @@ const categoryStoreTable: StoreTableProps = {
 pageManager.register('product.category', {
   page: {
     view: [{ kind: 'storeTable', ...categoryStoreTable }],
+    container: {
+      keepAlive: false,
+    },
   },
   stores: [
     {

@@ -83,7 +83,6 @@ export default [
               }
             ]
           },
-
           {
             path: '/product/category/add',
             icon: 'setting',
@@ -105,6 +104,22 @@ export default [
         path: '/product/brand',
         icon: 'setting',
         component: './dynamic-view',
+        routes: [
+          {
+            name: '商品品牌编辑',
+            path: '/product/brand/edit',
+            component: './dynamic-view',
+            parentKeys: ['/product/brand'],
+            hideInMenu: true,
+          },
+          {
+            name: '商品品牌新增',
+            path: '/product/brand/add',
+            component: './dynamic-view',
+            parentKeys: ['/product/brand'],
+            hideInMenu: true,
+          }
+        ]
       }
     ],
   },

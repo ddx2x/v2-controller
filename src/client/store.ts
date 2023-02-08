@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import { isDeepEqual, ObjectApi, Query, SearchQuery } from './api';
+import { isDeepEqual, ObjectApi, Parameter, Query, SearchQuery } from './api';
 import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -117,6 +117,18 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       });
   };
 
+  @action get = async (paramster?: Parameter, query?: Query): Promise<T> => {
+    const q = this.querys(query);
+    const newItem = await this.api.get(paramster, q);
+    const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
+    if (index < 1) {
+      this.data.push(newItem)
+    } else {
+      this.data.splice(index, 1, newItem);
+    }
+    return newItem;
+  }
+
   @action create = async (partial?: Partial<T>, query?: Query): Promise<T> => {
     const q = this.querys(query);
     const newItem = await this.api.create(undefined, partial, q);
@@ -126,7 +138,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action async update_one(item: T, partial: Partial<T>, fields: string[], query?: Query): Promise<T> {
     const q = this.querys(query);
-    const newItem = await item.update(this, { fields: fields, item: partial }, q);
+    const newItem = await item.update(this, { fields: fields, item: partial }, item.getUid(), q);
     const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
     this.data.splice(index, 1, newItem);
     return newItem;
@@ -142,7 +154,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action remove = async (id: string) => {
     this.api.delete(id).then(() => {
-      const remain = this.data.filter((item) => item.uid === id);
+      const remain = this.data.filter((item) => item.uid !== id);
       this.data.replace(remain);
     });
   };

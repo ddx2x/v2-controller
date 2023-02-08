@@ -1,7 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { Shop, shopApi } from './store';
+import { Shop, shopStore } from './store';
 
 let name: FormColumnsType = {
     title: '名称',
@@ -62,12 +62,8 @@ let recommend_door_name: FormColumnsType = {
     dataIndex: 'recommend_door_name',
     valueType: 'select',
     valueEnum: {
-        1: {
-            text: '总店',
-        },
-        2: {
-            text: '广州分店',
-        },
+        1: "总店",
+        2: "广州分店",
     },
     formItemProps: {
         rules: [
@@ -155,9 +151,10 @@ let address: FormColumnsType = {
 
 // kind: form
 const defaultFrom: FormProps = {
-    onMount: (location, formRef) => {
+    onMount: (location, formRef, setDataObject) => {
         formRef.current?.resetFields();
-        shopApi.get().then(rs => {
+        shopStore.get().then(rs => {
+            setDataObject(rs)
             rs.mode = String(rs.mode);
             rs.recommend_door = String(rs.recommend_door ? 1 : 0);
             rs.logo = {
@@ -185,8 +182,9 @@ const defaultFrom: FormProps = {
         address,
 
     ],
-    onSubmit: (formRef, values, handleClose) => {
-        let shop: Partial<Shop> = {
+    onSubmit: (formRef, values, dataObject, handleClose) => {
+
+        const target: Partial<Shop> = {
             name: values.name,
             mode: Number(values.mode),
             address: values.address,
@@ -197,11 +195,13 @@ const defaultFrom: FormProps = {
         };
 
         if (values.recommend_door_name !== "" || values.recommend_door_name !== undefined) {
-            shop.recommend_door_name = values.recommend_door_name
+            target.recommend_door_name = values.recommend_door_name
         }
-        shopApi.update(shop).
-            then(() => { notification.success({ message: "保存成功" }); })
+
+        shopStore.update_one(dataObject, target, ["name", "address", "mode", "logo", "industry", "introduction", "recommend_door", "recommend_door_name"])
+            .then(() => { notification.success({ message: "保存成功" }); })
             .catch((e) => notification.error(e))
+
 
         handleClose();
 
@@ -213,9 +213,8 @@ pageManager.register('setting.shop', {
     page: {
         view: [{ kind: 'form', ...defaultFrom }],
         container: {
-            keepAlive: true,
+            keepAlive: false,
             header: {
-                // title: '店铺信息',
             },
         },
     },

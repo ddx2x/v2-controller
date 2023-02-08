@@ -1,15 +1,12 @@
 import { StoreTableProps } from '@/dynamic-components/table';
 import { pageManager } from '@/dynamic-view';
-import { message } from 'antd';
-import { brandStore } from './store';
+import { notification } from 'antd';
+import { Brand, brandStore } from './store';
 
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
   pageSize: 10,
-  toolbar: {
-    title: '数据列表',
-  },
   columns: [
     {
       dataIndex: 'uid',
@@ -17,22 +14,18 @@ const brandStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
+
     {
       dataIndex: 'first_letter',
       title: '首字母',
       editable: false,
     },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-      hideInSearch: true,
-      editable: false,
-    },
+
     {
       dataIndex: 'factory_status',
-      title: '显示制造商',
-      hideInSearch: true,
+      title: '显示品牌制造商',
       valueType: 'switch',
+      hideInSearch: true,
     },
     {
       dataIndex: 'show_status',
@@ -52,14 +45,15 @@ const brandStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
+
     {
       dataIndex: 'logo_price',
-      title: '品牌logo',
+      title: '品牌',
       hideInSearch: true,
       valueType: 'image',
       editable: false,
       fieldProps: {
-        width: 60,
+        width: 80,
       },
     },
     {
@@ -71,27 +65,61 @@ const brandStoreTable: StoreTableProps = {
         width: 60,
       },
       editable: false,
-    }
+    },
+    {
+      dataIndex: 'sort',
+      title: '排序',
+      hideInSearch: true,
+      editable: false,
+    },
   ],
-  editableValuesChange: (record) => {
-    //TODO
-    console.log(record)
+  editableValuesChange: (record: Brand) => {
+    const src = brandStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<Brand> = record;
+
+    if (!src) return;
+    if (src?.show_status !== update.show_status) {
+      brandStore.update_one(src, update, ["show_status"]).then(() =>
+        notification.success({ message: "更新成功" })).catch((e) => {
+          notification.error({ message: "更新失败:" + e });
+        })
+    }
+
+    if (src?.factory_status !== update.factory_status) {
+      brandStore.update_one(src, update, ["factory_status"]).then(() =>
+        notification.success({ message: "更新成功" })).catch((e) => {
+          notification.error({ message: "更新失败:" + e });
+        })
+    }
   },
-  toolBarMenu: () => [
+  toolbarTitle: "数据列表",
+  toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
       tag: '新增',
-      link: `/product/brand/add`,
       title: '新增',
+      link: `/product/brand/add`,
     },
   ],
   tableMenu: (record, action) => [
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
+      onClick: () => {
+        brandStore.remove(record.uid)
+          .then(() => notification.success({ message: "删除成功" }))
+          .catch((e) => {
+            notification.error(e)
+          })
+      },
       tag: '删除',
       title: '删除',
       text: `确认删除` + record.name,
+    },
+    {
+      kind: 'link',
+      tag: '编辑',
+      title: '编辑',
+      link: '/product/brand/edit?id=' + record.uid
     },
   ],
   onRowEvent: [
@@ -111,13 +139,10 @@ const brandStoreTable: StoreTableProps = {
 pageManager.register('product.brand', {
   page: {
     view: [{ kind: 'storeTable', ...brandStoreTable }],
+    container: {
+      keepAlive: false,
+    }
   },
   stores: [
-    {
-      store: brandStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: brandStore.next,
-      exit: brandStore.reset,
-    }
   ],
 });

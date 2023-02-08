@@ -92,7 +92,6 @@ const userStoreTable: StoreTableProps = {
       title: '删除',
       text: `确认删除` + record.name,
     },
-
   ],
   onRowEvent: [
     {
@@ -100,10 +99,24 @@ const userStoreTable: StoreTableProps = {
       tag: '详情',
     },
   ],
+  onSubmit: () => {
+
+    const src = userStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<User> = record;
+
+    if (!src) return;
+    if (src?.is_lock !== update.is_lock) {
+      userStore.update_one(src, update, ["is_lock"]).then(() =>
+        notification.success({ message: "更新成功" })).catch((e) => {
+          notification.error({ message: "更新失败:" + e });
+        })
+    }
+
+  },
   onNext: (params: any) =>
     userStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
+      limit: { page: 0, size: 1 },
+      sort: {},
       ...params,
     }),
 
@@ -115,11 +128,11 @@ pageManager.register('privilege.user', {
     view: [{ kind: 'storeTable', ...userStoreTable }],
   },
   stores: [
-    {
-      store: userStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: userStore.next,
-      exit: userStore.reset,
-    }
+    // {
+    //   store: userStore,
+    //   query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
+    //   load: userStore.next,
+    //   exit: userStore.reset,
+    // }
   ],
 });

@@ -2,7 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { parse } from 'querystring';
-import { categoryApi, categoryStore } from './store';
+import { Category, categoryApi, categoryStore } from './store';
 
 const name: FormColumnsType = {
 	title: '类型名称',
@@ -24,21 +24,13 @@ const name: FormColumnsType = {
 
 
 const parent_id: FormColumnsType = {
-	title: '上级',
+	title: '上级名称',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
 	valueType: 'select',
-	fieldProps: (form: any) => {
-		if (form.getFieldValue('level') === 2) {
-			categoryStore.api
-				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
-				.then((rs) => {
-					console.log("catestore.....", rs)
-				})
-				.catch((e) => { console.log(e) })
-		}
-		return { disabled: true }
-	},
+	fieldProps: {
+		disabled: true,
+	}
 };
 
 const parent_id_dependency: FormColumnsType = {
@@ -114,7 +106,7 @@ const sort: FormColumnsType = {
 	dataIndex: 'sort',
 	title: '排序',
 	valueType: 'digit',
-	initialValue: 99,
+	initialValue: 1,
 	fieldProps: {
 		min: 1,
 		max: 99,
@@ -151,7 +143,6 @@ const description: FormColumnsType = {
 	title: '描述',
 	valueType: 'textarea',
 	fieldProps: {
-		mode: "tags",
 	},
 };
 
@@ -168,7 +159,6 @@ const editForm: FormProps = {
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
 		categoryApi.get(query.id).then((rs) => {
-			console.log("category.edit" + rs);
 			rs.nav_status = String(rs.nav_status);
 			rs.show_status = String(rs.show_status);
 			formRef.current?.setFieldsValue(rs);
@@ -193,23 +183,18 @@ const editForm: FormProps = {
 		description,
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
-		// let item: Partial<ProductAttribute> = {
-		// 	name: values.name,
-		// 	category_id: values.category_id,
-		// 	select_type: Number(values.select_type),
-		// 	input_type: Number(values.input_type),
-		// 	input_select_list: values.input_select_list,
-		// 	sort: Number(values.sort),
-		// 	filter_type: Number(values.filter_type),
-		// 	search_type: Number(values.search_type),
-		// 	related_status: Number(values.related_status),
-		// 	hand_add_status: Number(values.hand_add_status),
-		// 	type: Number(values.type),
-		// };
+		const src: Category = dataObject;
+		const target: Partial<Category> = {
+			nav_status: Number(values.nav_status),
+			show_status: Number(values.show_status),
+			sort: Number(values.sort),
+			keywords: values.keywords,
+			description: String(values.description) || "",
+		};
 
-		// productAttributeStore.api.create(undefined, item).
-		// 	then(() => { notification.success({ message: "保存成功" }); })
-		// 	.catch((e) => notification.error(e))
+		categoryStore.update_one(src, target, ["nav_status", "show_status", "sort", "keywords", "description"]).
+			then(() => { message.success("保存成功"); })
+			.catch((e) => message.error(e))
 
 		handleClose();
 		return true

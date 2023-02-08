@@ -39,7 +39,7 @@ const parent_id: FormColumnsType = {
 				})
 				.catch((e) => { message.error(e) })
 		}
-		return select
+		return { valueEnum: select }
 	},
 	formItemProps: {
 		rules: [
@@ -64,7 +64,7 @@ const level: FormColumnsType = {
 	title: '分类级别',
 	dataIndex: 'level',
 	valueType: 'digit',
-	initialValue: 2,
+	initialValue: 1,
 	fieldProps: {
 		min: 1,
 		max: 2,
@@ -125,7 +125,7 @@ const sort: FormColumnsType = {
 	dataIndex: 'sort',
 	title: '排序',
 	valueType: 'digit',
-	initialValue: 99,
+	initialValue: 1,
 	fieldProps: {
 		min: 1,
 		max: 99,
@@ -222,6 +222,9 @@ const addForm: FormProps = {
 pageManager.register('product.category.add', {
 	page: {
 		view: [{ kind: 'form', ...addForm }],
+		container: {
+			keepAlive: false,
+		},
 	},
 	stores: [],
 });

@@ -265,7 +265,6 @@ const editForm: FormProps = {
 		hand_add_status,
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
-		console.log("dataObject", dataObject)
 		let item: Partial<ProductAttribute> = {
 			name: values.name,
 			category_id: values.category_id,

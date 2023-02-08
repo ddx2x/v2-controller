@@ -1,4 +1,4 @@
-import type { ObjectData, ObjectDataList, ObjectStore, Query } from '.';
+import type { ObjectData, ObjectDataList, ObjectStore, Parameter, Query } from '.';
 
 export type IObjectConstructor<T extends IObject = any> = new (
   data: ObjectData | ObjectDataList | any,
@@ -29,9 +29,10 @@ export class IObject implements ObjectData {
   update: any = async <S extends ObjectStore<T>, T extends IObject>(
     store: S,
     partial: Partial<T>,
+    parameter?: Parameter,
     query?: Query,
   ): Promise<T> => {
-    return store.api.update(partial, undefined, query);
+    return store.api.update(partial, parameter, query);
   };
 }
 

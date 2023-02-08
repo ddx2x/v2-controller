@@ -7,16 +7,17 @@ declare type ImageFileList = {
 
 export class Brand extends IObject {
     first_letter: string | undefined
-    sort: number | undefined
-    factory_status: number | undefined
-    product_count: number | undefined
-    product_comment_count: number | undefined
-    show_status: number | undefined
-    logo: string | undefined
-    big_pic: string | undefined
+    sort: number | string | undefined
+    factory_status: number | string | undefined
+    product_count: number | string | undefined
+    product_comment_count: number | string | undefined
+    show_status: number | string | undefined
+    logo: string | object | undefined
+    big_pic: string | object | undefined
     brand_story: string | undefined
-    logo_price: string | undefined
-    big_pic_copy: string | undefined
+
+    logo_price: string | object | undefined
+    big_pic_copy: string | object|undefined
 
     constructor(data: Brand) {
         super(data);
