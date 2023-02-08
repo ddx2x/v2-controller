@@ -123,7 +123,6 @@ const sort: FormColumnsType = {
 		min: 1,
 		max: 99,
 	},
-	width: 'm',
 	formItemProps: {
 		rules: [
 			{
@@ -215,6 +214,12 @@ const addForm: FormProps = {
 pageManager.register('product.category.add', {
 	page: {
 		view: [{ kind: 'form', ...addForm }],
+		container: {
+			keepAlive: true,
+			header: {
+				title: '商品分类新增'
+			}
+		}
 	},
 	stores: [],
 });
