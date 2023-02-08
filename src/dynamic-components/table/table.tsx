@@ -6,6 +6,7 @@ import { EditableProTableProps } from '@ant-design/pro-table/es/components/Edita
 import { FormattedMessage } from '@umijs/max';
 import { Button, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
+import type { Location } from 'history';
 import { observable } from 'mobx';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -17,7 +18,7 @@ import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 import { Tree } from './tree';
 
-const defaulScrollHeight = '500px';
+const defaulScrollHeight = '70%';
 
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow'> & {
   useBatchDelete?: boolean; // 开启批量删除
@@ -292,7 +293,7 @@ export const Table: React.FC<TableProps> = (props) => {
         actionRef={actionRef}
         formRef={formRef}
         rowSelection={rowSelection}
-        scroll={{ y: tableHeight }}
+        scroll={{ y: tableHeight, x: 1500 }}
         editable={{
           type: 'multiple',
           editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
