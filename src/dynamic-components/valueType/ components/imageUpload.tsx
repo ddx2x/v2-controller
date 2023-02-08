@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
-import { Modal, Upload } from 'antd';
+import { Image, Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
@@ -50,9 +50,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     </div>
   );
 
-
-  console.log('fileList', fileList)
-
   const uploader = () => {
     return (
       <Upload
@@ -79,11 +76,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   }
 
   if (mode == 'read') {
+    if (!Array.isArray(fileList)) return null
+
+    console.log('fileList', fileList)
+
     return (
-      <div style={{ margin: 'auto', height: 'auto', width: 'auto' }}>
-        {uploader()}
-        {modal()}
-      </div>
+      <Image.PreviewGroup>
+        {fileList.map(item => <Image width={60} src={item.url} />)}
+      </Image.PreviewGroup>
     )
   }
 
