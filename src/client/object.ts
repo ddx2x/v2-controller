@@ -12,6 +12,8 @@ export class IObject implements ObjectData {
 
   constructor(data: ObjectData) {
     Object.assign(this, data);
+    if (this._id !== '') this.uid = this._id
+    if (this.uid !== '') this._id = this.uid
   }
 
   getUid = (): string => {
