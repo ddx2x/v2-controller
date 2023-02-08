@@ -1,3 +1,4 @@
+import { RollbackOutlined } from '@ant-design/icons';
 import {
   BetaSchemaForm,
   ProFormInstance,
@@ -5,11 +6,12 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { Button, Space } from 'antd';
+import { history } from '@umijs/max';
+import { Button, FloatButton, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import React, { Dispatch, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
@@ -29,101 +31,110 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any,  handleClose: () => void) => boolean;
+  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 } & RouterHistory
 
-export const Form =
-  React.forwardRef((props: FormProps, forwardRef) => {
-    const {
-      location,
-      onMount,
-      unMount,
-      triggerText,
-      buttonType,
-      buttonSize,
-      submitTimeout,
-      onSubmit,
-      intl,
-      routeContext,
-      ...rest
-    } = props;
+export const Form = (props: FormProps) => {
+  const {
+    location,
+    onMount,
+    unMount,
+    triggerText,
+    buttonType,
+    buttonSize,
+    submitTimeout,
+    onSubmit,
+    intl,
+    routeContext,
+    ...rest
+  } = props;
 
-    const [dataObject, setDataObject] = useState({})
-    useImperativeHandle(forwardRef, () => { return { open: () => handleShow() } });
 
-    const formRef = useRef<ProFormInstance>();
-    const init = () => {
-      delay(() => formRef && onMount && onMount(location, formRef, setDataObject), 10);
-    }
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const handleShow = () => { setIsModalOpen(true); init() };
-    const handleClose = () => { setIsModalOpen(false) };
+  const [dataObject, setDataObject] = useState({})
 
-    useEffect(() => {
-      props.layoutType == 'Form' && init()
-      return () => {
-        formRef && unMount && unMount(location, formRef);
-      };
-    }, []);
-
-    switch (props.layoutType) {
-      case 'ModalForm':
-        rest['onOpenChange'] = setIsModalOpen
-        rest['modalprops'] = { destroyOnClose: true };
-      case 'DrawerForm':
-        rest['onOpenChange'] = setIsModalOpen
-        rest['drawerprops'] = { destroyOnClose: true };
-      case 'Form':
-      default:
-        rest['submitter'] = {
-          searchConfig: { resetText: '重置' }
-        }
-        rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
-          return (
-            <>
-              {dom}
-              <FooterToolbar routeContext={routeContext || {}}>
-                <Space>{submitter}</Space> 
-              </FooterToolbar>
-            </>
-          )
-        }
-    }
-
-    const proProviderValues = useContext(ProProvider);
-
-    return (
-      <ProProvider.Provider
-        value={{
-          ...proProviderValues,
-          valueTypeMap: valueTypeMapStore.stores,
-        }}
-      >
-        <BetaSchemaForm
-          // @ts-ignore
-          formRef={formRef}
-          // @ts-ignore
-          trigger={
-            <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
-              {triggerText}
-            </Button>
-          }
-          open={isModalOpen}
-          autoFocusFirstInput
-          onFinish={async (values) => {
-            if (!onSubmit) return false;
-            const b = onSubmit(formRef, values, dataObject,  handleClose);
-            await waitTime(submitTimeout);
-            return b;
-          }}
-          {...rest}
-        />
-      </ProProvider.Provider>
-    );
+  const formRef = useRef<ProFormInstance>();
+  const init = () => {
+    delay(() => formRef && onMount && onMount(location, formRef, setDataObject), 10);
   }
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const handleShow = () => { setIsModalOpen(true); init() };
+  const handleClose = () => { setIsModalOpen(false) };
+
+  useEffect(() => {
+    props.layoutType == 'Form' && init()
+    return () => {
+      formRef && unMount && unMount(location, formRef);
+    };
+  }, []);
+
+  switch (props.layoutType) {
+    case 'ModalForm':
+      rest['onOpenChange'] = setIsModalOpen
+      rest['modalprops'] = { destroyOnClose: true };
+    case 'DrawerForm':
+      rest['onOpenChange'] = setIsModalOpen
+      rest['drawerprops'] = { destroyOnClose: true };
+    case 'Form':
+    default:
+      rest['submitter'] = {
+        searchConfig: { resetText: '重置' }
+      }
+      rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
+        return (
+          <>
+            {dom}
+            {history.action === 'PUSH' && (
+              <FloatButton
+                shape="circle"
+                type="primary"
+                style={{ top: 100, right: 55 }}
+                icon={<RollbackOutlined />}
+                onClick={history.back}
+              />
+            )}
+            <FooterToolbar routeContext={routeContext || {}}>
+              <Space>{submitter}</Space>
+            </FooterToolbar>
+          </>
+        )
+      }
+  }
+
+  const proProviderValues = useContext(ProProvider);
+
+  console.log('history', history)
+
+  return (
+    <ProProvider.Provider
+      value={{
+        ...proProviderValues,
+        valueTypeMap: valueTypeMapStore.stores,
+      }}
+    >
+      <BetaSchemaForm
+        // @ts-ignore
+        formRef={formRef}
+        // @ts-ignore
+        trigger={
+          <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
+            {triggerText}
+          </Button>
+        }
+        open={isModalOpen}
+        autoFocusFirstInput
+        onFinish={async (values) => {
+          if (!onSubmit) return false;
+          const b = onSubmit(formRef, values, dataObject, handleClose);
+          await waitTime(submitTimeout);
+          return b;
+        }}
+        {...rest}
+      />
+    </ProProvider.Provider>
   );
+};
 
 Form.defaultProps = {
   title: '新建表单',

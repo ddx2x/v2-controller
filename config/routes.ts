@@ -66,7 +66,7 @@ export default [
             hideInMenu: true,
             routes: [
               {
-                name: '商品分类属性编辑',
+                name: '商品属性编辑',
                 path: '/product/category/attribute/edit',
                 icon: 'setting',
                 component: './dynamic-view',
@@ -74,7 +74,7 @@ export default [
                 hideInMenu: true,
               },
               {
-                name: '商品分类属性新增',
+                name: '商品属性新增',
                 path: '/product/category/attribute/add',
                 icon: 'setting',
                 component: './dynamic-view',
@@ -84,6 +84,7 @@ export default [
             ]
           },
           {
+            name: '商品分类新增',
             path: '/product/category/add',
             icon: 'setting',
             component: './dynamic-view',
@@ -91,6 +92,7 @@ export default [
             hideInMenu: true,
           },
           {
+            name: '商品分类编辑',
             path: '/product/category/edit',
             icon: 'setting',
             component: './dynamic-view',
