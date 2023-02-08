@@ -84,7 +84,9 @@ export const Form = (props: FormProps) => {
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            {dom}
+            <div style={{ margin: '1% 20% 0% 20%' }}>
+              {dom}
+            </div>
             {history.action === 'PUSH' && (
               <FloatButton
                 shape="circle"
