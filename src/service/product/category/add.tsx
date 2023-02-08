@@ -1,6 +1,6 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import { parse } from 'querystring';
 import { Category, categoryApi } from './store';
 
@@ -23,21 +23,33 @@ const name: FormColumnsType = {
 
 
 const parent_id: FormColumnsType = {
-	title: '上级',
+	title: '上级名称',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
 	valueType: 'select',
 	fieldProps: (form: any) => {
+		let select: string[] = [];
 		if (form.getFieldValue('level') === 2) {
 			categoryApi
 				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
 				.then((rs) => {
-					console.log("......", rs)
+					rs.map((value) => {
+						select.push(value.uid);
+					})
 				})
-				.catch((e) => { console.log(e) })
+				.catch((e) => { message.error(e) })
 		}
-		return {}
+		return select
 	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
+
 };
 
 const parent_id_dependency: FormColumnsType = {
@@ -201,7 +213,7 @@ const addForm: FormProps = {
 
 		categoryApi.create(undefined, item).
 			then(() => { notification.success({ message: "保存成功" }); })
-			.catch((e) => notification.error(e))	
+			.catch((e) => notification.error(e))
 		handleClose();
 		return true
 	}
