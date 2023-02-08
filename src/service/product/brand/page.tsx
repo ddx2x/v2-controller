@@ -56,23 +56,15 @@ const brandStoreTable: StoreTableProps = {
       dataIndex: 'logo',
       title: '品牌logo',
       hideInSearch: true,
-      valueType: 'image',
+      valueType: 'imageUpload',
       editable: false,
-      fieldProps: {
-        width: 60,
-        height: 60
-      }
     },
     {
       dataIndex: 'big_pic',
       title: '专区大图',
       hideInSearch: true,
-      valueType: 'image',
+      valueType: 'imageUpload',
       editable: false,
-      fieldProps: {
-        width: 60,
-        height: 60
-      }
     },
     {
       dataIndex: 'lookup_down',
@@ -83,8 +75,12 @@ const brandStoreTable: StoreTableProps = {
   ],
   dataSourceFormatter: (items) => {
     return items.map((item: any) => {
-      item.logo = '/media-t/file/' + item.logo;
-      item.big_pic = '/media-t/file/' + item.big_pic;
+      item.logo = {
+        fileList: [{ url: '/media-t/file/' + item.logo, name: item.logo, }]
+      };
+      item.big_pic = {
+        fileList: [{ url: '/media-t/file/' + item.big_pic, name: item.big_pic, }]
+      };
       return item
     })
   },

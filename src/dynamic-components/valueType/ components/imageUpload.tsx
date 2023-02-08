@@ -13,9 +13,8 @@ export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { name, listType, newMode, buttonText, maxNumber, value, onChange, ...rest } = props;
-
-  const fileList = value?.fileList || [];
+  const { name, mode, listType, buttonText, maxNumber, value, onChange, ...rest } = props;
+  const fileList = value ? value?.fileList || [] : [];
 
   // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -51,26 +50,52 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     </div>
   );
 
-  return (
-    <>
-      <ImgCrop rotate>
-        <Upload
-          name={name || 'file'}
-          listType={listType || 'picture-card'}
-          fileList={fileList}
-          beforeUpload={handleBeforeUpload}
-          onPreview={onImagePreview}
-          onChange={handleChange}
-          {...rest}
-        >
-          {newMode && typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
-        </Upload>
-      </ImgCrop>
+
+  console.log('fileList', fileList)
+
+  const uploader = () => {
+    return (
+      <Upload
+        disabled={mode === 'read'}
+        name={name || 'file'}
+        listType={listType || 'picture-card'}
+        fileList={fileList}
+        onPreview={onImagePreview}
+        beforeUpload={mode === 'read' ? undefined : handleBeforeUpload}
+        onChange={mode === 'read' ? undefined : handleChange}
+        {...rest}
+      >
+        {(typeof maxNumber == 'number' && fileList?.length >= maxNumber || mode == 'read') ? null : button}
+      </Upload>
+    )
+  }
+
+  const modal = () => {
+    return (
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
         <img style={{ width: '100%' }} src={previewImage} />
       </Modal>
+    )
+  }
+
+  if (mode == 'read') {
+    return (
+      <div style={{ margin: 'auto', height: 'auto', width: 'auto' }}>
+        {uploader()}
+        {modal()}
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <ImgCrop rotate>
+        {uploader()}
+      </ImgCrop>
+      {modal()}
     </>
   );
+
 };
 
 
@@ -79,5 +104,5 @@ export const ImageUploadRender: React.FC<ImageUploadProps> = (props) => {
 }
 
 export const ImageUploadRenderFormItem: React.FC<ImageUploadProps> = (props) => {
-  return <ImageUpload {...props} newMode />
+  return <ImageUpload {...props} />
 }

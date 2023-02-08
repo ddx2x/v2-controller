@@ -10,10 +10,10 @@ class ValueTypeMapStore {
       ([key, [Render, RenderFormItem]]) =>
       (vT[key] = {
         render: (text, props) => {
-          return <Render {...props} value={text} />;
+          return <Render {...props} {...props.fieldProps} value={text} />;
         },
         renderFormItem: (text, props) => {
-          return <RenderFormItem {...props} {...props.fieldProps}  />;
+          return <RenderFormItem {...props} {...props.fieldProps} />;
         },
       }),
     );
