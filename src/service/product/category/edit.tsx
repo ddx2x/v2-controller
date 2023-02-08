@@ -37,7 +37,7 @@ const parent_id: FormColumnsType = {
 				})
 				.catch((e) => { console.log(e) })
 		}
-		return {}
+		return { disabled: true }
 	},
 };
 
@@ -109,29 +109,6 @@ const show_status: FormColumnsType = {
 		1: "显示",
 	}
 };
-
-
-const icon: FormColumnsType = {
-	dataIndex: 'icon',
-	title: '图标',
-	valueType: 'imageUpload',
-	tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
-	fieldProps: {
-		maxNumber: 1,
-		name: 'upload',
-		action: '/media-t/upload',
-	},
-	formItemProps: {
-		rules: [
-			{
-
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
-};
-
 
 const sort: FormColumnsType = {
 	dataIndex: 'sort',
@@ -212,7 +189,6 @@ const editForm: FormProps = {
 		nav_status,
 		show_status,
 		sort,
-		icon,
 		keywords,
 		description,
 	],

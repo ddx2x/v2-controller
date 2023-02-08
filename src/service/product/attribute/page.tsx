@@ -57,7 +57,7 @@ const attributeStoretable: StoreTableProps = {
       valueEnum: {
         0: "手工录入",
         1: "从列表中选取"
-      },
+      }
     },
     {
       dataIndex: 'input_select_list',

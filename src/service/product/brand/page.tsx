@@ -56,20 +56,12 @@ const brandStoreTable: StoreTableProps = {
       dataIndex: 'logo',
       title: '品牌logo',
       hideInSearch: true,
-<<<<<<< HEAD
-      editable: false,
-      valueType: 'imageUpload',
-      fieldProps:{
-        
-      },
-=======
       valueType: 'image',
       editable: false,
       fieldProps: {
         width: 50,
         alt: ''
       }
->>>>>>> d1b946d690c038c7d8c834b42f940dbf1967ef35
     },
     {
       dataIndex: 'big_pic',

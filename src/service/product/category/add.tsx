@@ -8,7 +8,6 @@ const name: FormColumnsType = {
 	dataIndex: 'uid',
 	valueType: 'text',
 	fieldProps: {
-		disabled: true,
 		placeholder: '请输入分类名称',
 	},
 	formItemProps: {
@@ -26,14 +25,13 @@ const parent_id: FormColumnsType = {
 	title: '上级',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
-
 	valueType: 'select',
 	fieldProps: (form: any) => {
 		if (form.getFieldValue('level') === 2) {
 			categoryApi
 				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
 				.then((rs) => {
-
+					console.log("......", rs)
 				})
 				.catch((e) => { console.log(e) })
 		}
@@ -57,7 +55,7 @@ const level: FormColumnsType = {
 	fieldProps: {
 		min: 1,
 		max: 2,
-		
+
 	},
 	formItemProps: {
 		rules: [
@@ -109,29 +107,6 @@ const show_status: FormColumnsType = {
 		1: "显示",
 	}
 };
-
-
-const icon: FormColumnsType = {
-	dataIndex: 'icon',
-	title: '图标',
-	valueType: 'imageUpload',
-	tooltip: '尺寸建议750x750像素以上，大小2M以下，最多5张 (可拖拽图片调整显示顺序)',
-	fieldProps: {
-		maxNumber: 1,
-		name: 'upload',
-		action: '/media-t/upload',
-	},
-	formItemProps: {
-		rules: [
-			{
-
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
-};
-
 
 const sort: FormColumnsType = {
 	dataIndex: 'sort',
@@ -204,7 +179,6 @@ const addForm: FormProps = {
 		nav_status,
 		show_status,
 		sort,
-		icon,
 		keywords,
 		description,
 	],
