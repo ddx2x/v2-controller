@@ -101,7 +101,6 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
           if (this.ctx.page !== undefined)
             merge(this.ctx, { page: Math.ceil(this.data.length / this.ctx.size) });
         }
-
         this.data.replace(items);
         this.isLoaded.set(true);
       })

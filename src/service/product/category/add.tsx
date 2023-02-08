@@ -1,7 +1,8 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { notification } from 'antd';
 import { parse } from 'querystring';
-import { categoryApi } from './store';
+import { Category, categoryApi } from './store';
 
 const name: FormColumnsType = {
 	title: '类型名称',
@@ -183,24 +184,24 @@ const addForm: FormProps = {
 		description,
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
-		// let item: Partial<ProductAttribute> = {
-		// 	name: values.name,
-		// 	category_id: values.category_id,
-		// 	select_type: Number(values.select_type),
-		// 	input_type: Number(values.input_type),
-		// 	input_select_list: values.input_select_list,
-		// 	sort: Number(values.sort),
-		// 	filter_type: Number(values.filter_type),
-		// 	search_type: Number(values.search_type),
-		// 	related_status: Number(values.related_status),
-		// 	hand_add_status: Number(values.hand_add_status),
-		// 	type: Number(values.type),
-		// };
+		let item: Partial<Category> = {
+			uid: values.uid,
+			level: Number(values.level),
+			parent_id: values.parent_id || "",
+			full_id: values.full_id || "",
+			product_count: 0,
+			product_unit: values.product_unit || "",
+			nav_status: Number(values.nav_status),
+			show_status: Number(values.show_status),
+			sort: Number(values.sort),
+			icon: values.icon || "",
+			keywords: values.keywords,
+			description: values.description || "",
+		};
 
-		// productAttributeStore.api.create(undefined, item).
-		// 	then(() => { notification.success({ message: "保存成功" }); })
-		// 	.catch((e) => notification.error(e))
-
+		categoryApi.create(undefined, item).
+			then(() => { notification.success({ message: "保存成功" }); })
+			.catch((e) => notification.error(e))	
 		handleClose();
 		return true
 	}

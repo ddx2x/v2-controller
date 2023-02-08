@@ -92,7 +92,6 @@ export class ObjectWatchApi<T extends IObject, S extends ObjectStore<T> = any>
   };
 
   protected onMessage = (evt: MessageEvent) => {
-    console.log('evt', evt);
     if (!evt.data) return;
     if (!this.onData) return;
 

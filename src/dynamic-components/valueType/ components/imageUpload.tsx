@@ -13,7 +13,7 @@ export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { name, mode, listType, buttonText, maxNumber, value, onChange, ...rest } = props;
+  const { name, mode, listType, buttonText, maxNumber, value, onChange, ...rest } = props;  
   const fileList = value ? value?.fileList || [] : [];
 
   // 图片预览
@@ -75,11 +75,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     )
   }
 
+  
   if (mode == 'read') {
     if (!Array.isArray(fileList)) return null
-
-    console.log('fileList', fileList)
-
     return (
       <Image.PreviewGroup>
         {fileList.map(item => <Image width={60} src={item.url} />)}

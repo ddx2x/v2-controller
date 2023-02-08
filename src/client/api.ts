@@ -203,7 +203,6 @@ export class ObjectApi<T extends IObject = any> {
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
     const url = this.getUrl(parameter, query, op);
-    console.log("url", url);
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
       this.parseResponse
     );

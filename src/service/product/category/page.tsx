@@ -207,7 +207,13 @@ const categoryStoreTable: StoreTableProps = {
     },
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
+      onClick: () => {
+        categoryStore.remove(record.uid).then(() => {
+          message.info('删除成功')
+        }).catch(e => {
+          message.error(e)
+        })
+      },
       tag: '删除',
       title: '删除',
       text: `确认删除` + record.uid,

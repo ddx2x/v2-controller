@@ -53,38 +53,30 @@ const brandStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'logo',
+      dataIndex: 'logo_price',
       title: '品牌logo',
       hideInSearch: true,
-      valueType: 'imageUpload',
+      valueType: 'image',
       editable: false,
+      fieldProps: {
+        width: 60,
+      },
     },
     {
-      dataIndex: 'big_pic',
+      dataIndex: 'big_pic_copy',
       title: '专区大图',
       hideInSearch: true,
-      valueType: 'imageUpload',
+      valueType: 'image',
+      fieldProps: {
+        width: 60,
+      },
       editable: false,
-    },
-    {
-      dataIndex: 'lookup_down',
-      title: '查看下级',
-      hideInSearch: true,
-      editable: false,
-    },
+    }
   ],
-  dataSourceFormatter: (items) => {
-    return items.map((item: any) => {
-      item.logo = {
-        fileList: [{ url: '/media-t/file/' + item.logo, name: item.logo, }]
-      };
-      item.big_pic = {
-        fileList: [{ url: '/media-t/file/' + item.big_pic, name: item.big_pic, }]
-      };
-      return item
-    })
+  editableValuesChange: (record) => {
+    //TODO
+    console.log(record)
   },
-  editableValuesChange: (record) => { console.log(record) },
   toolBarMenu: () => [
     {
       kind: 'link',

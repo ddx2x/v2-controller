@@ -1,6 +1,10 @@
 import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
+declare type ImageFileList = {
+    fileList: [{}],
+};
+
 export class Brand extends IObject {
     first_letter: string | undefined
     sort: number | undefined
@@ -11,10 +15,14 @@ export class Brand extends IObject {
     logo: string | undefined
     big_pic: string | undefined
     brand_story: string | undefined
+    logo_price: string | undefined
+    big_pic_copy: string | undefined
 
     constructor(data: Brand) {
         super(data);
         Object.assign(this, data);
+        this.logo_price = '/media-t/file/' + this.logo
+        this.big_pic_copy = '/media-t/file/' + this.big_pic
     }
 }
 
@@ -26,6 +34,7 @@ class BrandStore extends ObjectStore<Brand> {
         this.api = api;
         this.watchApi = watchApi;
     }
+
 }
 
 

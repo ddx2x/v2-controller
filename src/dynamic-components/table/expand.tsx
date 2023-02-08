@@ -17,8 +17,6 @@ const ExpandRow: React.FC<ExpandRowProps> = (props) => {
     onData && onData(record).then((res: any) => { console.log('res', res); setDataSource(res)});
   }, []);
 
-  console.log(dataSource, '....')
-
   if (kind === 'table') {
     return (
       <Table
