@@ -273,7 +273,6 @@ const aggregateAddStepForm2: FormProps = {
 pageManager.register('product.list.aggregate_add', {
 	page: {
 		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
-		// view: [{ kind: 'form', ...aggregateAddStepForm2 }],
 		container: {
 			keepAlive: true,
 			header: {

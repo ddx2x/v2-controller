@@ -1,6 +1,6 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { message, notification } from 'antd';
+import { notification } from 'antd';
 import { parse } from 'querystring';
 import { Category, categoryApi } from './store';
 
@@ -21,26 +21,31 @@ const name: FormColumnsType = {
 	},
 };
 
+const level: FormColumnsType = {
+	title: '分类级别',
+	dataIndex: 'level',
+	valueType: 'radioButton',
+	initialValue: '2',
+	valueEnum: {
+		1: '第一级',
+		2: '第二级',
+	},
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
+};
+
 
 const parent_id: FormColumnsType = {
 	title: '上级名称',
 	dataIndex: 'parent_id',
 	tooltip: "空表示一级分类",
 	valueType: 'select',
-	fieldProps: (form: any) => {
-		let select: string[] = [];
-		if (form.getFieldValue('level') === 2) {
-			categoryApi
-				.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
-				.then((rs) => {
-					rs.map((value) => {
-						select.push(value.uid);
-					})
-				})
-				.catch((e) => { message.error(e) })
-		}
-		return select
-	},
 	formItemProps: {
 		rules: [
 			{
@@ -49,37 +54,26 @@ const parent_id: FormColumnsType = {
 			},
 		],
 	},
-
+	request: () => {
+		return categoryApi
+			.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } })
+			.then((rs) => {
+				let select: any = []
+				rs.map((value) => { select.push({ label: value.uid, value: value.uid }) })
+				return select
+			})
+			.catch((e) => { return [] })
+	}
 };
+
 
 const parent_id_dependency: FormColumnsType = {
 	valueType: 'dependency',
 	name: ['level'],
 	columns: ({ level }) => {
-		return level === 2 ? [parent_id] : []
+		return level === '2' ? [parent_id] : []
 	},
 }
-
-const level: FormColumnsType = {
-	title: '分类级别',
-	dataIndex: 'level',
-	valueType: 'digit',
-	initialValue: 2,
-	fieldProps: {
-		min: 1,
-		max: 2,
-
-	},
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
-};
-
 
 const nav_status: FormColumnsType = {
 	title: '是否显示在导航栏',
@@ -98,7 +92,6 @@ const nav_status: FormColumnsType = {
 		0: "不显示",
 		1: "显示",
 	}
-
 };
 
 
@@ -130,6 +123,7 @@ const sort: FormColumnsType = {
 		min: 1,
 		max: 99,
 	},
+	width: 'm',
 	formItemProps: {
 		rules: [
 			{
@@ -165,7 +159,6 @@ const description: FormColumnsType = {
 		mode: "tags",
 	},
 };
-
 
 declare type Query = {
 	id?: string;
