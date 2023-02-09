@@ -34,7 +34,7 @@ export default [
         component: './dynamic-view',
         routes: [
           {
-            name: '单品新增',
+            name: '商品新增',
             path: '/product/product/add',
             icon: 'setting',
             component: './dynamic-view',
@@ -42,7 +42,7 @@ export default [
             hideInMenu: true,
           },
           {
-            name: '单品编辑',
+            name: '商品编辑',
             path: '/product/product/edit',
             icon: 'setting',
             component: './dynamic-view',

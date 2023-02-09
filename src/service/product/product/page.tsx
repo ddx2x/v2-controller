@@ -2,8 +2,92 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message, notification } from 'antd';
 import { merge } from 'lodash';
-import { productStore } from '../../api/productProduct.store';
+import { Product, productStore } from '../../api/productProduct.store';
 
+
+const columns = [
+  {
+    dataIndex: 'uid',
+    hideInSearch: true,
+    hideInTable: true,
+    editable: false,
+  },
+  {
+    dataIndex: 'name',
+    title: '商品名称',
+    hideInSearch: true,
+    editable: false,
+  },
+  {
+    dataIndex: 'brand_name',
+    title: '品牌名称',
+    hideInSearch: true,
+    editable: false,
+  },
+  {
+    dataIndex: 'product_category_name',
+    title: '产品分类',
+    hideInSearch: true,
+    editable: false,
+  },
+  {
+    dataIndex: 'product_sn',
+    title: '货号',
+    hideInSearch: true,
+    editable: false,
+  },
+  {
+    dataIndex: 'delete_status',
+    title: '删除状态',
+    hideInSearch: true,
+    editable: false,
+    valueType: "select",
+    valueEnum: {
+      0: "未删除",
+      1: "已删除"
+    }
+  },
+  {
+    dataIndex: 'new_status',
+    title: '新品状态',
+    hideInSearch: true,
+    editable: false,
+    valueType: "select",
+    valueEnum: {
+      0: "不是新品",
+      1: "新品"
+    }
+  },
+
+  {
+    dataIndex: 'recommand_status',
+    title: '推荐状态',
+    hideInSearch: true,
+    editable: false,
+    valueType: "select",
+    valueEnum: {
+      0: "不推荐",
+      1: "推荐"
+    }
+  },
+  {
+    dataIndex: 'verify_status',
+    title: '审核状态',
+    hideInSearch: true,
+    editable: false,
+    valueType: "select",
+    valueEnum: {
+      0: "未审核",
+      1: "审核通过"
+    }
+  },
+  {
+    dataIndex: 'sort',
+    title: '排序',
+    hideInSearch: true,
+    editable: false,
+  },
+];
 
 const productStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -11,55 +95,8 @@ const productStoreTable: StoreTableProps = {
   search: false,
   store: productStore,
   pageSize: 10,
-  columns: [
-    {
-      dataIndex: 'uid',
-      hideInSearch: true,
-      hideInTable: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'name',
-      title: '商品名称',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'brand_name',
-      title: '品牌名称',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'product_category_name',
-      title: '产品分类',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'product_sn',
-      title: '货号',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'delete_status',
-      title: '删除状态',
-      hideInSearch: true,
-      editable: false,
-      valueType: "select",
-      valueEnum: {
-        0: "未删除",
-        1: "已删除"
-      }
-    },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-      hideInSearch: true,
-      editable: false,
-    },
-  ],
+  columns: columns,
+
   editableValuesChange: (record) => { console.log(record) },
   toolBarMenu: (selectedRows) => [
     {
@@ -95,7 +132,7 @@ const productStoreTable: StoreTableProps = {
       collapse: true
     },
   ],
-  tableMenu: (record: any, action: any) => [
+  tableMenu: (record: Product, action: any) => [
     {
       kind: 'link',
       tag: '编辑',
