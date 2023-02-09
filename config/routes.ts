@@ -206,21 +206,18 @@ export default [
       {
         name: '用户',
         path: '/privilege/user',
-        icon: 'user',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '角色',
         path: '/privilege/role',
-        icon: 'role',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '资源',
         path: '/privilege/resource',
-        icon: 'resource',
         component: './dynamic-view',
         routes: [],
       }

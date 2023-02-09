@@ -8,7 +8,7 @@ import {
   Settings as LayoutSettings
 } from '@ant-design/pro-components';
 import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
-import { Button, Input, Popconfirm, Space } from 'antd';
+import { Button, ConfigProvider, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { isCachingNode } from './dynamic-components/container';
@@ -134,26 +134,26 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    // layoutBgImgList: [
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-    //     left: 85,
-    //     bottom: 100,
-    //     height: '303px',
-    //   },
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-    //     bottom: -68,
-    //     right: -45,
-    //     height: '303px',
-    //   },
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-    //     bottom: 0,
-    //     left: 0,
-    //     width: '331px',
-    //   },
-    // ],
+    layoutBgImgList: [
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+        left: 85,
+        bottom: 100,
+        height: '303px',
+      },
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
+        bottom: -68,
+        right: -45,
+        height: '303px',
+      },
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
+        bottom: 0,
+        left: 0,
+        width: '331px',
+      },
+    ],
     links: isDev
       ? [
         // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
@@ -189,7 +189,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       ),
 
     postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
-    // siderMenuType: 'group',
+    siderMenuType: 'group',
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
     subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
     menuHeaderRender: undefined,
@@ -199,7 +199,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     childrenRender: (children, props) => {
       if (initialState?.loading) return <PageLoading />;
       return (
-        <>
+        <ConfigProvider
+          theme={{
+            token: {
+              "wireframe": true,
+              "sizeStep": 4,
+              "borderRadius": 2,
+              "fontSize": 13.5
+            },
+          }}
+        >
           {children}
           {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer
@@ -214,21 +223,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               }}
             />
           )}
-        </>
+        </ConfigProvider>
       );
     },
     ...initialState?.settings,
   };
 };
-
-
-// import { extend } from 'umi-request';
-
-// const request = extend({
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
 
 /**
  * @name request 配置，可以配置错误处理
