@@ -162,10 +162,7 @@ const editForm: FormProps = {
 			rs.nav_status = String(rs.nav_status);
 			rs.show_status = String(rs.show_status);
 			formRef.current?.setFieldsValue(rs);
-		}).catch(e => {
-			message.error(e);
 		})
-
 	},
 	unMount: (location, formRef) => {
 		formRef.current?.resetFields();

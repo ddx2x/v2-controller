@@ -22,7 +22,7 @@ const brandStoreTable: StoreTableProps = {
       valueType: 'image',
       editable: false,
       fieldProps: {
-        width: 80,
+        width: 55,
       },
     },
     {
@@ -54,6 +54,7 @@ const brandStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
+
     {
       dataIndex: 'sort',
       title: '排序',

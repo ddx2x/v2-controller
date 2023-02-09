@@ -1,5 +1,6 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { parse } from 'querystring';
 import { Category, categoryApi } from '../../api/productCategory.store';
@@ -205,7 +206,11 @@ const addForm: FormProps = {
 		};
 
 		categoryApi.create(undefined, item).
-			then(() => { notification.success({ message: "保存成功" }); })
+			then(() => {
+				notification.success({ message: "保存成功" });
+				// 跳转至数据编辑页
+				history.replace(`/product/category/edit?id=${values.uid}`)
+			})
 			.catch((e) => notification.error(e))
 		handleClose();
 		return true
