@@ -95,15 +95,15 @@ export const Table: React.FC<TableProps> = (props) => {
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  useEffect(() => {
-    window.addEventListener('mousemove', (evt: MouseEvent) => {
-      if (evt.defaultPrevented || (container !== null && container.contains(evt.target as Node))) {
-        document.body.style.overflow = 'hidden';
-        return;
-      }
-      document.body.style.overflow = 'visible';
-    });
-  });
+  // useEffect(() => {
+  //   window.addEventListener('mousemove', (evt: MouseEvent) => {
+  //     if (evt.defaultPrevented || (container !== null && container.contains(evt.target as Node))) {
+  //       document.body.style.overflow = 'hidden';
+  //       return;
+  //     }
+  //     document.body.style.overflow = 'visible';
+  //   });
+  // });
 
   // 多选
   const [selectedRows, setSelectedRows] = useState([]);

@@ -13,7 +13,7 @@ import { delay } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { RouterHistory } from '../router';
-import { valueTypeMapStore } from '../valueType';
+import { FormColumnsType, valueTypeMapStore } from '../valueType';
 
 export declare type DescriptionsRef = {
   open: () => void;
@@ -25,8 +25,9 @@ export declare type DescriptionsItem = ProDescriptionsItemProps & {
 
 // https://next-procomponents.ant.design/components/descriptions
 
-export declare type DescriptionsProps = ProDescriptionsProps & {
+export declare type DescriptionsProps = Omit<ProDescriptionsProps, 'columns'> & {
   modal?: 'Modal' | 'Drawer' | 'Page';
+  columns: FormColumnsType[] | ProDescriptionsItemProps;
   title?: string;
   triggerText?: string;
   buttonType?: ButtonType;
@@ -41,6 +42,7 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
 
 export const Descriptions = (props: DescriptionsProps) => {
   const {
+    columns,
     location,
     onMount,
     unMount,
@@ -50,7 +52,6 @@ export const Descriptions = (props: DescriptionsProps) => {
     triggerText,
     buttonSize,
     buttonType,
-    dataSource,
     ...rest
   } = props;
 
@@ -93,7 +94,8 @@ export const Descriptions = (props: DescriptionsProps) => {
       >
         <ProDescriptions
           actionRef={actionRef}
-          dataSource={dataSource}
+          // @ts-ignore
+          columns={columns}
           {...rest}
         />
       </ProProvider.Provider>

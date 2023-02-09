@@ -3,6 +3,7 @@ import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Brand, brandStore } from '../../api/productBrand.store';
+import { detail } from './detail';
 
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
@@ -11,21 +12,24 @@ const brandStoreTable: StoreTableProps = {
   search: false,
   columns: [
     {
+      dataIndex: 'logo_price',
+      title: '品牌',
+      hideInSearch: true,
+      valueType: 'imageUpload',
+      editable: false,
+      width: 100,
+      fixed: 'left',
+      fieldProps: {
+        width: 55,
+      },
+    },
+    {
       dataIndex: 'uid',
       title: '名称',
       hideInSearch: true,
       editable: false,
     },
-    {
-      dataIndex: 'logo_price',
-      title: '品牌',
-      hideInSearch: true,
-      valueType: 'image',
-      editable: false,
-      fieldProps: {
-        width: 55,
-      },
-    },
+
     {
       dataIndex: 'first_letter',
       title: '首字母',
@@ -67,8 +71,6 @@ const brandStoreTable: StoreTableProps = {
     const src = brandStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<Brand> = record;
 
-
-    console.log("update", update);
     if (!src) return;
     if (src?.show_status !== update.show_status) {
       if (update.show_status) {
@@ -105,6 +107,19 @@ const brandStoreTable: StoreTableProps = {
   ],
   tableMenu: (record, action) => [
     {
+      kind: 'descriptions',
+      tag: '详情',
+      title: '详情',
+      dataSource: record,
+      ...detail
+    },
+    {
+      kind: 'link',
+      tag: '编辑',
+      title: '编辑',
+      link: '/product/brand/edit?id=' + record.uid
+    },
+    {
       kind: 'confirm',
       onClick: () => {
         brandStore.remove(record.uid)
@@ -117,17 +132,11 @@ const brandStoreTable: StoreTableProps = {
       title: '删除',
       text: `确认删除` + record.name,
     },
-    {
-      kind: 'link',
-      tag: '编辑',
-      title: '编辑',
-      link: '/product/brand/edit?id=' + record.uid
-    },
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '表单编辑',
+      tag: '详情',
     },
   ],
   onNext: (params: any) => {
