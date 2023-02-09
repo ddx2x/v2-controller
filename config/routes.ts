@@ -30,7 +30,7 @@ export default [
       {
         name: '商品列表',
         path: '/product/product',
-        icon: 'setting',
+        icon: 'table',
         component: './dynamic-view',
         routes: [
           {
@@ -44,7 +44,7 @@ export default [
           {
             name: '商品编辑',
             path: '/product/product/edit',
-            icon: 'setting',
+            icon: 'edit',
             component: './dynamic-view',
             parentKeys: ['/product/product'],
             hideInMenu: true,

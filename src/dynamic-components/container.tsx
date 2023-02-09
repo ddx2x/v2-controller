@@ -65,7 +65,10 @@ export const Container: React.FC<ContainerProps> = (props) => {
   };
 
   return (
-    <ProPageContainer header={{ breadcrumb: headerBreadcrumb(), ...header }} {...rest}>
+    <ProPageContainer
+      header={{ breadcrumb: headerBreadcrumb(), ...header }}
+      {...rest}
+    >
       {props.children}
     </ProPageContainer>
   );
@@ -74,7 +77,7 @@ export const Container: React.FC<ContainerProps> = (props) => {
 Container.defaultProps = {
   useBreadcrumb: true,
   context: null,
-  fixedHeader: false,
+  fixedHeader: true,
 };
 
 export declare type PageContainerProps = KeepAliveProps &

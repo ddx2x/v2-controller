@@ -166,40 +166,40 @@ export const Table: React.FC<TableProps> = (props) => {
       );
     }
 
-    // 侧边搜索树🌲
-    if (useSiderTree) {
-      const withTreeWidth = useMemo(() => {
-        const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
-        if (!hasSiderMenu) {
-          return undefined;
-        }
-        // 0 or undefined
-        if (!siderWidth) {
-          return '100%';
-        }
-        return isMobile ? '100%' : `calc(100% - ${siderWidth}px)`;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [
-        routeContext?.collapsed,
-        routeContext?.hasSiderMenu,
-        routeContext?.isMobile,
-        routeContext?.siderWidth,
-      ]);
+    // // 侧边搜索树🌲
+    // if (useSiderTree) {
+    //   const withTreeWidth = useMemo(() => {
+    //     const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
+    //     if (!hasSiderMenu) {
+    //       return undefined;
+    //     }
+    //     // 0 or undefined
+    //     if (!siderWidth) {
+    //       return '100%';
+    //     }
+    //     return isMobile ? '100%' : `calc(100% - ${siderWidth}px)`;
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   }, [
+    //     routeContext?.collapsed,
+    //     routeContext?.hasSiderMenu,
+    //     routeContext?.isMobile,
+    //     routeContext?.siderWidth,
+    //   ]);
 
-      return (
-        <>
-          <div style={{ display: 'flex' }}>
-            <ProCard bordered style={{ width: 249, marginRight: 7 }}>
-              <Tree treeData={treeData || []} />
-            </ProCard>
-            <div ref={setContainer} style={{ width: withTreeWidth }}>
-              {defaultDom}
-            </div>
-          </div>
-          <Footer />
-        </>
-      )
-    }
+    //   return (
+    //     <>
+    //       <div style={{ display: 'flex' }}>
+    //         <ProCard bordered style={{ width: 249, marginRight: 7 }}>
+    //           <Tree treeData={treeData || []} />
+    //         </ProCard>
+    //         <div ref={setContainer} style={{ width: withTreeWidth }}>
+    //           {defaultDom}
+    //         </div>
+    //       </div>
+    //       <Footer />
+    //     </>
+    //   )
+    // }
 
     // 原生table
     return (
