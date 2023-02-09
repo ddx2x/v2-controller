@@ -9,7 +9,7 @@ import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
+import { Dispatch, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
@@ -34,7 +34,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   routeContext?: RouteContextType;
 } & RouterHistory
 
-export const Form = (props: FormProps) => {
+export const Form = forwardRef((props: FormProps, forwardRef) => {
   const {
     location,
     onMount,
@@ -59,6 +59,12 @@ export const Form = (props: FormProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const handleShow = () => { setIsModalOpen(true); init() };
   const handleClose = () => { setIsModalOpen(false) };
+
+  useImperativeHandle(forwardRef, () => {
+    return {
+      open: () => handleShow(),
+    };
+  });
 
   useEffect(() => {
     props.layoutType == 'Form' && init()
@@ -123,7 +129,7 @@ export const Form = (props: FormProps) => {
       />
     </ProProvider.Provider>
   );
-};
+});
 
 Form.defaultProps = {
   title: '新建表单',

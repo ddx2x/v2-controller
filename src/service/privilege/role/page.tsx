@@ -35,22 +35,21 @@ const roleStoreTable: StoreTableProps = {
   toolBarMenu: () => [
     {
       kind: 'link',
-      tag: '新增',
-      link: `/product/brand/add`,
       title: '新增',
+      link: `/product/brand/add`,
+
     },
   ],
   tableMenu: (record: any, action: any) => [
     {
       kind: 'descriptions',
       dataSource: record,
-      tag: '详情',
+      title: '新增',
       collapse: "true",
     },
     {
       kind: 'confirm',
       onClick: () => message.info('删除成功'),
-      tag: '删除',
       title: '删除',
       text: `确认删除` + record.uid,
     },
@@ -59,7 +58,7 @@ const roleStoreTable: StoreTableProps = {
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onNext: (params: any) =>

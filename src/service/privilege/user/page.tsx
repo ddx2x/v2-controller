@@ -73,44 +73,43 @@ const userStoreTable: StoreTableProps = {
   toolBarMenu: () => [
     {
       kind: 'link',
-      tag: '新增',
-      link: `/product/brand/add`,
       title: '新增',
+      link: `/product/brand/add`,
+
     },
   ],
   tableMenu: (record: any, action: any) => [
     {
       kind: 'descriptions',
       dataSource: record,
-      tag: '详情',
+      title: '详情',
       collapse: "true",
     },
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
-      tag: '删除',
       title: '删除',
+      onClick: () => message.info('删除成功'),
       text: `确认删除` + record.name,
     },
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onSubmit: () => {
 
-    const src = userStore.items.find((item) => item.getUid() === record.uid);
-    const update: Partial<User> = record;
+    // const src = userStore.items.find((item) => item.getUid() === record.uid);
+    // const update: Partial<User> = record;
 
-    if (!src) return;
-    if (src?.is_lock !== update.is_lock) {
-      userStore.update_one(src, update, ["is_lock"]).then(() =>
-        notification.success({ message: "更新成功" })).catch((e) => {
-          notification.error({ message: "更新失败:" + e });
-        })
-    }
+    // if (!src) return;
+    // if (src?.is_lock !== update.is_lock) {
+    //   userStore.update_one(src, update, ["is_lock"]).then(() =>
+    //     notification.success({ message: "更新成功" })).catch((e) => {
+    //       notification.error({ message: "更新失败:" + e });
+    //     })
+    // }
 
   },
   onNext: (params: any) =>

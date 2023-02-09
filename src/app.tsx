@@ -202,7 +202,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         <ConfigProvider
           theme={{
             token: {
-              "wireframe": true,
               "sizeStep": 4,
               "borderRadius": 2,
               "fontSize": 13.5

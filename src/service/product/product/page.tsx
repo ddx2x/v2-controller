@@ -97,13 +97,11 @@ const productStoreTable: StoreTableProps = {
   toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
-      tag: '新增',
       title: '新增',
       link: `/product/product/add`,
     },
     {
       kind: 'implement',
-      tag: '批量商品上架',
       title: '批量商品上架',
       onClick: (e) => {
         if (selectedRows.length <= 0) {
@@ -115,7 +113,6 @@ const productStoreTable: StoreTableProps = {
     },
     {
       kind: 'implement',
-      tag: '批量商品下架',
       title: '批量商品下架',
       onClick: (e) => {
         if (selectedRows.length <= 0) {
@@ -129,19 +126,18 @@ const productStoreTable: StoreTableProps = {
   tableMenu: (record: Product, action: any) => [
     {
       kind: 'descriptions',
-      tag: '详情',
       title: '详情',
       dataSource: record,
       ...detail
     },
     {
       kind: 'link',
-      tag: '编辑',
       title: '编辑',
       link: '/product/product/edit?id=' + record.uid
     },
     {
       kind: 'confirm',
+      title: '删除',
       onClick: () => {
         productStore.remove(record.uid).then(() => {
           notification.info({ message: "删除成功" })
@@ -149,15 +145,13 @@ const productStoreTable: StoreTableProps = {
           notification.error(e)
         })
       },
-      tag: '删除',
-      title: '删除',
       text: `确认删除` + record.name,
     },
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onNext: (params) => {
