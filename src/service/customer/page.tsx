@@ -31,9 +31,7 @@ const table: View = {
   ],
   expand: {
     kind: 'table',
-    onData: (record: any) => {
-      [record];
-    },
+    onData: (record: any) => { [record] },
     table: {
       columns: [
         {
@@ -68,26 +66,8 @@ const table: View = {
         state2: 'open',
         ...record,
       },
-      // ...detail
     },
-    // { kind: 'form', collapse: true, initialValues: record, ...eidt },
-    // { kind: 'link', collapse: true, link: `/commdity/list/edit/?uid=${record.uid}&name=${record.name}`, title: '全量编辑' },
-    // { kind: 'confirm', onClick: () => message.info('删除成功'), title: '删除', text: `确认删除${record.name}` }
   ],
-  // globalSearch: {
-  //     onSearch: (value, setGlobalSearchOptions) => {
-  //         version.search({ text: value || '', offset: 0, limit: 10 })
-  //             .then(res => {
-  //                 if (!Array.isArray(res)) {
-  //                     return
-  //                 }
-  //                 const options = res.map(item => {
-  //                     return { label: <SearchLabel key={item.uid} searchObject={item} />, value: item.name }
-  //                 })
-  //                 setGlobalSearchOptions([...options])
-  //             })
-  //     }
-  // },
 
   onNext: (actionRef) => customerStore.next({ order: { version: 1 } }),
   onSubmit: (params) => customerStore.next({ order: { version: 1 } }),
