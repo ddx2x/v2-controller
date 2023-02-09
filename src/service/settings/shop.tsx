@@ -1,7 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { Shop, shopStore } from './store';
+import { Shop, shopStore } from '../api/settings.store';
 
 let name: FormColumnsType = {
     title: '名称',

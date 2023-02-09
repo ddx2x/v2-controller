@@ -1,5 +1,5 @@
-import { IObject, ObjectApi, ObjectStore, ObjectWatchApi } from '@/client';
-import { WatchApi } from '@/client/event';
+import { IObject, ObjectApi, ObjectStore } from '@/client';
+import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export class Customer extends IObject {
   constructor(data: Customer) {
@@ -16,13 +16,13 @@ const customerApi = new ObjectApi<Customer>({
 
 class CustomerStore extends ObjectStore<Customer> {
   api: ObjectApi<Customer>;
-  watchApi: WatchApi<Customer, CustomerStore>;
-  constructor(api: ObjectApi<Customer>, watchApi: WatchApi<Customer, CustomerStore>) {
+  watchApi: WatchApi<Customer>;
+  constructor(api: ObjectApi<Customer>, watchApi: WatchApi<Customer>) {
     super();
     this.api = api;
     this.watchApi = watchApi;
   }
 }
 
-export const objectWatchApi = new ObjectWatchApi();
-export const customerStore = new CustomerStore(customerApi, objectWatchApi);
+
+export const customerStore = new CustomerStore(customerApi, new DefaultWatchApi());

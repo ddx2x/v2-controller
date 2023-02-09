@@ -2,7 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { parse } from 'querystring';
-import { Brand, brandApi, brandStore } from './store';
+import { Brand, brandApi, brandStore } from '../../api/productBrand.store';
 
 
 const name: FormColumnsType = {
@@ -149,7 +149,7 @@ const editForm: FormProps = {
 				rs.uid = query.id || "";
 				rs.first_letter = rs.first_letter;
 				rs.sort = String(rs.sort);
-				rs.factory_status = String(rs.factory_status);
+				rs.factory_status = String(rs.factory_status || 0);
 				rs.show_status = String(rs.show_status);
 				rs.brand_story = rs.brand_story;
 				rs.big_pic_copy = {

@@ -3,7 +3,7 @@ import { pageManager } from '@/dynamic-view';
 import { unixtime2dateformat } from '@/service';
 import { message, notification } from 'antd';
 import { ReactNode } from 'react';
-import { User, userStore } from './store';
+import { User, userStore } from '../../api/privilegeUser.store';
 
 const userStoreTable: StoreTableProps = {
   store: userStore,

@@ -161,7 +161,7 @@ const commdityAggregateTable: StoreTableProps = {
     }),
 };
 
-pageManager.register('product.list', {
+pageManager.register('product.demo', {
   page: {
     view: [{ kind: 'storeTable', ...commdityAggregateTable }],
   },

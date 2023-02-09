@@ -1,7 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
-import { Role, roleStore } from './store';
+import { Role, roleStore } from '../../api/privilegeRole';
 
 const roleStoreTable: StoreTableProps = {
   store: roleStore,

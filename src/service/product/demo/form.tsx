@@ -270,7 +270,7 @@ const aggregateAddStepForm2: FormProps = {
 	}
 };
 
-pageManager.register('product.list.aggregate_add', {
+pageManager.register('product.demo.aggregate_add', {
 	page: {
 		view: [{ kind: 'stepForm', ...aggregateAddStepForm }],
 		container: {

@@ -1,7 +1,8 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { Category, categoryStore, categoryStore2 } from './store';
+import { merge } from 'lodash';
+import { Category, categoryStore, categoryStore2 } from '../../api/productCategory.store';
 
 
 const categoryStoreTable: StoreTableProps = {
@@ -99,7 +100,7 @@ const categoryStoreTable: StoreTableProps = {
       columns: [
         {
           dataIndex: 'uid',
-          title: '类型名称',
+          title: '子类型',
           hideInSearch: true,
           editable: false,
         },
@@ -175,32 +176,6 @@ const categoryStoreTable: StoreTableProps = {
       title: '新增',
       link: `/product/category/add`,
     },
-    // {
-    //   kind: 'implement',
-    //   tag: '批量商品上架',
-    //   title: '批量商品上架',
-    //   onClick: (e) => {
-    //     console.log('批量商品上架 selectedRows', selectedRows);
-    //     if (selectedRows.length <= 0) {
-    //       message.warning('请批量选择商品'); return
-    //     }
-    //     message.info('批量商品上架成功')
-    //   },
-    //   collapse: true
-    // },
-    // {
-    //   kind: 'implement',
-    //   tag: '批量商品下架',
-    //   title: '批量商品下架',
-    //   onClick: (e) => {
-    //     console.log('批量商品下架 selectedRows', selectedRows);
-    //     if (selectedRows.length <= 0) {
-    //       message.warning('请批量选择商品'); return
-    //     }
-    //     message.info('批量商品下架成功')
-    //   },
-    //   collapse: true
-    // },
   ],
   tableMenu: (record: any, action: any) => [
     {
@@ -229,6 +204,10 @@ const categoryStoreTable: StoreTableProps = {
       tag: '详情',
     },
   ],
+  onNext: (params) => {
+    const query = merge(params, { filter: { level: 1 }, sort: { version: 1 } });
+    categoryStore.next(query);
+  },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
 };
 
@@ -242,9 +221,7 @@ pageManager.register('product.category', {
   stores: [
     {
       store: categoryStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { level: 1 } },
-      load: categoryStore.next,
-      exit: categoryStore.reset,
+      exit: categoryStore.reset
     }
   ],
 });

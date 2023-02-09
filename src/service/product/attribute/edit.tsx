@@ -2,7 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { parse } from 'querystring';
-import { ProductAttribute, productAttributeApi, productAttributeStore } from './store';
+import { ProductAttribute, productAttributeApi, productAttributeStore } from '../../api/productAttribute.store';
 
 
 const name: FormColumnsType = {

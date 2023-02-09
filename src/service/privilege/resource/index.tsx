@@ -1,3 +1,3 @@
+export * from '../../api/privilegeResource';
 export * from './page';
-export * from './store';
 

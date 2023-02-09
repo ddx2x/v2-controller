@@ -2,7 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { parse } from 'querystring';
-import { Category, categoryApi, categoryStore } from './store';
+import { Category, categoryApi, categoryStore } from '../../api/productCategory.store';
 
 const name: FormColumnsType = {
 	title: '类型名称',

@@ -1,6 +1,6 @@
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
-import { customerStore } from './store';
+import { customerStore } from '../api/customer.store';
 
 // 商品列表
 const table: View = {

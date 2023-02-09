@@ -29,24 +29,24 @@ export default [
     routes: [
       {
         name: '商品列表',
-        path: '/product/list',
+        path: '/product/product',
         icon: 'setting',
         component: './dynamic-view',
         routes: [
           {
             name: '单品新增',
-            path: '/product/list/aggregate_add',
+            path: '/product/product/add',
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/product/list'],
+            parentKeys: ['/product/product'],
             hideInMenu: true,
           },
           {
             name: '单品编辑',
-            path: '/product/list/aggregate_edit',
+            path: '/product/product/edit',
             icon: 'setting',
             component: './dynamic-view',
-            parentKeys: ['/product/list'],
+            parentKeys: ['/product/product'],
             hideInMenu: true,
           },
         ],

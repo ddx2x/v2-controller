@@ -2,7 +2,7 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { parse } from 'querystring';
-import { productAttributeStore } from './store';
+import { productAttributeStore } from '../../api/productAttribute.store';
 
 const attributeStoretable: StoreTableProps = {
   store: productAttributeStore,

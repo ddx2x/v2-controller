@@ -2,7 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { parse } from 'querystring';
-import { ProductAttribute, productAttributeStore } from './store';
+import { ProductAttribute, productAttributeStore } from '../../api/productAttribute.store';
 
 
 const name: FormColumnsType = {
@@ -281,6 +281,9 @@ const addForm: FormProps = {
 pageManager.register('product.category.attribute.add', {
 	page: {
 		view: [{ kind: 'form', ...addForm }],
+		container: {
+			keepAlive: false,
+		}
 	},
 	stores: [],
 });

@@ -1,3 +1,3 @@
+export * from '../../api/privilegeRole';
 export * from './page';
-export * from './store';
 

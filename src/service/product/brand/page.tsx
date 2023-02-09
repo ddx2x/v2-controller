@@ -1,12 +1,13 @@
 import { StoreTableProps } from '@/dynamic-components/table';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { Brand, brandStore } from './store';
+import { Brand, brandStore } from '../../api/productBrand.store';
 
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
   pageSize: 10,
+  search: false,
   columns: [
     {
       dataIndex: 'uid',
@@ -14,13 +15,21 @@ const brandStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
-
+    {
+      dataIndex: 'logo_price',
+      title: '品牌',
+      hideInSearch: true,
+      valueType: 'image',
+      editable: false,
+      fieldProps: {
+        width: 80,
+      },
+    },
     {
       dataIndex: 'first_letter',
       title: '首字母',
       editable: false,
     },
-
     {
       dataIndex: 'factory_status',
       title: '显示品牌制造商',
@@ -45,27 +54,6 @@ const brandStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
-
-    {
-      dataIndex: 'logo_price',
-      title: '品牌',
-      hideInSearch: true,
-      valueType: 'image',
-      editable: false,
-      fieldProps: {
-        width: 80,
-      },
-    },
-    {
-      dataIndex: 'big_pic_copy',
-      title: '专区大图',
-      hideInSearch: true,
-      valueType: 'image',
-      fieldProps: {
-        width: 60,
-      },
-      editable: false,
-    },
     {
       dataIndex: 'sort',
       title: '排序',
@@ -77,8 +65,15 @@ const brandStoreTable: StoreTableProps = {
     const src = brandStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<Brand> = record;
 
+
+    console.log("update", update);
     if (!src) return;
     if (src?.show_status !== update.show_status) {
+      if (update.show_status) {
+        update.show_status = 1
+      } else {
+        update.show_status = 0
+      }
       brandStore.update_one(src, update, ["show_status"]).then(() =>
         notification.success({ message: "更新成功" })).catch((e) => {
           notification.error({ message: "更新失败:" + e });
@@ -86,6 +81,11 @@ const brandStoreTable: StoreTableProps = {
     }
 
     if (src?.factory_status !== update.factory_status) {
+      if (update.factory_status) {
+        update.factory_status = 1
+      } else {
+        update.factory_status = 0
+      }
       brandStore.update_one(src, update, ["factory_status"]).then(() =>
         notification.success({ message: "更新成功" })).catch((e) => {
           notification.error({ message: "更新失败:" + e });

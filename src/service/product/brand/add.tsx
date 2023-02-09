@@ -1,7 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
-import { Brand, brandStore } from './store';
+import { Brand, brandStore } from '../../api/productBrand.store';
 
 
 const name: FormColumnsType = {
