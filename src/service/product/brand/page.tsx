@@ -1,12 +1,13 @@
 import { StoreTableProps } from '@/dynamic-components/table';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
+import { merge } from 'lodash';
 import { Brand, brandStore } from '../../api/productBrand.store';
 
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
-  pageSize: 10,
+  pageSize: 5,
   search: false,
   columns: [
     {
@@ -129,12 +130,10 @@ const brandStoreTable: StoreTableProps = {
       tag: '表单编辑',
     },
   ],
-  onNext: (params: any) =>
-    brandStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
-      ...params,
-    }),
+  onNext: (params: any) => {
+    const query = merge(params, { sort: { _id: 1, sort: 1 } });
+    brandStore.next(query);
+  },
 };
 
 pageManager.register('product.brand', {

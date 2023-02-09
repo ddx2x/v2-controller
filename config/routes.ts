@@ -30,13 +30,11 @@ export default [
       {
         name: '商品列表',
         path: '/product/product',
-        icon: 'table',
         component: './dynamic-view',
         routes: [
           {
             name: '商品新增',
             path: '/product/product/add',
-            icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/product'],
             hideInMenu: true,
@@ -44,7 +42,6 @@ export default [
           {
             name: '商品编辑',
             path: '/product/product/edit',
-            icon: 'edit',
             component: './dynamic-view',
             parentKeys: ['/product/product'],
             hideInMenu: true,
@@ -54,13 +51,11 @@ export default [
       {
         name: '商品分类',
         path: '/product/category',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [
           {
             name: '商品分类属性',
             path: '/product/category/attribute',
-            icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/category'],
             hideInMenu: true,
@@ -68,7 +63,6 @@ export default [
               {
                 name: '商品属性编辑',
                 path: '/product/category/attribute/edit',
-                icon: 'setting',
                 component: './dynamic-view',
                 parentKeys: ['/product/category/attribute'],
                 hideInMenu: true,
@@ -76,7 +70,6 @@ export default [
               {
                 name: '商品属性新增',
                 path: '/product/category/attribute/add',
-                icon: 'setting',
                 component: './dynamic-view',
                 parentKeys: ['/product/category/attribute'],
                 hideInMenu: true,
@@ -86,7 +79,6 @@ export default [
           {
             name: '商品分类新增',
             path: '/product/category/add',
-            icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/category'],
             hideInMenu: true,
@@ -94,7 +86,6 @@ export default [
           {
             name: '商品分类编辑',
             path: '/product/category/edit',
-            icon: 'setting',
             component: './dynamic-view',
             parentKeys: ['/product/category'],
             hideInMenu: true,
@@ -104,7 +95,6 @@ export default [
       {
         name: '商品品牌',
         path: '/product/brand',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [
           {
@@ -134,7 +124,6 @@ export default [
       {
         name: '订单列表',
         path: '/order/list',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
@@ -142,7 +131,6 @@ export default [
       {
         name: '发货管理',
         path: '/order/deliverlist',
-        icon: 'setting',
         component: './dynamic-view',
         parentKeys: ['/order'],
       },
@@ -157,7 +145,6 @@ export default [
       {
         name: '客户列表',
         path: '/customer/list',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
@@ -165,7 +152,6 @@ export default [
       {
         name: '会员权益',
         path: '/customer/integral',
-        icon: 'setting',
         component: './dynamic-view',
         parentKeys: ['/customer'],
       },
@@ -232,28 +218,25 @@ export default [
       {
         name: '商户设置',
         path: '/setting/shop',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '商品设置',
         path: '/setting/product',
-        icon: 'setting',
+  
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '配送设置',
         path: '/setting/logistics',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '订单配置',
         path: '/setting/order',
-        icon: 'setting',
         component: './dynamic-view',
         routes: [],
       }

@@ -5,6 +5,9 @@ export class Product extends IObject {
     name: string | undefined
     brand_name: string | undefined
     product_category_name: string | undefined
+    product_category_main_name: string | undefined
+    product_category_second_name: string | undefined
+
     product_sn: string | undefined
     delete_status: number | string | undefined
     publish_status: number | string | undefined
@@ -43,6 +46,7 @@ export class Product extends IObject {
     constructor(data: Product) {
         super(data);
         Object.assign(this, data);
+        this.product_category_name = [this.product_category_main_name, this.product_category_second_name].join("|")
         this.delete_status = String(this.delete_status);
         this.publish_status = String(this.publish_status);
         this.new_status = String(this.new_status);

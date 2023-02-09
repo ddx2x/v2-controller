@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-this */
 import { merge } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
-import { isDeepEqual, ObjectApi, Parameter, Query, SearchQuery } from './api';
+import { ObjectApi, Parameter, Query, SearchQuery } from './api';
 import type { Noop, ObjectWatchEvent, WatchApi } from './event';
 import { ItemStore } from './item';
 import type { IObject } from './object';
@@ -65,46 +65,21 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   @action next = async (query?: Query) => {
     const { limit, sort, filter, ...rest } = !query ? this.ctx : query;
     if (limit === undefined || sort === undefined) return;
-
-    if (
-      !isDeepEqual(sort, this.ctx.sort || {}) ||
-      limit.size !== this.ctx.limit?.size ||
-      filter === undefined ||
-      !isDeepEqual(filter, this.ctx.filter || {})
-    ) {
-      this.reset();
-    }
+    this.reset();
 
     merge(this.ctx, { limit, sort, filter }, rest);
-
-    const disposer = this.bindDataBuffersUpdater();
     this.api.store = this;
 
     this.api
       .page(undefined, this.ctx)
       .then((res) => {
-        this.dataBuffers.push(...res);
-        let items = this.data.slice();
-        this.dataBuffers.clear().forEach((object) => {
-          if (!object) return;
-          const { uid } = object;
-          const index = this.data.findIndex((item) => item.uid === uid);
-          const item = this.data[index];
-          const newItem = new this.api.objectConstructor(object);
-          if (!item) {
-            items.push(newItem);
-          } else {
-            items.splice(index, 1, newItem);
-          }
-        });
-        if (this.ctx.size && this.data.length >= this.ctx.size) {
-          if (this.ctx.page !== undefined)
-            merge(this.ctx, { page: Math.ceil(this.data.length / this.ctx.size) });
-        }
-        this.data.replace(items);
+        this.data.replace(res);
         this.isLoaded.set(true);
       })
-      .finally(() => disposer());
+      .finally(() => {
+        // disposer()
+      }
+      );
   };
 
   @action load = async (query?: Query) => {

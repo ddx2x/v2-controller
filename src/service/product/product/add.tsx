@@ -1,5 +1,7 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { brandApi } from '../brand';
+import { categoryApi } from '../category';
 
 const columns = [
 	{
@@ -16,9 +18,9 @@ const columns = [
 					message: '此项为必填项',
 				},
 				{
-					message: '最小6个字符最大64',
+					message: '最小1个字符最大64',
 					type: 'string',
-					min: 6,
+					min: 1,
 					max: 64
 				}
 			],
@@ -28,9 +30,9 @@ const columns = [
 		dataIndex: 'brand_name',
 		title: '品牌名称',
 		hideInSearch: true,
+		valueTyep: "select",
 		fieldProps: {
-			placeholder: '请输入品牌名称',
-
+			placeholder: '请选择品牌名称',
 		},
 		formItemProps: {
 			rules: [
@@ -40,6 +42,17 @@ const columns = [
 				},
 			],
 		},
+		request: async () => {
+			try {
+				const rs = await brandApi
+					.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 } });
+				let select: any = [];
+				rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+				return select;
+			} catch (e) {
+				return [];
+			}
+		}
 	},
 	{
 		dataIndex: 'product_category_name',
@@ -57,6 +70,17 @@ const columns = [
 				},
 			],
 		},
+		request: async () => {
+			try {
+				const rs = await categoryApi
+					.list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 2 } });
+				let select: any = [];
+				rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+				return select;
+			} catch (e) {
+				return [];
+			}
+		}
 	},
 	{
 		dataIndex: 'product_sn',
