@@ -1,4 +1,3 @@
-import { RollbackOutlined } from '@ant-design/icons';
 import {
   BetaSchemaForm,
   ProFormInstance,
@@ -6,8 +5,7 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
-import { history } from '@umijs/max';
-import { Button, FloatButton, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
@@ -87,15 +85,6 @@ export const Form = (props: FormProps) => {
             <div style={{ margin: '1% 20% 0% 20%' }}>
               {dom}
             </div>
-            {history.action === 'PUSH' && (
-              <FloatButton
-                shape="circle"
-                type="primary"
-                style={{ top: 100, right: 55 }}
-                icon={<RollbackOutlined />}
-                onClick={history.back}
-              />
-            )}
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
@@ -105,8 +94,6 @@ export const Form = (props: FormProps) => {
   }
 
   const proProviderValues = useContext(ProProvider);
-
-  console.log('history', history)
 
   return (
     <ProProvider.Provider

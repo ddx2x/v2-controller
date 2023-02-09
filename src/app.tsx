@@ -1,6 +1,6 @@
 import Footer from '@/pages/layout/footer';
 import RightContent from '@/pages/layout/right-content';
-import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   MenuDataItem,
   PageLoading,
@@ -8,7 +8,7 @@ import {
   Settings as LayoutSettings
 } from '@ant-design/pro-components';
 import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
-import { Button, ConfigProvider, Input, Popconfirm, Space } from 'antd';
+import { Button, ConfigProvider, FloatButton, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { isCachingNode } from './dynamic-components/container';
@@ -209,6 +209,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             },
           }}
         >
+          {history.action === 'PUSH' && (
+            <FloatButton
+              shape="circle"
+              type="primary"
+              style={{ top: 100, right: 55 }}
+              icon={<RollbackOutlined />}
+              onClick={history.back}
+            />
+          )}
           {children}
           {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer

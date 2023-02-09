@@ -9,7 +9,8 @@ import {
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
-import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { delay } from 'lodash';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType';
@@ -31,7 +32,6 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
   width?: string | number;
-  items?: DescriptionsItem[]; // 自定义类型
   intl?: IntlShape;
   routeContext?: RouteContextType;
 } & RouterHistory & {
@@ -39,7 +39,7 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   unMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
 };
 
-export const Descriptions = React.forwardRef((props: DescriptionsProps, forwardRef) => {
+export const Descriptions = (props: DescriptionsProps) => {
   const {
     location,
     onMount,
@@ -50,22 +50,18 @@ export const Descriptions = React.forwardRef((props: DescriptionsProps, forwardR
     triggerText,
     buttonSize,
     buttonType,
-    items,
     dataSource,
     ...rest
   } = props;
 
-  useImperativeHandle(forwardRef, () => {
-    return {
-      open: () => showModal(),
-    };
-  });
 
-  // ref
   const actionRef = useRef<ActionType>();
+  const init = () => {
+    delay(() => actionRef && onMount && onMount(location, actionRef), 10);
+  }
 
   useEffect(() => {
-    actionRef && onMount && onMount(location, actionRef);
+    init()
     return () => actionRef && unMount && unMount(location, actionRef);
   }, []);
 
@@ -95,19 +91,11 @@ export const Descriptions = React.forwardRef((props: DescriptionsProps, forwardR
           valueTypeMap: valueTypeMapStore.stores,
         }}
       >
-        <ProDescriptions actionRef={actionRef} dataSource={dataSource} {...rest}>
-          {items &&
-            items.map((item) => {
-              const { value, valueType, dataIndex, key, ...rest } = item;
-              const dKey = dataIndex || key || '';
-              return (
-                <ProDescriptions.Item valueType={valueType || 'text'} {...rest}>
-                  {value ? value : dataSource && dKey ? dataSource[String(dKey)] : ''}
-                </ProDescriptions.Item>
-              );
-            })}
-          {props.children}
-        </ProDescriptions>
+        <ProDescriptions
+          actionRef={actionRef}
+          dataSource={dataSource}
+          {...rest}
+        />
       </ProProvider.Provider>
     );
   };
@@ -148,8 +136,7 @@ export const Descriptions = React.forwardRef((props: DescriptionsProps, forwardR
     default:
       return Page();
   }
-}
-);
+};
 
 Descriptions.defaultProps = {
   modal: 'Page',
