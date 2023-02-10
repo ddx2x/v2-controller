@@ -275,11 +275,11 @@ export const Table: React.FC<TableProps> = (props) => {
             : false
         }
         sticky
-        components={vComponents}
+        // components={vComponents}
         actionRef={actionRef}
         formRef={formRef}
         rowSelection={rowSelection}
-        scroll={{ y: tableHeight, x: 1500 }}
+        scroll={{ x: 1500 }}
         search={{ labelWidth: 80 }}
         toolbar={{
           title: toolbarTitle,
