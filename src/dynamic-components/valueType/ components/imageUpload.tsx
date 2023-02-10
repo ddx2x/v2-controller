@@ -7,14 +7,17 @@ import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
 export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
-  newMode?: boolean
+  prefix?: string
   maxNumber?: number;
   buttonText?: string;
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { name, mode, listType, buttonText, maxNumber, value, onChange, ...rest } = props;  
-  const fileList = value ? value?.fileList || [] : [];
+  const { name, listType, prefix, maxNumber, buttonText, mode, value, onChange, ...rest } = props;
+  let fileList: any = []
+  if (value?.fileList && Array.isArray(value.fileList)) {
+    fileList = value.fileList
+  }
 
   // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -36,7 +39,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     let fileList = info.fileList;
     fileList
       .filter((item) => item.uid === info.file.uid)
-      .map((item) => (item.url = '/media-t/file/' + item.name));
+      .map((item) => (item.url = prefix + item.name));
     onChange && onChange({ fileList: fileList });
   };
 
@@ -50,37 +53,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     </div>
   );
 
-  const uploader = () => {
-    return (
-      <Upload
-        disabled={mode === 'read'}
-        name={name || 'file'}
-        listType={listType || 'picture-card'}
-        fileList={fileList}
-        onPreview={onImagePreview}
-        beforeUpload={mode === 'read' ? undefined : handleBeforeUpload}
-        onChange={mode === 'read' ? undefined : handleChange}
-        {...rest}
-      >
-        {(typeof maxNumber == 'number' && fileList?.length >= maxNumber || mode == 'read') ? null : button}
-      </Upload>
-    )
-  }
 
-  const modal = () => {
-    return (
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
-        <img style={{ width: '100%' }} src={previewImage} />
-      </Modal>
-    )
-  }
-
-  
   if (mode == 'read') {
-    if (!Array.isArray(fileList)) return null
     return (
       <Image.PreviewGroup>
-        {fileList.map(item => <Image width={60} src={item.url} />)}
+        {fileList?.map((item: any) => <Image width={60} src={item.url} />)}
       </Image.PreviewGroup>
     )
   }
@@ -88,9 +65,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   return (
     <>
       <ImgCrop rotate>
-        {uploader()}
+        <Upload
+          name={name || 'file'}
+          listType={listType || 'picture-card'}
+          fileList={fileList}
+          onPreview={onImagePreview}
+          beforeUpload={handleBeforeUpload}
+          onChange={handleChange}
+          {...rest}
+        >
+          {(typeof maxNumber == 'number' && fileList?.length >= maxNumber) ? null : button}
+        </Upload>
       </ImgCrop>
-      {modal()}
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
+        <img style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </>
   );
 

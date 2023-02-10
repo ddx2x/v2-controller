@@ -7,14 +7,17 @@ import { BigPlayButton, ControlBar, PlaybackRateMenuButton, Player } from 'video
 import { getBase64, handleBeforeUpload } from '../../helper/utils';
 
 export declare type VideoUploadProps = UploadProps & ProFieldFCRenderProps & {
-  newMode?: boolean;
+  prefix?: string;
   maxNumber?: number;
   buttonText?: string;
 };
 
 export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
-  const { name, listType, newMode, maxNumber, buttonText, action, value, onChange, ...rest } = props;
-  const fileList = value?.fileList || [];
+  const { name, listType, action, prefix, maxNumber, buttonText, mode, value, onChange, ...rest } = props;
+  let fileList: any = []
+  if (value?.fileList && Array.isArray(value.fileList)) {
+    fileList = value.fileList
+  }
 
   // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -36,9 +39,13 @@ export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
     let fileList = info.fileList;
     fileList
       .filter((item) => item.uid == info.file.uid)
-      .map((item) => (item.url = '/media-t/file/' + item.name));
+      .map((item) => (item.url = prefix + item.name));
     onChange && onChange({ fileList: fileList });
   };
+
+  if (mode === 'read') {
+    return null
+  }
 
   const button = <Button icon={<UploadOutlined />}>{buttonText || '上传视频'}</Button>;
 
@@ -54,7 +61,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = (props) => {
         onChange={handleChange}
         {...rest}
       >
-        {newMode && typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
+        {typeof maxNumber == 'number' && fileList.length >= maxNumber ? null : button}
       </Upload>
       <Modal
         destroyOnClose
@@ -81,5 +88,5 @@ export const VideoUploadRender: React.FC<VideoUploadProps> = (props) => {
 }
 
 export const VideoUploadRenderFormItem: React.FC<VideoUploadProps> = (props) => {
-  return <VideoUpload {...props} newMode />
+  return <VideoUpload {...props} />
 }

@@ -17,7 +17,7 @@ import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 
-const defaulScrollHeight = '70%';
+const defaulScrollHeight = '600px';
 
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow'> & {
   useBatchDelete?: boolean; // 开启批量删除
@@ -277,6 +277,7 @@ export const Table: React.FC<TableProps> = (props) => {
       }}
     >
       <EditableProTable
+        sticky
         columns={newColumns}
         value={dataSourceFormatter ? dataSourceFormatter(value) : value}
         recordCreatorProps={
