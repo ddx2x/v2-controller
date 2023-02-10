@@ -306,6 +306,10 @@ export const Table: React.FC<TableProps> = (props) => {
             <MenuButton
               dropDownTitle='更多操作'
               menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []}
+              buttonType='primary'
+              buttonSize='middle'
+              dropDownButtonType='dashed'
+              dropDownButtonSize='middle'
             />
           ],
         }}

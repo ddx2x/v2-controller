@@ -36,8 +36,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'product_sn',
-      title: '货号',
+      dataIndex: 'product_price_sn',
+      title: '价格/货号',
       hideInSearch: true,
       editable: false,
     },
@@ -48,8 +48,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: "select",
       valueEnum: {
-        0: "未删除",
-        1: "已删除"
+        0: { text: "是", status: "Error" },
+        1: { text: "否", status: "Success" }
       }
     },
     {
@@ -59,8 +59,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: "select",
       valueEnum: {
-        0: "不是新品",
-        1: "新品"
+        0: { text: "否", status: "Error" },
+        1: { text: "是", status: "Success" }
       }
     },
 
@@ -71,8 +71,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: "select",
       valueEnum: {
-        0: "不推荐",
-        1: "推荐"
+        0: { text: "否", status: "Error" },
+        1: { text: "是", status: "Success" }
       }
     },
     {
@@ -82,8 +82,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: "select",
       valueEnum: {
-        0: "未审核",
-        1: "审核通过"
+        0: { text: "否", status: "Error" },
+        1: { text: "是", status: "Success" }
       }
     },
     {

@@ -9,6 +9,8 @@ export class Product extends IObject {
     product_category_second_name: string | undefined
 
     product_sn: string | undefined
+    product_price_sn: number | undefined
+
     delete_status: number | string | undefined
     publish_status: number | string | undefined
     new_status: number | string | undefined

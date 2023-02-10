@@ -1,4 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
+import { brandApi } from '../brand';
 import { categoryApi } from '../category';
 
 export const name: FormColumnsType = {
@@ -29,6 +30,7 @@ export const brand_name: FormColumnsType = {
   dataIndex: 'brand_name',
   title: '品牌名称',
   hideInSearch: true,
+  valueType: "select",
   fieldProps: {
     placeholder: '请输入品牌名称',
 
@@ -41,12 +43,24 @@ export const brand_name: FormColumnsType = {
       },
     ],
   },
-}
+  request: async () => {
+    try {
+      const rs = await brandApi
+        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 } });
+      let select: any = [];
+      rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+      return select;
+    } catch (e) {
+      return [];
+    }
+  }
+};
 
 export const product_category_main_name: FormColumnsType = {
   dataIndex: 'product_category_main_name',
   title: '产品大类',
   hideInSearch: true,
+  valueType: "select",
   fieldProps: {
     placeholder: '请输入产品分类',
   },
@@ -58,6 +72,17 @@ export const product_category_main_name: FormColumnsType = {
       },
     ],
   },
+  request: async () => {
+    try {
+      const rs = await categoryApi
+        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1 } });
+      let select: any = [];
+      rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+      return select;
+    } catch (e) {
+      return [];
+    }
+  }
 }
 
 export const product_category_second_name_dependency: FormColumnsType = {
@@ -72,12 +97,10 @@ export const product_category_second_name: FormColumnsType = {
   dataIndex: 'product_category_second_name',
   title: '产品分类',
   hideInSearch: true,
-  fieldProps(form, config) {
-    return {
-      'product_category_main_name': form.getFieldValue('product_category_main_name'),
-      placeholder: '请输入产品分类',
-    }
+  fieldProps: {
+    placeholder: '请输入产品分类',
   },
+  dependencies: ['product_category_main_name'],
   formItemProps: {
     rules: [
       {
@@ -87,11 +110,9 @@ export const product_category_second_name: FormColumnsType = {
     ],
   },
   request: async (params: any, props: any) => {
-    console.log('props', props);
-
     try {
       const rs = await categoryApi
-        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1, } });
+        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 2, full_id: params.product_category_main_name } });
       let select: any = [];
       rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
       return select;
@@ -105,7 +126,6 @@ export const product_sn: FormColumnsType = {
   title: '货号',
   fieldProps: {
     placeholder: '请输入货号',
-
   },
   hideInSearch: true,
   formItemProps: {
@@ -124,6 +144,7 @@ export const delete_status: FormColumnsType = {
   hideInSearch: true,
   editable: false,
   valueType: "radio",
+  initialValue: "0",
   valueEnum: {
     0: { text: "未删除", status: 'Success' },
     1: { text: "已删除", status: 'Error' },
@@ -144,6 +165,7 @@ export const new_status: FormColumnsType = {
   hideInSearch: true,
   editable: false,
   valueType: "radio",
+  initialValue: "0",
   valueEnum: {
     0: "不是新品",
     1: "新品"
@@ -163,6 +185,7 @@ export const recommand_status: FormColumnsType = {
   title: '推荐状态',
   hideInSearch: true,
   valueType: "radio",
+  initialValue: "0",
   valueEnum: {
     0: "不推荐",
     1: "推荐"
@@ -191,6 +214,26 @@ export const sort: FormColumnsType = {
       {
         required: true,
         message: '此项为必填项',
+      },
+    ],
+  },
+}
+
+export const sub_title: FormColumnsType = {
+  dataIndex: 'sub_title',
+  title: '子标题',
+  valueType: 'text',
+
+  formItemProps: {
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+      {
+        type: 'string',
+        min: 1,
+        max: 64,
       },
     ],
   },

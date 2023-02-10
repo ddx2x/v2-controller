@@ -2,15 +2,15 @@ import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { productApi } from '@/service/api/productProduct.store';
 import { notification } from 'antd';
+import { merge } from 'lodash';
 import { parse } from 'querystring';
 import {
 	brand_name, delete_status, name, new_status, product_category_main_name,
 	product_category_second_name_dependency,
 	product_sn, recommand_status,
-	sort
+	sort,
+	sub_title
 } from './columns';
-
-
 
 // kind: form
 const editForm: FormProps = {
@@ -46,11 +46,12 @@ const editForm: FormProps = {
 	layoutType: 'Form',
 	shouldUpdate: false,
 	columns: [
-		name,
-		brand_name,
-		product_category_main_name,
+		merge(sub_title, { fieldProps: { disabled: true } }),
+		merge(name, { fieldProps: { disabled: true } }),
+		merge(brand_name, { fieldProps: { disabled: true } }),
+		merge(product_category_main_name, { fieldProps: { disabled: true } }),
 		product_category_second_name_dependency,
-		product_sn,
+		merge(product_sn, { fieldProps: { disabled: true } }),
 		delete_status,
 		new_status,
 		recommand_status,

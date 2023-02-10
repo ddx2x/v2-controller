@@ -1,12 +1,22 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-
+import { Product, productStore } from '@/service/api/productProduct.store';
+import { history } from '@umijs/max';
+import { notification } from 'antd';
+import { cloneDeep } from 'lodash';
 import {
 	brand_name, delete_status, name, new_status, product_category_main_name,
 	product_category_second_name_dependency,
 	product_sn, recommand_status,
-	sort
+	sort,
+	sub_title
 } from './columns';
+
+
+// let sub_time_editable = sub_title;
+// sub_time_editable.fieldProps ? sub_time_editable.fieldProps["disabled"] = false : null;
+
+console.log("sub_title_editable", sub_title);
 
 // kind: form
 const addForm: FormProps = {
@@ -17,31 +27,35 @@ const addForm: FormProps = {
 		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
-	shouldUpdate: false,
 	columns: [
-		name,
-		brand_name,
-		product_category_main_name,
+		cloneDeep(sub_title),
+		cloneDeep(name),
+		cloneDeep(brand_name),
+		cloneDeep(product_category_main_name),
 		product_category_second_name_dependency,
-		product_sn,
+		cloneDeep(product_sn),
 		delete_status,
 		new_status,
 		recommand_status,
 		sort,
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
-		// const target: Partial<Brand> = {
-		// 	first_letter: values.first_letter,
-		// 	factory_status: Number(values.factory_status),
-		// 	show_status: Number(values.show_status),
-		// 	logo: values.logo_price?.fileList[0].name || "",
-		// 	big_pic: values.big_pic_copy?.fileList[0].name || "",
-		// 	brand_story: values.brand_story,
-		// 	sort: Number(values.sort),
-		// };
-		// brandStore.update_one(dataObject, target, ["first_letter", "factory_status", "logo", "big_pic", "brand_story", "sort"]).
-		// 	then(() => { notification.success({ message: "保存成功" }); })
-		// 	.catch((e) => notification.error(e))
+		let target: Partial<Product> = {
+			...values,
+		};
+		target.delete_status = Number(values.delete_status);
+		target.new_status = Number(values.new_status);
+		target.recommand_status = Number(values.recommand_status);
+		target.sort = Number(values.sort);
+		target.publish_status = Number(1);
+		target.verify_status = Number(1);
+
+		productStore.create(target).
+			then((rs) => {
+				notification.success({ message: "保存成功" });
+				history.push(`/product/product/edit?id=` + rs.getUid());
+			})
+			.catch((e) => notification.error(e))
 
 		handleClose();
 		return true
