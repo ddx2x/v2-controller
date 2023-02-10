@@ -19,7 +19,7 @@ export declare type MenuButton = {
 export declare type MenuButtonType = { title: string; collapse?: boolean | string } & (
   | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
   | ({ kind: 'form' } & FormProps) // 表单
-  | ({ kind: 'link' } & { link: string}) // 跳转
+  | ({ kind: 'link' } & { link: string }) // 跳转
   | ({ kind: 'implement' } & {
     onClick?: ((e?: React.MouseEvent) => void) | undefined;
   })
@@ -62,12 +62,17 @@ const ConfirmButton: React.FC<ConfirmButtonType> = (props) => {
 };
 
 // 下拉框
-export const DropdownMenu: React.FC<{ title: string | undefined, items: MenuProps['items'] }> = (props) => {
-  const { title, items } = props;
+export const DropdownMenu: React.FC<{
+  title: string | undefined,
+  items: MenuProps['items'],
+  dropDownButtonType?: ButtonType
+  dropDownButtonSize?: ButtonSize;
+}> = (props) => {
+  const { title, items, dropDownButtonType, dropDownButtonSize } = props;
 
   return (
     <Dropdown menu={{ items }} forceRender>
-      <Button type="link" size="small" block onClick={(e) => e.preventDefault()}>
+      <Button type={dropDownButtonType || "link"} size={dropDownButtonSize || 'small'} block onClick={(e) => e.preventDefault()} >
         {title || '操作'}
         <DownOutlined sizes={'small'} />
       </Button>
@@ -81,11 +86,13 @@ export declare type MenuButtonProps = {
   menus: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
+  dropDownButtonType?: ButtonType
+  dropDownButtonSize?: ButtonSize;
   hooks?: (T: { title: string; func: () => void }[]) => void;
 };
 
 export const MenuButton: React.FC<MenuButtonProps> = (props) => {
-  const { dropDownTitle, menus, buttonType, buttonSize, hooks } = props;
+  const { dropDownTitle, menus, buttonType, buttonSize, dropDownButtonType, dropDownButtonSize, hooks } = props;
   if (!menus) return null;
 
   let labels: React.ReactNode[] = [];
@@ -159,7 +166,14 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
   return labels || collapseLabels ? (
     <Space align="center" style={{ overflowX: 'scroll', width: '100%' }}>
       {labels.length > 0 && labels.map(item => item)}
-      {collapseLabels.length > 0 && <DropdownMenu title={dropDownTitle} items={collapseLabels} />}
+      {collapseLabels.length > 0 && (
+        <DropdownMenu
+          title={dropDownTitle}
+          items={collapseLabels}
+          dropDownButtonType={dropDownButtonType}
+          dropDownButtonSize={dropDownButtonSize}
+        />
+      )}
     </Space>
   ) : null;
 };

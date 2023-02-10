@@ -17,7 +17,6 @@ const addForm: FormProps = {
 		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
-	shouldUpdate: false,
 	columns: [
 		name,
 		brand_name,

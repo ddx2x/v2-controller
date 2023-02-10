@@ -72,12 +72,10 @@ export const product_category_second_name: FormColumnsType = {
   dataIndex: 'product_category_second_name',
   title: '产品分类',
   hideInSearch: true,
-  fieldProps(form, config) {  
-    return {
-      'product_category_main_name': form.getFieldValue('product_category_main_name'),
-      placeholder: '请输入产品分类',
-    }
+  fieldProps: {
+    placeholder: '请输入产品分类',
   },
+  dependencies: ['product_category_main_name'],
   formItemProps: {
     rules: [
       {
@@ -87,11 +85,9 @@ export const product_category_second_name: FormColumnsType = {
     ],
   },
   request: async (params: any, props: any) => {
-    console.log('props', props);
-
     try {
       const rs = await categoryApi
-        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1, } });
+        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1, ...params } });
       let select: any = [];
       rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
       return select;

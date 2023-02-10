@@ -67,6 +67,7 @@ export const Container: React.FC<ContainerProps> = (props) => {
   return (
     <ProPageContainer
       header={{ breadcrumb: headerBreadcrumb(), ...header }}
+      affixProps={{ offsetTop: 56 }}
       {...rest}
     >
       {props.children}
