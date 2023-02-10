@@ -72,7 +72,7 @@ export const product_category_second_name: FormColumnsType = {
   dataIndex: 'product_category_second_name',
   title: '产品分类',
   hideInSearch: true,
-  fieldProps(form, config) {  
+  fieldProps(form, config) {
     return {
       'product_category_main_name': form.getFieldValue('product_category_main_name'),
       placeholder: '请输入产品分类',
@@ -125,8 +125,8 @@ export const delete_status: FormColumnsType = {
   editable: false,
   valueType: "radio",
   valueEnum: {
-    0: "未删除",
-    1: "已删除"
+    0: { text: "未删除", status: 'Success' },
+    1: { text: "已删除", status: 'Error' },
   },
   formItemProps: {
     rules: [

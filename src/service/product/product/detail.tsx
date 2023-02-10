@@ -6,7 +6,7 @@ import {
 } from './columns';
 
 export const detail: DescriptionsProps = {
-  modal: 'Modal',
+  modal: 'Drawer',
   columns: [
     name,
     brand_name,
