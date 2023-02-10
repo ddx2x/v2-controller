@@ -78,16 +78,15 @@ const attributeStoretable: StoreTableProps = {
     return [
       {
         kind: 'link',
-        tag: '新增',
-        link: `/product/category/attribute/add?id=` + query.category_id,
         title: '新增',
+        link: `/product/category/attribute/add?id=` + query.category_id,
+
       },
     ]
   },
   tableMenu: (record, action) => [
     {
       kind: 'link',
-      tag: "编辑",
       title: "编辑",
       link: "/product/category/attribute/edit?id=" + record.uid,
     },
@@ -101,7 +100,6 @@ const attributeStoretable: StoreTableProps = {
             message.error('删除失败')
           })
       },
-      tag: '删除',
       title: '删除',
       text: `确认删除` + record.name,
     },
@@ -111,7 +109,7 @@ const attributeStoretable: StoreTableProps = {
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onNext: (params: any, sort, filter, location) => {

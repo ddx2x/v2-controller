@@ -14,6 +14,6 @@ export const detail: DescriptionsProps = {
     name,
     show_status,
     sort
-  ]
+  ] as DescriptionsProps['columns']
 }
 

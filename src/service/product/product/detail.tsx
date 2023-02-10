@@ -1,13 +1,12 @@
 import { DescriptionsProps } from '@/dynamic-components';
-
 import {
-    brand_name, delete_status, name, new_status, product_category_main_name,
-    product_sn, recommand_status,
-    sort
+  brand_name, delete_status, name, new_status, product_category_main_name,
+  product_sn, recommand_status,
+  sort
 } from './columns';
 
 export const detail: DescriptionsProps = {
-  modal: 'Drawer',
+  modal: 'Modal',
   columns: [
     name,
     brand_name,
@@ -17,5 +16,5 @@ export const detail: DescriptionsProps = {
     new_status,
     recommand_status,
     sort,
-  ]
+  ] as DescriptionsProps['columns']
 }

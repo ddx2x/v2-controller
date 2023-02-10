@@ -10,10 +10,10 @@ import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import  { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { RouterHistory } from '../router';
-import { FormColumnsType, valueTypeMapStore } from '../valueType';
+import { valueTypeMapStore } from '../valueType';
 
 export declare type DescriptionsRef = {
   open: () => void;
@@ -25,9 +25,8 @@ export declare type DescriptionsItem = ProDescriptionsItemProps & {
 
 // https://next-procomponents.ant.design/components/descriptions
 
-export declare type DescriptionsProps = Omit<ProDescriptionsProps, 'columns'> & {
+export declare type DescriptionsProps = ProDescriptionsProps & {
   modal?: 'Modal' | 'Drawer' | 'Page';
-  columns: FormColumnsType[] | ProDescriptionsItemProps;
   title?: string;
   triggerText?: string;
   buttonType?: ButtonType;
@@ -40,7 +39,7 @@ export declare type DescriptionsProps = Omit<ProDescriptionsProps, 'columns'> & 
   unMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
 };
 
-export const Descriptions = (props: DescriptionsProps) => {
+export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) => {
   const {
     columns,
     location,
@@ -60,6 +59,12 @@ export const Descriptions = (props: DescriptionsProps) => {
   const init = () => {
     delay(() => actionRef && onMount && onMount(location, actionRef), 10);
   }
+
+  useImperativeHandle(forwardRef, () => {
+    return {
+      open: () => showModal(),
+    };
+  });
 
   useEffect(() => {
     init()
@@ -138,7 +143,7 @@ export const Descriptions = (props: DescriptionsProps) => {
     default:
       return Page();
   }
-};
+});
 
 Descriptions.defaultProps = {
   modal: 'Page',

@@ -100,7 +100,7 @@ const brandStoreTable: StoreTableProps = {
   toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
-      tag: '新增',
+
       title: '新增',
       link: `/product/brand/add`,
     },
@@ -108,19 +108,18 @@ const brandStoreTable: StoreTableProps = {
   tableMenu: (record, action) => [
     {
       kind: 'descriptions',
-      tag: '详情',
       title: '详情',
       dataSource: record,
       ...detail
     },
     {
       kind: 'link',
-      tag: '编辑',
       title: '编辑',
       link: '/product/brand/edit?id=' + record.uid
     },
     {
       kind: 'confirm',
+      title: '删除',
       onClick: () => {
         brandStore.remove(record.uid)
           .then(() => notification.success({ message: "删除成功" }))
@@ -128,15 +127,13 @@ const brandStoreTable: StoreTableProps = {
             notification.error(e)
           })
       },
-      tag: '删除',
-      title: '删除',
       text: `确认删除` + record.name,
     },
   ],
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onNext: (params: any) => {

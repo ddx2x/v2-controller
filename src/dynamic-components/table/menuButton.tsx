@@ -16,16 +16,14 @@ export declare type MenuButton = {
 } | null;
 
 // 更多按钮
-export declare type MenuButtonType = { tag: string; collapse?: boolean | string } & (
+export declare type MenuButtonType = { title: string; collapse?: boolean | string } & (
   | ({ kind: 'descriptions' } & DescriptionsProps) // 详情页
   | ({ kind: 'form' } & FormProps) // 表单
-  | ({ kind: 'link' } & { link: string; title: string }) // 跳转
+  | ({ kind: 'link' } & { link: string}) // 跳转
   | ({ kind: 'implement' } & {
-    title: string;
     onClick?: ((e?: React.MouseEvent) => void) | undefined;
   })
   | ({ kind: 'confirm' } & {
-    title: string;
     text?: string;
     onClick?: ((e?: React.MouseEvent) => void) | undefined;
   })
@@ -83,7 +81,7 @@ export declare type MenuButtonProps = {
   menus: MenuButtonType[] | undefined;
   buttonType?: ButtonType;
   buttonSize?: ButtonSize;
-  hooks?: (T: { tag: string; func: () => void }[]) => void;
+  hooks?: (T: { title: string; func: () => void }[]) => void;
 };
 
 export const MenuButton: React.FC<MenuButtonProps> = (props) => {
@@ -92,10 +90,9 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
 
   let labels: React.ReactNode[] = [];
   let collapseLabels: { label: React.ReactNode; key: string }[] = [];
-  let T: { tag: string; func: () => void }[] = [];
+  let T: { title: string; func: () => void }[] = [];
 
   menus.forEach((item) => {
-    const tag = item.tag;
     const key = randomKey(5, { numbers: true });
     const collapse = item.collapse || false;
     const bt = collapse ? 'link' : buttonType || 'link';
@@ -104,7 +101,7 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
     let label = (() => {
       if (item.kind == 'descriptions') {
         const descriptionsDomRef = useRef<DescriptionsRef>();
-        T.push({ tag: tag, func: () => descriptionsDomRef.current?.open() });
+        T.push({ title: item.title, func: () => descriptionsDomRef.current?.open() });
         return (
           <Descriptions
             key={key}
@@ -117,11 +114,11 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
       }
       if (item.kind == 'form') {
         const formDomRef = useRef<FormRef>();
-        T.push({ tag: tag, func: () => formDomRef.current?.open() });
+        T.push({ title: item.title, func: () => formDomRef.current?.open() });
         return <Form key={key} ref={formDomRef} buttonType={bt} buttonSize={bs} {...item} />;
       }
       if (item.kind == 'link') {
-        T.push({ tag: tag, func: () => message.info('没有实现该功能') });
+        T.push({ title: item.title, func: () => message.info('没有实现该功能') });
         return (
           <Button key={key} type={bt} size={bs} block>
             <Link to={item.link}>{item.title}</Link>
@@ -129,7 +126,7 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
         );
       }
       if (item.kind == 'confirm') {
-        T.push({ tag: tag, func: () => message.info('没有实现该功能') });
+        T.push({ title: item.title, func: () => message.info('没有实现该功能') });
         return (
           <ConfirmButton
             key={key}
@@ -142,7 +139,7 @@ export const MenuButton: React.FC<MenuButtonProps> = (props) => {
         );
       }
       if (item.kind == 'implement') {
-        T.push({ tag: tag, func: () => item.onClick && item.onClick() });
+        T.push({ title: item.title, func: () => item.onClick && item.onClick() });
         return (
           <Button key={key} type={bt} size={bs} block onClick={item.onClick}>
             {item.title || '编辑'}

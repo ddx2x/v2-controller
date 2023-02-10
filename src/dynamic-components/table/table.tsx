@@ -1,5 +1,5 @@
 import {
-  ActionType, EditableProTable, ProCard, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableProTable, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -8,7 +8,7 @@ import { Button, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
 import { observable } from 'mobx';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
@@ -16,7 +16,6 @@ import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
-import { Tree } from './tree';
 
 const defaulScrollHeight = '70%';
 
@@ -50,7 +49,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   // 鼠标事件
   onRowEvent?: {
     mouseEvent: 'onClick' | 'onDoubleClick';
-    tag: string; // 按钮
+    title: string; // 按钮
   }[];
 } & RouterHistory;
 
@@ -225,13 +224,13 @@ export const Table: React.FC<TableProps> = (props) => {
   newColumns = newColumns.filter((item) => item.dataIndex !== 'menuButton');
 
   if (useTableMoreOption) {
-    const optionHooks = observable.array<{ tag: string; func: () => void }[]>()
+    const optionHooks = observable.array<{ title: string; func: () => void }[]>()
     // 更多操作 按钮
     newColumns.push({
       dataIndex: 'menuButton',
       title: '操作',
       editable: false,
-      width: 200,
+      width: 180,
       fixed: 'right',
       render: (text: any, record: any, index: any, action: any) => {
         return (
@@ -251,7 +250,7 @@ export const Table: React.FC<TableProps> = (props) => {
         onRowEvent.forEach((e) => {
           events[e.mouseEvent] = () => {
             if (typeof index == 'number') {
-              optionHooks[index].filter((item) => item.tag == e.tag).forEach((hook) => hook.func());
+              optionHooks[index].filter((item) => item.title == e.title).forEach((hook) => hook.func());
             }
           };
         });
@@ -304,7 +303,10 @@ export const Table: React.FC<TableProps> = (props) => {
         toolbar={{
           title: toolbarTitle,
           actions: [
-            <MenuButton dropDownTitle='更多操作' menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []} />
+            <MenuButton
+              dropDownTitle='更多操作'
+              menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []}
+            />
           ],
         }}
         tableRender={tableRender}

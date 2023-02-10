@@ -79,7 +79,6 @@ const commdityAggregateTable: StoreTableProps = {
   toolBarMenu: () => [
     {
       kind: 'link',
-      tag: '单品新增',
       title: '单品新增',
       link: `/product/list/aggregate_add`,
     },
@@ -116,13 +115,12 @@ const commdityAggregateTable: StoreTableProps = {
       tableMenu: (record: Commodity, action: any) => [
         {
           kind: 'descriptions',
-          tag: '详情',
+          title: '详情',
           dataSource: record,
           ...detail,
         },
         {
           kind: 'link',
-          tag: '编辑',
           title: '编辑',
           collapse: true,
           link: `/product/list/aggregate_edit` + `?` + stringify({ name: record.name }),
@@ -133,16 +131,15 @@ const commdityAggregateTable: StoreTableProps = {
   tableMenu: (record, action) => [
     {
       kind: 'descriptions',
+      title: '详情',
       dataSource: record,
-      tag: '详情',
       collapse: "true",
       ...detail,
     },
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
-      tag: '删除',
       title: '删除',
+      onClick: () => message.info('删除成功'),
       text: `确认删除` + record.name,
     },
 
@@ -150,7 +147,7 @@ const commdityAggregateTable: StoreTableProps = {
   onRowEvent: [
     {
       mouseEvent: 'onDoubleClick',
-      tag: '详情',
+      title: '详情',
     },
   ],
   onNext: (params) =>
