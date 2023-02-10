@@ -28,16 +28,6 @@ const editForm: FormProps = {
 				rs.factory_status = String(rs.factory_status || 0);
 				rs.show_status = String(rs.show_status);
 				rs.brand_story = rs.brand_story;
-				rs.big_pic = {
-					fileList: [
-						{ name: rs.big_pic, url: "/media-t/file/" + rs.big_pic }
-					]
-				}
-				rs.logo = {
-					fileList: [
-						{ name: rs.logo, url: "/media-t/file/" + rs.logo }
-					]
-				}
 				formRef.current?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))

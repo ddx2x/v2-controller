@@ -104,6 +104,7 @@ export const big_pic: FormColumnsType = {
   fieldProps: {
     maxNumber: 1,
     name: 'upload',
+    prefix: '/media-t/file/',
     action: '/media-t/upload',
   },
 };
@@ -117,6 +118,7 @@ export const logo: FormColumnsType = {
   fieldProps: {
     maxNumber: 1,
     name: 'upload',
+    prefix: '/media-t/file/',
     action: '/media-t/upload',
   },
 };
