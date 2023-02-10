@@ -150,7 +150,7 @@ const commdityAggregateTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onNext: (params) =>
+  onRequest: (params) =>
     commdityAggregateStore.next({
       limit: { page: 0, size: 10 },
       sort: { brand_name: 1 },

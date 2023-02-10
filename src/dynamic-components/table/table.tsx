@@ -3,12 +3,11 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
-import { FormattedMessage } from '@umijs/max';
-import { Button, Space } from 'antd';
+import { Pagination, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
 import { observable } from 'mobx';
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
@@ -17,7 +16,7 @@ import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 
-const defaulScrollHeight = '600px';
+const defaulScrollHeight = '100%';
 
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow'> & {
   useBatchDelete?: boolean; // 开启批量删除
@@ -31,14 +30,6 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   toolBarMenu?: (selectedRows?: any, location?: Location | undefined) => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
   // 虚拟滚动 加载数据
-  onNext?: (
-    params?: any,
-    sort?: any,
-    filter?: any,
-    location?: Location | null | undefined,
-    actionRef?: React.MutableRefObject<ActionType | undefined>,
-    treeSelectedNode?: any
-  ) => void;
   // 批量删除
   batchDelete?: (selectedRows: any) => void; // 批量删除回调函数
   isExpandNode?: boolean;
@@ -58,6 +49,7 @@ export const Table: React.FC<TableProps> = (props) => {
     columns,
     treeData,
     value,
+    pagination,
     dataSourceFormatter,
     // 批量删除
     useBatchDelete,
@@ -67,8 +59,6 @@ export const Table: React.FC<TableProps> = (props) => {
     editableValuesChange,
     // 挂载
     location,
-    // 列表
-    onNext,
     // 展开
     isExpandNode,
     expand,
@@ -94,51 +84,22 @@ export const Table: React.FC<TableProps> = (props) => {
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  // useEffect(() => {
-  //   window.addEventListener('mousemove', (evt: MouseEvent) => {
-  //     if (evt.defaultPrevented || (container !== null && container.contains(evt.target as Node))) {
-  //       document.body.style.overflow = 'hidden';
-  //       return;
-  //     }
-  //     document.body.style.overflow = 'visible';
-  //   });
-  // });
+
+  useEffect(() => {
+    // window.addEventListener('mousemove', (evt: MouseEvent) => {
+    //   if (evt.defaultPrevented || (container !== null && container.contains(evt.target as Node))) {
+    //     document.body.style.overflow = 'hidden';
+    //     return;
+    //   }
+    //   document.body.style.overflow = 'visible';
+    // });
+  });
 
   // 多选
   const [selectedRows, setSelectedRows] = useState([]);
   const rowSelection = {
     preserveSelectedRowKeys: true,
     onChange: (_: any, selectedRows: any) => { setSelectedRows(selectedRows) },
-  };
-
-  // 提示操作按钮
-  const Footer: React.FC = () => {
-    return (
-      <FooterToolbar routeContext={routeContext || {}}>
-        <Space size={6}>
-          {selectedRows.length > 0 ? (
-            <>
-              <Button
-                type="link"
-                onClick={async () => {
-                  batchDelete && batchDelete(selectedRows);
-                  setSelectedRows([]);
-                  actionRef.current?.reloadAndRest?.();
-                }}
-              >
-                <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
-              </Button>
-              <Button type="link" onClick={async () => { setSelectedRows([]); actionRef.current?.reloadAndRest?.(); }}>
-                <FormattedMessage
-                  id="pages.searchTable.cancelSelection"
-                  defaultMessage="取消选择"
-                />
-              </Button>
-            </>
-          ) : null}
-        </Space>
-      </FooterToolbar >
-    );
   };
 
   // 表单dom渲染
@@ -159,7 +120,6 @@ export const Table: React.FC<TableProps> = (props) => {
           ref={tableHeight !== '100%' ? setContainer : null}
           style={{ marginRight: 15, marginTop: 10, marginBottom: 10 }}
         >
-          {/* {domList.toolbar} */}
           {domList.table}
         </div>
       );
@@ -203,8 +163,37 @@ export const Table: React.FC<TableProps> = (props) => {
     // 原生table
     return (
       <>
-        <div ref={tableHeight !== '100%' ? setContainer : null}>{defaultDom}</div>
-        <Footer />
+        <div
+        // ref={tableHeight !== '100%' ? setContainer : null}
+        >
+          {defaultDom}
+        </div>
+        <FooterToolbar routeContext={routeContext || {}}>
+          <Space size={6}>
+            <Pagination
+              {...pagination}
+              current={actionRef.current?.pageInfo?.current || 1}
+              pageSize={actionRef.current?.pageInfo?.pageSize || 0}
+              showTotal={(total, range) => { return `已选择 ${selectedRows.length} 项， 第 ${range[0]}-${range[1]} 项 / 总共 ${total} 项` }}
+              onChange={(page, pageSize) => {
+                actionRef.current?.setPageInfo &&
+                  actionRef.current?.setPageInfo({
+                    pageSize: pageSize,
+                    current: page,
+                    total: pagination ? pagination?.total : undefined
+                  })
+              }}
+              onShowSizeChange={(current, size) => {
+                actionRef.current?.setPageInfo &&
+                  actionRef.current?.setPageInfo({
+                    pageSize: size,
+                    current: current,
+                    total: pagination ? pagination?.total : undefined
+                  })
+              }}
+            />
+          </Space>
+        </FooterToolbar>
       </>
     );
   };
@@ -258,14 +247,6 @@ export const Table: React.FC<TableProps> = (props) => {
     }
   }
 
-  const request = async (params: any, sort: {}, filter: {}) => {
-    const { pageSize: size, current: current, ...more } = params;
-    const order = sort;
-    const page = current - 1;
-    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, location, actionRef, null);
-    return { success: true };
-  }
-
   const recordCreatorPosition = 'hidden'
   const proProviderValues = useContext(ProProvider);
 
@@ -277,9 +258,14 @@ export const Table: React.FC<TableProps> = (props) => {
       }}
     >
       <EditableProTable
-        sticky
         columns={newColumns}
         value={dataSourceFormatter ? dataSourceFormatter(value) : value}
+        editable={{
+          type: 'multiple',
+          editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
+          actionRender: () => [],
+          onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+        }}
         recordCreatorProps={
           recordCreatorPosition !== 'hidden'
             ? {
@@ -288,21 +274,16 @@ export const Table: React.FC<TableProps> = (props) => {
             }
             : false
         }
-        components={value && value.length > 10 ? vComponents : undefined}
-        request={request}
+        sticky
+        components={vComponents}
         actionRef={actionRef}
         formRef={formRef}
         rowSelection={rowSelection}
         scroll={{ y: tableHeight, x: 1500 }}
-        editable={{
-          type: 'multiple',
-          editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
-          actionRender: () => { return [] },
-          onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
-        }}
         search={{ labelWidth: 80 }}
         toolbar={{
           title: toolbarTitle,
+          search: '...',
           actions: [
             <MenuButton
               dropDownTitle='更多操作'
@@ -318,6 +299,7 @@ export const Table: React.FC<TableProps> = (props) => {
         expandable={{
           ...expandModule(expand ? expand : null)
         }}
+        pagination={{ ...pagination, style: { display: 'none' } }}
         {...rest}
       />
     </ProProvider.Provider>

@@ -112,7 +112,7 @@ const attributeStoretable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onNext: (params: any, sort, filter, location) => {
+  onRequest: (params: any, sort, filter, location) => {
     let data = location?.search.split('?')[1] || '';
     let query = parse(data);
     productAttributeStore.next({

@@ -112,7 +112,7 @@ const userStoreTable: StoreTableProps = {
     // }
 
   },
-  onNext: (params: any) =>
+  onRequest: (params: any) =>
     userStore.next({
       limit: { page: 0, size: 1 },
       sort: {},

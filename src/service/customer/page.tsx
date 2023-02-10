@@ -69,7 +69,7 @@ const table: View = {
     },
   ],
 
-  onNext: (actionRef) => customerStore.next({ order: { version: 1 } }),
+  onRequest: (actionRef) => customerStore.next({ order: { version: 1 } }),
   onSubmit: (params) => customerStore.next({ order: { version: 1 } }),
 };
 
