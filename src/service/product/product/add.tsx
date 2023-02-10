@@ -2,7 +2,8 @@ import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 
 import {
-	brand_name, delete_status, name, new_status, product_category_name,
+	brand_name, delete_status, name, new_status, product_category_main_name,
+	product_category_second_name_dependency,
 	product_sn, recommand_status,
 	sort
 } from './columns';
@@ -20,7 +21,8 @@ const addForm: FormProps = {
 	columns: [
 		name,
 		brand_name,
-		product_category_name,
+		product_category_main_name,
+		product_category_second_name_dependency,
 		product_sn,
 		delete_status,
 		new_status,

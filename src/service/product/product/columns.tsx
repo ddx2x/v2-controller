@@ -1,4 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
+import { categoryApi } from '../category';
 
 export const name: FormColumnsType = {
   dataIndex: 'name',
@@ -16,11 +17,12 @@ export const name: FormColumnsType = {
       {
         message: '最小6个字符最大64',
         type: 'string',
-        min: 6,
+        min: 1,
         max: 64
       }
     ],
   },
+
 }
 
 export const brand_name: FormColumnsType = {
@@ -41,9 +43,9 @@ export const brand_name: FormColumnsType = {
   },
 }
 
-export const product_category_name: FormColumnsType = {
-  dataIndex: 'product_category_name',
-  title: '产品分类',
+export const product_category_main_name: FormColumnsType = {
+  dataIndex: 'product_category_main_name',
+  title: '产品大类',
   hideInSearch: true,
   fieldProps: {
     placeholder: '请输入产品分类',
@@ -58,6 +60,46 @@ export const product_category_name: FormColumnsType = {
   },
 }
 
+export const product_category_second_name_dependency: FormColumnsType = {
+  valueType: 'dependency',
+  name: ['product_category_main_name'],
+  columns: ({ product_category_main_name }) => {
+    return product_category_main_name ? [product_category_second_name] : []
+  },
+}
+
+export const product_category_second_name: FormColumnsType = {
+  dataIndex: 'product_category_second_name',
+  title: '产品分类',
+  hideInSearch: true,
+  fieldProps(form, config) {  
+    return {
+      'product_category_main_name': form.getFieldValue('product_category_main_name'),
+      placeholder: '请输入产品分类',
+    }
+  },
+  formItemProps: {
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+    ],
+  },
+  request: async (params: any, props: any) => {
+    console.log('props', props);
+
+    try {
+      const rs = await categoryApi
+        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 1, } });
+      let select: any = [];
+      rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+      return select;
+    } catch (e) {
+      return [];
+    }
+  }
+}
 export const product_sn: FormColumnsType = {
   dataIndex: 'product_sn',
   title: '货号',

@@ -27,6 +27,12 @@ export const first_letter: FormColumnsType = {
         required: true,
         message: '此项为必填项',
       },
+      {
+        message: '必须是1位大写字母',
+        min: 1,
+        max: 1,
+        type: "string",
+      },
     ],
   },
 };

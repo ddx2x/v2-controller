@@ -12,7 +12,7 @@ const brandStoreTable: StoreTableProps = {
   search: false,
   columns: [
     {
-      dataIndex: 'logo_price',
+      dataIndex: 'logo',
       title: '品牌',
       hideInSearch: true,
       valueType: 'imageUpload',

@@ -4,7 +4,8 @@ import { productApi } from '@/service/api/productProduct.store';
 import { notification } from 'antd';
 import { parse } from 'querystring';
 import {
-	brand_name, delete_status, name, new_status, product_category_name,
+	brand_name, delete_status, name, new_status, product_category_main_name,
+	product_category_second_name_dependency,
 	product_sn, recommand_status,
 	sort
 } from './columns';
@@ -47,7 +48,8 @@ const editForm: FormProps = {
 	columns: [
 		name,
 		brand_name,
-		product_category_name,
+		product_category_main_name,
+		product_category_second_name_dependency,
 		product_sn,
 		delete_status,
 		new_status,

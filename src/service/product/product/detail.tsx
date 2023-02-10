@@ -1,9 +1,9 @@
 import { DescriptionsProps } from '@/dynamic-components';
 
 import {
-  brand_name, delete_status, name, new_status, product_category_name,
-  product_sn, recommand_status,
-  sort
+    brand_name, delete_status, name, new_status, product_category_main_name,
+    product_sn, recommand_status,
+    sort
 } from './columns';
 
 export const detail: DescriptionsProps = {
@@ -11,7 +11,7 @@ export const detail: DescriptionsProps = {
   columns: [
     name,
     brand_name,
-    product_category_name,
+    product_category_main_name,
     product_sn,
     delete_status,
     new_status,

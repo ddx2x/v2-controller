@@ -18,14 +18,11 @@ export class Brand extends IObject {
 	big_pic: string | object | undefined
 	brand_story: string | undefined
 
-	logo_price: string | ImageFileList | undefined
-	big_pic_copy: string | object | undefined
-
 	constructor(data: Brand) {
 		super(data);
 		Object.assign(this, data);
 		// this.logo_price = '/media-t/file/' + this.logo
-		this.logo_price = {
+		this.logo = {
 			fileList: [{
 				url: '/media-t/file/' + this.logo, name: this.logo
 			}]

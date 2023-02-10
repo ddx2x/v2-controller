@@ -10,7 +10,7 @@ import {
 } from './columns';
 
 let editName = name
-editName.fieldProps ? editName.fieldProps['disabled'] = true : null;
+editName.fieldProps ? editName.fieldProps['disabled'] = false : null;
 
 
 // kind: form
@@ -28,12 +28,12 @@ const editForm: FormProps = {
 				rs.factory_status = String(rs.factory_status || 0);
 				rs.show_status = String(rs.show_status);
 				rs.brand_story = rs.brand_story;
-				rs.big_pic_copy = {
+				rs.big_pic = {
 					fileList: [
 						{ name: rs.big_pic, url: "/media-t/file/" + rs.big_pic }
 					]
 				}
-				rs.logo_price = {
+				rs.logo = {
 					fileList: [
 						{ name: rs.logo, url: "/media-t/file/" + rs.logo }
 					]
@@ -62,8 +62,8 @@ const editForm: FormProps = {
 			first_letter: values.first_letter,
 			factory_status: Number(values.factory_status),
 			show_status: Number(values.show_status),
-			logo: values.logo_price?.fileList[0].name || "",
-			big_pic: values.big_pic_copy?.fileList[0].name || "",
+			logo: values.logo?.fileList[0].name || "",
+			big_pic: values.big_pic?.fileList[0].name || "",
 			brand_story: values.brand_story,
 			sort: Number(values.sort),
 		};
