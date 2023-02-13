@@ -125,6 +125,43 @@ export const Table: React.FC<TableProps> = (props) => {
       );
     }
 
+    const paginationDom = () => {
+      return (
+        <Space size={6}>
+          <Pagination
+            {...pagination}
+            current={actionRef.current?.pageInfo?.current || 1}
+            pageSize={actionRef.current?.pageInfo?.pageSize || 0}
+            showTotal={(total, range) => { return `已选择 ${selectedRows.length} 项， 第 ${range[0]}-${range[1]} 项 / 总共 ${total} 项` }}
+            onChange={(page, pageSize) => {
+              actionRef.current?.setPageInfo &&
+                actionRef.current?.setPageInfo({
+                  pageSize: pageSize,
+                  current: page,
+                  total: pagination ? pagination?.total : undefined
+                })
+            }}
+            onShowSizeChange={(current, size) => {
+              actionRef.current?.setPageInfo &&
+                actionRef.current?.setPageInfo({
+                  pageSize: size,
+                  current: current,
+                  total: pagination ? pagination?.total : undefined
+                })
+            }}
+          />
+        </Space>
+      )
+    }
+
+    const footerExtra = () => {
+      return (
+        <Space size={6}>
+          
+        </Space>
+      )
+    }
+
     // // 侧边搜索树🌲
     // if (useSiderTree) {
     //   const withTreeWidth = useMemo(() => {
@@ -169,30 +206,7 @@ export const Table: React.FC<TableProps> = (props) => {
           {defaultDom}
         </div>
         <FooterToolbar routeContext={routeContext || {}}>
-          <Space size={6}>
-            <Pagination
-              {...pagination}
-              current={actionRef.current?.pageInfo?.current || 1}
-              pageSize={actionRef.current?.pageInfo?.pageSize || 0}
-              showTotal={(total, range) => { return `已选择 ${selectedRows.length} 项， 第 ${range[0]}-${range[1]} 项 / 总共 ${total} 项` }}
-              onChange={(page, pageSize) => {
-                actionRef.current?.setPageInfo &&
-                  actionRef.current?.setPageInfo({
-                    pageSize: pageSize,
-                    current: page,
-                    total: pagination ? pagination?.total : undefined
-                  })
-              }}
-              onShowSizeChange={(current, size) => {
-                actionRef.current?.setPageInfo &&
-                  actionRef.current?.setPageInfo({
-                    pageSize: size,
-                    current: current,
-                    total: pagination ? pagination?.total : undefined
-                  })
-              }}
-            />
-          </Space>
+          {pagination && paginationDom()}
         </FooterToolbar>
       </>
     );
@@ -282,6 +296,7 @@ export const Table: React.FC<TableProps> = (props) => {
         scroll={{ x: 1500 }}
         search={{ labelWidth: 80 }}
         toolbar={{
+          multipleLine: true,
           title: toolbarTitle,
           search: '...',
           actions: [
@@ -295,6 +310,7 @@ export const Table: React.FC<TableProps> = (props) => {
             />
           ],
         }}
+        tableAlertRender={false}
         tableRender={tableRender}
         expandable={{
           ...expandModule(expand ? expand : null)
