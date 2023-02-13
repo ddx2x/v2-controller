@@ -6,12 +6,15 @@ import { Privilege, privilegeStore } from '../../api/privilegeResource';
 const table: View = {
   kind: 'storeTable',
   store: privilegeStore,
+  search: false,
   rowKey: 'uid',
   columns: [
     {
       dataIndex: 'uid',
       title: '资源名',
       hideInSearch: true,
+      fixed: 'left',
+      width: 120,
       editable: false,
     },
     {
@@ -27,6 +30,7 @@ const table: View = {
       dataIndex: 'url',
       title: '路由模式',
       hideInSearch: true,
+      width: 300,
       editable: false,
     },
     {

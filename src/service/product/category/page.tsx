@@ -1,5 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Category, categoryStore, categoryStore2 } from '../../api/productCategory.store';
@@ -78,7 +79,10 @@ const categoryStoreTable: StoreTableProps = {
           title: '删除',
           onClick: () => {
             categoryStore2.remove(record.uid)
-              .then(() => notification.success({ message: "删除成功" }))
+              .then(() => {
+                notification.success({ message: "删除成功" });
+                history.push(`/product/category`);
+              })
               .catch(e => notification.error(e))
           },
           text: `确认删除类型名称` + "'" + record.uid + "'",
@@ -185,7 +189,8 @@ const categoryStoreTable: StoreTableProps = {
       title: '删除',
       onClick: () => {
         categoryStore.remove(record.uid).then(() => {
-          notification.info({ message: "删除成功" })
+          notification.info({ message: "删除成功" });
+          history.push(`/product/category`);
         }).catch(e => {
           notification.error(e)
         })

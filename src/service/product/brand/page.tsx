@@ -1,5 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components/table';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Brand, brandStore } from '../../api/productBrand.store';
@@ -78,10 +79,13 @@ const brandStoreTable: StoreTableProps = {
       } else {
         update.show_status = 0
       }
-      brandStore.update_one(src, update, ["show_status"]).then(() =>
-        notification.success({ message: "更新成功" })).catch((e) => {
-          notification.error({ message: "更新失败:" + e });
-        })
+      brandStore.update_one(src, update, ["show_status"]).then(() => {
+        notification.success({ message: "更新成功" });
+        history.push(`/product/brand`);
+      }
+      ).catch((e) => {
+        notification.error({ message: "更新失败:" + e });
+      })
     }
 
     if (src?.factory_status !== update.factory_status) {
@@ -90,10 +94,12 @@ const brandStoreTable: StoreTableProps = {
       } else {
         update.factory_status = 0
       }
-      brandStore.update_one(src, update, ["factory_status"]).then(() =>
-        notification.success({ message: "更新成功" })).catch((e) => {
-          notification.error({ message: "更新失败:" + e });
-        })
+      brandStore.update_one(src, update, ["factory_status"]).then(() => {
+        notification.success({ message: "更新成功" });
+        history.push(`/product/brand`);
+      }).catch((e) => {
+        notification.error({ message: "更新失败:" + e });
+      })
     }
   },
   toolbarTitle: "数据列表",
@@ -122,7 +128,11 @@ const brandStoreTable: StoreTableProps = {
       title: '删除',
       onClick: () => {
         brandStore.remove(record.uid)
-          .then(() => notification.success({ message: "删除成功" }))
+          .then(() => {
+            notification.success({ message: "删除成功" });
+            history.push(`/product/brand`);
+          }
+          )
           .catch((e) => {
             notification.error(e)
           })

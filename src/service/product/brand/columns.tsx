@@ -121,6 +121,14 @@ export const logo: FormColumnsType = {
     prefix: '/media-t/file/',
     action: '/media-t/upload',
   },
+  formItemProps: {
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+    ],
+  },
 };
 
 

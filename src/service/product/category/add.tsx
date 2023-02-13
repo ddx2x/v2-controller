@@ -209,7 +209,7 @@ const addForm: FormProps = {
 			then(() => {
 				notification.success({ message: "保存成功" });
 				// 跳转至数据编辑页
-				history.replace(`/product/category/edit?id=${values.uid}`)
+				history.push(`/product/category`)
 			})
 			.catch((e) => notification.error(e))
 		handleClose();

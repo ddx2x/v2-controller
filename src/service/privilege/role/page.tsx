@@ -6,10 +6,13 @@ import { Role, roleStore } from '../../api/privilegeRole';
 const roleStoreTable: StoreTableProps = {
   store: roleStore,
   rowKey: 'uid',
+  search: false,
   columns: [
     {
       dataIndex: 'uid',
       title: '角色',
+      fixed: 'left',
+      width: 120,
       hideInSearch: true,
       editable: false,
     },

@@ -20,7 +20,7 @@ export class Category extends IObject {
     }
 }
 
-class CategoryStore extends ObjectStore<Category> {
+export class CategoryStore extends ObjectStore<Category> {
     watchApi: WatchApi<Category>;
     api: ObjectApi<Category>;
     constructor(api: ObjectApi<Category>, watchApi: WatchApi<Category>) {

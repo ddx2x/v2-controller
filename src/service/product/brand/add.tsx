@@ -1,5 +1,6 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { Brand, brandStore } from '../../api/productBrand.store';
 import {
@@ -8,7 +9,7 @@ import {
 } from './columns';
 
 // kind: form
-const editForm: FormProps = {
+const form: FormProps = {
 	onMount: (location, formRef, setDataObject) => {
 		formRef.current?.resetFields();
 	},
@@ -40,7 +41,11 @@ const editForm: FormProps = {
 		};
 
 		brandStore.api.create(undefined, item).
-			then(() => { notification.success({ message: "保存成功" }); })
+			then(() => {
+				notification.success({ message: "保存成功" });
+				// history.push(`/product/brand/edit?id=` + values.uid);
+				history.push(`/product/brand`);
+			})
 			.catch((e) => notification.error(e))
 
 		handleClose();
@@ -50,7 +55,7 @@ const editForm: FormProps = {
 
 pageManager.register('product.brand.add', {
 	page: {
-		view: [{ kind: 'form', ...editForm }],
+		view: [{ kind: 'form', ...form }],
 		container: {
 			keepAlive: false,
 		}

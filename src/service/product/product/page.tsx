@@ -1,5 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { message, notification } from 'antd';
 import { merge } from 'lodash';
 import { Product, productStore } from '../../api/productProduct.store';
@@ -16,6 +17,18 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       hideInTable: true,
       editable: false,
+    },
+    {
+      dataIndex: 'pic',
+      title: '商品图',
+      hideInSearch: true,
+      valueType: 'imageUpload',
+      editable: false,
+      width: 100,
+      fixed: 'left',
+      fieldProps: {
+        width: 55,
+      },
     },
     {
       dataIndex: 'name',
@@ -36,17 +49,17 @@ const productStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'product_price_sn',
-      title: '价格/货号',
+      dataIndex: 'publish_status',
+      title: '上架状态',
+      valueType: 'switch',
       hideInSearch: true,
-      editable: false,
     },
     {
       dataIndex: 'delete_status',
       title: '删除状态',
       hideInSearch: true,
       editable: false,
-      valueType: "select",
+      valueType: 'radio',
       valueEnum: {
         0: { text: "是", status: "Error" },
         1: { text: "否", status: "Success" }
@@ -86,15 +99,32 @@ const productStoreTable: StoreTableProps = {
         1: { text: "是", status: "Success" }
       }
     },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-      hideInSearch: true,
-      editable: false,
-    },
+
   ],
-  editableValuesChange: (record) => { console.log(record) },
-  toolBarMenu: (selectedRows) => [
+  editableValuesChange: (record: Product) => {
+    const src = productStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<Product> = record;
+
+    if (!src) return;
+
+    console.log("prodcut edit", src, update)
+    if (src?.publish_status !== String(update.publish_status)) {
+      if (update.publish_status) {
+        update.publish_status = 1
+      } else {
+        update.publish_status = 0
+      }
+      productStore.update_one(src, update, ["publish_status"]).then(() => {
+        notification.success({ message: "更新成功" });
+      }
+      ).catch((e) => {
+        notification.error({ message: "更新失败:" + e });
+      })
+    }
+
+
+  },
+  toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
       title: '新增',
@@ -104,10 +134,19 @@ const productStoreTable: StoreTableProps = {
       kind: 'implement',
       title: '批量商品上架',
       onClick: (e) => {
-        if (selectedRows.length <= 0) {
+        const rows: Product[] = selectedRows;
+        if (rows.length <= 0) {
           message.warning('请批量选择商品'); return
         }
-        message.info('批量商品上架成功')
+        rows.map((row) => {
+          productStore.update_one(row, { publish_status: 1 }, ["publish_status"]).
+            then(() => {
+              message.info(`"${row.name}" 上架成功`);
+              history.push(`/product/product`);
+            }).catch((e) => {
+              message.error(e)
+            })
+        });
       },
       collapse: true
     },
@@ -115,10 +154,19 @@ const productStoreTable: StoreTableProps = {
       kind: 'implement',
       title: '批量商品下架',
       onClick: (e) => {
-        if (selectedRows.length <= 0) {
+        const rows: Product[] = selectedRows;
+        if (rows.length <= 0) {
           message.warning('请批量选择商品'); return
         }
-        message.info('批量商品下架成功')
+        rows.map((row) => {
+          productStore.update_one(row, { publish_status: 0 }, ["publish_status"]).
+            then(() => {
+              message.info(`"${row.name}" 下架成功`);
+              history.push(`/product/product`);
+            }).catch((e) => {
+              message.error(e)
+            })
+        });
       },
       collapse: true
     },

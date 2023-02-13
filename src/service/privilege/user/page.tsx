@@ -8,11 +8,14 @@ import { User, userStore } from '../../api/privilegeUser.store';
 const userStoreTable: StoreTableProps = {
   store: userStore,
   rowKey: 'uid',
+  search: false,
   columns: [
     {
       dataIndex: 'uid',
       title: '帐户',
       hideInSearch: true,
+      fixed: 'left',
+      width:120,
       editable: false,
     },
     {

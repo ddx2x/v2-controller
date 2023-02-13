@@ -1,15 +1,19 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { productApi } from '@/service/api/productProduct.store';
+import { Product, productApi, productStore } from '@/service/api/productProduct.store';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { parse } from 'querystring';
 import {
-	brand_name, delete_status, name, new_status, product_category_main_name,
-	product_category_second_name_dependency,
-	product_sn, recommand_status,
+	album_pics,
+	brand_name,
+	keywords, low_stock, name, new_status, product_category_name,
+	product_sn, promotion_end_time, promotion_per_limit, promotion_start_time, promotion_type, publish_status, recommand_status,
+	service_ids,
 	sort,
-	sub_title
+	sub_title,
+	unit
 } from './columns';
 
 // kind: form
@@ -19,23 +23,50 @@ const editForm: FormProps = {
 		if (location === undefined) return;
 		const query: any = parse(location?.search.split('?')[1] || '');
 		productApi.get(query.id).
-			then((rs) => {
+			then((rs: Product) => {
 				setDataObject(rs);
-				// rs.first_letter = rs.first_letter;
-				// rs.sort = String(rs.sort);
-				// rs.factory_status = String(rs.factory_status || 0);
-				// rs.show_status = String(rs.show_status);
-				// rs.brand_story = rs.brand_story;
-				// rs.big_pic_copy = {
-				// 	fileList: [
-				// 		{ name: rs.big_pic, url: "/media-t/file/" + rs.big_pic }
-				// 	]
-				// }
-				// rs.logo_price = {
-				// 	fileList: [
-				// 		{ name: rs.logo, url: "/media-t/file/" + rs.logo }
-				// 	]
-				// }
+
+				rs.delete_status = String(rs.delete_status);
+				rs.publish_status = String(rs.publish_status);
+				rs.new_status = String(rs.new_status);
+				rs.recommand_status = String(rs.recommand_status);
+				rs.sort = String(rs.sort);
+
+
+				
+				// gift_growth: number | string | undefined
+				// gift_point: number | string | undefined
+				// use_point_limit: string | undefined | number
+				// sub_title: string | undefined | number
+				// description: string | undefined | number
+				// original_price: string | undefined | number
+				// stock: string | undefined | number
+				// low_stock: string | undefined | number
+				// unit: string | undefined | number
+				// weight: string | undefined | number
+				// preview_status: string | undefined | number
+				// service_ids: string | undefined | number
+				// keywords: string | undefined | number
+				// note: string | undefined | number
+				// album_pics: string | undefined | number
+
+
+				// promotion_price: number | string | undefined
+				// promotion_start_time: string | undefined | number
+				// promotion_end_time: string | undefined | number
+				// promotion_per_limit: string | undefined | number
+				// promotion_type: string | undefined | number
+
+
+
+				rs.album_pics = {
+					fileList: rs.album_pics?.map((pic: any) => {
+						return { name: pic, url: "/media-t/file/" + pic }
+					}) || []
+				};
+
+				console.log("edit album_pics", rs.album_pics);
+
 				formRef.current?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
@@ -49,27 +80,46 @@ const editForm: FormProps = {
 		merge(sub_title, { fieldProps: { disabled: true } }),
 		merge(name, { fieldProps: { disabled: true } }),
 		merge(brand_name, { fieldProps: { disabled: true } }),
-		merge(product_category_main_name, { fieldProps: { disabled: true } }),
-		product_category_second_name_dependency,
+		merge(product_category_name, { fieldProps: { disabled: true } }),
+		publish_status,
 		merge(product_sn, { fieldProps: { disabled: true } }),
-		delete_status,
+		service_ids,
+		keywords,
+		unit,
 		new_status,
 		recommand_status,
+
+		album_pics,
+
+		promotion_type,
+		promotion_start_time,
+		promotion_end_time,
+		promotion_per_limit,
+
+		low_stock,
 		sort,
+
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
-		// const target: Partial<Brand> = {
-		// 	first_letter: values.first_letter,
-		// 	factory_status: Number(values.factory_status),
-		// 	show_status: Number(values.show_status),
-		// 	logo: values.logo_price?.fileList[0].name || "",
-		// 	big_pic: values.big_pic_copy?.fileList[0].name || "",
-		// 	brand_story: values.brand_story,
-		// 	sort: Number(values.sort),
-		// };
-		// brandStore.update_one(dataObject, target, ["first_letter", "factory_status", "logo", "big_pic", "brand_story", "sort"]).
-		// 	then(() => { notification.success({ message: "保存成功" }); })
-		// 	.catch((e) => notification.error(e))
+		let target: Partial<Product> = {
+			// first_letter: values.first_letter,
+			// factory_status: Number(values.factory_status),
+			// show_status: Number(values.show_status),
+			album_pics: values.album_pics?.fileList?.map((file: { name: any; }) => file.name) || [],
+			// big_pic: values.big_pic_copy?.fileList[0].name || "",
+			// brand_story: values.brand_story,
+			// sort: Number(values.sort),
+		};
+
+
+		console.log("dataObject", dataObject);
+
+		productStore.update_one(dataObject, target, ["album_pics"]).
+			then(() => {
+				notification.success({ message: "保存成功" });
+				history.push(`/product/product`);
+			})
+			.catch((e) => notification.error(e))
 
 		handleClose();
 		return true

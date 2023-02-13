@@ -5,11 +5,9 @@ export class Product extends IObject {
     name: string | undefined
     brand_name: string | undefined
     product_category_name: string | undefined
-    product_category_main_name: string | undefined
-    product_category_second_name: string | undefined
 
     product_sn: string | undefined
-    product_price_sn: number | undefined
+    product_price_sn: string | undefined
 
     delete_status: number | string | undefined
     publish_status: number | string | undefined
@@ -34,27 +32,29 @@ export class Product extends IObject {
     service_ids: string | undefined | number
     keywords: string | undefined | number
     note: string | undefined | number
-    album_pics: string | undefined | number
-    detail_title: string | undefined | number
-    detail_desc: string | undefined | number
-    detail_html: string | undefined | number
-    detail_mobile_html: string | undefined | number
+    album_pics: string[] | any | undefined
+
     promotion_start_time: string | undefined | number
     promotion_end_time: string | undefined | number
     promotion_per_limit: string | undefined | number
     promotion_type: string | undefined | number
 
+    pic: object | undefined
 
     constructor(data: Product) {
         super(data);
         Object.assign(this, data);
-        this.product_category_name = [this.product_category_main_name, this.product_category_second_name].join("|")
         this.delete_status = String(this.delete_status);
         this.publish_status = String(this.publish_status);
         this.new_status = String(this.new_status);
         this.recommand_status = String(this.recommand_status);
         this.verify_status = String(this.verify_status);
         this.sort = String(this.sort);
+        this.pic = this.album_pics && this.album_pics?.length > 0 ? {
+            fileList: [{
+                url: '/media-t/file/' + this.album_pics[0], name: this.album_pics[0]
+            }]
+        } : {};
     }
 }
 
