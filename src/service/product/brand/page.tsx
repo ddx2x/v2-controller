@@ -146,7 +146,7 @@ const brandStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onNext: (params: any) => {
+  onRequest: (params: any) => {
     const query = merge(params, { sort: { _id: 1, sort: 1 } });
     brandStore.next(query);
   },

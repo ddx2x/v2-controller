@@ -26,7 +26,7 @@ export type ListProps = ProListProps & {
   // 表格高度
   scrollHeight?: string | number;
   // 虚拟滚动 加载数据
-  onNext?: (
+  onRequest?: (
     params?: any,
     sort?: any,
     filter?: any,
@@ -60,7 +60,7 @@ export const List: React.FC<ListProps> = (props) => {
     location,
     onMount,
     unMount,
-    onNext,
+    onRequest,
     useBatchDelete,
     batchDelete,
     toolBarRender,
@@ -112,7 +112,7 @@ export const List: React.FC<ListProps> = (props) => {
     const { pageSize: size, current: current, ...more } = params;
     const order = sort;
     const page = current - 1;
-    onNext && onNext({ limit: { size, page }, filter: { ...more } }, order, filter, null, actionRef);
+    onRequest && onRequest({ limit: { size, page }, filter: { ...more } }, order, filter, null, actionRef);
     return { success: true };
   }
 

@@ -202,7 +202,7 @@ const productStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onNext: (params) => {
+  onRequest: (params) => {
     const query = merge(params, { sort: { version: 1 } });
     productStore.next(query);
   },

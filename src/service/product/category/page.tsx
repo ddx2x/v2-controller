@@ -204,7 +204,7 @@ const categoryStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onNext: (params) => {
+  onRequest: (params) => {
     const query = merge(params, { filter: { level: 1 }, sort: { version: 1 } });
     categoryStore.next(query);
   },
