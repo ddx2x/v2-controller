@@ -1,6 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
+import { merge } from 'lodash';
 import { parse } from 'querystring';
 import { productAttributeStore } from '../../api/productAttribute.store';
 
@@ -80,7 +81,6 @@ const attributeStoretable: StoreTableProps = {
         kind: 'link',
         title: '新增',
         link: `/product/category/attribute/add?id=` + query.category_id,
-
       },
     ]
   },
@@ -103,23 +103,19 @@ const attributeStoretable: StoreTableProps = {
       title: '删除',
       text: `确认删除` + record.name,
     },
-
-
   ],
-  onRowEvent: [
-    {
-      mouseEvent: 'onDoubleClick',
-      title: '详情',
-    },
-  ],
+  // onRowEvent: [
+  //   {
+  //     mouseEvent: 'onDoubleClick',
+  //     title: '详情',
+  //   },
+  // ],
   onRequest: (params: any, sort, filter, location) => {
-    let data = location?.search.split('?')[1] || '';
-    let query = parse(data);
-    productAttributeStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { brand_name: 1 },
-      filter: query,
-    });
+    const query = merge(params,
+      { sort: { brand_name: 1 } },
+      { filter: parse(location?.search.split('?')[1] || '') },
+    );
+    productAttributeStore.next(query);
   }
 };
 

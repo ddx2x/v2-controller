@@ -19,7 +19,7 @@ const productStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'pic',
+      dataIndex: 'album_pics',
       title: '商品图',
       hideInSearch: true,
       valueType: 'imageUpload',
@@ -53,24 +53,18 @@ const productStoreTable: StoreTableProps = {
       title: '上架状态',
       valueType: 'switch',
       hideInSearch: true,
-    },
-    {
-      dataIndex: 'delete_status',
-      title: '删除状态',
-      hideInSearch: true,
-      editable: false,
-      valueType: 'radio',
       valueEnum: {
-        0: { text: "是", status: "Error" },
-        1: { text: "否", status: "Success" }
+        0: false,
+        1: true,
       }
     },
+
     {
       dataIndex: 'new_status',
       title: '新品状态',
       hideInSearch: true,
       editable: false,
-      valueType: "select",
+      valueType: 'select',
       valueEnum: {
         0: { text: "否", status: "Error" },
         1: { text: "是", status: "Success" }
@@ -88,15 +82,16 @@ const productStoreTable: StoreTableProps = {
         1: { text: "是", status: "Success" }
       }
     },
+
     {
-      dataIndex: 'verify_status',
-      title: '审核状态',
+      dataIndex: 'delete_status',
+      title: '删除状态',
       hideInSearch: true,
       editable: false,
-      valueType: "select",
+      valueType: 'radio',
       valueEnum: {
-        0: { text: "否", status: "Error" },
-        1: { text: "是", status: "Success" }
+        0: { text: "否", status: 'Success' },
+        1: { text: "是", status: 'Error' },
       }
     },
 
@@ -176,12 +171,20 @@ const productStoreTable: StoreTableProps = {
       kind: 'descriptions',
       title: '详情',
       dataSource: record,
+      collapse: true,
       ...detail
     },
     {
       kind: 'link',
       title: '编辑',
+      collapse: true,
       link: '/product/product/edit?id=' + record.uid
+    },
+    {
+      kind: 'link',
+      title: '存货',
+      link: '/product/product/sku?product_id=' + record.uid,
+      collapse: true,
     },
     {
       kind: 'confirm',
@@ -194,6 +197,7 @@ const productStoreTable: StoreTableProps = {
         })
       },
       text: `确认删除` + record.name,
+      collapse: true,
     },
   ],
   onRowEvent: [

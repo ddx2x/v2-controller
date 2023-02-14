@@ -37,7 +37,9 @@ export class Product extends IObject {
     promotion_start_time: string | undefined | number
     promotion_end_time: string | undefined | number
     promotion_per_limit: string | undefined | number
-    promotion_type: string | undefined | number
+    promotion_type: string[] | number[] | undefined
+
+    details: string | undefined
 
     pic: object | undefined
 
@@ -50,7 +52,7 @@ export class Product extends IObject {
         this.recommand_status = String(this.recommand_status);
         this.verify_status = String(this.verify_status);
         this.sort = String(this.sort);
-        this.pic = this.album_pics && this.album_pics?.length > 0 ? {
+        this.album_pics = this.album_pics && this.album_pics?.length > 0 ? {
             fileList: [{
                 url: '/media-t/file/' + this.album_pics[0], name: this.album_pics[0]
             }]

@@ -46,6 +46,13 @@ export default [
             parentKeys: ['/product/product'],
             hideInMenu: true,
           },
+          {
+            name: '单品存量',
+            path: '/product/product/sku',
+            component: './dynamic-view',
+            parentKeys: ['/product/product'],
+            hideInMenu: true,
+          },
         ],
       },
       {

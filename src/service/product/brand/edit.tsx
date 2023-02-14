@@ -9,8 +9,8 @@ import {
 	sort
 } from './columns';
 
-let editName = name
-editName.fieldProps ? editName.fieldProps['disabled'] = false : null;
+let editName: any = name
+editName.fieldProps ? editName.fieldProps['disabled'] = true : null;
 
 
 // kind: form

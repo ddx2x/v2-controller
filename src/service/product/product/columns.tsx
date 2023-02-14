@@ -164,8 +164,8 @@ export const delete_status: FormColumnsType = {
   valueType: 'radioButton',
   initialValue: "0",
   valueEnum: {
-    0: { text: "未删除", status: 'Success' },
-    1: { text: "已删除", status: 'Error' },
+    0: { text: "否", status: 'Success' },
+    1: { text: "是", status: 'Error' },
   },
   formItemProps: {
     rules: [
@@ -210,7 +210,7 @@ export const sort: FormColumnsType = {
   dataIndex: 'sort',
   title: '排序',
   valueType: 'digit',
-  initialValue: "1",
+  initialValue: 1,
   fieldProps: {
     min: 1,
     max: 99,
@@ -374,7 +374,7 @@ export const low_stock: FormColumnsType = {
   dataIndex: 'low_stock',
   title: '库存预警值',
   valueType: 'digit',
-  tooltip: "默认不限制",
+  tooltip: "默认0为不限制",
   initialValue: 0,
 }
 
@@ -396,4 +396,16 @@ export const publish_status: FormColumnsType = {
     0: "下架",
     1: "上架",
   }
+}
+
+export const details: FormColumnsType = {
+  dataIndex: 'details',
+  title: '商品详情',
+  valueType: 'quill'
+}
+
+export const default_test: FormColumnsType = {
+  // dataIndex: 'grid',
+  // valueType: 'card',
+  // title: 'ABC'
 }

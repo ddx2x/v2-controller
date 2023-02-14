@@ -2,6 +2,7 @@ import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
+import { cloneDeep } from 'lodash';
 import { Brand, brandStore } from '../../api/productBrand.store';
 import {
 	big_pic, brand_story, factory_status, first_letter, logo, name, show_status,
@@ -19,7 +20,7 @@ const form: FormProps = {
 	layoutType: 'Form',
 	shouldUpdate: false,
 	columns: [
-		name,
+		cloneDeep(name),
 		first_letter,
 		factory_status,
 		show_status,
@@ -35,7 +36,7 @@ const form: FormProps = {
 			sort: Number(values.sort),
 			factory_status: Number(values.factory_status),
 			show_status: Number(values.show_status),
-			logo: values.logo,
+			logo: values.logo?.fileList[0].name || "",
 			big_pic: values.big_pic,
 			brand_story: values.brand_story,
 		};

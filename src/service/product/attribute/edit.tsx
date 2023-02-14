@@ -1,5 +1,6 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { parse } from 'querystring';
 import { ProductAttribute, productAttributeApi, productAttributeStore } from '../../api/productAttribute.store';
@@ -280,7 +281,10 @@ const editForm: FormProps = {
 		};
 
 		productAttributeStore.api.update(item, dataObject.uid).
-			then(() => { notification.success({ message: "保存成功" }); })
+			then((rs) => {
+				notification.success({ message: "保存成功" });
+				history.push(`/product/category/attribute?category_id=` + rs.category_id);;
+			})
 			.catch((e) => notification.error(e))
 
 		handleClose();

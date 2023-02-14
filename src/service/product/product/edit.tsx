@@ -8,6 +8,7 @@ import { parse } from 'querystring';
 import {
 	album_pics,
 	brand_name,
+	details,
 	keywords, low_stock, name, new_status, product_category_name,
 	product_sn, promotion_end_time, promotion_per_limit, promotion_start_time, promotion_type, publish_status, recommand_status,
 	service_ids,
@@ -31,9 +32,10 @@ const editForm: FormProps = {
 				rs.new_status = String(rs.new_status);
 				rs.recommand_status = String(rs.recommand_status);
 				rs.sort = String(rs.sort);
+				rs.promotion_type = rs.promotion_type?.map((item: any) => String(item));
 
 
-				
+
 				// gift_growth: number | string | undefined
 				// gift_point: number | string | undefined
 				// use_point_limit: string | undefined | number
@@ -57,16 +59,6 @@ const editForm: FormProps = {
 				// promotion_per_limit: string | undefined | number
 				// promotion_type: string | undefined | number
 
-
-
-				rs.album_pics = {
-					fileList: rs.album_pics?.map((pic: any) => {
-						return { name: pic, url: "/media-t/file/" + pic }
-					}) || []
-				};
-
-				console.log("edit album_pics", rs.album_pics);
-
 				formRef.current?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
@@ -89,8 +81,6 @@ const editForm: FormProps = {
 		new_status,
 		recommand_status,
 
-		album_pics,
-
 		promotion_type,
 		promotion_start_time,
 		promotion_end_time,
@@ -98,6 +88,10 @@ const editForm: FormProps = {
 
 		low_stock,
 		sort,
+
+		album_pics,
+		details,
+
 
 	],
 	onSubmit: (formRef, values, dataObject, handleClose) => {
@@ -108,13 +102,25 @@ const editForm: FormProps = {
 			album_pics: values.album_pics?.fileList?.map((file: { name: any; }) => file.name) || [],
 			// big_pic: values.big_pic_copy?.fileList[0].name || "",
 			// brand_story: values.brand_story,
-			// sort: Number(values.sort),
+
+			low_stock: values.low_stock,
+			promotion_type: values.promotion_type?.map((item: any) => String(item)),
+			promotion_per_limit: values.promotion_per_limit,
+			promotion_start_time: values.promotion_start_time,
+			promotion_end_time: values.promotion_end_time,
+
+			details: values.details,
+			keywords: values.keywords,
+			unit: values.unit,
+			sort: Number(values.sort),
 		};
 
-
-		console.log("dataObject", dataObject);
-
-		productStore.update_one(dataObject, target, ["album_pics"]).
+		productStore.update_one(dataObject, target, ["album_pics", "details", "promotion_type",
+			"promotion_per_limit", "promotion_start_time", "promotion_end_time",
+			"low_stock",
+			"keywords",
+			"unit"
+		]).
 			then(() => {
 				notification.success({ message: "保存成功" });
 				history.push(`/product/product`);
