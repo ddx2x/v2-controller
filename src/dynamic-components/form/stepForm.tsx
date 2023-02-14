@@ -6,21 +6,31 @@ import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, useContext, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
-  onMount?: (location: Location | undefined, form: ProFormInstance | undefined, setDataObject: Dispatch<any>) => void;
-  unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
+  onMount?: (params: {
+    location: Location | undefined,
+    form: ProFormInstance | undefined,
+    setDataObject: Dispatch<any>,
+    columns: FormSchema['columns'],
+    setColumns: Dispatch<FormSchema['columns']>
+  }) => void;
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
   triggerText?: string;
   buttonType?: ButtonType;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, dataObject: any, handleClose: () => void) => boolean;
+  onSubmit?: (params: {
+    formRef: React.MutableRefObject<ProFormInstance | undefined>,
+    values: any,
+    dataObject: any,
+    handleClose: () => void
+  }) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 }
@@ -28,7 +38,7 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
 export const StepForm: React.FC<StepFormProps> = (props) => {
   const {
     onMount,
-    unMount,
+    columns,
     title,
     modal,
     triggerText,
@@ -42,16 +52,13 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
 
   const location = useLocation()
   const formRef = useRef<ProFormInstance>();
+  const [_columns, setColumns] = useState<FormSchema['columns']>(columns)
   const [dataObject, setDataObject] = useState([])
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleShow = () => { setIsModalOpen(true) };
   const handleClose = () => { setIsModalOpen(false) };
-
-  useEffect(() => {
-    return () => formRef && unMount && unMount(location, formRef);
-  }, []);
 
   const triggerDom = () => {
     return (
@@ -114,15 +121,18 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         <BetaSchemaForm
           // @ts-ignore
           formRef={formRef}
-          onInit={(values, form) => onMount && onMount(location, form, setDataObject)}
+          // @ts-ignore
+          columns={_columns}
+          onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
           layoutType="StepsForm"
           onFinish={async (values) => {
             if (!onSubmit) return false;
             await waitTime(submitTimeout);
-            return onSubmit(formRef, values, dataObject, handleClose);
+            return onSubmit({ formRef, values, dataObject, handleClose });
           }}
+          isKeyPressSubmit={true}
           {...rest}
         />
       </ProProvider.Provider>

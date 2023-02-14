@@ -19,14 +19,20 @@ export declare type FormRef = {
 };
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
-  onMount?: (location: Location | undefined, form: ProFormInstance<any> | undefined, setDataObject: Dispatch<any>) => void;
+  onMount?: (params: {
+    location: Location | undefined,
+    form: ProFormInstance<any>,
+    setDataObject: Dispatch<any>,
+    columns: FormSchema['columns'],
+    setColumns: Dispatch<FormSchema['columns']>
+  }) => void;
   trigger?: () => void;
   layoutType?: FormSchema['layoutType'];
   triggerText?: string;
   buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any, handleClose: () => void) => boolean;
+  onSubmit?: (params: { formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any, handleClose: () => void }) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 }
@@ -34,6 +40,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
 export const Form = forwardRef((props: FormProps, forwardRef) => {
   const {
     onMount,
+    columns,
     triggerText,
     buttonType,
     buttonSize,
@@ -44,12 +51,12 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
     ...rest
   } = props;
 
-
   const location = useLocation()
   const formRef = useRef<ProFormInstance>();
   const [dataObject, setDataObject] = useState({})
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [_columns, setColumns] = useState<FormSchema['columns']>(columns)
   const handleShow = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
 
@@ -100,7 +107,9 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       }}
     >
       <BetaSchemaForm
-        onInit={(values, form) => onMount && onMount(location, form, setDataObject)}
+        onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
+        // @ts-ignore
+        columns={_columns}
         // @ts-ignore
         formRef={formRef}
         // @ts-ignore
@@ -113,10 +122,12 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
         autoFocusFirstInput
         onFinish={async (values) => {
           if (!onSubmit) return false;
-          const b = onSubmit(formRef, values, dataObject, handleClose);
+          const b = onSubmit({ formRef, values, dataObject, handleClose });
           await waitTime(submitTimeout);
           return b;
         }}
+        isKeyPressSubmit={true}
+        // omitNil={true}
         {...rest}
       />
     </ProProvider.Provider>

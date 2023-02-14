@@ -6,9 +6,7 @@ import { notification } from 'antd';
 import { cloneDeep } from 'lodash';
 import {
 	album_pics,
-	brand_name,
-	default_test,
-	details,
+	brand_name, details,
 	keywords,
 	name, new_status, product_category_name,
 	product_sn, promotion_end_time, promotion_per_limit, promotion_start_time, promotion_type,
@@ -21,9 +19,6 @@ import {
 
 // kind: form
 const addForm: FormProps = {
-	onMount: (location, form, setDataObject) => {
-		form?.resetFields();
-	},
 	layoutType: 'Form',
 	columns: [
 		cloneDeep(product_category_name),
@@ -32,7 +27,6 @@ const addForm: FormProps = {
 		cloneDeep(name),
 		cloneDeep(brand_name),
 		cloneDeep(product_sn),
-		default_test,
 		new_status,
 		recommand_status,
 
@@ -46,13 +40,12 @@ const addForm: FormProps = {
 		promotion_start_time,
 		promotion_end_time,
 		promotion_per_limit,
-		default_test,
 
 
 		album_pics,
 		details,
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ values, handleClose }) => {
 		let target: Partial<Product> = {
 			...values,
 		};

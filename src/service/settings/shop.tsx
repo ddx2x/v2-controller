@@ -151,7 +151,7 @@ let address: FormColumnsType = {
 
 // kind: form
 const defaultFrom: FormProps = {
-	onMount: (location, form, setDataObject) => {
+	onMount: ({ form, setDataObject }) => {
 		form?.resetFields();
 		shopStore.get().then(rs => {
 			setDataObject(rs)
@@ -179,8 +179,7 @@ const defaultFrom: FormProps = {
 		address,
 
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
-
+	onSubmit: ({ formRef, values, dataObject, handleClose }) => {
 		const target: Partial<Shop> = {
 			name: values.name,
 			mode: Number(values.mode),

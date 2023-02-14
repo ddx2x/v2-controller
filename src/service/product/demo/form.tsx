@@ -145,7 +145,7 @@ export declare type Query = {
 };
 
 const singleEditView: StepFormProps = {
-	onMount: (location, form) => {
+	onMount: ({ location, form }) => {
 		let data = location?.search.split('?')[1] || '';
 		let query: Query = parse(data);
 		commodityApi.get(query.name).then((item: Commodity) => {
@@ -201,7 +201,7 @@ pageManager.register('commdity.list.aggregate_edit', {
 
 // kind: stepForm
 const aggregateAddStepForm: StepFormProps = {
-	onMount: (location, form) => {
+	onMount: ({ location, form }) => {
 		form?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
 	shouldUpdate: false,
@@ -234,7 +234,7 @@ const aggregateAddStepForm: StepFormProps = {
 		],
 		[],
 	],
-	onSubmit: (formRef, values, handleClose) => {
+	onSubmit: ({ formRef, values, handleClose }) => {
 		console.log('values', values);
 		handleClose();
 		return true
@@ -243,7 +243,7 @@ const aggregateAddStepForm: StepFormProps = {
 
 // kind: form
 const aggregateAddStepForm2: FormProps = {
-	onMount: (location, form) => {
+	onMount: ({ location, form }) => {
 		form?.resetFields();
 		form?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
@@ -254,7 +254,7 @@ const aggregateAddStepForm2: FormProps = {
 		commodityType,
 		bMap
 	],
-	onSubmit: (formRef, values, handleClose) => {
+	onSubmit: ({ formRef, values, handleClose }) => {
 		handleClose();
 		return true
 	}

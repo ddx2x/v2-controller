@@ -15,7 +15,7 @@ editName.fieldProps ? editName.fieldProps['disabled'] = true : null;
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, form, setDataObject) => {
+	onMount: ({ location, form, setDataObject }) => {
 		form?.resetFields();
 		if (location === undefined) return;
 		const query: any = parse(location?.search.split('?')[1] || '');
@@ -44,7 +44,7 @@ const editForm: FormProps = {
 		big_pic,
 		brand_story,
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ formRef, values, dataObject, handleClose }) => {
 		const target: Partial<Brand> = {
 			first_letter: values.first_letter,
 			factory_status: Number(values.factory_status),

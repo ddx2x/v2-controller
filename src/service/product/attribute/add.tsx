@@ -231,7 +231,7 @@ declare type Query = {
 
 // kind: form
 const addForm: FormProps = {
-	onMount: (location, form) => {
+	onMount: ({ location, form }) => {
 		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
@@ -252,7 +252,7 @@ const addForm: FormProps = {
 		related_status,
 		hand_add_status,
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ formRef, values, handleClose }) => {
 		let item: Partial<ProductAttribute> = {
 			name: values.name,
 			category_id: values.category_id,

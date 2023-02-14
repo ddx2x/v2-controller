@@ -19,7 +19,7 @@ import {
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, form, setDataObject) => {
+	onMount: ({ location, form, setDataObject }) => {
 		form?.resetFields();
 		if (location === undefined) return;
 		const query: any = parse(location?.search.split('?')[1] || '');
@@ -91,7 +91,7 @@ const editForm: FormProps = {
 
 
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ values, dataObject, handleClose }) => {
 		let target: Partial<Product> = {
 			// first_letter: values.first_letter,
 			// factory_status: Number(values.factory_status),
