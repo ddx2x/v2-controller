@@ -168,14 +168,11 @@ declare type Query = {
 
 // kind: form
 const addForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
-		formRef.current?.setFieldsValue({ "category_id": query.id });
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+		form?.setFieldsValue({ "category_id": query.id });
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -208,6 +205,7 @@ const addForm: FormProps = {
 		categoryApi.create(undefined, item).
 			then(() => {
 				notification.success({ message: "保存成功" });
+				formRef.current?.resetFields();
 				// 跳转至数据编辑页
 				history.push(`/product/category`)
 			})

@@ -11,11 +11,8 @@ import {
 
 // kind: form
 const form: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -44,6 +41,7 @@ const form: FormProps = {
 		brandStore.api.create(undefined, item).
 			then(() => {
 				notification.success({ message: "保存成功" });
+				formRef.current?.resetFields();
 				// history.push(`/product/brand/edit?id=` + values.uid);
 				history.push(`/product/brand`);
 			})

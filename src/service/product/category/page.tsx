@@ -66,7 +66,7 @@ const categoryStoreTable: StoreTableProps = {
   store: categoryStore,
   rowKey: 'uid',
   search: false,
-  pageSize: 10,
+  defaultPageSize: 10,
   columns: columns,
   expand: {
     kind: 'table',

@@ -3,6 +3,7 @@ import {
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
+import { useLocation } from '@umijs/max';
 import { Pagination, Space } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
@@ -11,7 +12,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
-import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
@@ -42,7 +42,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
     mouseEvent: 'onClick' | 'onDoubleClick';
     title: string; // 按钮
   }[];
-} & RouterHistory;
+};
 
 export const Table: React.FC<TableProps> = (props) => {
   let {
@@ -57,8 +57,6 @@ export const Table: React.FC<TableProps> = (props) => {
     useSiderTree,
     // 表格编辑
     editableValuesChange,
-    // 挂载
-    location,
     // 展开
     isExpandNode,
     expand,
@@ -81,6 +79,7 @@ export const Table: React.FC<TableProps> = (props) => {
 
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
+  const location = useLocation();
 
   // 挂载 鼠标事件
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -157,7 +156,7 @@ export const Table: React.FC<TableProps> = (props) => {
     const footerExtra = () => {
       return (
         <Space size={6}>
-          
+
         </Space>
       )
     }
@@ -246,9 +245,9 @@ export const Table: React.FC<TableProps> = (props) => {
       },
     });
 
-    // 绑定点击事件 单击 双击
+    // @ts-ignore 绑定点击事件 单击 双击
     rest['onRow'] = (_: any, index: number) => {
-      let events = {};
+      let events: any = {};
       onRowEvent &&
         onRowEvent.forEach((e) => {
           events[e.mouseEvent] = () => {

@@ -227,8 +227,8 @@ declare type Query = {
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
 
@@ -243,12 +243,9 @@ const editForm: FormProps = {
 				rs.related_status = String(rs.related_status);
 				rs.hand_add_status = String(rs.hand_add_status);
 				rs.type = String(rs.type);
-				formRef.current?.setFieldsValue(rs);
+				form?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -283,7 +280,9 @@ const editForm: FormProps = {
 		productAttributeStore.api.update(item, dataObject.uid).
 			then((rs) => {
 				notification.success({ message: "保存成功" });
-				history.push(`/product/category/attribute?category_id=` + rs.category_id);;
+				formRef.current?.resetFields();
+				history.push(`/product/category/attribute?category_id=` + rs.category_id);
+
 			})
 			.catch((e) => notification.error(e))
 

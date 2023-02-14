@@ -9,8 +9,9 @@ import { detail } from './detail';
 const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
-  pageSize: 5,
+  defaultPageSize: 5,
   search: false,
+  size: 'small',
   columns: [
     {
       dataIndex: 'logo',

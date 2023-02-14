@@ -154,18 +154,15 @@ declare type Query = {
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
 		categoryApi.get(query.id).then((rs) => {
 			rs.nav_status = String(rs.nav_status);
 			rs.show_status = String(rs.show_status);
-			formRef.current?.setFieldsValue(rs);
+			form?.setFieldsValue(rs);
 		})
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -190,7 +187,7 @@ const editForm: FormProps = {
 		};
 
 		categoryStore.update_one(src, target, ["nav_status", "show_status", "sort", "keywords", "description"]).
-			then(() => { message.success("保存成功"); })
+			then(() => { message.success("保存成功"); formRef.current?.resetFields(); })
 			.catch((e) => message.error(e))
 
 		handleClose();

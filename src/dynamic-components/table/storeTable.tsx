@@ -5,7 +5,7 @@ import { Table, TableProps } from './table'
 
 export declare type StoreTableProps = TableProps & {
   store?: ObjectStore<any>
-  pageSize?: number;
+  defaultPageSize?: number;
   onRequest?: (
     params?: any,
     sort?: any,
@@ -16,14 +16,14 @@ export declare type StoreTableProps = TableProps & {
 }
 
 export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
-  const { store, pageSize, onRequest, ...rest } = props;
+  const { store, defaultPageSize, onRequest, ...rest } = props;
   return (
     <Table
       value={store?.items || []}
       loading={store?.loading || false}
       pagination={{
         total: store?.count,
-        defaultPageSize: pageSize || 10,
+        defaultPageSize: defaultPageSize || 10,
         showQuickJumper: true,
         showLessItems: true,
         showPrevNextJumpers: true,

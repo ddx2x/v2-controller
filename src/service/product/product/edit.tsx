@@ -19,8 +19,8 @@ import {
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: any = parse(location?.search.split('?')[1] || '');
 		productApi.get(query.id).
@@ -59,12 +59,9 @@ const editForm: FormProps = {
 				// promotion_per_limit: string | undefined | number
 				// promotion_type: string | undefined | number
 
-				formRef.current?.setFieldsValue(rs);
+				form?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,

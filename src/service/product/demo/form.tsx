@@ -145,21 +145,17 @@ export declare type Query = {
 };
 
 const singleEditView: StepFormProps = {
-	onMount: (location, formRef) => {
-		console.log('location?.search', location?.search, formRef);
+	onMount: (location, form) => {
 		let data = location?.search.split('?')[1] || '';
 		let query: Query = parse(data);
 		commodityApi.get(query.name).then((item: Commodity) => {
 			if (location?.search) {
-				formRef.current?.setFieldsValue({
+				form?.setFieldsValue({
 					name: item.name,
 					types: item.type,
 				});
 			}
 		})
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
 	},
 	steps: singleSteps,
 	columns: [
@@ -205,11 +201,8 @@ pageManager.register('commdity.list.aggregate_edit', {
 
 // kind: stepForm
 const aggregateAddStepForm: StepFormProps = {
-	onMount: (location, formRef) => {
-		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+	onMount: (location, form) => {
+		form?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
 	shouldUpdate: false,
 	steps: aggregateSteps,
@@ -250,12 +243,9 @@ const aggregateAddStepForm: StepFormProps = {
 
 // kind: form
 const aggregateAddStepForm2: FormProps = {
-	onMount: (location, formRef) => {
-		formRef.current?.resetFields();
-		formRef.current?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+	onMount: (location, form) => {
+		form?.resetFields();
+		form?.setFieldsValue({ 'name': '广州市天河区时代E-PARK', 'map': '广州市天河区时代E-PARK' })
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
