@@ -137,7 +137,7 @@ const brandStoreTable: StoreTableProps = {
             notification.error(e)
           })
       },
-      text: `确认删除` + record.name,
+      text: `确认删除` + record.uid,
     },
   ],
   onRowEvent: [
