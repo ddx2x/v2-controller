@@ -1,3 +1,4 @@
+import { randomKey } from '@/dynamic-components/helper';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Image, Modal, Upload } from 'antd';
@@ -57,7 +58,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   if (mode == 'read') {
     return (
       <Image.PreviewGroup>
-        {fileList?.map((item: any) => <Image width={60} src={item.url} />)}
+        {fileList?.map((item: any) => <Image key={randomKey(5)} width={60} src={item.url} />)}
       </Image.PreviewGroup>
     )
   }
