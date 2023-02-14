@@ -154,7 +154,7 @@ declare type Query = {
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, form, setDataObject) => {
+	onMount: ({ location, form }) => {
 		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
@@ -176,7 +176,7 @@ const editForm: FormProps = {
 		keywords,
 		description,
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ formRef, values, dataObject, handleClose }) => {
 		const src: Category = dataObject;
 		const target: Partial<Category> = {
 			nav_status: Number(values.nav_status),

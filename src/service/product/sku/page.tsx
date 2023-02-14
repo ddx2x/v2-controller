@@ -62,6 +62,21 @@ const table: StoreTableProps = {
       columns: [],
       triggerText: '生成单品存量',
       title: '生成单品存量',
+      onMount({ form, setColumns }) {
+        setTimeout(() =>
+          setColumns([{
+            dataIndex: 'stock',
+            title: '库存',
+            hideInSearch: true,
+            editable: false,
+          },
+          {
+            dataIndex: 'low_stock',
+            title: '库存预警',
+          }
+          ]), 200)
+        form.setFieldsValue({ stock: 1, low_stock: 2 })
+      },
       onClick: () => {
         // stockKeepingUnitStore.remove(record.uid).then(() => {
         notification.info({ message: "生成成功" + location })

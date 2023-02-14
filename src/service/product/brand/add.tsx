@@ -11,7 +11,7 @@ import {
 
 // kind: form
 const form: FormProps = {
-	onMount: (location, form, setDataObject) => {
+	onMount: ({ form }) => {
 		form?.resetFields();
 	},
 	layoutType: 'Form',
@@ -26,7 +26,7 @@ const form: FormProps = {
 		logo,
 		brand_story,
 	],
-	onSubmit: (formRef, values, dataObject, handleClose) => {
+	onSubmit: ({ formRef, values, handleClose }) => {
 		let item: Partial<Brand> = {
 			uid: values.uid,
 			first_letter: values.first_letter,
