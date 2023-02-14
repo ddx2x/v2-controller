@@ -231,14 +231,11 @@ declare type Query = {
 
 // kind: form
 const addForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: Query = parse(location?.search.split('?')[1] || '');
-		formRef.current?.setFieldsValue({ "category_id": query.id });
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+		form?.setFieldsValue({ "category_id": query.id });
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -273,6 +270,7 @@ const addForm: FormProps = {
 		productAttributeStore.api.create(undefined, item).
 			then((rs) => {
 				notification.success({ message: "保存成功" });
+				formRef.current?.resetFields();
 				history.push(`/product/category/attribute?category_id=` + rs.category_id);
 			})
 			.catch((e) => notification.error(e))

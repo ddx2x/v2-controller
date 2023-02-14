@@ -11,6 +11,7 @@ const productStoreTable: StoreTableProps = {
   rowKey: 'uid',
   search: false,
   store: productStore,
+  size: 'small',
   columns: [
     {
       dataIndex: 'uid',

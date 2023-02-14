@@ -21,16 +21,13 @@ import {
 
 // kind: form
 const addForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 	},
 	layoutType: 'Form',
 	columns: [
 		cloneDeep(product_category_name),
-		
+
 		cloneDeep(sub_title),
 		cloneDeep(name),
 		cloneDeep(brand_name),
@@ -38,7 +35,7 @@ const addForm: FormProps = {
 		default_test,
 		new_status,
 		recommand_status,
-		
+
 
 		service_ids,
 		keywords,
@@ -49,7 +46,7 @@ const addForm: FormProps = {
 		promotion_start_time,
 		promotion_end_time,
 		promotion_per_limit,
-		default_test,	
+		default_test,
 
 
 		album_pics,

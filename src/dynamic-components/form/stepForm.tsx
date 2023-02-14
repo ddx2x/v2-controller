@@ -1,20 +1,19 @@
 import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
+import { useLocation } from '@umijs/max';
 import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import { delay } from 'lodash';
 import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
 import { waitTime } from '../helper/wait';
-import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
-  onMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>, setDataObject: Dispatch<any>) => void;
+  onMount?: (location: Location | undefined, form: ProFormInstance | undefined, setDataObject: Dispatch<any>) => void;
   unMount?: (location: Location | undefined, formRef: React.MutableRefObject<ProFormInstance | undefined>) => void;
   modal?: 'Modal' | 'Drawer' | 'Form';
   width?: string | number;
@@ -24,11 +23,10 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   onSubmit?: (formRef: React.MutableRefObject<ProFormInstance | undefined>, values: any, dataObject: any, handleClose: () => void) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
-} & RouterHistory;
+}
 
 export const StepForm: React.FC<StepFormProps> = (props) => {
   const {
-    location,
     onMount,
     unMount,
     title,
@@ -42,17 +40,16 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     ...rest
   } = props;
 
-  const [dataObject, setDataObject] = useState([])
+  const location = useLocation()
   const formRef = useRef<ProFormInstance>();
-  const init = () => {
-    delay(() => formRef && onMount && onMount(location, formRef, setDataObject), 10);
-  }
+  const [dataObject, setDataObject] = useState([])
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleShow = () => { setIsModalOpen(true); init() };
+  const handleShow = () => { setIsModalOpen(true) };
   const handleClose = () => { setIsModalOpen(false) };
 
   useEffect(() => {
-    modal == 'Form' && init()
     return () => formRef && unMount && unMount(location, formRef);
   }, []);
 
@@ -117,6 +114,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         <BetaSchemaForm
           // @ts-ignore
           formRef={formRef}
+          onInit={(values, form) => onMount && onMount(location, form, setDataObject)}
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
           layoutType="StepsForm"

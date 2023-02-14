@@ -70,7 +70,7 @@ const roleStoreTable: StoreTableProps = {
       sort: { version: 1 },
       ...params,
     }),
-  pageSize: 10,
+  defaultPageSize: 10,
 };
 
 pageManager.register('privilege.role', {

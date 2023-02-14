@@ -15,8 +15,8 @@ editName.fieldProps ? editName.fieldProps['disabled'] = true : null;
 
 // kind: form
 const editForm: FormProps = {
-	onMount: (location, formRef, setDataObject) => {
-		formRef.current?.resetFields();
+	onMount: (location, form, setDataObject) => {
+		form?.resetFields();
 		if (location === undefined) return;
 		const query: any = parse(location?.search.split('?')[1] || '');
 		brandApi.get(query.id).
@@ -28,12 +28,9 @@ const editForm: FormProps = {
 				rs.factory_status = String(rs.factory_status || 0);
 				rs.show_status = String(rs.show_status);
 				rs.brand_story = rs.brand_story;
-				formRef.current?.setFieldsValue(rs);
+				form?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
-	},
-	unMount: (location, formRef) => {
-		formRef.current?.resetFields();
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -58,7 +55,7 @@ const editForm: FormProps = {
 			sort: Number(values.sort),
 		};
 		brandStore.update_one(dataObject, target, ["first_letter", "factory_status", "logo", "big_pic", "brand_story", "sort"]).
-			then(() => { notification.success({ message: "保存成功" }); })
+			then(() => { notification.success({ message: "保存成功" }); formRef.current?.resetFields(); })
 			.catch((e) => notification.error(e))
 
 		handleClose();

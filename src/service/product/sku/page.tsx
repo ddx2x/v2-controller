@@ -62,9 +62,6 @@ const table: StoreTableProps = {
       columns: [],
       triggerText: '生成单品存量',
       title: '生成单品存量',
-      onMount: (location, formRef) => {
-        // formRef.current.([""])
-      },
       onClick: () => {
         // stockKeepingUnitStore.remove(record.uid).then(() => {
         notification.info({ message: "生成成功" + location })
@@ -72,7 +69,6 @@ const table: StoreTableProps = {
         //   notification.error(e)
         // })
       },
-      text: `生成单品存量`
     },
   ],
   tableMenu: (record: StockKeepingUnit, action: any) => [
@@ -103,7 +99,7 @@ const table: StoreTableProps = {
     );
     stockKeepingUnitStore.next(query);
   },
-  pageSize: 10,
+  defaultPageSize: 10,
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
 };
 
