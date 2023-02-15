@@ -34,31 +34,6 @@ const editForm: FormProps = {
 				rs.sort = String(rs.sort);
 				rs.promotion_type = rs.promotion_type?.map((item: any) => String(item));
 
-
-
-				// gift_growth: number | string | undefined
-				// gift_point: number | string | undefined
-				// use_point_limit: string | undefined | number
-				// sub_title: string | undefined | number
-				// description: string | undefined | number
-				// original_price: string | undefined | number
-				// stock: string | undefined | number
-				// low_stock: string | undefined | number
-				// unit: string | undefined | number
-				// weight: string | undefined | number
-				// preview_status: string | undefined | number
-				// service_ids: string | undefined | number
-				// keywords: string | undefined | number
-				// note: string | undefined | number
-				// album_pics: string | undefined | number
-
-
-				// promotion_price: number | string | undefined
-				// promotion_start_time: string | undefined | number
-				// promotion_end_time: string | undefined | number
-				// promotion_per_limit: string | undefined | number
-				// promotion_type: string | undefined | number
-
 				form?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))

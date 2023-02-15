@@ -148,15 +148,7 @@ export class ObjectApi<T extends IObject = any> {
 
     return new this.objectConstructor(data);
   };
-
-  private parseResponsePage = (data: ObjectDataList): any => {
-    if (!data) return;
-    const { items, count } = data;
-    if (this.store != undefined) this.store.count = count || 0;
-    if (!items) return [];
-    return items.map((item: any) => new this.objectConstructor({ ...item }));
-  };
-
+  
   static createLink(ref: IObjectApiLinkRef): string {
     const { apiPrefix, apiVersion, apiResource, service } = ref;
     return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
@@ -177,7 +169,7 @@ export class ObjectApi<T extends IObject = any> {
   getUrl = (parameter?: Parameter, query?: Partial<Query>, op?: string) => {
     const { service, apiPrefix, apiVersion, apiResource } = this;
     let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
-    let queryObject = {};
+    let queryObject: any = {};
 
     if (query?.limit) queryObject['limit'] = JSON.stringify(query.limit);
     if (query?.sort) queryObject['sort'] = JSON.stringify(query.sort);

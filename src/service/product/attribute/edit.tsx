@@ -281,8 +281,7 @@ const editForm: FormProps = {
 			then((rs) => {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();
-				history.push(`/product/category/attribute?category_id=` + rs.category_id);
-
+				history.push(`/product/category`);
 			})
 			.catch((e) => notification.error(e))
 

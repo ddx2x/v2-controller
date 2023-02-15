@@ -2,6 +2,13 @@ import { IObject, ObjectApi, ObjectStore } from '../../client';
 import { DefaultWatchApi, WatchApi } from '../../client/event';
 
 export class StockKeepingUnit extends IObject {
+    spec_name: string | undefined
+    product_id: string | undefined
+    product_name: string | undefined
+    price: string | number | undefined
+    promotion_price: string | number | undefined
+    stock: string | number | undefined
+    low_stock: string | number | undefined
 
     constructor(data: StockKeepingUnit) {
         super(data);
@@ -21,7 +28,7 @@ class StockKeepingUnitStore extends ObjectStore<StockKeepingUnit> {
 
 export const StockKeepingUnitApi = new ObjectApi<StockKeepingUnit>(
     {
-        url: '/api/v1/StockKeepingUnit',
+        url: '/api/v1/stockkeepingunit',
         objectConstructor: StockKeepingUnit,
         service: 'product-t',
     }

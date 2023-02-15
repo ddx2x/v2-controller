@@ -1,9 +1,12 @@
-import { StoreTableProps } from '@/dynamic-components';
+import { FormColumnsType, StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { notification } from 'antd';
+import { history } from '@umijs/max';
+import { message, notification } from 'antd';
 import { merge } from 'lodash';
 import { parse } from 'querystring';
+import { request } from 'umi';
 import { StockKeepingUnit, stockKeepingUnitStore } from '../../api/productSKU.store';
+import { ProductAttribute } from '../attribute';
 
 const table: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -18,72 +21,110 @@ const table: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'name',
+      dataIndex: 'product_name',
       title: '商品名称',
       hideInSearch: true,
       editable: false,
       valueType: 'text',
-      width: 100,
       fixed: 'left',
-      fieldProps: {
-        width: 55,
-      },
-      colSpan: 1,
     },
     {
       dataIndex: 'spec_name',
       title: '规格名称',
       hideInSearch: true,
-
+      editable: false,
+      valueType: 'text',
     },
-
     {
       dataIndex: 'price',
-      title: '价格',
+      title: '销售价格',
       hideInSearch: true,
+      valueType: 'money',
+      editable: false,
+    },
+    {
+      dataIndex: 'promotion_price',
+      title: '促销价格',
+      hideInSearch: true,
+      valueType: 'money',
       editable: false,
     },
     {
       dataIndex: 'stock',
-      title: '库存',
+      title: '商品库存',
       hideInSearch: true,
+      valueType: 'digit',
       editable: false,
     },
     {
       dataIndex: 'low_stock',
       title: '库存预警',
+      valueType: 'digit',
+      editable: false,
     },
   ],
   editableValuesChange: (record: StockKeepingUnit) => { },
-  toolBarMenu: (selectedRows: any, location: any) => [
+  toolBarMenu: (selectedRows, location) => [
     {
       kind: 'form',
       layoutType: 'ModalForm',
       columns: [],
       triggerText: '生成单品存量',
       title: '生成单品存量',
-      onMount({ form, setColumns }) {
-        setTimeout(() =>
-          setColumns([{
-            dataIndex: 'stock',
-            title: '库存',
-            hideInSearch: true,
-            editable: false,
-          },
-          {
-            dataIndex: 'low_stock',
-            title: '库存预警',
-          }
-          ]), 200)
-        form.setFieldsValue({ stock: 1, low_stock: 2 })
+      onMount({ form, setColumns, setDataObject }) {
+        const query: any = parse(location?.search.split('?')[1] || '');
+        const product_id = query["product_id"];
+        setDataObject({ product_id: product_id });
+
+        request(`/product-t/api/v1/product_other/${product_id}`)
+          .then((rs: ProductAttribute[]) => {
+            const fields = rs.map((r) => {
+              const valueEnum = r.input_select_list?.map((item, index) => {
+                return { val: item }
+              }).reduce(function (map: any, obj: any) {
+                map[obj.val] = obj.val;
+                return map;
+              }, {});
+
+              return {
+                dataIndex: r.name,
+                title: r.name,
+                tooltip: `${r.category_id}-${r.name}-${r.input_type === 1 ? "只能从列表选择" : "支持手工添加"}`,
+                valueType: "select",
+                hideInSearch: true,
+                fieldProps: {
+                  mode: r.input_type === 1 ? 'multiple' : 'tags',
+                },
+                editable: false,
+                valueEnum: valueEnum,
+              } as FormColumnsType
+            })
+            setColumns(fields);
+
+          })
+          .catch((e) => {
+            message.error(e);
+          });
       },
-      onClick: () => {
-        // stockKeepingUnitStore.remove(record.uid).then(() => {
-        notification.info({ message: "生成成功" + location })
-        // }).catch(e => {
-        //   notification.error(e)
-        // })
+      onSubmit: ({ values, dataObject, handleClose }) => {
+        request(`/product-t/api/v1/product_other`, {
+          method: "POST",
+          data: merge({}, { product_id: dataObject.product_id, values: values }),
+        })
+          .then(() => {
+            notification.info({ message: "生成成功" })
+            history.push(`/product/product/sku?product_id=${dataObject.product_id}`)
+          })
+          .catch((e) => notification.error(e))
+
+        handleClose();
+        return true;
       },
+    },
+    {
+      kind: 'link',
+      title: '增加',
+      link: `/product/product/sku/add?product_id=${parse(location?.search.split('?')[1] || '').product_id}`,
     },
   ],
   tableMenu: (record: StockKeepingUnit, action: any) => [
@@ -97,8 +138,12 @@ const table: StoreTableProps = {
           notification.error(e)
         })
       },
-      text: `确认删除` + record.uid,
-      collapse: true,
+      text: `确认删除` + record.spec_name,
+    },
+    {
+      kind: 'link',
+      title: '编辑',
+      link: `/product/product/sku/edit?id=${record.uid}`,
     },
   ],
   onRowEvent: [

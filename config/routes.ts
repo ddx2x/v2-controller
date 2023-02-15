@@ -52,6 +52,22 @@ export default [
             component: './dynamic-view',
             parentKeys: ['/product/product'],
             hideInMenu: true,
+            routes: [
+              {
+                name: '单品存量编辑',
+                path: '/product/product/sku/edit',
+                component: './dynamic-view',
+                parentKeys: ['/product/product/sku'],
+                hideInMenu: true,
+              },
+              {
+                name: '单品存量新增',
+                path: '/product/product/sku/add',
+                component: './dynamic-view',
+                parentKeys: ['/product/product/sku'],
+                hideInMenu: true,
+              },
+            ],
           },
         ],
       },
@@ -231,7 +247,7 @@ export default [
       {
         name: '商品设置',
         path: '/setting/product',
-  
+
         component: './dynamic-view',
         routes: [],
       },
