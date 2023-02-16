@@ -27,6 +27,19 @@ const table: StoreTableProps = {
       editable: false,
       valueType: 'text',
       fixed: 'left',
+      width: 100,
+    },
+    {
+      dataIndex: 'pic',
+      title: '图片',
+      hideInSearch: true,
+      valueType: 'imageUpload',
+      editable: false,
+      width: 100,
+      fixed: 'left',
+      fieldProps: {
+        width: 55,
+      },
     },
     {
       dataIndex: 'spec_name',
@@ -120,11 +133,6 @@ const table: StoreTableProps = {
         handleClose();
         return true;
       },
-    },
-    {
-      kind: 'link',
-      title: '增加',
-      link: `/product/product/sku/add?product_id=${parse(location?.search.split('?')[1] || '').product_id}`,
     },
   ],
   tableMenu: (record: StockKeepingUnit, action: any) => [

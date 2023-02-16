@@ -3,9 +3,11 @@ import { pageManager } from '@/dynamic-view';
 import { StockKeepingUnit, StockKeepingUnitApi, stockKeepingUnitStore } from '@/service/api/productSKU.store';
 import { history } from '@umijs/max';
 import { message } from 'antd';
+import { merge } from 'lodash';
 import { parse } from 'querystring';
 import {
 	low_stock,
+	pic,
 	price,
 	product_name,
 	promotion_price,
@@ -30,8 +32,9 @@ const editForm: FormProps = {
 	layoutType: 'Form',
 	shouldUpdate: false,
 	columns: [
-		product_name,
-		spec_name,
+		merge(product_name, { fieldProps: { disabled: true } }),
+		merge(spec_name, { fieldProps: { disabled: true } }),
+		pic,
 		price,
 		promotion_price,
 		stock,
@@ -41,7 +44,7 @@ const editForm: FormProps = {
 		const src: StockKeepingUnit = dataObject;
 		const target: Partial<StockKeepingUnit> = values;
 
-		stockKeepingUnitStore.update_one(src, target, ["price", "promotion_price", "stock", "low_stock"]).
+		stockKeepingUnitStore.update_one(src, target, ["price", "promotion_price", "stock", "low_stock", "pic"]).
 			then(() => {
 				message.success("保存成功");
 				formRef.current?.resetFields();

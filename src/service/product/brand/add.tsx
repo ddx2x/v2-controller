@@ -42,7 +42,6 @@ const form: FormProps = {
 			then(() => {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();
-				// history.push(`/product/brand/edit?id=` + values.uid);
 				history.push(`/product/brand`);
 			})
 			.catch((e) => notification.error(e))

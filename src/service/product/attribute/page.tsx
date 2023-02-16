@@ -116,7 +116,9 @@ const attributeStoretable: StoreTableProps = {
       { filter: parse(location?.search.split('?')[1] || '') },
     );
     productAttributeStore.next(query);
-  }
+  },
+  useBatchDelete: true,
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
 };
 
 pageManager.register('product.category.attribute', {

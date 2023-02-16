@@ -60,13 +60,6 @@ export default [
                 parentKeys: ['/product/product/sku'],
                 hideInMenu: true,
               },
-              {
-                name: '单品存量新增',
-                path: '/product/product/sku/add',
-                component: './dynamic-view',
-                parentKeys: ['/product/product/sku'],
-                hideInMenu: true,
-              },
             ],
           },
         ],

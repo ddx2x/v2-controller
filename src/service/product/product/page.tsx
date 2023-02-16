@@ -102,8 +102,6 @@ const productStoreTable: StoreTableProps = {
     const update: Partial<Product> = record;
 
     if (!src) return;
-
-    console.log("prodcut edit", src, update)
     if (src?.publish_status !== String(update.publish_status)) {
       if (update.publish_status) {
         update.publish_status = 1
@@ -117,8 +115,6 @@ const productStoreTable: StoreTableProps = {
         notification.error({ message: "更新失败:" + e });
       })
     }
-
-
   },
   toolBarMenu: (selectedRows: any) => [
     {

@@ -9,6 +9,7 @@ export class StockKeepingUnit extends IObject {
     promotion_price: string | number | undefined
     stock: string | number | undefined
     low_stock: string | number | undefined
+    pic: string | object | undefined
 
     constructor(data: StockKeepingUnit) {
         super(data);
