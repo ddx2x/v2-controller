@@ -67,8 +67,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: 'select',
       valueEnum: {
-        0: { text: "否", status: "Error" },
-        1: { text: "是", status: "Success" }
+        false: { text: "否", status: "Error" },
+        true: { text: "是", status: "Success" }
       }
     },
 
@@ -79,8 +79,8 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: "select",
       valueEnum: {
-        0: { text: "否", status: "Error" },
-        1: { text: "是", status: "Success" }
+        false: { text: "否", status: "Error" },
+        true: { text: "是", status: "Success" }
       }
     },
 
@@ -102,12 +102,13 @@ const productStoreTable: StoreTableProps = {
     const update: Partial<Product> = record;
 
     if (!src) return;
-    if (src?.publish_status !== String(update.publish_status)) {
+    if (src?.publish_status !== update.publish_status) {
       if (update.publish_status) {
         update.publish_status = 1
       } else {
         update.publish_status = 0
       }
+      // console.log("update", update.publish_status, "src", src.publish_status)
       productStore.update_one(src, update, ["publish_status"]).then(() => {
         notification.success({ message: "更新成功" });
       }

@@ -26,11 +26,10 @@ const editForm: FormProps = {
 		productApi.get(query.id).
 			then((rs: Product) => {
 				setDataObject(rs);
-
 				rs.delete_status = String(rs.delete_status);
-				rs.publish_status = String(rs.publish_status);
-				rs.new_status = String(rs.new_status);
-				rs.recommand_status = String(rs.recommand_status);
+				rs.publish_status = rs.publish_status === 1 ? true : false;
+				rs.new_status = rs.new_status === 1 ? true : false;
+				rs.recommand_status = rs.recommand_status === 1 ? true : false;
 				rs.sort = String(rs.sort);
 				rs.promotion_type = rs.promotion_type?.map((item: any) => String(item));
 
@@ -81,6 +80,10 @@ const editForm: FormProps = {
 			promotion_start_time: values.promotion_start_time,
 			promotion_end_time: values.promotion_end_time,
 
+			publish_status: values.publish_status ? 1 : 0,
+			new_status: values.new_status ? 1 : 0,
+			recommand_status: values.recommand_status ? 1 : 0,
+
 			details: values.details,
 			keywords: values.keywords,
 			unit: values.unit,
@@ -91,7 +94,10 @@ const editForm: FormProps = {
 			"promotion_per_limit", "promotion_start_time", "promotion_end_time",
 			"low_stock",
 			"keywords",
-			"unit"
+			"unit",
+			"publish_status",
+			"new_status",
+			"recommand_status",
 		]).
 			then(() => {
 				notification.success({ message: "保存成功" });

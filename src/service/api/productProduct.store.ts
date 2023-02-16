@@ -10,9 +10,9 @@ export class Product extends IObject {
     product_price_sn: string | undefined
 
     delete_status: number | string | undefined
-    publish_status: number | string | undefined
-    new_status: number | string | undefined
-    recommand_status: number | string | undefined
+    publish_status: number | boolean | undefined
+    new_status: number | boolean | undefined
+    recommand_status: number | boolean | undefined
     verify_status: number | string | undefined
     sort: number | string | undefined
 
@@ -47,9 +47,9 @@ export class Product extends IObject {
         super(data);
         Object.assign(this, data);
         this.delete_status = String(this.delete_status);
-        this.publish_status = String(this.publish_status);
-        this.new_status = String(this.new_status);
-        this.recommand_status = String(this.recommand_status);
+        this.publish_status = this.publish_status === 1 ? true : false;
+        this.new_status = this.new_status === 1 ? true : false;
+        this.recommand_status = this.recommand_status === 1 ? true : false;
         this.verify_status = String(this.verify_status);
         this.sort = String(this.sort);
         this.album_pics = this.album_pics && this.album_pics?.length > 0 ? {
