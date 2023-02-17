@@ -130,8 +130,7 @@ const storeTable: StoreTableProps = {
     },
   ],
   onRequest: (params) => {
-    const query = merge(params, { sort: { version: 1 } });
-    cmsDoorStore.next(query);
+    cmsDoorStore.next(merge(params, { sort: { version: 1 } }));
   },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
 };

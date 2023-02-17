@@ -144,7 +144,7 @@ export const bmap: FormColumnsType = {
 
 export const store_status: FormColumnsType = {
 	dataIndex: 'store_status',
-	title: '门店状态',
+	title: '门店状态开启',
 	valueType: 'switch',
 	hideInSearch: true,
 	valueEnum: {
@@ -162,7 +162,7 @@ export const store_status: FormColumnsType = {
 };
 export const online_store_status: FormColumnsType = {
 	dataIndex: 'online_store_status',
-	title: '网店状态',
+	title: '网店状态开启',
 	valueType: 'switch',
 	hideInSearch: true,
 	valueEnum: {
@@ -195,19 +195,20 @@ export const business_days: FormColumnsType = {
 				5: '周五',
 				6: '周六',
 				7: '周日'
+			},
+			formItemProps: {
+				rules: [
+					{
+						required: true,
+						message: '此项为必填项',
+					},
+				],
 			}
 		},
 		{
 			dataIndex: 'hours', valueType: 'timeRange', title: '时间段'
 		}
 	],
-	fieldProps: {
-		type: 'group',
-	},
-	valueEnum: {
-		true: false,
-		false: true,
-	},
 	formItemProps: {
 		rules: [
 			{
@@ -220,5 +221,71 @@ export const business_days: FormColumnsType = {
 
 
 
+export const logo: FormColumnsType = {
+	title: '门店logo',
+	dataIndex: 'logo',
+	valueType: 'imageUpload',
+	tooltip: '尺寸建议750x750像素以上，大小2M以下，最多1张,如果没有那么使用内部统一logo',
+	fieldProps: {
+		maxNumber: 1,
+		name: 'upload',
+		action: '/media-t/upload',
+	}
+};
+
+
+
+
+export const admin_name: FormColumnsType = {
+	title: '管理员姓名',
+	dataIndex: 'admin_name',
+	valueType: 'text',
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			}
+		],
+	},
+};
+
+
+export const admin_account: FormColumnsType = {
+	title: '管理员帐号',
+	dataIndex: 'admin_account',
+	valueType: 'text',
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+			{
+				min: 11,
+				max: 11,
+			}
+		],
+	},
+};
+
+
+export const contact: FormColumnsType = {
+	title: '联系电话',
+	dataIndex: 'contact',
+	valueType: 'text',
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+			{
+				min: 11,
+				max: 11,
+			}
+		],
+	},
+};
 
 

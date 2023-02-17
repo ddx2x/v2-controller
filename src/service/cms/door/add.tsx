@@ -4,7 +4,7 @@ import { CmsDoor, cmsDoorStore } from '@/service/api/cmsDoor.store';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { cloneDeep, merge } from 'lodash';
-import { address, bmap, business_days, first_name, online_store_status, region_name, second_name, store_status } from './columns';
+import { address, bmap, business_days, first_name, logo, online_store_status, region_name, second_name, store_status } from './columns';
 
 // kind: form
 const form: FormProps = {
@@ -20,6 +20,7 @@ const form: FormProps = {
 		region_name,
 		address,
 		bmap,
+		logo,
 		store_status,
 		online_store_status,
 	],

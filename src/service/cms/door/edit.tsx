@@ -5,7 +5,7 @@ import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { cloneDeep, merge } from 'lodash';
 import { parse } from 'querystring';
-import { address, bmap, business_days, first_name, online_store_status, region_name, second_name, store_status } from './columns';
+import { address, admin_account, admin_name, bmap, business_days, contact, first_name, logo, online_store_status, region_name, second_name, store_status } from './columns';
 
 // kind: form
 const editForm: FormProps = {
@@ -25,18 +25,28 @@ const editForm: FormProps = {
 	columns: [
 		merge(cloneDeep(first_name), { fieldProps: { disabled: true } }),
 		merge(cloneDeep(second_name), { fieldProps: { disabled: true } }),
+		admin_name,
+		contact,
+		admin_account,
+		logo,
+
 		business_days,
 		region_name,
 		address,
 		bmap,
+		
+	
 		store_status,
 		online_store_status,
-		
-
 	],
 	onSubmit: ({ values, dataObject, handleClose }) => {
-		let target: Partial<CmsDoor> = values;
-		cmsDoorStore.update_one(dataObject, target, ['store_status', 'online_store_status', 'region_name', 'address'
+		let target: Partial<CmsDoor> = {
+			logo: values.logo?.fileList[0].name,
+			...values,
+		};
+
+		cmsDoorStore.update_one(dataObject, target, [
+			'store_status', 'online_store_status', 'region_name', 'address', 'business_days', 'logo'
 		]).
 			then(() => {
 				notification.success({ message: "保存成功" });
