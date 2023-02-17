@@ -121,7 +121,6 @@ export const address: FormColumnsType = {
 	hideInSearch: true,
 	// valueType: 'mapInput',
 	editable: false,
-
 	formItemProps: {
 		rules: [
 			{
@@ -187,26 +186,38 @@ export const business_days: FormColumnsType = {
 	hideInSearch: true,
 	columns: [
 		{
-			dataIndex: 'days', valueType: 'checkbox', title: '营业日', valueEnum: {
-				1: '周一',
-				2: '周二',
-				3: '周三',
-				4: '周四',
-				5: '周五',
-				6: '周六',
-				7: '周日'
-			}
-		},
-		{
-			dataIndex: 'hours', valueType: 'timeRange', title: '时间段'
+			valueType: 'group',
+			fieldProps: {
+				style: {
+					margin: '1rem 3rem 0 2rem',
+				},
+			},
+			columns: [
+				{
+					dataIndex: 'days',
+					valueType: 'checkbox',
+					title: '营业日',
+					valueEnum: {
+						1: '周一',
+						2: '周二',
+						3: '周三',
+						4: '周四',
+						5: '周五',
+						6: '周六',
+						7: '周日'
+					}
+				},
+				{
+					dataIndex: 'hours',
+					valueType: 'timeRange',
+					title: '时间段',
+				}
+			]
 		}
 	],
 	fieldProps: {
-		type: 'group',
-	},
-	valueEnum: {
-		true: false,
-		false: true,
+		alwaysShowItemLabel: true,
+		max: 2
 	},
 	formItemProps: {
 		rules: [
