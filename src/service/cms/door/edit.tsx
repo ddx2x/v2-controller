@@ -45,9 +45,10 @@ const editForm: FormProps = {
 	],
 	onSubmit: ({ values, dataObject, handleClose }) => {
 		let target: Partial<CmsDoor> = {
-			logo: values.logo?.fileList[0].name,
 			...values,
 		};
+
+		target.logo = values.logo?.fileList && values.logo?.fileList[0].name || "";
 
 		cmsDoorStore.update_one(dataObject, target, [
 			'store_status', 'online_store_status', 'region_name', 'address', 'business_days', 'logo',

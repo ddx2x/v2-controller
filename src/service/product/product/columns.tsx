@@ -223,7 +223,6 @@ export const sub_title: FormColumnsType = {
   dataIndex: 'sub_title',
   title: '子标题',
   valueType: 'text',
-
   formItemProps: {
     rules: [
       {
@@ -239,22 +238,6 @@ export const sub_title: FormColumnsType = {
   },
 }
 
-
-export const unit: FormColumnsType = {
-  dataIndex: 'unit',
-  title: '计量单位',
-  valueType: 'text',
-
-  formItemProps: {
-    rules: [
-      {
-        type: 'string',
-        min: 1,
-        max: 64,
-      },
-    ],
-  }
-}
 
 
 export const weight: FormColumnsType = {
@@ -405,7 +388,11 @@ export const details: FormColumnsType = {
 }
 
 export const default_test: FormColumnsType = {
-  // dataIndex: 'grid',
-  // valueType: 'card',
-  // title: 'ABC'
+  valueType: 'divider',
 }
+
+export const unit: FormColumnsType = {
+  dataIndex: 'unit',
+  title: '单位',
+  valueType: 'text',
+};

@@ -259,11 +259,11 @@ const editForm: FormProps = {
 		select_type,
 		input_type,
 		input_select_list,
-		sort,
-		filter_type,
-		search_type,
-		related_status,
-		hand_add_status,
+		// sort,
+		// filter_type,
+		// search_type,
+		// related_status,
+		// hand_add_status,
 	],
 	onSubmit: ({ formRef, values, dataObject, handleClose }) => {
 		let item: Partial<ProductAttribute> = {

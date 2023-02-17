@@ -14,12 +14,6 @@ const columns: StoreTableProps['columns'] = [
     editable: false,
   },
   {
-    dataIndex: 'product_count',
-    title: '商品数量',
-    hideInSearch: true,
-    editable: false,
-  },
-  {
     dataIndex: 'nav_status',
     title: '导航栏显示',
     hideInSearch: true,
@@ -37,27 +31,11 @@ const columns: StoreTableProps['columns'] = [
     },
   },
   {
-    dataIndex: 'show_status',
-    title: '是否显示',
+    dataIndex: 'keywords',
+    title: '关键字',
     hideInSearch: true,
     editable: false,
     valueType: 'select',
-    valueEnum: {
-      1: {
-        text: '未显示',
-        status: 'Error',
-      },
-      0: {
-        text: '已显示',
-        status: 'Success',
-      },
-    },
-  },
-  {
-    dataIndex: 'sort',
-    title: '排序',
-    hideInSearch: true,
-    editable: false,
   },
 ]
 
@@ -107,25 +85,10 @@ const categoryStoreTable: StoreTableProps = {
           editable: false,
         },
         {
-          dataIndex: 'product_count',
-          title: '商品数量',
+          dataIndex: 'parent_id',
+          title: '父类型',
           hideInSearch: true,
           editable: false,
-        },
-        {
-          dataIndex: 'product_unit',
-          title: '商品单位',
-          hideInSearch: true,
-          editable: false,
-          valueType: 'tag',
-          valueEnum: {
-            '辆': {
-              status: 'success',
-            },
-            '件': {
-              status: 'success',
-            },
-          },
         },
         {
           dataIndex: 'nav_status',
@@ -145,28 +108,13 @@ const categoryStoreTable: StoreTableProps = {
           },
         },
         {
-          dataIndex: 'show_status',
-          title: '是否显示',
+          dataIndex: 'keywords',
+          title: '关键字',
           hideInSearch: true,
           editable: false,
           valueType: 'select',
-          valueEnum: {
-            1: {
-              text: '未显示',
-              status: 'Error',
-            },
-            0: {
-              text: '已显示',
-              status: 'Success',
-            },
-          },
         },
-        {
-          dataIndex: 'sort',
-          title: '排序',
-          hideInSearch: true,
-          editable: false,
-        },
+
       ],
     },
   },
@@ -205,8 +153,7 @@ const categoryStoreTable: StoreTableProps = {
     },
   ],
   onRequest: (params) => {
-    const query = merge(params, { filter: { level: 1 }, sort: { version: 1 } });
-    categoryStore.next(query);
+    categoryStore.next(merge(params, { filter: { level: 1 }, sort: { version: 1 } }));
   },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
 };

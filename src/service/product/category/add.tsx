@@ -97,6 +97,7 @@ const nav_status: FormColumnsType = {
 };
 
 
+
 const show_status: FormColumnsType = {
 	dataIndex: 'show_status',
 	title: '显示状态',
@@ -181,8 +182,6 @@ const addForm: FormProps = {
 		level,
 		parent_id_dependency,
 		nav_status,
-		show_status,
-		sort,
 		keywords,
 		description,
 	],
@@ -192,12 +191,7 @@ const addForm: FormProps = {
 			level: Number(values.level),
 			parent_id: values.parent_id || "",
 			full_id: values.full_id || "",
-			product_count: 0,
-			product_unit: values.product_unit || "",
 			nav_status: Number(values.nav_status),
-			show_status: Number(values.show_status),
-			sort: Number(values.sort),
-			icon: values.icon || "",
 			keywords: values.keywords,
 			description: values.description || "",
 		};

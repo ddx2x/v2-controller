@@ -171,9 +171,10 @@ const business_days: FormColumnsType = {
 	columns: [
 		{
 			valueType: 'group',
+			
 			fieldProps: {
 				style: {
-					margin: '1rem 3rem 0 2rem',
+					margin: '0rem 1rem 0 1rem',
 				},
 			},
 			columns: [
@@ -204,7 +205,7 @@ const business_days: FormColumnsType = {
 	],
 	fieldProps: {
 		alwaysShowItemLabel: true,
-		max: 2
+		max: 2,
 	},
 	formItemProps: {
 		rules: [

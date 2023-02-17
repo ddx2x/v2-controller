@@ -127,15 +127,7 @@ const keywords: FormColumnsType = {
 	valueType: 'select',
 	fieldProps: {
 		mode: "tags",
-	},
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
+	}
 };
 
 const description: FormColumnsType = {
@@ -163,7 +155,6 @@ const editForm: FormProps = {
 		const query: Query = parse(location?.search.split('?')[1] || '');
 		categoryApi.get(query.id).then((rs) => {
 			rs.nav_status = String(rs.nav_status);
-			rs.show_status = String(rs.show_status);
 			form?.setFieldsValue(rs);
 		})
 	},
@@ -174,8 +165,6 @@ const editForm: FormProps = {
 		level,
 		parent_id_dependency,
 		nav_status,
-		show_status,
-		sort,
 		keywords,
 		description,
 	],
@@ -183,8 +172,6 @@ const editForm: FormProps = {
 		const src: Category = dataObject;
 		const target: Partial<Category> = {
 			nav_status: Number(values.nav_status),
-			show_status: Number(values.show_status),
-			sort: Number(values.sort),
 			keywords: values.keywords,
 			description: String(values.description) || "",
 		};

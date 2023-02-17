@@ -5,12 +5,7 @@ export class Category extends IObject {
     level: number | string | undefined
     parent_id: string | undefined
     full_id: string | undefined
-    product_count: number | undefined
-    product_unit: string | undefined
     nav_status: number | string | undefined
-    show_status: number | string | undefined
-    sort: number | undefined
-    icon: string | undefined
     keywords: string[] | undefined
     description: string | string | undefined
 

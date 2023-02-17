@@ -12,7 +12,6 @@ export const detail: DescriptionsProps = {
     store_status,
     online_store_status,
     bmap,
-
   ] as DescriptionsProps['columns']
 }
 

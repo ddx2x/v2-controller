@@ -246,11 +246,11 @@ const addForm: FormProps = {
 		select_type,
 		input_type,
 		input_select_list,
-		sort,
-		filter_type,
-		search_type,
-		related_status,
-		hand_add_status,
+		// sort,
+		// filter_type,
+		// search_type,
+		// related_status,
+		// hand_add_status,
 	],
 	onSubmit: ({ formRef, values, handleClose }) => {
 		let item: Partial<ProductAttribute> = {

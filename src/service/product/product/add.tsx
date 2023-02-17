@@ -14,7 +14,6 @@ import {
 	service_ids,
 	sort,
 	sub_title,
-	unit
 } from './columns';
 
 // kind: form
@@ -33,7 +32,6 @@ const addForm: FormProps = {
 
 		service_ids,
 		keywords,
-		unit,
 		sort,
 
 		promotion_type,

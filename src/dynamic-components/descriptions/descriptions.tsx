@@ -10,7 +10,7 @@ import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { delay } from 'lodash';
-import  { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType';
@@ -151,8 +151,16 @@ Descriptions.defaultProps = {
   buttonType: 'link',
   buttonSize: 'small',
   title: '详情信息',
-  column: 2,
-  width: '48%',
+  bordered: true,
+  column: 1,
+  width: '60%',
+  layout: 'horizontal',
+  labelStyle: {
+    width: '18%'
+  },
+  contentStyle: {
+    width: '82%'
+  }
 };
 
 export const useDescriptions = (props: DescriptionsProps): React.ReactNode => {

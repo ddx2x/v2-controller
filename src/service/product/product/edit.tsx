@@ -14,7 +14,6 @@ import {
 	service_ids,
 	sort,
 	sub_title,
-	unit
 } from './columns';
 
 // kind: form
@@ -51,7 +50,6 @@ const editForm: FormProps = {
 		merge(product_sn, { fieldProps: { disabled: true } }),
 		service_ids,
 		keywords,
-		unit,
 		new_status,
 		recommand_status,
 

@@ -88,11 +88,9 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            <div
-              style={{ margin: '0% 20% 0% 20%' }}
-            >
+            <>
               {dom}
-            </div>
+            </>
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
@@ -152,6 +150,7 @@ Form.defaultProps = {
   },
   submitTimeout: 1000,
   columns: [],
+  style: {padding: '0 14%'}
 };
 
 export const useForm = (props: FormProps): React.ReactNode => {
