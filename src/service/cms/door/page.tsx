@@ -19,18 +19,18 @@ const storeTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'second_name',
-      title: '名称',
+      dataIndex: 'first_name',
+      title: '主体',
       hideInSearch: true,
       editable: false,
-      width: 100,
+      width: 200,
       fixed: 'left',
       fieldProps: {
         width: 55,
       },
     },
     {
-      dataIndex: 'first_name',
+      dataIndex: 'second_name',
       title: '门店',
       hideInSearch: true,
       editable: false,
