@@ -153,7 +153,7 @@ const singleEditView: StepFormProps = {
 				form?.setFieldsValue({
 					name: item.name,
 					types: item.type,
-				});
+				});	
 			}
 		})
 	},

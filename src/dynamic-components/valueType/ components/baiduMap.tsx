@@ -36,6 +36,7 @@ export function mapGeocoder(map: any, address: string, handle?: () => void) {
 }
 
 export declare type BaiduMapProps = ProFieldFCRenderProps & {
+  useSearchInput?: boolean;
   height?: number | string;
   width?: number | string;
 };
@@ -44,7 +45,7 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
   const mapRef = useRef<any>(null);
   const [inputValue, setInputValue] = useState('');
 
-  const { height, width, value, onChange } = props;
+  const { useSearchInput, height, width, value, onChange } = props;
 
   useEffect(() => {
     value && mapGeocoder(mapRef.current.map, value)
@@ -57,32 +58,67 @@ export const BaiduMapCompoent: React.FC<BaiduMapProps> = (props) => {
       center={new BMapGL.Point(116.404449, 39.914889)}
       zoom={10}
     >
-      {/* 地址检索 */}
-      <Input
-        size="small"
-        id="locatoinSearch"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="请搜索并选择地址"
-        style={{ position: 'absolute', top: '15px', left: '10px', width: '50%', zIndex: 50 }}
-      />
-      <AutoComplete
-        input={'locatoinSearch'}
-        onConfirm={(e: any) => {
-          const c = e?.item.value;
-          const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
-          mapGeocoder(mapRef.current.map, l, () => {
-            setInputValue(l);
-            onChange && onChange(l);
-          });
-        }}
-      />
+      {useSearchInput && (
+        <>
+          <Input
+            size="small"
+            id="locatoinSearch"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="请搜索并选择地址"
+            style={{ position: 'absolute', top: '15px', left: '10px', width: '50%', zIndex: 50 }}
+          />
+          <AutoComplete
+            input={'locatoinSearch'}
+            onConfirm={(e: any) => {
+              const c = e?.item.value;
+              const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
+              mapGeocoder(mapRef.current.map, l, () => {
+                setInputValue(l);
+                onChange && onChange(l);
+              });
+            }}
+          />
+        </>
+      )
+      }
       <ZoomControl map={mapRef?.current?.map} />
     </Map>
   );
 };
 
+export declare type BaiduMapInputProps = ProFieldFCRenderProps 
+
+export const BaiduMapInputCompoent: React.FC<BaiduMapInputProps> = (props) => { 
+  const { value, onChange } = props;
+
+  // console.log('value', value);
+  
+
+  return (
+    <>
+      <Input
+        id="locatoinSearch"
+        autoFocus
+        value={value}
+        onChange={(e) => onChange && onChange(e.target.value) }
+        placeholder="请搜索并选择地址"
+      />
+      <AutoComplete
+        input={'locatoinSearch'}
+        onConfirm={(e: any) => {
+          const c = e?.item.value;
+          console.log(c);
+          
+          const l = [c.province, c.city, c.district, c.business, c.street, c.streetNumber].join('');
+        }}
+      />
+    </>
+  );
+}
+
 export const BMap = MapApiLoaderHOC({ ak: AK })(BaiduMapCompoent);
+export const BaiduMapInput = MapApiLoaderHOC({ ak: AK })(BaiduMapInputCompoent);
 
 
 export const BMapRenderFormItem: React.FC<BaiduMapProps> = (props) => {
@@ -93,3 +129,9 @@ export const BMapRender: React.FC<BaiduMapProps> = (props) => {
   return <BMap {...props} />
 }
 
+export const BaiduMapInputRenderFormItem: React.FC<BaiduMapInputProps> = (props) => {
+  return <BaiduMapInput  {...props} />
+}
+export const BaiduMapInputRender: React.FC<BaiduMapInputProps> = (props) => {
+  return <BaiduMapInput {...props} />
+}

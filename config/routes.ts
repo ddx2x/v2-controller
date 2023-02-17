@@ -176,26 +176,41 @@ export default [
 
   {
     name: '店铺',
-    path: '/door',
+    path: '/cms',
     icon: 'team',
     routes: [
       {
         name: '个性装修',
-        path: '/door/furnish',
+        path: '/cms/furnish',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '系统页面',
-        path: '/door/main',
+        path: '/cms/main',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '门店列表',
-        path: '/door/list',
+        path: '/cms/door',
         component: './dynamic-view',
-        routes: [],
+        routes: [
+          {
+            name: '门店新增',
+            path: '/cms/door/add',
+            component: './dynamic-view',
+            parentKeys: ['/cms/door'],
+            hideInMenu: true,
+          },
+          {
+            name: '门店编辑',
+            path: '/cms/door/edit',
+            component: './dynamic-view',
+            parentKeys: ['/cms/door'],
+            hideInMenu: true,
+          },
+        ],
       },
     ],
   },
