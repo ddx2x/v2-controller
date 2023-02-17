@@ -86,7 +86,9 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            <div style={{ margin: '1% 20% 0% 20%' }}>
+            <div
+              style={{ margin: '0% 20% 0% 20%' }}
+            >
               {dom}
             </div>
             <FooterToolbar routeContext={routeContext || {}}>
