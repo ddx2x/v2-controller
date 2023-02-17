@@ -4,7 +4,7 @@ import { CmsDoor, cmsDoorStore } from '@/service/api/cmsDoor.store';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { cloneDeep, merge } from 'lodash';
-import { address, bmap, business_days, first_name, logo, online_store_status, region_name, second_name, store_status } from './columns';
+import { address, admin_account, admin_name, bmap, business_days_dependency, contact, first_name, labels, logo, online_store_status, region_name, second_name, store_status } from './columns';
 
 // kind: form
 const form: FormProps = {
@@ -16,18 +16,27 @@ const form: FormProps = {
 	columns: [
 		merge(cloneDeep(first_name), { fieldProps: { disabled: false } }),
 		merge(cloneDeep(second_name), { fieldProps: { disabled: false } }),
-		business_days,
+		admin_name,
+		contact,
+		admin_account,
 		region_name,
 		address,
 		bmap,
 		logo,
 		store_status,
+		business_days_dependency,
 		online_store_status,
+		labels,
 	],
 	onSubmit: ({ formRef, values, handleClose }) => {
-		let item: Partial<CmsDoor> = values;
+		let item: Partial<CmsDoor> = {
 
-		cmsDoorStore.api.create(undefined, item).
+			...values,
+		};
+		item.logo = values.logo?.fileList[0].name || "";
+		item.online_store_status = values.online_store_status as boolean;
+		item.store_status = values.store_status as boolean;
+		cmsDoorStore.create(item).
 			then(() => {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();

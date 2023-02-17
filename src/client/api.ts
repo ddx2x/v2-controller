@@ -46,24 +46,24 @@ export declare type SearchQuery = {
 
 export declare type Parameter = string | number;
 
-const isObject = (object: Object) => {
-  return object !== null && typeof object === 'object';
-};
+// const isObject = (object: Object) => {
+//   return object !== null && typeof object === 'object';
+// };
 
-export const isDeepEqual = (object1: Object, object2: Object) => {
-  const objKeys1 = Object.keys(object1);
-  const objKeys2 = Object.keys(object2);
-  if (objKeys1.length !== objKeys2.length) return false;
-  for (let key of objKeys1) {
-    const value1 = object1[key];
-    const value2 = object2[key];
-    const isObjects = isObject(value1) && isObject(value2);
-    if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
-      return false;
-    }
-  }
-  return true;
-};
+// export const isDeepEqual = (object1: Object, object2: Object) => {
+//   const objKeys1 = Object.keys(object1);
+//   const objKeys2 = Object.keys(object2);
+//   if (objKeys1.length !== objKeys2.length) return false;
+//   for (let key of objKeys1) {
+//     const value1 = object1[key];
+//     const value2 = object2[key];
+//     const isObjects = isObject(value1) && isObject(value2);
+//     if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
+//       return false;
+//     }
+//   }
+//   return true;
+// };
 
 export declare type Query = {
   limit?: {
@@ -194,7 +194,7 @@ export class ObjectApi<T extends IObject = any> {
   };
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
-    const url = this.getUrl(parameter, query, op);
+    // const url = this.getUrl(parameter, query, op);
     return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
       this.parseResponse
     );

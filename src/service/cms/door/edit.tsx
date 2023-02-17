@@ -5,10 +5,13 @@ import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { cloneDeep, merge } from 'lodash';
 import { parse } from 'querystring';
-import { address, admin_account, admin_name, bmap, business_days, contact, first_name, logo, online_store_status, region_name, second_name, store_status } from './columns';
+import { address, admin_account, admin_name, bmap, business_days_dependency, contact, first_name, labels, logo, online_store_status, region_name, second_name, store_status } from './columns';
 
 // kind: form
 const editForm: FormProps = {
+	submitter: {
+		resetButtonProps: false
+	},
 	onMount: ({ location, form, setDataObject }) => {
 		form?.resetFields();
 		if (location === undefined) return;
@@ -29,15 +32,16 @@ const editForm: FormProps = {
 		contact,
 		admin_account,
 		logo,
-
-		business_days,
 		region_name,
 		address,
 		bmap,
-		
-	
+
+
 		store_status,
+		business_days_dependency,
 		online_store_status,
+
+		labels,
 	],
 	onSubmit: ({ values, dataObject, handleClose }) => {
 		let target: Partial<CmsDoor> = {
@@ -46,7 +50,8 @@ const editForm: FormProps = {
 		};
 
 		cmsDoorStore.update_one(dataObject, target, [
-			'store_status', 'online_store_status', 'region_name', 'address', 'business_days', 'logo'
+			'store_status', 'online_store_status', 'region_name', 'address', 'business_days', 'logo',
+			'admin_name', 'admin_account', 'contact'
 		]).
 			then(() => {
 				notification.success({ message: "保存成功" });

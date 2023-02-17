@@ -8,6 +8,7 @@ import { useLocation } from '@umijs/max';
 import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
+import { merge } from 'lodash';
 import { Dispatch, forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { FooterToolbar } from '../footer';
@@ -79,9 +80,10 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       rest['drawerprops'] = { destroyOnClose: true };
     case 'Form':
     default:
-      rest['submitter'] = {
+      rest['submitter'] = merge(
+        rest['submitter'] || {}, {
         searchConfig: { resetText: '重置' }
-      }
+      })
       // @ts-ignore
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (

@@ -1,5 +1,6 @@
 import type { FormColumnsType } from '@/dynamic-components';
 import { Region, regionStore } from '@/service/api/region.store';
+import { userStore } from '@/service/privilege';
 
 
 export const first_name: FormColumnsType = {
@@ -146,40 +147,23 @@ export const store_status: FormColumnsType = {
 	title: '门店状态开启',
 	valueType: 'switch',
 	hideInSearch: true,
+	initialValue: false,
 	valueEnum: {
-		true: false,
-		false: true,
-	},
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
-};
-export const online_store_status: FormColumnsType = {
-	dataIndex: 'online_store_status',
-	title: '网店状态开启',
-	valueType: 'switch',
-	hideInSearch: true,
-	valueEnum: {
-		true: false,
-		false: true,
-	},
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			},
-		],
+		true: true,
+		false: false,
 	},
 };
 
 
-export const business_days: FormColumnsType = {
+export const business_days_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['store_status'],
+	columns: ({ store_status }) => {
+		return store_status ? [business_days] : []
+	},
+}
+
+const business_days: FormColumnsType = {
 	dataIndex: 'business_days',
 	title: '营业时间',
 	valueType: 'formList',
@@ -211,6 +195,9 @@ export const business_days: FormColumnsType = {
 					dataIndex: 'hours',
 					valueType: 'timeRange',
 					title: '时间段',
+					fieldProps: {
+						// bordered: false,
+					},
 				}
 			]
 		}
@@ -229,6 +216,18 @@ export const business_days: FormColumnsType = {
 	},
 };
 
+export const online_store_status: FormColumnsType = {
+	dataIndex: 'online_store_status',
+	title: '网店状态开启',
+	valueType: 'switch',
+	hideInSearch: true,
+	initialValue: false,
+	valueEnum: {
+		true: true,
+		false: false,
+	},
+};
+
 
 
 export const logo: FormColumnsType = {
@@ -244,8 +243,6 @@ export const logo: FormColumnsType = {
 };
 
 
-
-
 export const admin_name: FormColumnsType = {
 	title: '管理员姓名',
 	dataIndex: 'admin_name',
@@ -258,32 +255,70 @@ export const admin_name: FormColumnsType = {
 			}
 		],
 	},
+	request: async () => {
+		try {
+			const rs = await userStore.api.list(undefined, { limit: { page: 0, size: 500 } });
+			let select: TreeSelect[] = [];
+			rs.map((r) => {
+				if (!r.name) return;
+				select.push({
+					title: r.name,
+					value: r.name,
+					uid: r.uid,
+					children: []
+				})
+			});
+			return select;
+		} catch (e) {
+			return [];
+		}
+	}
+
 };
 
 
 export const admin_account: FormColumnsType = {
 	title: '管理员帐号',
 	dataIndex: 'admin_account',
-	valueType: 'text',
+	valueType: 'select',
+	fieldProps: {
+		// showSearch: true,
+	},
 	formItemProps: {
 		rules: [
 			{
 				required: true,
 				message: '此项为必填项',
 			},
-			{
-				min: 11,
-				max: 11,
-			}
 		],
 	},
+
+	request: async () => {
+		try {
+			const rs = await userStore.api.list(undefined, { limit: { page: 0, size: 500 } });
+			let select: TreeSelect[] = [];
+			rs.map((r) => {
+				if (!r.phone_number) return;
+				select.push({
+					title: r.phone_number,
+					value: r.phone_number,
+					uid: r.uid,
+					children: []
+				})
+			});
+			return select;
+		} catch (e) {
+			return [];
+		}
+	}
+
 };
 
 
 export const contact: FormColumnsType = {
 	title: '联系电话',
 	dataIndex: 'contact',
-	valueType: 'text',
+	valueType: 'select',
 	formItemProps: {
 		rules: [
 			{
@@ -296,6 +331,33 @@ export const contact: FormColumnsType = {
 			}
 		],
 	},
+	request: async () => {
+		try {
+			const rs = await userStore.api.list(undefined, { limit: { page: 0, size: 500 } });
+			let select: TreeSelect[] = [];
+			rs.map((r) => {
+				if (!r.phone_number) return;
+				select.push({
+					title: r.phone_number,
+					value: r.phone_number,
+					uid: r.uid,
+					children: []
+				})
+			});
+			return select;
+		} catch (e) {
+			return [];
+		}
+	}
 };
 
 
+export const labels: FormColumnsType = {
+	dataIndex: 'lables',
+	title: '标签',
+	valueType: 'select',
+	fieldProps: {
+		mode: "tags",
+	},
+	hideInSearch: true,
+};

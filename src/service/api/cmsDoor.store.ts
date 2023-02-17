@@ -16,10 +16,10 @@ export class CmsDoor extends IObject {
     admin_name: string | undefined
     admin_account: string | undefined
     logo: string | object | undefined
-    roles: any[] | undefined
+    roles: string[] | undefined
     online_store_status: boolean | undefined
     store_status: boolean | undefined
-    lables: any[] | undefined
+    lables: string[] | undefined
     sort: number | undefined
 
     constructor(data: CmsDoor) {
@@ -31,12 +31,6 @@ export class CmsDoor extends IObject {
                 item.days = item.days.map((day) => String(day));
                 return item;
             });
-
-        this.logo = {
-            fileList: [{
-                url: '/media-t/file/' + this.logo, name: this.logo
-            }]
-        }
     }
 }
 

@@ -19,6 +19,9 @@ import {
 
 // kind: form
 const editForm: FormProps = {
+	submitter: {
+		resetButtonProps: false
+	},
 	onMount: ({ location, form, setDataObject }) => {
 		form?.resetFields();
 		if (location === undefined) return;

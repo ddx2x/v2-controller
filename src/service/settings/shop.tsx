@@ -1,6 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
+import { cmsDoorStore } from '../api/cmsDoor.store';
 import { Shop, shopStore } from '../api/settings.store';
 
 let name: FormColumnsType = {
@@ -21,12 +22,11 @@ let mode: FormColumnsType = {
 	title: '模式',
 	dataIndex: 'mode',
 	valueType: 'radio',
-	tooltip: `1.启用单店模式，手机端只展示一个商家店铺。门店可作为商家的自提点或配送点 2.启用多门店模式，则买家可在手机端选择门店 3.导流门店模式下用户在商家店下单必须选择服务门店，积分商城、社区团购仍扣减商家店库存`,
+	tooltip: `1.启用单店模式，手机端只展示一个商家店铺。门店可作为商家的自提点或配送点 2.启用多门店模式，则买家可在手机端选择门店`,
 	initialValue: 1,
 	valueEnum: {
-		1: '单网店模式',
-		2: '多网店模式',
-		3: '导流门店模式',
+		1: '单店模式',
+		2: '多店模式',
 	},
 	formItemProps: {
 		rules: [
@@ -37,6 +37,14 @@ let mode: FormColumnsType = {
 		],
 	},
 };
+
+let recommend_door_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['mode'],
+	columns: ({ mode }) => {
+		return mode === '2' ? [recommend_door] : []
+	},
+}
 
 let recommend_door: FormColumnsType = {
 	title: '推荐',
@@ -57,14 +65,23 @@ let recommend_door: FormColumnsType = {
 	},
 };
 
+interface TreeSelect {
+	title: string,
+	value: string,
+}
+
+let recommend_door_name_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['mode', 'recommend_door'],
+	columns: ({ recommend_door, mode }) => {
+		return (recommend_door !== '0' && mode === '2') ? [recommend_door_name] : []
+	},
+}
+
 let recommend_door_name: FormColumnsType = {
 	title: '选择推荐店',
 	dataIndex: 'recommend_door_name',
 	valueType: 'select',
-	valueEnum: {
-		1: "总店",
-		2: "广州分店",
-	},
 	formItemProps: {
 		rules: [
 			{
@@ -73,15 +90,24 @@ let recommend_door_name: FormColumnsType = {
 			},
 		],
 	},
+
+	request: async () => {
+		try {
+			let select: TreeSelect[] = [];
+			let rs = await cmsDoorStore.api.list(undefined, { limit: { page: 0, size: 500 } });
+			rs.forEach((r) => {
+				if (!r.second_name) return;
+				select.push({ title: r.second_name, value: r.second_name })
+			});
+			return select
+		} catch (e) {
+			return [];
+		}
+
+	},
 };
 
-let recommend_door_name_dependency: FormColumnsType = {
-	valueType: 'dependency',
-	name: ['recommend_door'],
-	columns: ({ recommend_door }) => {
-		return recommend_door !== '0' ? [recommend_door_name] : []
-	},
-}
+
 
 
 let industry: FormColumnsType = {
@@ -171,7 +197,7 @@ const defaultFrom: FormProps = {
 	columns: [
 		name,
 		mode,
-		recommend_door,
+		recommend_door_dependency,
 		recommend_door_name_dependency,
 		industry,
 		logo,

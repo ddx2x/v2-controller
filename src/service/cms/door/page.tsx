@@ -48,16 +48,6 @@ const storeTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'store_status',
-      title: '门店状态',
-      valueType: 'switch',
-      hideInSearch: true,
-      valueEnum: {
-        true: false,
-        false: true,
-      }
-    },
-    {
       dataIndex: 'online_store_status',
       title: '网店状态',
       valueType: 'switch',
