@@ -4,6 +4,7 @@ import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { parse } from 'querystring';
 import { ProductAttribute, productAttributeStore } from '../../api/productAttribute.store';
+import { input_select_list_dependency, input_type } from './columns';
 
 
 const name: FormColumnsType = {
@@ -47,7 +48,7 @@ const select_type: FormColumnsType = {
 	title: '属性选择类型',
 	dataIndex: 'select_type',
 	valueType: 'radio',
-	initialValue: "0",
+	initialValue: "1",
 	formItemProps: {
 		rules: [
 			{
@@ -57,32 +58,12 @@ const select_type: FormColumnsType = {
 		],
 	},
 	valueEnum: {
-		0: "唯一",
 		1: "单选",
 		2: "多选",
 	}
 
 };
 
-
-const input_type: FormColumnsType = {
-	dataIndex: 'input_type',
-	title: '录入方式',
-	valueType: 'radio',
-	initialValue: "0",
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			},
-		],
-	},
-	valueEnum: {
-		0: "手工录入",
-		1: "从列表中选取",
-	}
-};
 
 
 const input_select_list: FormColumnsType = {
@@ -245,7 +226,7 @@ const addForm: FormProps = {
 		name,
 		select_type,
 		input_type,
-		input_select_list,
+		input_select_list_dependency,
 		// sort,
 		// filter_type,
 		// search_type,
@@ -259,11 +240,11 @@ const addForm: FormProps = {
 			select_type: Number(values.select_type),
 			input_type: Number(values.input_type),
 			input_select_list: values.input_select_list,
-			sort: Number(values.sort),
-			filter_type: Number(values.filter_type),
-			search_type: Number(values.search_type),
-			related_status: Number(values.related_status),
-			hand_add_status: Number(values.hand_add_status),
+			// sort: Number(values.sort),
+			// filter_type: Number(values.filter_type),
+			// search_type: Number(values.search_type),
+			// related_status: Number(values.related_status),
+			// hand_add_status: Number(values.hand_add_status),
 			type: Number(values.type),
 		};
 

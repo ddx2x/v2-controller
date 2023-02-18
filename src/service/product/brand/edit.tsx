@@ -52,7 +52,7 @@ const editForm: FormProps = {
 			logo: values.logo?.fileList[0].name || "",
 			big_pic: values.big_pic?.fileList[0].name || "",
 			brand_story: values.brand_story,
-			sort: Number(values.sort),
+			// sort: Number(values.sort),
 		};
 		brandStore.update_one(dataObject, target, ["first_letter", "factory_status", "logo", "big_pic", "brand_story", "sort"]).
 			then(() => { notification.success({ message: "保存成功" }); formRef.current?.resetFields(); })

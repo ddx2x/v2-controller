@@ -12,6 +12,7 @@ const columns: StoreTableProps['columns'] = [
     title: '类型名称',
     hideInSearch: true,
     editable: false,
+    fixed: 'left',
   },
   {
     dataIndex: 'nav_status',
@@ -83,6 +84,7 @@ const categoryStoreTable: StoreTableProps = {
           title: '子类型',
           hideInSearch: true,
           editable: false,
+          fixed: 'left',
         },
         {
           dataIndex: 'parent_id',

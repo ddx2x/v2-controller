@@ -22,6 +22,8 @@ const attributeStoretable: StoreTableProps = {
       title: '名称',
       hideInSearch: true,
       editable: false,
+      fixed: 'left',
+      width: 100,
     },
     {
       dataIndex: 'type',
@@ -45,7 +47,6 @@ const attributeStoretable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       valueEnum: {
-        0: "唯一",
         1: "单选",
         2: "多选",
       }
@@ -66,12 +67,6 @@ const attributeStoretable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       valueType: 'select',
-    },
-    {
-      dataIndex: 'sort',
-      title: '排序',
-      hideInSearch: true,
-      editable: false,
     },
   ],
   toolBarMenu: (selectedRows, location) => {
@@ -111,11 +106,12 @@ const attributeStoretable: StoreTableProps = {
   //   },
   // ],
   onRequest: (params: any, sort, filter, location) => {
-    const query = merge(params,
-      { sort: { brand_name: 1 } },
-      { filter: parse(location?.search.split('?')[1] || '') },
-    );
-    productAttributeStore.next(query);
+
+    productAttributeStore.next(
+      merge(params,
+        { sort: { type: 1 } },
+        { filter: parse(location?.search.split('?')[1] || '') },
+      ));
   },
   useBatchDelete: true,
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)

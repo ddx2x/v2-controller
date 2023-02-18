@@ -7,11 +7,11 @@ export class ProductAttribute extends IObject {
     select_type: number | string | undefined
     input_type: number | string | undefined
     input_select_list: string[] | undefined
-    sort: number | undefined
-    filter_type: number | string | undefined
-    search_type: number | string | undefined
-    related_status: number | string | undefined
-    hand_add_status: number | string | undefined
+    // sort: number | undefined
+    // filter_type: number | string | undefined
+    // search_type: number | string | undefined
+    // related_status: number | string | undefined
+    // hand_add_status: number | string | undefined
     type: number | string | undefined
 
     constructor(data: ProductAttribute) {
