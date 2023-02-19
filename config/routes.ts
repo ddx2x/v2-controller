@@ -141,9 +141,16 @@ export default [
         name: '订单列表',
         path: '/order/list',
         component: './dynamic-view',
-        routes: [],
+        routes: [
+          {
+            name: '订单详情',
+            path: '/order/list/detail',
+            component: './dynamic-view',
+            parentKeys: ['/order/list'],
+            hideInMenu: true,
+          }
+        ],
       },
-
       {
         name: '发货管理',
         path: '/order/deliverlist',

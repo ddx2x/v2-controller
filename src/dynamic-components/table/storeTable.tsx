@@ -16,10 +16,10 @@ export declare type StoreTableProps = TableProps & {
 }
 
 export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
-  const { store, defaultPageSize, onRequest, ...rest } = props;
+  const { store, defaultPageSize, onRequest, value, ...rest } = props;
   return (
     <Table
-      value={store?.items || []}
+      value={value || store?.items || []}
       loading={store?.loading || false}
       pagination={{
         total: store?.count,

@@ -1,7 +1,7 @@
 import { pageManager } from '@/dynamic-view';
 import { View } from '@/dynamic-view/typing';
 import { message } from 'antd';
-import { Privilege, privilegeStore } from '../../api/privilegeResource';
+import { Privilege, privilegeStore } from '../../api/privilegeResource.store';
 
 const table: View = {
   kind: 'storeTable',

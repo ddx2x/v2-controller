@@ -1,11 +1,15 @@
-import { Table } from '@/dynamic-components/table';
-import { Form, FormProps } from '../../form';
 import { valueTypeMapStore } from '../valueTypeMap';
-import { BMapRender, BMapRenderFormItem, BaiduMapInputProps, BaiduMapInputRender, BaiduMapInputRenderFormItem, BaiduMapProps } from './baiduMap';
-import { Card, CardProps } from './card';
+import { BaiduMapInputProps, BaiduMapInputRender, BaiduMapInputRenderFormItem, BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
+import { DescriptionsCardProps, DescriptionsCardRender, DescriptionsCardRenderFormItem } from './descriptionsCard';
+import { EditableTableProps, EditableTableRender, EditableTableRenderFormItem } from './editableTable';
 import { ImageUploadProps, ImageUploadRender, ImageUploadRenderFormItem } from './imageUpload';
+import {
+  MerchandiseListProps, MerchandiseListRender, MerchandiseListRenderFormItem,
+  MerchandiseProps, MerchandiseRender, MerchandiseRenderFormItem
+} from './merchandise';
 import { MonacoEditorProps, MonacoEditorRender, MonacoEditorRenderFormItem } from './monacoEditor';
 import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
+import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
 import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
 
@@ -17,9 +21,12 @@ declare module '@ant-design/pro-utils' {
     imageUpload: ImageUploadProps;
     videoUpload: VideoUploadProps;
     monacoEditor: MonacoEditorProps;
-    card: CardProps;
-    form: FormProps;
+    merchandise: MerchandiseProps;
+    merchandiseList: MerchandiseListProps
     quill: QuillProps;
+    steps: StepsProps;
+    descriptionsCard: DescriptionsCardProps
+    editableTable: EditableTableProps
   }
 }
 
@@ -31,10 +38,12 @@ const valueTypeMap = {
   imageUpload: [ImageUploadRender, ImageUploadRenderFormItem],
   videoUpload: [VideoUploadRender, VideoUploadRenderFormItem],
   monacoEditor: [MonacoEditorRender, MonacoEditorRenderFormItem],
-  card: [Card, Card],
-  table: [Table, Table],
-  form: [Form, Form],
-  quill: [QuillRender, QuillRenderFormItem]
+  quill: [QuillRender, QuillRenderFormItem],
+  merchandise: [MerchandiseRender, MerchandiseRenderFormItem],
+  merchandiseList: [MerchandiseListRender, MerchandiseListRenderFormItem],
+  steps: [StepsRender, StepsFormItem],
+  descriptionsCard: [DescriptionsCardRender, DescriptionsCardRenderFormItem],
+  editableTable: [EditableTableRender, EditableTableRenderFormItem]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);

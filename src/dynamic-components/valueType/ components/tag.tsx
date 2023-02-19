@@ -11,7 +11,7 @@ const TagIcon = {
   'stop': <MinusCircleOutlined />
 }
 
-export declare type TagProps = ProFieldFCRenderProps 
+export declare type TagProps = ProFieldFCRenderProps
 
 // 编辑
 export const TagRenderFormItem: React.FC<TagProps> = (props) => {
@@ -22,11 +22,15 @@ export const TagRenderFormItem: React.FC<TagProps> = (props) => {
 export const TagRender: React.FC<TagProps> = (props) => {
   const { valueEnum, value } = props
   if (!valueEnum) return null
-  if (!valueEnum[value]) return null
+  // @ts-ignore
+  const obj = valueEnum.hasOwnProperty(value) ? valueEnum[value] : {}
+  const status = obj?.status || 'success'
+  // @ts-ignore
+  const icon = obj?.icon ? TagIcon[obj?.icon] : undefined
 
   return (
     <Space>
-      <Tag color={valueEnum[value]?.status || 'success'} icon={TagIcon[valueEnum[value]?.icon] || undefined} key={value}>
+      <Tag color={status} icon={icon} key={value}>
         {value}
       </Tag>
     </Space>
