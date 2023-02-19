@@ -160,6 +160,9 @@ const editForm: FormProps = {
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
+	grid: true,
+	// layout: 'horizontal',
+	// colProps: { flex: 'auto' },
 	columns: [
 		name,
 		level,

@@ -34,13 +34,15 @@ const editForm: FormProps = {
 				rs.recommand_status = rs.recommand_status === 1 ? true : false;
 				rs.sort = String(rs.sort);
 				rs.promotion_type = rs.promotion_type?.map((item: any) => String(item));
-
 				form?.setFieldsValue(rs);
 			}).
 			catch((e) => notification.error({ message: e }))
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
+	grid: true,
+	layout: 'horizontal',
+	// colProps: { flex: 'auto' },
 	columns: [
 		merge(sub_title, { fieldProps: { disabled: true } }),
 		merge(name, { fieldProps: { disabled: true } }),

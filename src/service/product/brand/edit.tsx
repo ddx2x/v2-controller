@@ -34,6 +34,9 @@ const editForm: FormProps = {
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
+	// grid: true,
+	// layout: 'vertical',
+	// colProps: { flex: 'auto' },
 	columns: [
 		editName,
 		first_letter,

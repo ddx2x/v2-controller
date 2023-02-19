@@ -19,8 +19,17 @@ const productStoreTable: StoreTableProps = {
       hideInTable: true,
       editable: false,
     },
+
     {
       dataIndex: 'album_pics',
+      title: '商品图',
+      hideInSearch: true,
+      valueType: 'imageUpload',
+      editable: false,
+      hideInTable: true,
+    },
+    {
+      dataIndex: 'album_pic',
       title: '商品图',
       hideInSearch: true,
       valueType: 'imageUpload',
