@@ -12,4 +12,8 @@ export const shipForm: FormProps = {
     orderTime,
     deliveryInfo,
   ],
+  onSubmit({ formRef, values, handleClose }) {
+    console.log('values', values);
+    return true
+  },
 }

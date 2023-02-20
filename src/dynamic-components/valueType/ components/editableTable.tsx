@@ -8,15 +8,22 @@ import { useState } from 'react';
 
 export declare type EditableTableProps = ProFieldFCRenderProps & EditableProTableProps<any, any> & {
   editableValuesChange?: (record: any) => void
+  onSelectedRows?: (selectedRows: any) => void
 }
 
 export const EditableTable: React.FC<EditableTableProps> = (props) => {
-  const { columns, value, editableValuesChange, ...rest } = props
+  const { columns, value, onChange, editableValuesChange, onSelectedRows, ...rest } = props
 
-  const [selectedRows, setSelectedRows] = useState([]);
+  const { dataSource, selectedRows } = value
+
+  const [_selectedRows, setSelectedRows] = useState(selectedRows || []);
   const rowSelection = {
     preserveSelectedRowKeys: true,
-    onChange: (_: any, selectedRows: any) => { setSelectedRows(selectedRows) },
+    onChange: (_: any, selectedRows: any) => {
+      setSelectedRows(selectedRows);
+      onSelectedRows && onSelectedRows(selectedRows)
+      onChange && onChange({ dataSource, selectedRows: selectedRows })
+    },
   };
 
   const recordCreatorPosition = 'hidden'
@@ -34,12 +41,12 @@ export const EditableTable: React.FC<EditableTableProps> = (props) => {
       ) => domList.table}
       bordered
       columns={columns || []}
-      value={value || []}
+      value={dataSource || []}
       tableAlertRender={false}
       rowSelection={rowSelection}
       editable={{
         type: 'multiple',
-        editableKeys: value?.map((item: { [x: string]: any; }) => item[props['rowKey'] as string || 'id']) || [],
+        editableKeys: (dataSource || [])?.map((item: { [x: string]: any; }) => item[props['rowKey'] as string || 'id']) || [],
         actionRender: () => [],
         onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
       }}

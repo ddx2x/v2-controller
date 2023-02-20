@@ -46,7 +46,10 @@ export const merchandiseTable: FormColumnsType = {
         valueType: 'digit',
         initialValue: 1
       }
-    ]
+    ],
+    onSelectedRows: (selectedRows) => {
+      console.log('selectedRows', selectedRows)
+    }
   },
 }
 
