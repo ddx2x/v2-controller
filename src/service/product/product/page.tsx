@@ -9,7 +9,6 @@ import { detail } from './detail';
 const productStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
-  search: false,
   store: productStore,
   size: 'small',
   columns: [

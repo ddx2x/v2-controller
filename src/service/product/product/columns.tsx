@@ -1,5 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
-import { brandApi } from '../brand';
+import { brandApi } from '../../api';
 import { Category, categoryApi } from '../category';
 
 export const name: FormColumnsType = {

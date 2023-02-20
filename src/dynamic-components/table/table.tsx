@@ -1,10 +1,10 @@
 import {
-  ActionType, EditableProTable, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableProTable, ProCard, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
 import { useLocation } from '@umijs/max';
-import { Pagination, Space } from 'antd';
+import { Pagination, Space, Tree } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
 import { observable } from 'mobx';
@@ -22,7 +22,6 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
-  dataSourceFormatter?: (items: any) => any
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
   tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
@@ -50,7 +49,6 @@ export const Table: React.FC<TableProps> = (props) => {
     treeData,
     value,
     pagination,
-    dataSourceFormatter,
     // 批量删除
     useBatchDelete,
     useTableMoreOption,
@@ -153,48 +151,42 @@ export const Table: React.FC<TableProps> = (props) => {
       )
     }
 
-    const footerExtra = () => {
-      return (
-        <Space size={6}>
+    // 侧边搜索树🌲
+    if (useSiderTree) {
+      const withTreeWidth = useMemo(() => {
+        const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
+        if (!hasSiderMenu) {
+          return undefined;
+        }
+        // 0 or undefined
+        if (!siderWidth) {
+          return '100%';
+        }
+        return isMobile ? '100%' : `calc(100% - ${siderWidth}px)`;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [
+        routeContext?.collapsed,
+        routeContext?.hasSiderMenu,
+        routeContext?.isMobile,
+        routeContext?.siderWidth,
+      ]);
 
-        </Space>
+      return (
+        <>
+          <div style={{ display: 'flex' }}>
+            <ProCard bordered style={{ width: 249, marginRight: 7 }}>
+              <Tree treeData={treeData || []} />
+            </ProCard>
+            <div ref={setContainer} style={{ width: withTreeWidth }}>
+              {defaultDom}
+            </div>
+          </div>
+          <FooterToolbar routeContext={routeContext || {}}>
+            {pagination && paginationDom()}
+          </FooterToolbar>
+        </>
       )
     }
-
-    // // 侧边搜索树🌲
-    // if (useSiderTree) {
-    //   const withTreeWidth = useMemo(() => {
-    //     const { hasSiderMenu, isMobile, siderWidth } = routeContext || {};
-    //     if (!hasSiderMenu) {
-    //       return undefined;
-    //     }
-    //     // 0 or undefined
-    //     if (!siderWidth) {
-    //       return '100%';
-    //     }
-    //     return isMobile ? '100%' : `calc(100% - ${siderWidth}px)`;
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   }, [
-    //     routeContext?.collapsed,
-    //     routeContext?.hasSiderMenu,
-    //     routeContext?.isMobile,
-    //     routeContext?.siderWidth,
-    //   ]);
-
-    //   return (
-    //     <>
-    //       <div style={{ display: 'flex' }}>
-    //         <ProCard bordered style={{ width: 249, marginRight: 7 }}>
-    //           <Tree treeData={treeData || []} />
-    //         </ProCard>
-    //         <div ref={setContainer} style={{ width: withTreeWidth }}>
-    //           {defaultDom}
-    //         </div>
-    //       </div>
-    //       <Footer />
-    //     </>
-    //   )
-    // }
 
     // 原生table
     return (
@@ -231,16 +223,19 @@ export const Table: React.FC<TableProps> = (props) => {
     newColumns.push({
       dataIndex: 'menuButton',
       title: '操作',
+      hideInSearch: true,
       editable: false,
       width: 180,
       fixed: 'right',
       render: (text: any, record: any, index: any, action: any) => {
         return (
-          <MenuButton
-            dropDownTitle='操作'
-            menus={tableMenu ? tableMenu(record, action) : []}
-            hooks={(T) => { optionHooks[index] = T }}
-          />
+          <div style={{ textAlign: 'center' }}>
+            <MenuButton
+              dropDownTitle='操作'
+              menus={tableMenu ? tableMenu(record, action) : []}
+              hooks={(T) => { optionHooks[index] = T }}
+            />
+          </div>
         )
       },
     });
@@ -272,7 +267,7 @@ export const Table: React.FC<TableProps> = (props) => {
     >
       <EditableProTable
         columns={newColumns}
-        value={dataSourceFormatter ? dataSourceFormatter(value) : value}
+        value={value}
         editable={{
           type: 'multiple',
           editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
@@ -297,7 +292,6 @@ export const Table: React.FC<TableProps> = (props) => {
         toolbar={{
           multipleLine: true,
           title: toolbarTitle,
-          search: '...',
           actions: [
             <MenuButton
               dropDownTitle='更多操作'
