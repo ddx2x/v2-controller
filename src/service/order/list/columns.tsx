@@ -1,7 +1,7 @@
 import { FormColumnsType } from '@/dynamic-components';
 
 export const merchandiseList: FormColumnsType = {
-  dataIndex: 'name',
+  dataIndex: 'product_name',
   title: '商品名称',
   hideInSearch: true,
   valueType: 'merchandiseList',
@@ -19,7 +19,7 @@ export const merchandiseTable: FormColumnsType = {
   dataIndex: 'merchandiseTable',
   valueType: 'editableTable',
   fieldProps: {
-    rowKey: 'id',
+    rowKey: 'uid',
     columns: [
       {
         dataIndex: 'id',
