@@ -1,9 +1,8 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { orderStore } from '@/service/api';
+import { Order, orderStore } from '@/service/api';
 import { merge } from 'lodash';
-import { Product, productStore } from '../../api/productProduct.store';
 import { shipForm } from './form';
 
 const orderStoreTable: StoreTableProps = {
@@ -13,7 +12,7 @@ const orderStoreTable: StoreTableProps = {
   size: 'small',
   columns: [
     {
-      dataIndex: 'model_commodity',
+      dataIndex: 'order_sku_list',
       title: '商品信息',
       hideInSearch: true,
       valueType: 'merchandiseList',
@@ -64,40 +63,8 @@ const orderStoreTable: StoreTableProps = {
       }
     },
   ],
-  value: [{
-    "uid": '12344321421',
-    "model_commodity": [{
-      image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
-      title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
-      attrs: {
-        '数量': '10',
-        '单价': '4752',
-        '仓库': '智慧零售_6013610787967'
-      }
-    },
-    {
-      image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
-      title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
-      attrs: {
-        '数量': '10',
-        '单价': '4752',
-        '仓库': '智慧零售_6013610787967'
-      },
-      
-    },
-      {
-        image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
-        title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
-        attrs: {
-          '数量': '10',
-          '单价': '4752',
-          '仓库': '智慧零售_6013610787967'
-        }
-      }],
-    "total": 100.25,
-    "customer": '鑫新智联',
-  }],
-  tableMenu: (record: Product, action: any) => {
+
+  tableMenu: (record: Order, action: any) => {
     let columns: MenuButtonType[] = [{
       kind: 'link',
       title: '详情',
@@ -109,34 +76,9 @@ const orderStoreTable: StoreTableProps = {
       request: async (params) => {
         return {
           merchandiseTable: {
-            dataSource: [
-              {
-                id: '1',
-                merchandise: {
-                  image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
-                  title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
-                  attrs: {
-                    '数量': '10',
-                    '单价': '4752',
-                    '仓库': '智慧零售_6013610787967'
-                  }
-                },
-                orderId: '1234412'
-              },
-              {
-                id: '2',
-                merchandise: {
-                  image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
-                  title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
-                  attrs: {
-                    '数量': '10',
-                    '单价': '4752',
-                    '仓库': '智慧零售_6013610787967'
-                  }
-                },
-              }]
+            dataSource: record.order_sku_list
           },
-          orderId: '1234412'
+          orderId: record._id
         }
       },
       ...shipForm,
@@ -145,7 +87,7 @@ const orderStoreTable: StoreTableProps = {
   },
   onRequest: (params) => {
     const query = merge(params, { sort: { version: 1 } });
-    productStore.next(query);
+    orderStore.next(query)
   },
 };
 

@@ -8,6 +8,7 @@ export class Order extends IObject {
   is_view: boolean | undefined
   level: number | undefined
   op: number | undefined
+  order_sku_list: [] | undefined
 
   constructor(data: Order) {
     super(data);
@@ -18,7 +19,7 @@ export class Order extends IObject {
 export const orderApi = new ObjectApi<Order>({
   url: '/api/v1/order',
   objectConstructor: Order,
-  service: 'base',
+  service: 'trade-t',
 });
 
 class OrderStore extends ObjectStore<Order> {
