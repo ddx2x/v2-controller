@@ -82,8 +82,18 @@ const orderStoreTable: StoreTableProps = {
         '数量': '10',
         '单价': '4752',
         '仓库': '智慧零售_6013610787967'
-      }
-    }],
+      },
+      
+    },
+      {
+        image: '/media-t/file/3prFcPQUTwpbBe9fgBaWRw_1676282738491.png',
+        title: '美孚(Mobil)美孚速霸2000 全合成机油 5W-40 SP级 4L',
+        attrs: {
+          '数量': '10',
+          '单价': '4752',
+          '仓库': '智慧零售_6013610787967'
+        }
+      }],
     "total": 100.25,
     "customer": '鑫新智联',
   }],

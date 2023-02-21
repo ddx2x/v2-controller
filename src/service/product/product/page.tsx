@@ -10,6 +10,7 @@ const productStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: productStore,
+  search: false,
   size: 'small',
   columns: [
     {
@@ -116,7 +117,6 @@ const productStoreTable: StoreTableProps = {
       } else {
         update.publish_status = 0
       }
-      // console.log("update", update.publish_status, "src", src.publish_status)
       productStore.update_one(src, update, ["publish_status"]).then(() => {
         notification.success({ message: "更新成功" });
       }
@@ -176,8 +176,10 @@ const productStoreTable: StoreTableProps = {
     {
       kind: 'descriptions',
       title: '详情',
-      dataSource: record,
       collapse: true,
+      request: async (params) => {
+        return await productStore.get(record.uid).then(rs => rs)
+      },
       ...detail
     },
     {
