@@ -178,7 +178,7 @@ const productStoreTable: StoreTableProps = {
       title: '详情',
       collapse: true,
       request: async (params) => {
-        return await productApi.get().catch(rs => { return { data: { product_category_name: 'product_category_name' }, success: true } })
+        return await productApi.get(record.uid).then(rs => { return { data: rs, success: true } })
       },
       ...detail
     },

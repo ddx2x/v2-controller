@@ -67,7 +67,6 @@ const table: StoreTableProps = {
       title: '商品库存',
       hideInSearch: true,
       valueType: 'digit',
-      editable: false,
     },
     {
       dataIndex: 'low_stock',

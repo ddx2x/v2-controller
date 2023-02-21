@@ -82,6 +82,10 @@ let recommend_door_name: FormColumnsType = {
 	title: '选择推荐店',
 	dataIndex: 'recommend_door_name',
 	valueType: 'select',
+	fieldProps: {
+		// showSearch: true,
+		// search: true,
+	},
 	formItemProps: {
 		rules: [
 			{
