@@ -8,7 +8,6 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
-import type { Location } from 'history';
 import { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { RouterHistory } from '../router';
@@ -33,17 +32,12 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   width?: string | number;
   intl?: IntlShape;
   routeContext?: RouteContextType;
-} & RouterHistory & {
-  onMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
-  unMount?: (location: Location | undefined, actionRef: React.MutableRefObject<ActionType | undefined>) => void;
-};
+} & RouterHistory
 
 export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) => {
   const {
     columns,
     location,
-    onMount,
-    unMount,
     title,
     modal,
     width,
@@ -55,26 +49,16 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
 
 
   const actionRef = useRef<ActionType>();
-  // const init = () => {
-  //   delay(() => actionRef && onMount && onMount(location, actionRef), 10);
-  // }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useImperativeHandle(forwardRef, () => {
-    return {
-      open: () => showModal(),
-    };
+    return { open: () => { showModal() } };
   });
-
-  // useEffect(() => {
-  //   init()
-  //   return () => actionRef && unMount && unMount(location, actionRef);
-  // }, []);
 
   const proProviderValues = useContext(ProProvider);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => { setIsModalOpen(true) };
-  const handleClose = () => { setIsModalOpen(false)};
+  const handleClose = () => { setIsModalOpen(false) };
 
   const triggerDom = () => {
     return (

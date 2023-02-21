@@ -3,7 +3,7 @@ import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { message, notification } from 'antd';
 import { merge } from 'lodash';
-import { Product, productStore } from '../../api/productProduct.store';
+import { Product, productApi, productStore } from '../../api/productProduct.store';
 import { detail } from './detail';
 
 const productStoreTable: StoreTableProps = {
@@ -178,7 +178,7 @@ const productStoreTable: StoreTableProps = {
       title: '详情',
       collapse: true,
       request: async (params) => {
-        return await productStore.get(record.uid).then(rs => rs)
+        return await productApi.get().catch(rs => { return { data: { product_category_name: 'product_category_name' }, success: true } })
       },
       ...detail
     },
