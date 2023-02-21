@@ -11,8 +11,8 @@ import type { Location } from 'history';
 import { merge } from 'lodash';
 import { Dispatch, forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
-import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type FormRef = {
@@ -150,7 +150,7 @@ Form.defaultProps = {
   },
   submitTimeout: 1000,
   columns: [],
-  style: {padding: '0 14%'}
+  style: { padding: '0 14%' }
 };
 
 export const useForm = (props: FormProps): React.ReactNode => {

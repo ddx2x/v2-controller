@@ -1,4 +1,4 @@
-import { randomKey } from '@/dynamic-components/helper';
+import { randomKey } from '@/helper';
 import NoFoundPage from '@/pages/404';
 import { RouteContext } from '@ant-design/pro-components';
 import { useIntl, useLocation } from '@umijs/max';

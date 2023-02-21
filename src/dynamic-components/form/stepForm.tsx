@@ -8,8 +8,8 @@ import Button from 'antd/lib/button';
 import type { Location } from 'history';
 import React, { Dispatch, useContext, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
+import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
-import { waitTime } from '../helper/wait';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {

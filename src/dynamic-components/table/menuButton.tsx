@@ -4,9 +4,9 @@ import { Button, Dropdown, MenuProps, message, Popconfirm, Space } from 'antd';
 import { ButtonSize } from 'antd/es/button';
 import { ButtonType } from 'antd/lib/button';
 import React, { useRef } from 'react';
+import { randomKey } from '../../helper';
 import { Descriptions, DescriptionsProps, DescriptionsRef } from '../descriptions';
 import { Form, FormProps, FormRef } from '../form';
-import { randomKey } from '../helper';
 
 export declare type MenuButton = {
   key: string;

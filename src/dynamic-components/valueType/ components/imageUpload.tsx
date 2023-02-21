@@ -1,11 +1,11 @@
-import { randomKey } from '@/dynamic-components/helper';
+import { randomKey } from '@/helper';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Image, Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
-import { getBase64, handleBeforeUpload } from '../../helper/utils';
+import { getBase64, handleBeforeUpload } from '../../../helper/utils';
 
 export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
   prefix?: string
