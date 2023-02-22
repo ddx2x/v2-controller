@@ -11,7 +11,7 @@ export interface Store<S extends ObjectStore<IObject>> {
 }
 
 export function storeables(stores: Store<any>[]) {
-  return function classes<T extends { new (...args: any[]): any }>(constructor: T) {
+  return function classes<T extends { new(...args: any[]): any }>(constructor: T) {
     return class extends constructor {
       stores = stores;
       componentDidMount() {

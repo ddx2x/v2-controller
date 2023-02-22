@@ -1,10 +1,10 @@
 
 import {
-  EditableProTable, ProFieldFCRenderProps, ProTableProps
+  EditableProTable, ProFieldFCRenderProps
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
 import { useState } from 'react';
-
+import './index.scss';
 
 export declare type EditableTableProps = ProFieldFCRenderProps & EditableProTableProps<any, any> & {
   editableValuesChange?: (record: any) => void
@@ -30,15 +30,7 @@ export const EditableTable: React.FC<EditableTableProps> = (props) => {
 
   return (
     <EditableProTable
-      tableRender={(
-        props: ProTableProps<any, any, 'text'>,
-        defaultDom: JSX.Element,
-        domList: {
-          toolbar: JSX.Element | undefined;
-          alert: JSX.Element | undefined;
-          table: JSX.Element | undefined;
-        },
-      ) => domList.table}
+      prefixCls='editableTable'
       bordered
       columns={columns || []}
       value={dataSource || []}
@@ -48,7 +40,7 @@ export const EditableTable: React.FC<EditableTableProps> = (props) => {
         type: 'multiple',
         editableKeys: (dataSource || [])?.map((item: { [x: string]: any; }) => item[props['rowKey'] as string || 'id']) || [],
         actionRender: () => [],
-        onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+        onValuesChange: (record, dataSource) => onChange && onChange({ dataSource, selectedRows: _selectedRows }),
       }}
       recordCreatorProps={
         recordCreatorPosition !== 'hidden'

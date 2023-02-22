@@ -1,5 +1,5 @@
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
-import { Card, Divider, Image } from 'antd';
+import { Card, Col, Descriptions, Divider, Image, Row } from 'antd';
 
 export declare type MerchandiseProps = ProFieldFCRenderProps & {
 }
@@ -9,36 +9,24 @@ export const Merchandise: React.FC<MerchandiseListProps> = (props) => {
   const { image, title, attrs } = value
 
   return (
-    <div style={{ width: '100%', display: 'flex' }}>
-      <div
-        style={{ position: 'relative', width: '28%', overflow: 'hidden' }}
-      >
-        <Image
-          src={image}
-          style={{
-            width: '100%',
-            // height: '133%',
-          }}
-        />
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          flexGrow: 1,
-          WebkitBoxFlex: 1,
-          WebkitBoxOrient: 'vertical',
-          WebkitBoxDirection: 'normal',
-          WebkitBoxPack: 'justify',
-          // justifyContent: 'space-between',
-          padding: '0% 3% 3% 4%',
-          width: '78%'
-        }}
-      >
-        {title && <><div style={{ fontWeight: 700 }}>{title}</div></>}
-        {attrs && Object.entries(attrs).map(([key, value]) => <div>{key}: {value}</div>)}
-      </div>
-    </div>
+    <Row justify="space-around" align="top">
+      <Col span={8} style={{ paddingTop: '3%' }} >
+        <Image src={image} width={'100%'} />
+      </Col>
+      <Col span={13}>
+        <Descriptions column={1} title={title} size={'small'}>
+          {attrs && Object.entries(attrs).map(([key, value], index) =>
+            <Descriptions.Item
+              key={'attrs-descriptions' + index}
+              style={{ paddingBottom: 1 }}
+              label={key}>
+              {value}
+            </Descriptions.Item>
+          )}
+        </Descriptions>
+
+      </Col>
+    </Row>
   )
 }
 
@@ -56,11 +44,11 @@ export const MerchandiseList: React.FC<MerchandiseListProps> = (props) => {
   const { value } = props
   return (
     <Card hoverable>
-      {Array.isArray(value) && value.map((item: any) => (
-        <>
-          <Merchandise text='' mode='read' value={item} />
-          <Divider style={{ marginTop: '0' }} />
-        </>
+      {Array.isArray(value) && value.map((item: any, index) => (
+        <div key={'merchandise' + index}>
+          <Merchandise key={'merchandise-' + index} text='' mode='read' value={item} />
+          <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+        </div>
       ))}
     </Card>
   )
