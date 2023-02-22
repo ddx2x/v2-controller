@@ -1,7 +1,7 @@
 import { FormColumnsType } from '@/dynamic-components';
 
 export const merchandiseList: FormColumnsType = {
-  dataIndex: 'product_name',
+  dataIndex: 'merchandiseList',
   title: '商品名称',
   hideInSearch: true,
   valueType: 'merchandiseList',
@@ -22,7 +22,7 @@ export const merchandiseTable: FormColumnsType = {
     rowKey: 'uid',
     columns: [
       {
-        dataIndex: 'id',
+        dataIndex: 'uid',
         hideInSearch: true,
         hideInTable: true,
       },
@@ -38,18 +38,16 @@ export const merchandiseTable: FormColumnsType = {
         hideInSearch: true,
         editable: false,
         valueType: 'digit',
-        initialValue: 1
       },
       {
         dataIndex: 'number2',
         title: '发货数量',
         valueType: 'digit',
-        initialValue: 1
       }
     ],
-    onSelectedRows: (selectedRows) => {
-      console.log('selectedRows', selectedRows)
-    }
+    editableValuesChange: (record) => {
+      console.log(record);
+    },
   },
 }
 
@@ -72,10 +70,7 @@ export const orderTime: FormColumnsType = {
 
 
 export const deliveryInfo: FormColumnsType = {
-  dataIndex: 'deliveryInfo',
-  title: '收货信息',
-  fieldProps: {
-    disabled: true
-  }
+  dataIndex: 'delivery_id',
+  title: '发货单',
 }
 

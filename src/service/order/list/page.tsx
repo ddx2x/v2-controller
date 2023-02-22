@@ -12,7 +12,7 @@ const orderStoreTable: StoreTableProps = {
   size: 'small',
   columns: [
     {
-      dataIndex: 'order_sku_list',
+      dataIndex: 'merchandise_list',
       title: '商品信息',
       hideInSearch: true,
       valueType: 'merchandiseList',
@@ -27,11 +27,12 @@ const orderStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'total',
+      dataIndex: 'total_render',
       title: '实收金额',
       valueType: 'money',
       hideInSearch: true,
       editable: false,
+
     },
     {
       dataIndex: 'customer',
@@ -74,9 +75,17 @@ const orderStoreTable: StoreTableProps = {
       kind: 'form',
       title: '详情',
       request: async (params) => {
+        
         return {
           merchandiseTable: {
-            dataSource: record.order_sku_list
+            dataSource: record.merchandise_list?.map(item => {
+              return {
+                uid: item.uid,
+                merchandise: item,
+                number1: 1,
+                number2: 2
+              }
+            })
           },
           orderId: record._id
         }
