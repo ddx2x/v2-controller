@@ -14,7 +14,7 @@ export const Merchandise: React.FC<MerchandiseListProps> = (props) => {
         <Image src={image} width={'100%'} />
       </Col>
       <Col span={13}>
-        <Descriptions column={1} title={title} size={'small'}>
+        <Descriptions column={1} title={title} size={'small'} style={{ marginBottom: 0 }}>
           {attrs && Object.entries(attrs).map(([key, value], index) =>
             <Descriptions.Item
               key={'attrs-descriptions' + index}
