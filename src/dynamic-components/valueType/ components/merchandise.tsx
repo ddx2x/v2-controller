@@ -17,28 +17,26 @@ export const Merchandise: React.FC<MerchandiseListProps> = (props) => {
           src={image}
           style={{
             width: '100%',
-            height: '133%',
+            // height: '133%',
           }}
         />
       </div>
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            flexGrow: 1,
-            WebkitBoxFlex: 1,
-            WebkitBoxOrient: 'vertical',
-            WebkitBoxDirection: 'normal',
-            WebkitBoxPack: 'justify',
-            justifyContent: 'space-between',
-            padding: '0% 3% 3% 4%',
-          }}
-        >
-          {title && <><div style={{ fontWeight: 700 }}>{title}</div></>}
-          {attrs && Object.entries(attrs).map(([key, value]) => <div>{key}: {value}</div>)}
-
-        </div>
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          flexGrow: 1,
+          WebkitBoxFlex: 1,
+          WebkitBoxOrient: 'vertical',
+          WebkitBoxDirection: 'normal',
+          WebkitBoxPack: 'justify',
+          // justifyContent: 'space-between',
+          padding: '0% 3% 3% 4%',
+          width: '78%'
+        }}
+      >
+        {title && <><div style={{ fontWeight: 700 }}>{title}</div></>}
+        {attrs && Object.entries(attrs).map(([key, value]) => <div>{key}: {value}</div>)}
       </div>
     </div>
   )

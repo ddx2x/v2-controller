@@ -1,4 +1,5 @@
 import { FormProps } from '@/dynamic-components';
+import { orderApi } from '@/service/api';
 import { deliveryInfo, merchandiseTable, orderId, orderTime } from './columns';
 
 export const shipForm: FormProps = {
@@ -8,8 +9,6 @@ export const shipForm: FormProps = {
   style: { width: '100%' },
   columns: [
     merchandiseTable,
-    orderId,
-    orderTime,
     deliveryInfo,
   ],
   onSubmit({ formRef, values, handleClose }) {
