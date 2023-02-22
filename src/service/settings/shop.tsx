@@ -1,13 +1,17 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
+import { cloneDeep, merge } from 'lodash';
 import { cmsDoorStore } from '../api/cmsDoor.store';
 import { Shop, shopStore } from '../api/settings.store';
 
-let name: FormColumnsType = {
+export const name: FormColumnsType = {
 	title: '名称',
 	dataIndex: 'name',
 	valueType: 'text',
+	fieldProps: {
+		disabled: true,
+	},
 	formItemProps: {
 		rules: [
 			{
@@ -18,16 +22,45 @@ let name: FormColumnsType = {
 	},
 };
 
-let mode: FormColumnsType = {
+const mode_dependency: FormColumnsType = {
+	valueType: 'dependency',
+	name: ['mode'],
+	columns: ({ mode }) => {
+		return mode === '1' ? [
+			merge(cloneDeep(mode_columns), {
+				valueEnum: {
+					2: '多店模式',
+				},
+			})
+		] : [merge(cloneDeep(mode_columns), {
+			valueEnum: {
+				1: '单店模式',
+			},
+			fieldProps: {
+				disabled: true,
+			},
+		})]
+	},
+};
+
+const mode_columns: FormColumnsType = {
 	title: '模式',
 	dataIndex: 'mode',
 	valueType: 'radio',
-	tooltip: `1.启用单店模式，手机端只展示一个商家店铺。门店可作为商家的自提点或配送点 2.启用多门店模式，则买家可在手机端选择门店`,
+	tooltip: `1.启用单店模式，手机端只展示一个商家店铺。门店可作为商家的自提点或配送点 2.启用多门店模式，则买家可在手机端选择门店(切换后将不可修改)`,
 	initialValue: 1,
 	valueEnum: {
 		1: '单店模式',
 		2: '多店模式',
 	},
+	fieldProps: {
+		onChange: (e: Event) => {
+			// TODO:提示一旦切换将不能改变,弹出modal框确认
+			
+			message.open({ content: "111111111" })
+			console.log(e);
+		},
+	},
 	formItemProps: {
 		rules: [
 			{
@@ -38,7 +71,7 @@ let mode: FormColumnsType = {
 	},
 };
 
-let recommend_door_dependency: FormColumnsType = {
+const recommend_door_dependency: FormColumnsType = {
 	valueType: 'dependency',
 	name: ['mode'],
 	columns: ({ mode }) => {
@@ -46,8 +79,8 @@ let recommend_door_dependency: FormColumnsType = {
 	},
 }
 
-let recommend_door: FormColumnsType = {
-	title: '推荐',
+const recommend_door: FormColumnsType = {
+	title: '门店推荐',
 	dataIndex: 'recommend_door',
 	valueType: 'radio',
 	initialValue: 0,
@@ -114,7 +147,7 @@ let recommend_door_name: FormColumnsType = {
 
 
 
-let industry: FormColumnsType = {
+const industry: FormColumnsType = {
 	title: '行业',
 	dataIndex: 'industry',
 	valueType: 'text',
@@ -129,7 +162,7 @@ let industry: FormColumnsType = {
 };
 
 
-let logo: FormColumnsType = {
+const logo: FormColumnsType = {
 	title: '商户logo',
 	dataIndex: 'logo',
 	valueType: 'imageUpload',
@@ -151,7 +184,7 @@ let logo: FormColumnsType = {
 };
 
 
-let introduction: FormColumnsType = {
+const introduction: FormColumnsType = {
 	title: '商户简介',
 	dataIndex: 'introduction',
 	valueType: 'textarea',
@@ -165,7 +198,7 @@ let introduction: FormColumnsType = {
 	},
 };
 
-let address: FormColumnsType = {
+const address: FormColumnsType = {
 	title: '地址',
 	dataIndex: 'address',
 	valueType: 'textarea',
@@ -198,9 +231,13 @@ const defaultFrom: FormProps = {
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
+	submitter: {
+		resetButtonProps: false
+	},
 	columns: [
 		name,
-		mode,
+		// mode_columns,
+		mode_dependency,
 		recommend_door_dependency,
 		recommend_door_name_dependency,
 		industry,
