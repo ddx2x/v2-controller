@@ -58,8 +58,8 @@ const mode_columns: FormColumnsType = {
 			onChange: (e: any) => {
 				if (e.target.value !== '1') {
 					Modal.confirm({
-						title: '确认门店模式',
-						content: '多门店模式一旦确认将不能修改',
+						title: '门店模式',
+						content: '多门店模式一旦确认将不能变更',
 						onOk: () => { },
 						onCancel: () => { form.setFieldValue('mode', '1') }
 					});
