@@ -1,6 +1,6 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { message, notification } from 'antd';
+import { Modal, notification } from 'antd';
 import { cloneDeep, merge } from 'lodash';
 import { cmsDoorStore } from '../api/cmsDoor.store';
 import { Shop, shopStore } from '../api/settings.store';
@@ -53,13 +53,19 @@ const mode_columns: FormColumnsType = {
 		1: '单店模式',
 		2: '多店模式',
 	},
-	fieldProps: {
-		onChange: (e: Event) => {
-			// TODO:提示一旦切换将不能改变,弹出modal框确认
-			
-			message.open({ content: "111111111" })
-			console.log(e);
-		},
+	fieldProps: (form) => {
+		return {
+			onChange: (e: any) => {
+				if (e.target.value !== '1') {
+					Modal.confirm({
+						title: '确认门店模式',
+						content: '多门店模式一旦确认将不能修改',
+						onOk: () => { },
+						onCancel: () => { form.setFieldValue('mode', '1') }
+					});
+				}
+			}
+		}
 	},
 	formItemProps: {
 		rules: [

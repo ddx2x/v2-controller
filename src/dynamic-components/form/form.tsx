@@ -9,6 +9,7 @@ import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { merge } from 'lodash';
+import { observer } from 'mobx-react';
 import { Dispatch, forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
@@ -38,7 +39,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   routeContext?: RouteContextType;
 }
 
-export const Form = forwardRef((props: FormProps, forwardRef) => {
+export const Form = observer(forwardRef((props: FormProps, forwardRef) => {
   const {
     onMount,
     columns,
@@ -102,39 +103,43 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
   const proProviderValues = useContext(ProProvider);
 
   return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
-      }}
-    >
-      <BetaSchemaForm
-        onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
-        // @ts-ignore
-        columns={_columns}
-        // @ts-ignore
-        formRef={formRef}
-        // @ts-ignore
-        trigger={
-          <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
-            {triggerText}
-          </Button>
-        }
-        open={isModalOpen}
-        autoFocusFirstInput
-        onFinish={async (values) => {
-          if (!onSubmit) return false;
-          const b = onSubmit({ formRef, values, dataObject, handleClose });
-          await waitTime(submitTimeout);
-          return b;
+    <>
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
         }}
-        isKeyPressSubmit={true}
-        // omitNil={true}
-        {...rest}
-      />
-    </ProProvider.Provider>
+      >
+        <BetaSchemaForm
+          onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
+          // @ts-ignore
+          columns={_columns}
+          // @ts-ignore
+          formRef={formRef}
+          // @ts-ignore
+          trigger={
+            <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
+              {triggerText}
+            </Button>
+          }
+          open={isModalOpen}
+          autoFocusFirstInput
+          onFinish={async (values) => {
+            if (!onSubmit) return false;
+            const b = onSubmit({ formRef, values, dataObject, handleClose });
+            await waitTime(submitTimeout);
+            return b;
+          }}
+          isKeyPressSubmit={true}
+          // omitNil={true}
+          {...rest}
+        />
+
+      </ProProvider.Provider>
+
+    </>
   );
-});
+}));
 
 Form.defaultProps = {
   title: '新建表单',

@@ -45,27 +45,26 @@ export default () => {
         {schema?.view &&
           schema.view.map((config: View, index: number) => {
             const { kind, ...props } = config;
-            props['location'] = location;
-            props['key'] = index;
 
             if (kind == 'storeTable') {
-              return <StoreTable {...(props as StoreTableProps)} intl={intl} routeContext={routeContext} />;
+              return <StoreTable key={kind + '-' + index} {...(props as StoreTableProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'table') {
-              return <Table {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
+              return <Table key={kind + '-' + index}  {...(props as TableProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'storeList') {
-              return <StoreList {...(props as StoreListProps)} intl={intl} routeContext={routeContext} />
+              return <StoreList key={kind + '-' + index}   {...(props as StoreListProps)} intl={intl} routeContext={routeContext} />
             }
             if (kind == 'list') {
-              return <List {...(props as ListProps)} intl={intl} routeContext={routeContext} />;
+              return <List key={kind + '-' + index}  {...(props as ListProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'form') {
-              return <Form {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
+              return <Form key={kind + '-' + index}   {...(props as FormProps)} intl={intl} routeContext={routeContext} />;
             }
             if (kind == 'stepForm') {
               return (
                 <StepForm
+                  key={kind + '-' + index}
                   {...(props as StepFormProps)}
                   modal="Form"
                   intl={intl}
@@ -76,6 +75,7 @@ export default () => {
             if (kind == 'descriptions') {
               return (
                 <Descriptions
+                  key={kind + '-' + index}
                   modal="Page"
                   {...(props as DescriptionsProps)}
                   intl={intl}
@@ -94,5 +94,6 @@ export default () => {
     <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>
       {page}
     </PageContainer>
+
   );
 };
