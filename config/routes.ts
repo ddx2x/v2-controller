@@ -162,19 +162,19 @@ export default [
 
   {
     name: '客户',
-    path: '/customer',
+    path: '/ums',
     icon: 'flag',
     routes: [
       {
         name: '客户列表',
-        path: '/customer/list',
+        path: '/ums/customer',
         component: './dynamic-view',
         routes: [],
       },
 
       {
         name: '会员权益',
-        path: '/customer/integral',
+        path: '/ums/member',
         component: './dynamic-view',
         parentKeys: ['/customer'],
       },

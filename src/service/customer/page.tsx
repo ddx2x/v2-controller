@@ -1,85 +1,198 @@
+import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { View } from '@/dynamic-view/typing';
-import { customerStore } from '../api/customer.store';
+import { Modal, notification } from 'antd';
+import { merge } from 'lodash';
+import { Customer, customerStore } from '../api/customer.store';
+import { detail } from './detail';
 
-// 商品列表
-const table: View = {
-  kind: 'storeTable',
+
+
+const defaultStoreTable: StoreTableProps = {
+  toolbarTitle: '数据列表',
   store: customerStore,
   rowKey: 'uid',
+  search: false,
+  defaultPageSize: 10,
   columns: [
     {
-      dataIndex: 'brand_name',
-      title: '品牌',
-      width: 200,
-    },
-    {
       dataIndex: 'uid',
-      title: '商品名称',
-      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
     },
     {
-      dataIndex: 'title',
-      title: '标题',
-      width: 200,
-    },
-    {
-      dataIndex: 'sub_title',
-      title: '标题',
+      dataIndex: 'name',
+      title: '客户信息',
+      hideInSearch: true,
+      editable: false,
+      fixed: 'left',
       width: 100,
     },
-  ],
-  expand: {
-    kind: 'table',
-    onData: (record: any) => { [record] },
-    table: {
-      columns: [
-        {
-          dataIndex: 'type',
-          title: '商品类型',
-        },
-        {
-          dataIndex: 'sale_channels',
-          title: '销售渠道',
-        },
-        {
-          dataIndex: 'price',
-          title: '价格',
-        },
-        {
-          dataIndex: 'stock',
-          title: '库存',
-        },
-      ],
+    {
+      dataIndex: 'phone',
+      title: '手机号',
+      hideInSearch: true,
+      editable: false,
+      fixed: 'left',
+      width: 120
     },
-  },
-  tableMenu: (record: any) => [
+    {
+      dataIndex: 'icon',
+      title: '头像',
+      valueType: 'imageUpload',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'become_time',
+      title: '成为客户时间',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'become_member_time',
+      title: '成为会员时间',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'bind_up_level',
+      title: '绑定的推荐人',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'bind_up_level_time',
+      title: '绑定推荐人时间',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'is_member',
+      title: '是否会员',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'integral',
+      title: '积分',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'accumulated_integral',
+      title: '累计积分',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'amount_of_consumption',
+      title: '消费金额',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'consumption_times',
+      title: '消费次数',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'last_consumption_time',
+      title: '最后消费时间',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'after_sales_amount',
+      title: '售后金额',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'after_sales_times',
+      title: '售后次数',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'freeze',
+      title: '是否冻结',
+      valueType: 'select',
+      valueEnum: {
+        false: '否',
+        true: '是',
+      },
+      hideInSearch: true,
+      editable: false,
+    }
+  ],
+  editableValuesChange: (record: any) => { console.log(record) },
+  toolBarMenu: (selectedRows: any) => [
+    {
+      kind: 'link',
+      title: '新增',
+      link: `/product/category/add`,
+    },
+  ],
+  tableMenu: (record: Customer, action: any) => [
+    {
+      kind: 'implement',
+      title: record.freeze ? '解冻结' : '冻结',
+      onClick: (e) => {
+        Modal.confirm({
+          title: record.freeze ? '解冻结' : '冻结',
+          content: record.freeze ? '解冻结后可以使用积分、余额' : '冻结后将无法使用积分、余额',
+          onOk: () => {
+            customerStore.
+              update_one(record, { freeze: !record.freeze }, ["freeze"]).
+              then((r) => {
+                notification.info({ message: r.freeze ? "冻结成功" : "解冻结成功" });
+              }).
+              catch((e) => {
+                notification.error(e);
+              });
+          },
+          onCancel: () => { }
+        });
+      },
+    },
     {
       kind: 'descriptions',
       title: '详情',
       collapse: true,
-      dataSource: {
-        id: '这是一段文本columns',
-        date: '20200809',
-        money: '1212100',
-        state: 'closed',
-        state2: 'open',
-        ...record,
+      request: async (params) => {
+        return await customerStore.api.get(record.uid).then(rs => { return { data: rs, success: true } })
       },
+      ...detail
     },
   ],
-
-  onRequest: (actionRef) => customerStore.next({ order: { version: 1 } }),
-  onSubmit: (params) => customerStore.next({ order: { version: 1 } }),
+  onRowEvent: [
+    {
+      mouseEvent: 'onDoubleClick',
+      title: '详情',
+    },
+  ],
+  onRequest: (params: any) => {
+    customerStore.next(merge(params, { filter: { level: 1 }, sort: { version: 1 } }));
+  },
+  batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows)
 };
 
-pageManager.register('customer.list', {
-  page: { view: [table] },
+
+pageManager.register('ums.customer', {
+  page: {
+    view: [{ kind: 'storeTable', ...defaultStoreTable }],
+    container: {
+      keepAlive: false
+    }
+  },
   stores: [
     {
       store: customerStore,
-      query: { order: { version: 1 } },
-      load: customerStore.next,
       exit: customerStore.reset,
     },
   ],
