@@ -1,14 +1,15 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { Order, orderStore } from '@/service/api';
+import { Order, orderApi, orderStore } from '@/service/api';
+import { message } from 'antd';
 import { merge } from 'lodash';
 import { shipForm } from './form';
 
 const orderStoreTable: StoreTableProps = {
   rowKey: 'uid',
   store: orderStore,
-  search: false,
+  // search: false,
   size: 'small',
   columns: [
     {
@@ -30,15 +31,15 @@ const orderStoreTable: StoreTableProps = {
       dataIndex: 'total_render',
       title: '实收金额',
       valueType: 'money',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
 
     },
     {
       dataIndex: 'customer',
       title: '客户信息',
-      hideInSearch: true,
-      editable: false,
+      // hideInSearch: true,
+      // editable: false,
     },
     {
       dataIndex: 'delivery_type',
@@ -49,7 +50,7 @@ const orderStoreTable: StoreTableProps = {
     {
       dataIndex: 'payment_type',
       title: '支付方式',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
     },
     {
@@ -57,38 +58,85 @@ const orderStoreTable: StoreTableProps = {
       title: '订单状态',
       valueType: 'switch',
       editable: false,
-      hideInSearch: true,
+      // hideInSearch: true,
       valueEnum: {
         0: false,
         1: true,
       }
     },
   ],
-
-  tableMenu: (record: Order, action: any) => {
+  toolbarTitle: '订单列表',
+  toolBarMenu: (selectedRows) => {
+    return [
+      {
+        kind: 'implement',
+        title: '批量删除',
+        collapse: true,
+        onClick(e) {
+          message.info('批量删除')
+        },
+      },
+      {
+        kind: 'implement',
+        title: '批量删除',
+        collapse: true,
+        onClick(e) {
+          message.info('批量删除')
+        },
+      },
+      {
+        kind: 'implement',
+        title: '批量删除',
+        onClick(e) {
+          message.info('批量删除')
+        },
+      },
+      {
+        kind: 'implement',
+        title: '批量删除',
+        onClick(e) {
+          message.info('批量删除')
+        },
+      },
+    ]
+  },
+  tableMenu: (record: Order, action) => {
     let columns: MenuButtonType[] = [{
       kind: 'link',
       title: '详情',
       link: `/order/list/detail?uid=${record.uid}`,
+    }, {
+      kind: 'implement',
+      title: '刷新',
+      onClick(e) {
+        action?.reload()
+      },
     }]
     columns.push({
       kind: 'form',
-      title: '详情',
-      request: async (params) => {
-        
-        return {
+      title: '发货',
+
+      onMount: async ({ form, setDataObject, }) => {
+        await orderApi.get(record.uid).then((res) => {
+          console.log('api', res);
+
+        })
+
+
+
+        form?.setFieldsValue({
           merchandiseTable: {
             dataSource: record.merchandise_list?.map(item => {
               return {
                 uid: item.uid,
                 merchandise: item,
-                number1: 1,
-                number2: 2
+                number1: record.delivery_map?.get(item.uid),
+                number2: record.delivery_map?.get(item.uid)
               }
             })
           },
           orderId: record._id
-        }
+        });
       },
       ...shipForm,
     })

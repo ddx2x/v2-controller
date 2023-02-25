@@ -19,24 +19,27 @@ export class Order extends IObject {
   op: number | undefined
   total: number | undefined
   order_sku_list: any | undefined
+  deliveries: any | undefined
   // 
   merchandise_list: MerchandiseList[] | undefined
   total_render: number | undefined
+  delivery_map: Map<string, number> | undefined
 
 
   constructor(data: Order) {
     super(data);
     Object.assign(this, data);
+
+    let delivery_map = new Map();
+
     this.total_render = this.total ? this.total / 100 : 0
     this.merchandise_list = this.order_sku_list?.map(
       (item: any) => {
+        delivery_map.set(item.sku.uid, item.quantity)
         let attrs: any = {}
-        if (item.quantity) {
-          attrs['数量'] = item.quantity
-        }
-        if (item.amount) {
-          attrs['价格'] = item.amount
-        }
+        attrs['数量'] = item.quantity
+        attrs['价格'] = item.amount
+
         if (item.sku.spec_name) {
           attrs['规格'] = item.sku.spec_name
         }
@@ -49,7 +52,13 @@ export class Order extends IObject {
       }
     )
 
-
+    this.deliveries?.map(
+      (item: any) => {
+        let quantity = delivery_map.get(item.sku_id) - item.quantity
+        delivery_map.set(item.sku_id, quantity)
+      }
+    )
+    this.delivery_map = delivery_map
   }
 }
 

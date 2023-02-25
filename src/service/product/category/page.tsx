@@ -116,7 +116,6 @@ const categoryStoreTable: StoreTableProps = {
           editable: false,
           valueType: 'select',
         },
-
       ],
     },
   },

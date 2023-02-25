@@ -14,7 +14,8 @@ export declare type EditableTableProps = ProFieldFCRenderProps & EditableProTabl
 export const EditableTable: React.FC<EditableTableProps> = (props) => {
   const { columns, value, onChange, editableValuesChange, onSelectedRows, ...rest } = props
 
-  const { dataSource, selectedRows } = value
+  let dataSource = value?.dataSource || []
+  let selectedRows = value?.selectedRows || []
 
   const [_selectedRows, setSelectedRows] = useState(selectedRows || []);
   const rowSelection = {

@@ -11,8 +11,8 @@ export const shipForm: FormProps = {
     merchandiseTable,
     deliveryInfo,
   ],
-  onSubmit({ formRef, values, handleClose }) {
-    console.log('values', values);
-    return true
+  onSubmit({ formRef, values, dataObject, handleClose }) {
+    console.log('values', values, dataObject);
+    return false
   },
 }

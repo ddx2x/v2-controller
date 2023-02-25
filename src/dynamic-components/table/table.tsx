@@ -1,5 +1,5 @@
 import {
-  ActionType, EditableProTable, ProCard, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableProTable, ProCard, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -24,7 +24,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   useSiderTree?: boolean; // 侧边树
   editableValuesChange?: (record: any) => void
   treeData?: DataNode[];
-  tableMenu?: (record?: any, action?: any) => MenuButtonType[]; // 更多操作
+  tableMenu?: (record?: any, action?: ProCoreActionType) => MenuButtonType[]; // 更多操作
   toolbarTitle?: string;
   toolBarMenu?: (selectedRows?: any, location?: Location | undefined) => MenuButtonType[];
   tableHeight?: string | number; // 表格高度
@@ -227,7 +227,7 @@ export const Table: React.FC<TableProps> = (props) => {
       editable: false,
       width: 180,
       fixed: 'right',
-      render: (text: any, record: any, index: any, action: any) => {
+      render: (text: any, record: any, index: any, action) => {
         return (
           <div style={{ textAlign: 'center' }}>
             <MenuButton
