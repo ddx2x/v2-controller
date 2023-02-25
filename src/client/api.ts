@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import { stringify } from 'querystring';
 import { request } from 'umi';
 import { apiManager } from './manager';
@@ -148,7 +149,7 @@ export class ObjectApi<T extends IObject = any> {
 
     return new this.objectConstructor(data);
   };
-  
+
   static createLink(ref: IObjectApiLinkRef): string {
     const { apiPrefix, apiVersion, apiResource, service } = ref;
     return [service, apiPrefix, apiVersion, apiResource].filter((v) => !!v).join('/');
@@ -171,9 +172,13 @@ export class ObjectApi<T extends IObject = any> {
     let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
     let queryObject: any = {};
 
-    if (query?.limit) queryObject['limit'] = JSON.stringify(query.limit);
-    if (query?.sort) queryObject['sort'] = JSON.stringify(query.sort);
-    if (query?.filter) queryObject['filter'] = JSON.stringify(query.filter);
+    let { limit, sort, filter, ...restQuery } = (query ? query : { limit: {}, sort: {}, filter: {} })
+
+    if (limit) queryObject['limit'] = JSON.stringify(limit);
+    if (sort) queryObject['sort'] = JSON.stringify(sort);
+    if (filter) queryObject['filter'] = JSON.stringify(filter);
+
+    if (restQuery) merge(queryObject, restQuery)
 
     if (parameter) resourcePath = resourcePath + '/' + parameter;
     if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(queryObject) : '');
