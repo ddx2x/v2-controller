@@ -103,6 +103,7 @@ const orderDescription: DescriptionsProps = {
     orderInfo,
   ] as DescriptionsProps['columns'],
   request: async (params) => {
+    console.log('params', params);
     let res = await orderApi.get(params.uid).then((res) => {
       let delivery_map = new Map();
 

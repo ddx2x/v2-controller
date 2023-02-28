@@ -6,11 +6,12 @@ import {
   ProProvider,
   RouteContextType
 } from '@ant-design/pro-components';
+import { useLocation } from '@umijs/max';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
+import { parse } from 'querystring';
 import { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { RouterHistory } from '../router';
 import { valueTypeMapStore } from '../valueType';
 
 export declare type DescriptionsRef = {
@@ -32,18 +33,18 @@ export declare type DescriptionsProps = ProDescriptionsProps & {
   width?: string | number;
   intl?: IntlShape;
   routeContext?: RouteContextType;
-} & RouterHistory
+}
 
 export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) => {
   const {
     columns,
-    location,
     title,
     modal,
     width,
     triggerText,
     buttonSize,
     buttonType,
+    params,
     ...rest
   } = props;
 
@@ -51,9 +52,8 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
   const actionRef = useRef<ActionType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useImperativeHandle(forwardRef, () => {
-    return { open: () => { showModal() } };
-  });
+
+  useImperativeHandle(forwardRef, () => { return { open: () => { showModal() } } });
 
   const proProviderValues = useContext(ProProvider);
 
@@ -68,6 +68,8 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
     );
   };
 
+  const query = parse(useLocation()?.search.split('?')[1] || '')
+
   const Page = () => {
     return (
       <ProProvider.Provider
@@ -77,6 +79,7 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
         }}
       >
         <ProDescriptions
+          params={{ ...params, ...query }}
           actionRef={actionRef}
           // @ts-ignore
           columns={columns}
