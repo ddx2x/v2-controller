@@ -1,6 +1,6 @@
 import { FormProps } from '@/dynamic-components';
 import { orderApi } from '@/service/api';
-import { deliveryInfo, merchandiseTable } from './columns';
+import { deliveryInfo, deliveryType, merchandiseTable } from '../order';
 
 export const shipForm: FormProps = {
   layoutType: 'ModalForm',
@@ -9,6 +9,7 @@ export const shipForm: FormProps = {
   style: { width: '100%' },
   columns: [
     merchandiseTable,
+    deliveryType,
     deliveryInfo,
   ],
   onSubmit({ formRef, values, dataObject, handleClose }) {
@@ -17,19 +18,20 @@ export const shipForm: FormProps = {
         2
     }
 
-    let data = []
-    data.push({
-      delivery_id: values.delivery_id,
+    let data = {
+      express_id: values.delivery_id,
+      delivery_id: "",
+      delivery_type: Number(values.delivery_type),
       sku_list: values.merchandiseTable.selectedRows.map((row: any) => {
         return {
           sku_id: row.uid,
-          quantity: row.number2
+          quantity: row.number2,
         }
       })
-    })
+    }
 
     // @ts-ignore
-    orderApi.update({ data: data }, dataObject.uid, query).then((res) => {
+    orderApi.update({ data: data, delivery_type: values.delivery_type }, dataObject.uid, query).then((res) => {
       console.log(res);
     })
     return true

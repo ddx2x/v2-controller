@@ -11,6 +11,7 @@ export interface MerchandiseList {
 
 
 export class Order extends IObject {
+  customer: string | undefined
   type: number | undefined
   url: string | undefined
   full_id: string | undefined

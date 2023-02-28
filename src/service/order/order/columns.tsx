@@ -74,3 +74,15 @@ export const deliveryInfo: FormColumnsType = {
   title: '发货单',
 }
 
+
+
+export const deliveryType: FormColumnsType = {
+  dataIndex: 'delivery_type',
+  title: '发货类型',
+  valueType: 'select',
+  valueEnum: {
+    1: '快递',
+    2: '自提',
+  },
+}
+

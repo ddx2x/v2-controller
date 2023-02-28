@@ -139,14 +139,14 @@ export default [
     routes: [
       {
         name: '订单列表',
-        path: '/order/list',
+        path: '/order/order',
         component: './dynamic-view',
         routes: [
           {
             name: '订单详情',
-            path: '/order/list/detail',
+            path: '/order/order/detail',
             component: './dynamic-view',
-            parentKeys: ['/order/list'],
+            parentKeys: ['/order/order'],
             hideInMenu: true,
           }
         ],
@@ -156,6 +156,12 @@ export default [
         path: '/order/deliverlist',
         component: './dynamic-view',
         parentKeys: ['/order'],
+      },
+      {
+        name: '售后管理',
+        path: '/order/after-sale-order',
+        component: './dynamic-view',
+        parentKeys: ['/after-sale-order'],
       },
     ],
   },

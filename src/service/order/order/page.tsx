@@ -66,7 +66,7 @@ const orderStoreTable: StoreTableProps = {
     let columns: MenuButtonType[] = [{
       kind: 'link',
       title: '详情',
-      link: `/order/list/detail?uid=${record.uid}`,
+      link: `/order/order/detail?uid=${record.uid}`,
     },
     {
       kind: 'implement',
@@ -126,7 +126,7 @@ const orderStoreTable: StoreTableProps = {
   },
 };
 
-pageManager.register('order.list', {
+pageManager.register('order.order', {
   page: {
     view: [{ kind: 'storeTable', ...orderStoreTable }],
     container: {
