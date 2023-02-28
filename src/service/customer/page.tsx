@@ -5,8 +5,6 @@ import { merge } from 'lodash';
 import { Customer, customerStore } from '../api/customer.store';
 import { detail } from './detail';
 
-
-
 const defaultStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: customerStore,
@@ -17,7 +15,7 @@ const defaultStoreTable: StoreTableProps = {
     {
       dataIndex: 'uid',
       hideInSearch: true,
-      hideInTable: true,
+      hideInTable: true,  
     },
     {
       dataIndex: 'name',
@@ -132,11 +130,11 @@ const defaultStoreTable: StoreTableProps = {
   ],
   editableValuesChange: (record: any) => { console.log(record) },
   toolBarMenu: (selectedRows: any) => [
-    {
-      kind: 'link',
-      title: '新增',
-      link: `/product/category/add`,
-    },
+    // {
+    //   kind: 'link',
+    //   title: '新增',
+    //   link: `/product/category/add`,
+    // },
   ],
   tableMenu: (record: Customer, action: any) => [
     {

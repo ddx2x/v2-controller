@@ -10,7 +10,7 @@ const productStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: productStore,
-  search: false,
+  // search: false,
   size: 'small',
   columns: [
     {
@@ -43,13 +43,23 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'name',
       title: '商品名称',
+      // hideInSearch: true,
+      editable: false,
+      fieldProps: {
+        autoComplete: true,
+      },
+    },
+    {
+      dataIndex: 'price',
+      title: '价格(起)',
       hideInSearch: true,
       editable: false,
+      valueType: 'money',
     },
     {
       dataIndex: 'brand_name',
       title: '品牌名称',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
     },
     {
@@ -61,12 +71,12 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'publish_status',
       title: '上架状态',
-      valueType: 'switch',
       hideInSearch: true,
+      valueType: 'switch',
       valueEnum: {
         0: false,
         1: true,
-      }
+      },
     },
 
     {
@@ -76,9 +86,9 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: 'select',
       valueEnum: {
-        false: { text: "否", status: "Error" },
-        true: { text: "是", status: "Success" }
-      }
+        false: { text: '否', status: 'Error' },
+        true: { text: '是', status: 'Success' },
+      },
     },
 
     {
@@ -86,11 +96,11 @@ const productStoreTable: StoreTableProps = {
       title: '推荐状态',
       hideInSearch: true,
       editable: false,
-      valueType: "select",
+      valueType: 'select',
       valueEnum: {
-        false: { text: "否", status: "Error" },
-        true: { text: "是", status: "Success" }
-      }
+        false: { text: '否', status: 'Error' },
+        true: { text: '是', status: 'Success' },
+      },
     },
 
     {
@@ -100,11 +110,10 @@ const productStoreTable: StoreTableProps = {
       editable: false,
       valueType: 'radio',
       valueEnum: {
-        0: { text: "否", status: 'Success' },
-        1: { text: "是", status: 'Error' },
-      }
+        0: { text: '否', status: 'Success' },
+        1: { text: '是', status: 'Error' },
+      },
     },
-
   ],
   editableValuesChange: (record: Product) => {
     const src = productStore.items.find((item) => item.getUid() === record.uid);
@@ -113,16 +122,18 @@ const productStoreTable: StoreTableProps = {
     if (!src) return;
     if (src?.publish_status !== update.publish_status) {
       if (update.publish_status) {
-        update.publish_status = 1
+        update.publish_status = 1;
       } else {
-        update.publish_status = 0
+        update.publish_status = 0;
       }
-      productStore.update_one(src, update, ["publish_status"]).then(() => {
-        notification.success({ message: "更新成功" });
-      }
-      ).catch((e) => {
-        notification.error({ message: "更新失败:" + e });
-      })
+      productStore
+        .update_one(src, update, ['publish_status'])
+        .then(() => {
+          notification.success({ message: '更新成功' });
+        })
+        .catch((e) => {
+          notification.error({ message: '更新失败:' + e });
+        });
     }
   },
   toolBarMenu: (selectedRows: any) => [
@@ -137,19 +148,22 @@ const productStoreTable: StoreTableProps = {
       onClick: (e) => {
         const rows: Product[] = selectedRows;
         if (rows.length <= 0) {
-          message.warning('请批量选择商品'); return
+          message.warning('请批量选择商品');
+          return;
         }
         rows.map((row) => {
-          productStore.update_one(row, { publish_status: 1 }, ["publish_status"]).
-            then(() => {
+          productStore
+            .update_one(row, { publish_status: 1 }, ['publish_status'])
+            .then(() => {
               message.info(`"${row.name}" 上架成功`);
               history.push(`/product/product`);
-            }).catch((e) => {
-              message.error(e)
             })
+            .catch((e) => {
+              message.error(e);
+            });
         });
       },
-      collapse: true
+      collapse: true,
     },
     {
       kind: 'implement',
@@ -157,19 +171,22 @@ const productStoreTable: StoreTableProps = {
       onClick: (e) => {
         const rows: Product[] = selectedRows;
         if (rows.length <= 0) {
-          message.warning('请批量选择商品'); return
+          message.warning('请批量选择商品');
+          return;
         }
         rows.map((row) => {
-          productStore.update_one(row, { publish_status: 0 }, ["publish_status"]).
-            then(() => {
+          productStore
+            .update_one(row, { publish_status: 0 }, ['publish_status'])
+            .then(() => {
               message.info(`"${row.name}" 下架成功`);
               history.push(`/product/product`);
-            }).catch((e) => {
-              message.error(e)
             })
+            .catch((e) => {
+              message.error(e);
+            });
         });
       },
-      collapse: true
+      collapse: true,
     },
   ],
   tableMenu: (record: Product, action: any) => [
@@ -178,31 +195,36 @@ const productStoreTable: StoreTableProps = {
       title: '详情',
       collapse: true,
       request: async (params) => {
-        return await productApi.get(record.uid).then(rs => { return { data: rs, success: true } })
+        return await productApi.get(record.uid).then((rs) => {
+          return { data: rs, success: true };
+        });
       },
-      ...detail
+      ...detail,
     },
     {
       kind: 'link',
       title: '编辑',
-      collapse: true,
-      link: '/product/product/edit?id=' + record.uid
+      // collapse: true,
+      link: '/product/product/edit?id=' + record.uid,
     },
     {
       kind: 'link',
       title: '存货',
       link: '/product/product/sku?product_id=' + record.uid,
-      collapse: true,
+      // collapse: true,
     },
     {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        productStore.remove(record.uid).then(() => {
-          notification.info({ message: "删除成功" })
-        }).catch(e => {
-          notification.error(e)
-        })
+        productStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
       },
       text: `确认删除` + record.name,
       collapse: true,
@@ -218,7 +240,7 @@ const productStoreTable: StoreTableProps = {
     const query = merge(params, { sort: { version: 1 } });
     productStore.next(query);
   },
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 
 pageManager.register('product.product', {
@@ -231,7 +253,7 @@ pageManager.register('product.product', {
   stores: [
     {
       store: productStore,
-      exit: productStore.reset
-    }
+      exit: productStore.reset,
+    },
   ],
 });
