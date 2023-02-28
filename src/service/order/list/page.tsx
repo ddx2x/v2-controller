@@ -36,6 +36,7 @@ const orderStoreTable: StoreTableProps = {
     {
       dataIndex: 'customer',
       title: '客户信息',
+      editable: false,
     },
     {
       dataIndex: 'delivery_type',
@@ -66,7 +67,8 @@ const orderStoreTable: StoreTableProps = {
       kind: 'link',
       title: '详情',
       link: `/order/list/detail?uid=${record.uid}`,
-    }, {
+    },
+    {
       kind: 'implement',
       title: '刷新',
       onClick(e) {
@@ -94,16 +96,22 @@ const orderStoreTable: StoreTableProps = {
           return res;
         })
 
+        let dataSource: any[] = [];
+        record.merchandise_list?.map(item => {
+          if (record.delivery_map?.get(item.uid) == 0) {
+            return
+          }
+          dataSource.push({
+            uid: item.uid,
+            merchandise: item,
+            number1: record.delivery_map?.get(item.uid),
+            number2: record.delivery_map?.get(item.uid)
+          })
+        })
+
         form?.setFieldsValue({
           merchandiseTable: {
-            dataSource: record.merchandise_list?.map(item => {
-              return {
-                uid: item.uid,
-                merchandise: item,
-                number1: data.delivery_map?.get(item.uid),
-                number2: data.delivery_map?.get(item.uid)
-              }
-            })
+            dataSource: dataSource,
           },
           orderId: record._id
         });

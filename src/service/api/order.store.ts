@@ -52,13 +52,20 @@ export class Order extends IObject {
       }
     )
 
+
     this.deliveries?.map(
       (item: any) => {
-        let quantity = delivery_map.get(item.sku_id) - item.quantity
-        delivery_map.set(item.sku_id, quantity)
+        item.sku_list?.map((sku: any) => {
+          let quantity = delivery_map.get(sku.sku_id) - sku.quantity
+          delivery_map.set(sku.sku_id, quantity)
+        })
+
+
       }
     )
     this.delivery_map = delivery_map
+    console.log('delivery_map', this.delivery_map);
+
   }
 }
 
