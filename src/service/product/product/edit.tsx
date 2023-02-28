@@ -53,7 +53,7 @@ const editForm: FormProps = {
     merge(sub_title, { fieldProps: { disabled: true } }),
     merge(name, { fieldProps: { disabled: true } }),
     merge(brand_name, { fieldProps: { disabled: true } }),
-    merge(product_category_name, { fieldProps: { disabled: true } }),
+    merge(product_category_name, { fieldProps: { disabled: false } }),
     publish_status,
     price,
     merge(product_sn, { fieldProps: { disabled: true } }),

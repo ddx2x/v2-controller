@@ -66,6 +66,7 @@ const table: StoreTableProps = {
       dataIndex: 'stock',
       title: '商品库存',
       hideInSearch: true,
+      editable: false,
       valueType: 'digit',
     },
     {
@@ -75,7 +76,7 @@ const table: StoreTableProps = {
       editable: false,
     },
   ],
-  editableValuesChange: (record: StockKeepingUnit) => { },
+  editableValuesChange: (record: StockKeepingUnit) => {},
   toolBarMenu: (selectedRows, location) => [
     {
       kind: 'form',
@@ -85,34 +86,37 @@ const table: StoreTableProps = {
       title: '生成单品存量',
       onMount({ form, setColumns, setDataObject }) {
         const query: any = parse(location?.search.split('?')[1] || '');
-        const product_id = query["product_id"];
+        const product_id = query['product_id'];
         setDataObject({ product_id: product_id });
 
         request(`/product-t/api/v1/product_other/${product_id}`)
           .then((rs: ProductAttribute[]) => {
             const fields = rs.map((r) => {
-              const valueEnum = r.input_select_list?.map((item, index) => {
-                return { val: item }
-              }).reduce(function (map: any, obj: any) {
-                map[obj.val] = obj.val;
-                return map;
-              }, {});
+              const valueEnum = r.input_select_list
+                ?.map((item, index) => {
+                  return { val: item };
+                })
+                .reduce(function (map: any, obj: any) {
+                  map[obj.val] = obj.val;
+                  return map;
+                }, {});
 
               return {
                 dataIndex: r.name,
                 title: r.name,
-                tooltip: `${r.category_id}-${r.name}-${r.input_type === 1 ? "只能从列表选择" : "支持手工添加"}`,
-                valueType: "select",
+                tooltip: `${r.category_id}-${r.name}-${
+                  r.input_type === 1 ? '只能从列表选择' : '支持手工添加'
+                }`,
+                valueType: 'select',
                 hideInSearch: true,
                 fieldProps: {
                   mode: r.input_type === 1 ? 'multiple' : 'tags',
                 },
                 editable: false,
                 valueEnum: valueEnum,
-              } as FormColumnsType
-            })
+              } as FormColumnsType;
+            });
             setColumns(fields);
-
           })
           .catch((e) => {
             message.error(e);
@@ -120,14 +124,14 @@ const table: StoreTableProps = {
       },
       onSubmit: ({ values, dataObject, handleClose }) => {
         request(`/product-t/api/v1/product_other`, {
-          method: "POST",
+          method: 'POST',
           data: merge({}, { product_id: dataObject.product_id, values: values }),
         })
           .then(() => {
-            notification.info({ message: "生成成功" })
-            history.push(`/product/product/sku?product_id=${dataObject.product_id}`)
+            notification.info({ message: '生成成功' });
+            history.push(`/product/product/sku?product_id=${dataObject.product_id}`);
           })
-          .catch((e) => notification.error(e))
+          .catch((e) => notification.error(e));
 
         handleClose();
         return true;
@@ -139,11 +143,14 @@ const table: StoreTableProps = {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        stockKeepingUnitStore.remove(record.uid).then(() => {
-          notification.info({ message: "删除成功" })
-        }).catch(e => {
-          notification.error(e)
-        })
+        stockKeepingUnitStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
       },
       text: `确认删除` + record.spec_name,
     },
@@ -160,14 +167,15 @@ const table: StoreTableProps = {
     },
   ],
   onRequest: (params) => {
-    const query = merge(params,
+    const query = merge(
+      params,
       { filter: parse(location?.search.split('?')[1] || '') },
       { sort: { spec_name: 1 } },
     );
     stockKeepingUnitStore.next(query);
   },
   defaultPageSize: 10,
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 
 pageManager.register('product.product.sku', {
@@ -180,7 +188,7 @@ pageManager.register('product.product.sku', {
   stores: [
     {
       store: stockKeepingUnitStore,
-      exit: stockKeepingUnitStore.reset
-    }
+      exit: stockKeepingUnitStore.reset,
+    },
   ],
 });
