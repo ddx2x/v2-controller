@@ -10,7 +10,7 @@ import { useLocation } from '@umijs/max';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import { parse } from 'querystring';
-import { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { valueTypeMapStore } from '../valueType';
 
@@ -45,12 +45,15 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
     buttonSize,
     buttonType,
     params,
+    request,
     ...rest
   } = props;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true); return () => setMounted(false) }, [])
 
   const actionRef = useRef<ActionType>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   useImperativeHandle(forwardRef, () => { return { open: () => { showModal() } } });
@@ -71,6 +74,7 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
   const query = parse(useLocation()?.search.split('?')[1] || '')
 
   const Page = () => {
+    if (!mounted) return null
     return (
       <ProProvider.Provider
         value={{
@@ -83,6 +87,7 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
           actionRef={actionRef}
           // @ts-ignore
           columns={columns}
+          request={request}
           {...rest}
         />
       </ProProvider.Provider>
