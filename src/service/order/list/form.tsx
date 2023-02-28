@@ -32,6 +32,6 @@ export const shipForm: FormProps = {
     orderApi.update({ data: data }, dataObject.uid, query).then((res) => {
       console.log(res);
     })
-    return false
+    return true
   },
 }
