@@ -1,5 +1,5 @@
-import { IObject, ObjectApi, ObjectStore } from '@/client';
-import { DefaultWatchApi, WatchApi } from '@/client/event';
+import { IObject,ObjectApi,ObjectStore } from '@/client';
+import { DefaultWatchApi,WatchApi } from '@/client/event';
 
 export class Shop extends IObject {
   name: string | undefined
@@ -38,12 +38,12 @@ export const shopStore = new ShopStore(shopApi, new DefaultWatchApi());
 
 
 export class ProductSetting extends IObject {
-  pic_mode: number | string | undefined
-  product_comment_status: boolean | undefined
-  auto_comment_day: number | string | undefined
-  auto_comment_content: string | undefined
-  product_import_setting: boolean | undefined
-  product_distribute_setting: boolean | undefined
+  pic_mode: number | string | undefined;
+  product_comment_status: boolean | undefined;
+  auto_comment_day: number | string | undefined;
+  auto_comment_content: string | undefined;
+  product_import_setting: boolean | undefined;
+  product_distribute_setting: boolean | undefined;
 
   constructor(data: ProductSetting) {
     super(data);
@@ -51,7 +51,6 @@ export class ProductSetting extends IObject {
     this.pic_mode = String(this.pic_mode);
     this.auto_comment_day = String(this.auto_comment_day);
   }
-
 }
 
 class ProductSettingStore extends ObjectStore<ProductSetting> {

@@ -19,21 +19,19 @@ export const name: FormColumnsType = {
         message: '最小6个字符最大64',
         type: 'string',
         min: 1,
-        max: 64
-      }
+        max: 64,
+      },
     ],
   },
-
-}
+};
 
 export const brand_name: FormColumnsType = {
   dataIndex: 'brand_name',
   title: '品牌名称',
   hideInSearch: true,
-  valueType: "select",
+  valueType: 'select',
   fieldProps: {
     placeholder: '请输入品牌名称',
-
   },
   formItemProps: {
     rules: [
@@ -45,21 +43,25 @@ export const brand_name: FormColumnsType = {
   },
   request: async () => {
     try {
-      const rs = await brandApi
-        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 } });
+      const rs = await brandApi.list(undefined, {
+        limit: { page: 0, size: 500 },
+        sort: { version: 1 },
+      });
       let select: any = [];
-      rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+      rs.map((value) => {
+        select.push({ label: value.uid, value: value.uid });
+      });
       return select;
     } catch (e) {
       return [];
     }
-  }
+  },
 };
 
 export interface TreeSelect {
-  title: string,
-  value: string,
-  children: TreeSelect[],
+  title: string;
+  value: string;
+  children: TreeSelect[];
 }
 
 export const product_category_name: FormColumnsType = {
@@ -82,22 +84,26 @@ export const product_category_name: FormColumnsType = {
   },
   request: async () => {
     try {
-      const rs = await categoryApi
-        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 } });
+      const rs = await categoryApi.list(undefined, {
+        limit: { page: 0, size: 500 },
+        sort: { version: 1 },
+      });
       let select: TreeSelect[] = [];
       // level 1
       rs.map((value: Category) => {
         if (value.level == 1) {
-          select.push({ title: value.uid, value: value.uid, children: [] })
+          select.push({ title: value.uid, value: value.uid, children: [] });
         }
       });
       // level 2
       rs.map((value: Category) => {
         if (value.level == 2) {
-          if (!value.parent_id) { return; }
+          if (!value.parent_id) {
+            return;
+          }
           select.map((treeSelect) => {
             if (treeSelect.title === value.parent_id) {
-              treeSelect.children.push({ title: value.uid, value: value.uid, children: [] })
+              treeSelect.children.push({ title: value.uid, value: value.uid, children: [] });
             }
           });
         }
@@ -106,8 +112,8 @@ export const product_category_name: FormColumnsType = {
     } catch (e) {
       return [];
     }
-  }
-}
+  },
+};
 
 // export const product_category_second_name_dependency: FormColumnsType = {
 //   valueType: 'dependency',
@@ -135,16 +141,21 @@ export const product_category_second_name: FormColumnsType = {
   },
   request: async (params: any, props: any) => {
     try {
-      const rs = await categoryApi
-        .list(undefined, { limit: { page: 0, size: 500 }, sort: { version: 1 }, filter: { level: 2, full_id: params.product_category_main_name } });
+      const rs = await categoryApi.list(undefined, {
+        limit: { page: 0, size: 500 },
+        sort: { version: 1 },
+        filter: { level: 2, full_id: params.product_category_main_name },
+      });
       let select: any = [];
-      rs.map((value) => { select.push({ label: value.uid, value: value.uid }); });
+      rs.map((value) => {
+        select.push({ label: value.uid, value: value.uid });
+      });
       return select;
     } catch (e) {
       return [];
     }
-  }
-}
+  },
+};
 export const product_sn: FormColumnsType = {
   dataIndex: 'product_sn',
   title: '货号',
@@ -152,9 +163,8 @@ export const product_sn: FormColumnsType = {
     placeholder: '请输入货号',
   },
   hideInSearch: true,
-  formItemProps: {
-  },
-}
+  formItemProps: {},
+};
 
 export const delete_status: FormColumnsType = {
   dataIndex: 'delete_status',
@@ -162,10 +172,10 @@ export const delete_status: FormColumnsType = {
   hideInSearch: true,
   editable: false,
   valueType: 'radioButton',
-  initialValue: "0",
+  initialValue: '0',
   valueEnum: {
-    0: { text: "否", status: 'Success' },
-    1: { text: "是", status: 'Error' },
+    0: { text: '否', status: 'Success' },
+    1: { text: '是', status: 'Error' },
   },
   formItemProps: {
     rules: [
@@ -175,36 +185,32 @@ export const delete_status: FormColumnsType = {
       },
     ],
   },
-}
+};
 
 export const new_status: FormColumnsType = {
   dataIndex: 'new_status',
   title: '新品状态',
   hideInSearch: true,
   editable: false,
-  valueType: "switch",
-  initialValue: "0",
+  valueType: 'switch',
   valueEnum: {
-    0: "不是新品",
-    1: "新品"
+    false: false,
+    true: true,
   },
-  formItemProps: {
-  },
-}
+  formItemProps: {},
+};
 
 export const recommand_status: FormColumnsType = {
   dataIndex: 'recommand_status',
   title: '推荐状态',
   hideInSearch: true,
-  valueType: "switch",
-  initialValue: "0",
+  valueType: 'switch',
   valueEnum: {
-    0: "不推荐",
-    1: "推荐"
+    false: false,
+    true: true,
   },
-  formItemProps: {
-  },
-}
+  formItemProps: {},
+};
 
 export const sort: FormColumnsType = {
   dataIndex: 'sort',
@@ -215,9 +221,8 @@ export const sort: FormColumnsType = {
     min: 1,
     max: 99,
   },
-  formItemProps: {
-  },
-}
+  formItemProps: {},
+};
 
 export const sub_title: FormColumnsType = {
   dataIndex: 'sub_title',
@@ -236,69 +241,81 @@ export const sub_title: FormColumnsType = {
       },
     ],
   },
-}
-
-
+};
 
 export const weight: FormColumnsType = {
   dataIndex: 'unit',
   title: '商品重量',
   valueType: 'digit',
-  tooltip: "默认为克",
-  formItemProps: {
-  }
-}
+  tooltip: '默认为克',
+  formItemProps: {},
+};
 
 export const preview_status: FormColumnsType = {
   dataIndex: 'preview_status',
   title: '是否为预告商品',
   hideInSearch: true,
   editable: false,
-  valueType: "radio",
-  initialValue: "0",
+  valueType: 'radio',
+  initialValue: '0',
   valueEnum: {
-    0: "不是",
-    1: "是"
+    0: '不是',
+    1: '是',
   },
-}
+};
 
 export const service_ids: FormColumnsType = {
   dataIndex: 'service_ids',
   title: '产品服务',
-  tooltip: "多选",
+  tooltip: '多选',
   hideInSearch: true,
   editable: false,
   valueType: 'select',
   fieldProps: {
-    mode: "multiple",
+    mode: 'multiple',
   },
   valueEnum: {
-    1: "无忧退货",
-    2: "快速退款",
-    3: "免费包邮",
+    1: '无忧退货',
+    2: '快速退款',
+    3: '免费包邮',
   },
-}
+};
 
+export const price: FormColumnsType = {
+  dataIndex: 'price',
+  title: '价格(起)',
+  hideInSearch: true,
+  valueType: 'money',
+  formItemProps: {
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+      {
+        type: 'number',
+      },
+    ],
+  },
+};
 
 export const keywords: FormColumnsType = {
   dataIndex: 'keywords',
   title: '关键字',
   hideInSearch: true,
-  tooltip: "自定义输入一个或者多个",
+  tooltip: '自定义输入一个或者多个',
   valueType: 'select',
   fieldProps: {
-    mode: "tags",
-  }
-}
-
+    mode: 'tags',
+  },
+};
 
 export const note: FormColumnsType = {
   dataIndex: 'note',
   title: '备注',
   valueType: 'textarea',
-  formItemProps: {
-  }
-}
+  formItemProps: {},
+};
 
 export const album_pics: FormColumnsType = {
   dataIndex: 'album_pics',
@@ -311,62 +328,56 @@ export const album_pics: FormColumnsType = {
     prefix: '/media-t/file/',
     action: '/media-t/upload',
   },
-}
-
+};
 
 export const promotion_start_time: FormColumnsType = {
   dataIndex: 'promotion_start_time',
   title: '促销开始时间',
   valueType: 'dateTime',
-  formItemProps: {
-  }
-}
+  formItemProps: {},
+};
 export const promotion_end_time: FormColumnsType = {
   dataIndex: 'promotion_end_time',
   title: '促销结束时间',
   valueType: 'dateTime',
-  formItemProps: {
-  }
-}
+  formItemProps: {},
+};
 export const promotion_per_limit: FormColumnsType = {
   dataIndex: 'promotion_per_limit',
   title: '活动限购数量',
   valueType: 'digit',
-  formItemProps: {
-  }
-}
+  formItemProps: {},
+};
 
 export const promotion_type: FormColumnsType = {
   dataIndex: 'promotion_type',
   title: '促销类型',
   valueType: 'select',
-  tooltip: "多选",
+  tooltip: '多选',
   fieldProps: {
     mode: 'tags',
   },
   valueEnum: {
-    1: "使用促销价",
-    2: "使用会员价",
-    3: "使用满减价格",
-    4: "限时购",
-  }
-}
-
+    1: '使用促销价',
+    2: '使用会员价',
+    3: '使用满减价格',
+    4: '限时购',
+  },
+};
 
 export const low_stock: FormColumnsType = {
   dataIndex: 'low_stock',
   title: '库存预警值',
   valueType: 'digit',
-  tooltip: "默认0为不限制",
+  tooltip: '默认0为不限制',
   initialValue: 0,
-}
+};
 
 export const publish_status: FormColumnsType = {
   dataIndex: 'publish_status',
   title: '上架状态',
   valueType: 'switch',
-  fieldProps: {
-  },
+  fieldProps: {},
   formItemProps: {
     rules: [
       {
@@ -376,20 +387,20 @@ export const publish_status: FormColumnsType = {
     ],
   },
   valueEnum: {
-    0: "下架",
-    1: "上架",
-  }
-}
+    0: '下架',
+    1: '上架',
+  },
+};
 
 export const details: FormColumnsType = {
   dataIndex: 'details',
   title: '商品详情',
-  valueType: 'quill'
-}
+  valueType: 'quill',
+};
 
 export const default_test: FormColumnsType = {
   valueType: 'divider',
-}
+};
 
 export const unit: FormColumnsType = {
   dataIndex: 'unit',
