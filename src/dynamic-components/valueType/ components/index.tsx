@@ -1,6 +1,6 @@
 import { valueTypeMapStore } from '../valueTypeMap';
 import { BaiduMapInputProps, BaiduMapInputRender, BaiduMapInputRenderFormItem, BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
-import { DescriptionsCardProps, DescriptionsCardRender, DescriptionsCardRenderFormItem } from './descriptionsCard';
+import { DescriptionsCardProps, DescriptionsCardRender, DescriptionsCardRenderFormItem, DescriptionsCardListProps, DescriptionsCardListRender, DescriptionsCardListRenderFormItem } from './descriptionsCard';
 import { EditableTableProps, EditableTableRender, EditableTableRenderFormItem } from './editableTable';
 import { ImageUploadProps, ImageUploadRender, ImageUploadRenderFormItem } from './imageUpload';
 import {
@@ -25,8 +25,9 @@ declare module '@ant-design/pro-utils' {
     merchandiseList: MerchandiseListProps
     quill: QuillProps;
     steps: StepsProps;
-    descriptionsCard: DescriptionsCardProps
-    editableTable: EditableTableProps
+    descriptionsCard: DescriptionsCardProps;
+    descriptionsCardList: DescriptionsCardListProps;
+    editableTable: EditableTableProps;
   }
 }
 
@@ -43,6 +44,7 @@ const valueTypeMap = {
   merchandiseList: [MerchandiseListRender, MerchandiseListRenderFormItem],
   steps: [StepsRender, StepsFormItem],
   descriptionsCard: [DescriptionsCardRender, DescriptionsCardRenderFormItem],
+  descriptionsCardList: [DescriptionsCardListRender, DescriptionsCardListRenderFormItem],
   editableTable: [EditableTableRender, EditableTableRenderFormItem]
 };
 

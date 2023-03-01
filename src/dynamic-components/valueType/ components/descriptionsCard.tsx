@@ -19,10 +19,37 @@ export const DescriptionsCard: React.FC<DescriptionsCardProps> = (props) => {
   )
 }
 
+export declare type DescriptionsCardListProps = ProFieldFCRenderProps & ProDescriptionsProps
+
+export const DescriptionsCardList: React.FC<DescriptionsCardListProps> = (props) => {
+  const { value, title, columns, ...rest } = props
+  if (!Array.isArray(value)) return null;
+  return (
+    <>
+      {value.map(item => (
+        <Card title={title} hoverable>
+          <ProDescriptions
+            // @ts-ignore
+            columns={columns}
+            dataSource={item}
+            {...rest}
+          />
+        </Card>))}
+    </>
+  )
+
+}
 
 export const DescriptionsCardRenderFormItem: React.FC<DescriptionsCardProps> = (props) => {
   return <DescriptionsCard  {...props} />
 }
 export const DescriptionsCardRender: React.FC<DescriptionsCardProps> = (props) => {
+  return <DescriptionsCard {...props} />
+}
+
+export const DescriptionsCardListRenderFormItem: React.FC<DescriptionsCardListProps> = (props) => {
+  return <DescriptionsCard  {...props} />
+}
+export const DescriptionsCardListRender: React.FC<DescriptionsCardListProps> = (props) => {
   return <DescriptionsCard {...props} />
 }

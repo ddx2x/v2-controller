@@ -138,11 +138,11 @@ const orderDescription: DescriptionsProps = {
 }
 
 
-pageManager.register('order.order.detail', {
-  page: {
-    view: [{ kind: 'descriptions', ...orderDescription }],
-    container: {
-      keepAlive: false,
-    },
-  },
-})
+// pageManager.register('order.after-sale-order.detail', {
+//   page: {
+//     view: [{ kind: 'descriptions', ...orderDescription }],
+//     container: {
+//       keepAlive: false,
+//     },
+//   },
+// })

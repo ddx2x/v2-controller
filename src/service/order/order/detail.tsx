@@ -11,7 +11,7 @@ const orderSteps: ProDescriptionsItemProps = {
 
 const deliveryInfo: ProDescriptionsItemProps = {
   dataIndex: 'delivery',
-  valueType: 'descriptionsCard',
+  valueType: 'descriptionsCardList',
   fieldProps: {
     title: '配送信息',
     columns: [
@@ -49,6 +49,8 @@ const deliveryInfo: ProDescriptionsItemProps = {
   }
 }
 
+
+
 const orderInfo: ProDescriptionsItemProps = {
   dataIndex: 'orderInfo',
   valueType: 'descriptionsCard',
@@ -72,6 +74,7 @@ const orderInfo: ProDescriptionsItemProps = {
   },
 }
 
+
 const orderDescription: DescriptionsProps = {
   modal: 'Page',
   bordered: false,
@@ -81,59 +84,63 @@ const orderDescription: DescriptionsProps = {
     orderInfo,
   ] as DescriptionsProps['columns'],
   request: async (params) => {
-    let res = await orderApi.get(params.uid).then((res) => {
-      let delivery_map = new Map();
+    console.log('request.....');
 
-      (res?.order_sku_list || []).map((item: any) => {
-        delivery_map.set(item.sku.uid, item.quantity)
+    return await orderApi.get(params.uid).then((res) => {
+      // let delivery_map = new Map();
+
+      // (res?.order_sku_list || []).map((item: any) => {
+      //   delivery_map.set(item.sku.uid, item.quantity)
+      // })
+      // res.deliveries?.map(
+      //   (item: any) => {
+      //     let quantity = delivery_map.get(item.sku_id) - item.quantity
+      //     delivery_map.set(item.sku_id, quantity)
+      //   }
+      // )
+      // res.delivery_map = delivery_map
+
+      let delivery: any[] = [];
+      res.deliveries.map((item: any) => {
+        delivery.push({
+          delivery_type: item.delivery_type == 1 ? '快递配送' : '自提',
+          delivery_id: item.delivery_id,
+          customer: res.customer,
+        })
       })
-      res.deliveries?.map(
-        (item: any) => {
-          let quantity = delivery_map.get(item.sku_id) - item.quantity
-          delivery_map.set(item.sku_id, quantity)
+
+      return {
+        success: true,
+        data: {
+          delivery: [{}, {}],
+          orderStatus: {},
+          orderInfo: {},
+          // steps: {
+          //   current: 1,
+          //   items: [
+          //     {
+          //       title: 'Finished',
+          //       description: 'This is a description.',
+          //     },
+          //     {
+          //       title: 'In Progress',
+          //       description: 'This is a description.',
+          //       subTitle: 'Left 00:00:08',
+          //     },
+          //     {
+          //       title: 'Waiting',
+          //       description: 'This is a description.',
+          //     },
+          //   ]
+          // },
         }
-      )
-      res.delivery_map = delivery_map
-      return res;
-    })
-
-    let delivery: any[] = [];
-    res.deliveries.map((item: any) => {
-      delivery.push({
-        delivery_type: item.delivery_type == 1 ? '快递配送' : '自提',
-        delivery_id: item.delivery_id,
-        customer: res.customer,
-      })
-    })
-    console.log(delivery);
-
-
-    return {
-      success: true,
-      data: {
-        delivery: delivery[0],
-        orderStatus: {},
-        orderInfo: {},
-        steps: {
-          current: 1,
-          items: [
-            {
-              title: 'Finished',
-              description: 'This is a description.',
-            },
-            {
-              title: 'In Progress',
-              description: 'This is a description.',
-              subTitle: 'Left 00:00:08',
-            },
-            {
-              title: 'Waiting',
-              description: 'This is a description.',
-            },
-          ]
-        },
       }
-    }
+    })
+
+
+
+
+
   },
 }
 
