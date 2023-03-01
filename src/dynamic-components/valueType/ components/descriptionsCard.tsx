@@ -25,17 +25,12 @@ export const DescriptionsCardList: React.FC<DescriptionsCardListProps> = (props)
   const { value, title, columns, ...rest } = props
   if (!Array.isArray(value)) return null;
   return (
-    <>
-      {value.map(item => (
-        <Card title={title} hoverable>
-          <ProDescriptions
-            // @ts-ignore
-            columns={columns}
-            dataSource={item}
-            {...rest}
-          />
-        </Card>))}
-    </>
+    <Card bordered={true} title='列表'>
+      {value.map(item =>
+        <div style={{ margin: '1rem 0' }}>
+          <DescriptionsCard value={item} columns={columns} title={title} {...rest} />
+        </div>)}
+    </Card>
   )
 
 }
@@ -48,8 +43,8 @@ export const DescriptionsCardRender: React.FC<DescriptionsCardProps> = (props) =
 }
 
 export const DescriptionsCardListRenderFormItem: React.FC<DescriptionsCardListProps> = (props) => {
-  return <DescriptionsCard  {...props} />
+  return <DescriptionsCardList  {...props} />
 }
 export const DescriptionsCardListRender: React.FC<DescriptionsCardListProps> = (props) => {
-  return <DescriptionsCard {...props} />
+  return <DescriptionsCardList {...props} />
 }

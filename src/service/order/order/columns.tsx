@@ -69,20 +69,30 @@ export const orderTime: FormColumnsType = {
 }
 
 
-export const deliveryInfo: FormColumnsType = {
-  dataIndex: 'delivery_id',
-  title: '发货单',
-}
-
-
 
 export const deliveryType: FormColumnsType = {
   dataIndex: 'delivery_type',
   title: '发货类型',
   valueType: 'select',
+  initialValue: '1',
+
+  // transform: value => String(value),
   valueEnum: {
     1: '快递',
     2: '自提',
   },
 }
 
+export const deliveryInfo: FormColumnsType = {
+  dataIndex: 'delivery_id',
+  title: '发货单',
+}
+
+
+export const deliveryInfoDependency: FormColumnsType = {
+  valueType: 'dependency',
+  name: ['delivery_type'],
+  columns: ({ delivery_type }) => {
+    return delivery_type == 1 ? [deliveryInfo] : []
+  },
+}

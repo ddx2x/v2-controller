@@ -1,6 +1,6 @@
 import { FormProps } from '@/dynamic-components';
 import { orderApi } from '@/service/api';
-import { deliveryInfo, deliveryType, merchandiseTable } from './columns';
+import { deliveryType, deliveryInfoDependency, merchandiseTable } from './columns';
 
 export const shipForm: FormProps = {
   layoutType: 'ModalForm',
@@ -10,7 +10,7 @@ export const shipForm: FormProps = {
   columns: [
     merchandiseTable,
     deliveryType,
-    deliveryInfo,
+    deliveryInfoDependency,
   ],
   onSubmit({ formRef, values, dataObject, handleClose }) {
     let query = {
