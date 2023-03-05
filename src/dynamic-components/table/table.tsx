@@ -321,6 +321,6 @@ Table.defaultProps = {
   isExpandNode: false,
   cardBordered: true,
   tableHeight: defaulScrollHeight,
-  options: { density: true, reload: false, fullScreen: false },
+  options: { density: true, reload: true, fullScreen: true },
   columns: [],
 };

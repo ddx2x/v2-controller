@@ -1,8 +1,22 @@
-import { StoreTableProps } from '@/dynamic-components';
+import { FormOnSumbit, StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { Order, afterSaleOrderStore } from '@/service/api';
+import { AfterSaleOrder, AfterSaleOrderStateValueEnum, AfterSaleOrderTypeValueEnum, afterSaleOrderStore, afterSaleorderApi } from '@/service/api';
 import { merge } from 'lodash';
+import { rejectForm } from './form';
+
+const rejectFormOnSubmit = (action: any, { formRef, values, dataObject, handleClose }: FormOnSumbit) => {
+  let query = {
+    update_type:
+      1
+  }
+  console.log(values);
+  // @ts-ignore
+  afterSaleorderApi.update({ title: values.title, spec: values.spec }, dataObject.uid, query).then((res) => {
+    action?.reload()
+  })
+  return true
+}
 
 const afterSaleOrderStoreTable: StoreTableProps = {
   rowKey: 'uid',
@@ -26,7 +40,7 @@ const afterSaleOrderStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'total',
+      dataIndex: 'total_render',
       title: '应退金额',
       valueType: 'money',
       editable: false,
@@ -36,61 +50,62 @@ const afterSaleOrderStoreTable: StoreTableProps = {
       title: '客户信息',
       editable: false,
     },
-    // {
-    //   dataIndex: 'delivery_type',
-    //   title: '配送方式',
-    //   hideInSearch: true,
-    //   editable: false,
-    // },
-    // {
-    //   dataIndex: 'payment_type',
-    //   title: '支付方式',
-    //   editable: false,
-    // },
     {
       dataIndex: 'typ',
-      title: '订单状态',
-      valueType: 'switch',
+      title: '售后类型',
+      valueType: 'select',
       editable: false,
-      valueEnum: {
-        0: false,
-        1: true,
-      }
+      valueEnum: AfterSaleOrderTypeValueEnum
+    },
+    {
+      dataIndex: 'state',
+      title: '售后状态',
+      valueType: 'select',
+      editable: false,
+      valueEnum: AfterSaleOrderStateValueEnum
     },
   ],
 
   toolbarTitle: '订单列表',
-  tableMenu: (record: Order, action) => {
+  tableMenu: (record: AfterSaleOrder, action) => {
     let columns: MenuButtonType[] = [
       {
         kind: 'link',
         title: '详情',
         link: `/order/after-sale-order/detail?uid=${record.uid}`,
       },
-      {
-        kind: 'implement',
-        title: '刷新',
-        onClick(e) {
-          action?.reload()
-        },
-      },
-      {
-        kind: 'implement',
-        collapse: true,
-
-        title: '通过',
-        onClick(e) {
-        },
-      },
-      {
-        kind: 'implement',
-        title: '拒绝',
-        collapse: true,
-
-        onClick(e) {
-        },
-      },
     ]
+    if (record.state == 1) {
+      columns.push(
+        {
+          kind: 'implement',
+          collapse: true,
+
+          title: '通过',
+          onClick(e) {
+            let query = {
+              update_type: 2
+            }
+            // @ts-ignore
+            afterSaleorderApi.update({}, record.uid, query).then(() => {
+              action?.reload()
+            })
+          },
+        },
+        {
+          kind: 'form',
+          title: '拒绝',
+          collapse: true,
+          onMount: async ({ form, setDataObject, }) => {
+            setDataObject(record)
+          },
+          onSubmit(params) {
+            return rejectFormOnSubmit(action, params)
+          },
+          ...rejectForm,
+        },
+      )
+    }
     return columns
   },
   onRequest: (params) => {

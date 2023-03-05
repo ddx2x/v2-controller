@@ -43,6 +43,28 @@ export const merchandiseTable: FormColumnsType = {
         dataIndex: 'number2',
         title: '发货数量',
         valueType: 'digit',
+        dependencies: ['number1'],
+        fieldProps: {
+          style: { width: '100%' },
+        },
+        // formItemProps: (form: any) => {
+        //   let max = form.getFieldValue('number1') || 0
+        //   console.log('max', max);
+        //   return {
+        //     rules: [
+        //       {
+        //         max: max,
+        //         whitespace: true,
+        //         message: `最长为 ${max} 位`,
+        //       },
+        //       {
+        //         min: 0,
+        //         whitespace: true,
+        //         message: '最小为 0 位',
+        //       },
+        //     ]
+        //   }
+        // }
       }
     ],
     editableValuesChange: (record) => {

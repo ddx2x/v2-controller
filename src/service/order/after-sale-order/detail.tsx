@@ -1,6 +1,6 @@
 import { DescriptionsProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { orderApi } from '@/service/api';
+import { AfterSaleOrderStateValueEnum, afterSaleorderApi } from '@/service/api';
 import { ProDescriptionsItemProps } from '@ant-design/pro-components';
 
 const orderSteps: ProDescriptionsItemProps = {
@@ -9,65 +9,39 @@ const orderSteps: ProDescriptionsItemProps = {
   plain: true
 }
 
-const deliveryInfo: ProDescriptionsItemProps = {
-  dataIndex: 'delivery',
-  valueType: 'descriptionsCard',
-  fieldProps: {
-    title: '配送信息',
-    columns: [
-      {
-        dataIndex: 'delivery_type',
-        title: '配送方式',
-      },
-      {
-        dataIndex: 'delivery_time',
-        valueType: 'date',
-        title: '配送时间',
-      },
-      {
-        dataIndex: 'delivery_id',
-        title: '快递单号',
-      },
-      {
-        dataIndex: 'customer',
-        title: '买家昵称',
-      },
-      // {
-      //   dataIndex: 'delivery_type',
-      //   title: '配送方式',
-      // },
-      // {
-      //   dataIndex: 'delivery_time',
-      //   valueType: 'date',
-      //   title: '配送时间',
-      // },
-      // {
-      //   dataIndex: 'customer',
-      //   title: '买家昵称',
-      // },
-    ]
-  }
-}
-
 const orderInfo: ProDescriptionsItemProps = {
   dataIndex: 'orderInfo',
   valueType: 'descriptionsCard',
   fieldProps: {
-    title: '订单信息',
+    title: '售后单信息',
     columns: [
+      {
+        dataIndex: '_id',
+        title: '售后单编号',
+      },
       {
         dataIndex: 'order_id',
         title: '订单编号',
       },
       {
-        dataIndex: 'order_status',
-        valueType: 'date',
-        title: '订单状态',
-      },
-      {
         dataIndex: 'customer',
         title: '买家昵称',
       },
+      {
+        dataIndex: 'state',
+        valueType: 'select',
+        title: '订单状态',
+        valueEnum: AfterSaleOrderStateValueEnum
+      },
+      {
+        dataIndex: 'remark_title',
+        title: '商家操作',
+      },
+      {
+        dataIndex: 'remark_spec',
+        title: '详情',
+      },
+
     ]
   },
 }
@@ -77,43 +51,22 @@ const orderDescription: DescriptionsProps = {
   bordered: false,
   columns: [
     orderSteps,
-    deliveryInfo,
     orderInfo,
   ] as DescriptionsProps['columns'],
   request: async (params) => {
-    let res = await orderApi.get(params.uid).then((res) => {
-      let delivery_map = new Map();
-
-      (res?.order_sku_list || []).map((item: any) => {
-        delivery_map.set(item.sku.uid, item.quantity)
-      })
-      res.deliveries?.map(
-        (item: any) => {
-          let quantity = delivery_map.get(item.sku_id) - item.quantity
-          delivery_map.set(item.sku_id, quantity)
-        }
-      )
-      res.delivery_map = delivery_map
+    let res = await afterSaleorderApi.get(params.uid).then((res) => {
+      res.remark_title = res.remark?.title
+      res.remark_spec = res.remark?.spec
       return res;
     })
-
-    let delivery: any[] = [];
-    res.deliveries.map((item: any) => {
-      delivery.push({
-        delivery_type: item.delivery_type == 1 ? '快递配送' : '自提',
-        delivery_id: item.delivery_id,
-        customer: res.customer,
-      })
-    })
-    console.log(delivery);
 
 
     return {
       success: true,
       data: {
-        delivery: delivery[0],
+        // delivery: delivery,
         orderStatus: {},
-        orderInfo: {},
+        orderInfo: res,
         steps: {
           current: 1,
           items: [
@@ -138,11 +91,11 @@ const orderDescription: DescriptionsProps = {
 }
 
 
-// pageManager.register('order.after-sale-order.detail', {
-//   page: {
-//     view: [{ kind: 'descriptions', ...orderDescription }],
-//     container: {
-//       keepAlive: false,
-//     },
-//   },
-// })
+pageManager.register('order.after-sale-order.detail', {
+  page: {
+    view: [{ kind: 'descriptions', ...orderDescription }],
+    container: {
+      keepAlive: false,
+    },
+  },
+})

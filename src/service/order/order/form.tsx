@@ -29,6 +29,8 @@ export const shipForm: FormProps = {
         }
       })
     }
+    console.log('onSubmit.....', data);
+
 
     // @ts-ignore
     orderApi.update({ data: data, delivery_type: values.delivery_type }, dataObject.uid, query).then((res) => {

@@ -19,13 +19,15 @@ export const DescriptionsCard: React.FC<DescriptionsCardProps> = (props) => {
   )
 }
 
-export declare type DescriptionsCardListProps = ProFieldFCRenderProps & ProDescriptionsProps
+export declare type DescriptionsCardListProps = ProFieldFCRenderProps & ProDescriptionsProps & {
+  cardTitle?: string
+}
 
 export const DescriptionsCardList: React.FC<DescriptionsCardListProps> = (props) => {
-  const { value, title, columns, ...rest } = props
+  const { cardTitle, value, title, columns, ...rest } = props
   if (!Array.isArray(value)) return null;
   return (
-    <Card bordered={true} title='列表'>
+    <Card bordered={true} title={cardTitle} style={{ width: '100%' }}>
       {value.map(item =>
         <div style={{ margin: '1rem 0' }}>
           <DescriptionsCard value={item} columns={columns} title={title} {...rest} />

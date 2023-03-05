@@ -20,6 +20,13 @@ export declare type FormRef = {
   open: () => void;
 };
 
+export declare type FormOnSumbit = {
+  formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
+  values: any,
+  dataObject: any,
+  handleClose: () => void
+}
+
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   onMount?: (params: {
     location: Location | undefined,
@@ -34,7 +41,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   buttonType?: ButtonType
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
-  onSubmit?: (params: { formRef: React.MutableRefObject<ProFormInstance<any> | undefined>, values: any, dataObject: any, handleClose: () => void }) => boolean;
+  onSubmit?: (params: FormOnSumbit) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
 }

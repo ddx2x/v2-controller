@@ -152,16 +152,19 @@ export default [
         ],
       },
       {
-        name: '发货管理',
-        path: '/order/deliverlist',
-        component: './dynamic-view',
-        parentKeys: ['/order'],
-      },
-      {
         name: '售后管理',
         path: '/order/after-sale-order',
         component: './dynamic-view',
         parentKeys: ['/after-sale-order'],
+        routes: [
+          {
+            name: '售后单详情',
+            path: '/order/after-sale-order/detail',
+            component: './dynamic-view',
+            parentKeys: ['/order/after-sale-order'],
+            hideInMenu: true,
+          }
+        ],
       },
     ],
   },
