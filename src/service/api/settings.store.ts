@@ -1,15 +1,15 @@
-import { IObject,ObjectApi,ObjectStore } from '@/client';
-import { DefaultWatchApi,WatchApi } from '@/client/event';
+import { IObject, ObjectApi, ObjectStore } from '@/client';
+import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export class Shop extends IObject {
-  name: string | undefined
-  address: string | undefined
-  industry: string | undefined
-  logo: string | object | undefined
-  introduction: string | undefined
-  mode: number | string | undefined
-  recommend_door: boolean | string | undefined
-  recommend_door_name: string | undefined
+  name: string | undefined;
+  address: string | undefined;
+  industry: string | undefined;
+  logo: string | object | undefined;
+  introduction: string | undefined;
+  mode: number | string | undefined;
+  recommend_door: boolean | string | undefined;
+  recommend_door_name: string | undefined;
 
   constructor(data: Shop) {
     super(data);
@@ -34,8 +34,6 @@ class ShopStore extends ObjectStore<Shop> {
 }
 
 export const shopStore = new ShopStore(shopApi, new DefaultWatchApi());
-
-
 
 export class ProductSetting extends IObject {
   pic_mode: number | string | undefined;
@@ -69,31 +67,26 @@ export const productSettingApi = new ObjectApi<ProductSetting>({
   service: 'settings',
 });
 
-export const productSettingStore = new ProductSettingStore(productSettingApi, new DefaultWatchApi());
-
-
-
-
-
+export const productSettingStore = new ProductSettingStore(
+  productSettingApi,
+  new DefaultWatchApi(),
+);
 
 export class OrderSetting extends IObject {
-
-  automatically_close_unpaid_orders_time: number | string | undefined
-  automatic_receipt_of_shipped_orders_time: number | string | undefined
-  types_of_aftermarket_support_after_shipment: number[] | string[] | undefined
-  after_sale_coupon_setting: number | string | undefined
-  predelivery_and_aftersales_application_settings: boolean | undefined
-  after_sale_prompts: string | undefined
-  buyer_initiates_refund_request_day: number | string | undefined
-  auto_confirm_buyer_has_returned_day: number | string | undefined
-  buyer_return_method_setting: number[] | string[] | undefined
+  automatically_close_unpaid_orders_time: number | string | undefined;
+  automatic_receipt_of_shipped_orders_time: number | string | undefined;
+  types_of_aftermarket_support_after_shipment: number[] | string[] | undefined;
+  after_sale_coupon_setting: number | string | undefined;
+  predelivery_and_aftersales_application_settings: boolean | undefined;
+  after_sale_prompts: string | undefined;
+  buyer_initiates_refund_request_day: number | string | undefined;
+  auto_confirm_buyer_has_returned_day: number | string | undefined;
+  buyer_return_method_setting: number[] | string[] | undefined;
 
   constructor(data: OrderSetting) {
     super(data);
     Object.assign(this, data);
-
   }
-
 }
 
 class OrderSettingStore extends ObjectStore<OrderSetting> {
@@ -114,5 +107,71 @@ export const orderSettingApi = new ObjectApi<OrderSetting>({
 
 export const orderSettingStore = new OrderSettingStore(orderSettingApi, new DefaultWatchApi());
 
+export class DeliverySetting extends IObject {
+  name: string | undefined;
+  type: number | string | undefined;
+  pricing_method: number | string | undefined;
+  constructor(data: DeliverySetting) {
+    super(data);
+    Object.assign(this, data);
+    this.type = String(this.type);
+    this.pricing_method = String(this.pricing_method);
+  }
+}
 
+class DeliverySettingStore extends ObjectStore<DeliverySetting> {
+  api: ObjectApi<DeliverySetting>;
+  watchApi: WatchApi<DeliverySetting>;
+  constructor(api: ObjectApi<DeliverySetting>, watchApi: WatchApi<DeliverySetting>) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
+}
 
+export const deliverySettingApi = new ObjectApi<DeliverySetting>({
+  url: '/api/v1/delivery',
+  objectConstructor: DeliverySetting,
+  service: 'settings',
+});
+
+export const deliverySettingStore = new DeliverySettingStore(
+  deliverySettingApi,
+  new DefaultWatchApi(),
+);
+
+export class DeliverySettingTemplate extends IObject {
+  region: string[] | string | undefined;
+  constructor(data: DeliverySettingTemplate) {
+    super(data);
+    Object.assign(this, data);
+    if (typeof this.region == 'string') {
+      return;
+    }
+    this.region = this.region?.join('、');
+  }
+}
+
+class DeliverySettingTemplateStore extends ObjectStore<DeliverySettingTemplate> {
+  api: ObjectApi<DeliverySettingTemplate>;
+  watchApi: WatchApi<DeliverySettingTemplate>;
+  constructor(
+    api: ObjectApi<DeliverySettingTemplate>,
+    watchApi: WatchApi<DeliverySettingTemplate>,
+  ) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
+}
+
+export const deliverySettingTemplateApi = new ObjectApi<DeliverySettingTemplate>({
+  url: '/api/v1/delivery_template',
+  objectConstructor: DeliverySettingTemplate,
+  service: 'settings',
+});
+
+export const deliverySettingTemplateStore = new DeliverySettingTemplateStore(
+  deliverySettingTemplateApi,
+  new DefaultWatchApi(),
+);

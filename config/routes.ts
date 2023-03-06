@@ -89,8 +89,8 @@ export default [
                 component: './dynamic-view',
                 parentKeys: ['/product/category/attribute'],
                 hideInMenu: true,
-              }
-            ]
+              },
+            ],
           },
           {
             name: '商品分类新增',
@@ -106,7 +106,7 @@ export default [
             parentKeys: ['/product/category'],
             hideInMenu: true,
           },
-        ]
+        ],
       },
       {
         name: '商品品牌',
@@ -126,9 +126,9 @@ export default [
             component: './dynamic-view',
             parentKeys: ['/product/brand'],
             hideInMenu: true,
-          }
-        ]
-      }
+          },
+        ],
+      },
     ],
   },
 
@@ -148,7 +148,7 @@ export default [
             component: './dynamic-view',
             parentKeys: ['/order/order'],
             hideInMenu: true,
-          }
+          },
         ],
       },
       {
@@ -163,7 +163,7 @@ export default [
             component: './dynamic-view',
             parentKeys: ['/order/after-sale-order'],
             hideInMenu: true,
-          }
+          },
         ],
       },
     ],
@@ -253,7 +253,7 @@ export default [
         path: '/privilege/resource',
         component: './dynamic-view',
         routes: [],
-      }
+      },
     ],
   },
 
@@ -277,16 +277,31 @@ export default [
       },
       {
         name: '配送设置',
-        path: '/setting/logistics',
+        path: '/setting/delivery',
         component: './dynamic-view',
-        routes: [],
+        routes: [
+          {
+            name: '配送设置新增',
+            path: '/setting/delivery/add',
+            component: './dynamic-view',
+            parentKeys: ['/setting/delivery'],
+            hideInMenu: true,
+          },
+          {
+            name: '配送设置编辑',
+            path: '/setting/delivery/edit',
+            component: './dynamic-view',
+            parentKeys: ['/setting/delivery'],
+            hideInMenu: true,
+          },
+        ],
       },
       {
         name: '订单配置',
         path: '/setting/order',
         component: './dynamic-view',
         routes: [],
-      }
+      },
     ],
   },
 ];
