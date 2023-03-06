@@ -11,7 +11,7 @@ export default {
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',
   'layout.user.link.terms': '条款',
-  'app.copyright.produced': 'v2xx打工仔出品',
+  'app.copyright.produced': '汇有科技出品',
   ...pages,
   ...globalHeader,
   ...menu,

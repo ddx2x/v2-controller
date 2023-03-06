@@ -7,18 +7,19 @@ const Settings: LayoutSettings & {
   pwa?: boolean;
   logo?: string;
 } = {
+  title: '汇有科技',
   navTheme: 'light',
-  // 拂晓蓝
-  colorPrimary: '#1890ff',
+  colorPrimary: '#FA541C',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
-  colorWeak: false,
-  title: 'v2xx',
   pwa: true,
-  logo: '/giraffe-svgrepo-com.svg',
-  iconfontUrl: '',
+  logo: '/2C5D4E47-6205-4f3a-9517-1D8751F727FD.png',
+  splitMenus: false,
+  siderMenuType: 'group',
+  footerRender: false,
+  menuHeaderRender: false,
 };
 
 export default Settings;
