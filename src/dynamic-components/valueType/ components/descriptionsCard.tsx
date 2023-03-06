@@ -1,7 +1,20 @@
+import { Descriptions, DescriptionsProps } from '@/dynamic-components/descriptions';
 import {
   ProDescriptions, ProDescriptionsProps, ProFieldFCRenderProps
 } from '@ant-design/pro-components';
 import { Card } from 'antd';
+
+
+export declare type FDescriptionsProps = ProFieldFCRenderProps & DescriptionsProps
+
+export const FDescriptions: React.FC<FDescriptionsProps> = (props) => {
+  const { value, title, columns, ...rest } = props
+  console.log(columns, value);
+
+  return (
+    <Descriptions columns={columns} dataSource={value} {...rest} />
+  )
+}
 
 export declare type DescriptionsCardProps = ProFieldFCRenderProps & ProDescriptionsProps
 
@@ -34,7 +47,13 @@ export const DescriptionsCardList: React.FC<DescriptionsCardListProps> = (props)
         </div>)}
     </Card>
   )
+}
 
+export const FDescriptionsRenderFormItem: React.FC<FDescriptionsProps> = (props) => {
+  return <FDescriptions  {...props} />
+}
+export const FDescriptionsRender: React.FC<FDescriptionsProps> = (props) => {
+  return <FDescriptions {...props} />
 }
 
 export const DescriptionsCardRenderFormItem: React.FC<DescriptionsCardProps> = (props) => {
