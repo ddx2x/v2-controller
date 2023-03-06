@@ -16,6 +16,12 @@ export default [
     component: './404',
   },
   {
+    name: 'index',
+    path: '/',
+    hideInMenu: true,
+    component: './index',
+  },
+  {
     name: 'login',
     path: '/login',
     layout: false,
