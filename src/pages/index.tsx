@@ -98,15 +98,15 @@ export default () => {
               <StatisticCard title='今日订单统计' >
                 <StatisticCard
                   statistic={{
-                    title: '代支付订单',
-                    tip: '代支付订单',
+                    title: '待支付订单',
+                    tip: '待支付订单',
                     value: 79,
                   }}
                 />
                 <Divider />
                 <StatisticCard
                   statistic={{
-                    title: '代发货订单',
+                    title: '待发货订单',
                     value: 8396,
                     status: 'default',
                   }}
