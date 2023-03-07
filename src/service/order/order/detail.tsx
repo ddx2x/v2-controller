@@ -32,7 +32,21 @@ const deliveryInfo: ProDescriptionsItemProps = {
         dataIndex: 'customer',
         title: '买家昵称',
       },
-
+      // {
+      //   dataIndex: 'd',
+      //   valueType: 'descriptions',
+      //   title: '物流',
+      //   fieldProps: {
+      //     title: '物流',
+      //     modal: 'Modal',
+      //     columns: [
+      //       {
+      //         dataIndex: 's',
+      //         valueType: 'steps',
+      //       }
+      //     ]
+      //   }
+      // }
     ]
   }
 }
