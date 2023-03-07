@@ -49,6 +49,16 @@ const table: StoreTableProps = {
       valueType: 'text',
     },
     {
+      dataIndex: 'publish_status',
+      title: '上架状态',
+      hideInSearch: true,
+      valueType: 'switch',
+      valueEnum: {
+        false: false,
+        true: true,
+      },
+    },
+    {
       dataIndex: 'price',
       title: '销售价格',
       hideInSearch: true,
@@ -75,8 +85,34 @@ const table: StoreTableProps = {
       valueType: 'digit',
       editable: false,
     },
+    {
+      dataIndex: 'sale',
+      title: '销量',
+      valueType: 'digit',
+      editable: false,
+    },
   ],
-  editableValuesChange: (record: StockKeepingUnit) => {},
+  editableValuesChange: (record: StockKeepingUnit) => {
+    const src = stockKeepingUnitStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<StockKeepingUnit> = record;
+
+    if (!src) return;
+    if (src?.publish_status !== update.publish_status) {
+      if (update.publish_status) {
+        update.publish_status = true;
+      } else {
+        update.publish_status = false;
+      }
+      stockKeepingUnitStore
+        .update_one(src, update, ['publish_status'])
+        .then(() => {
+          notification.success({ message: '更新成功' });
+        })
+        .catch((e) => {
+          notification.error({ message: '更新失败:' + e });
+        });
+    }
+  },
   toolBarMenu: (selectedRows, location) => [
     {
       kind: 'form',

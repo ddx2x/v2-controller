@@ -9,7 +9,16 @@ import { history } from '@umijs/max';
 import { message } from 'antd';
 import { merge } from 'lodash';
 import { parse } from 'querystring';
-import { low_stock, pic, price, product_name, promotion_price, spec_name, stock } from './columns';
+import {
+  low_stock,
+  pic,
+  price,
+  product_name,
+  promotion_price,
+  publish_status,
+  spec_name,
+  stock,
+} from './columns';
 
 // kind: form
 const editForm: FormProps = {

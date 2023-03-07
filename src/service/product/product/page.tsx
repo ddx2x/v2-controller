@@ -114,6 +114,12 @@ const productStoreTable: StoreTableProps = {
         1: { text: '是', status: 'Error' },
       },
     },
+    {
+      dataIndex: 'sale',
+      title: '销量',
+      valueType: 'digit',
+      editable: false,
+    },
   ],
   editableValuesChange: (record: Product) => {
     const src = productStore.items.find((item) => item.getUid() === record.uid);

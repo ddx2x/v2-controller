@@ -10,6 +10,7 @@ export class StockKeepingUnit extends IObject {
   stock: string | number | undefined;
   low_stock: string | number | undefined;
   pic: string | object | undefined;
+  publish_status: boolean | undefined;
 
   constructor(data: StockKeepingUnit) {
     super(data);
