@@ -28,6 +28,13 @@ export default [
     component: './login',
   },
   {
+    name: '首页',
+    href: null,
+    path: '/',
+    icon: 'home',
+    routes: [],
+  },
+  {
     name: '商品',
     href: null,
     path: '/product',

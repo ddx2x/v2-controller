@@ -165,28 +165,29 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义菜单
     collapsed: collapsed,
     onCollapse: (collapsed) => setCollapsed(collapsed),
-    menuExtraRender: ({ collapsed }) =>
-      !collapsed && (
-        <Input
-          style={{
-            borderRadius: 4,
-            marginBottom: 10,
-            backgroundColor: 'rgba(0,0,0,0.03)',
-          }}
-          prefix={
-            <SearchOutlined
-              style={{
-                color: 'rgba(0, 0, 0, 0.15)',
-              }}
-            />
-          }
-          placeholder="搜索菜单"
-          bordered={false}
-          onChange={(e) => {
-            setKeyWord((e.target as HTMLInputElement).value);
-          }}
-        />
-      ),
+    // 去掉搜索菜单
+    // menuExtraRender: ({ collapsed }) =>
+    //   !collapsed && (
+    //     <Input
+    //       style={{
+    //         borderRadius: 4,
+    //         marginBottom: 10,
+    //         backgroundColor: 'rgba(0,0,0,0.03)',
+    //       }}
+    //       prefix={
+    //         <SearchOutlined
+    //           style={{
+    //             color: 'rgba(0, 0, 0, 0.15)',
+    //           }}
+    //         />
+    //       }
+    //       placeholder="搜索菜单"
+    //       bordered={false}
+    //       onChange={(e) => {
+    //         setKeyWord((e.target as HTMLInputElement).value);
+    //       }}
+    //     />
+    //   ),
     postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
     subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
