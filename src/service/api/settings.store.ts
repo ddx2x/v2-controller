@@ -142,6 +142,12 @@ export const deliverySettingStore = new DeliverySettingStore(
 
 export class DeliverySettingTemplate extends IObject {
   region: string[] | string | undefined;
+  delivery_id: string | undefined; //配送模板ID
+  first: number | string | undefined; //首件/首重/首体积
+  freight: number | string | undefined; //运费
+  continuation: number | string | undefined; //续件/续重/续体积
+  continuation_freight: number | string | undefined; //续费
+
   constructor(data: DeliverySettingTemplate) {
     super(data);
     Object.assign(this, data);

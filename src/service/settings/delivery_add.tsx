@@ -1,5 +1,7 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
+import { notification } from 'antd';
 import { DeliverySetting, deliverySettingStore } from '../api';
 
 const name: FormColumnsType = {
@@ -89,11 +91,12 @@ const addForm: FormProps = {
     deliverySettingStore
       .create(target)
       .then(() => {
-        // message.success('保存成功');
+        notification.success({ message: '保存成功' });
+        history.push(`/setting/delivery`);
         formRef.current?.resetFields();
       })
       .catch((e) => {
-        // message.error(e)
+        notification.error({ message: e });
       });
 
     handleClose();

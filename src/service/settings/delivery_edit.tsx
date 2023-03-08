@@ -1,7 +1,9 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { history } from '@umijs/max';
+import { notification } from 'antd';
 import { parse } from 'querystring';
-import { deliverySettingStore } from '../api';
+import { DeliverySetting, deliverySettingStore } from '../api';
 
 export const name: FormColumnsType = {
   title: '模板名称',
@@ -74,35 +76,37 @@ const editForm: FormProps = {
   submitter: {
     resetButtonProps: false,
   },
-  onMount: ({ location, form }) => {
+  onMount: ({ location, form, setDataObject }) => {
     form?.resetFields();
     if (location === undefined) return;
     const query: Query = parse(location?.search.split('?')[1] || '');
-    deliverySettingStore.get(query.id).then((rs) => {
+    deliverySettingStore.api.get(query.id).then((rs) => {
       form?.setFieldsValue(rs);
+      setDataObject(rs);
     });
   },
   layoutType: 'Form',
   shouldUpdate: false,
   grid: true,
-  // layout: 'horizontal',
+  layout: 'vertical',
   // colProps: { flex: 'auto' },
   columns: [name, type, pricing_method],
   onSubmit: ({ formRef, values, dataObject, handleClose }) => {
-    // const src: Category = dataObject;
-    // const target: Partial<Category> = {
-    //   nav_status: Number(values.nav_status),
-    //   keywords: values.keywords,
-    //   description: String(values.description) || '',
-    // };
+    const src: DeliverySetting = dataObject;
+    const target: Partial<DeliverySetting> = {
+      name: values.name,
+      type: Number(values.type),
+      pricing_method: Number(values.pricing_method),
+    };
 
-    // categoryStore
-    //   .update_one(src, target, ['nav_status', 'show_status', 'sort', 'keywords', 'description'])
-    //   .then(() => {
-    //     message.success('保存成功');
-    //     formRef.current?.resetFields();
-    //   })
-    //   .catch((e) => message.error(e));
+    deliverySettingStore
+      .update_one(src, target, ['name', 'type', 'pricing_method'])
+      .then(() => {
+        notification.success({ message: '保存成功' }); // message.success('保存成功
+        history.push(`/setting/delivery`);
+        formRef.current?.resetFields();
+      })
+      .catch((e) => notification.error({ message: e }));
 
     handleClose();
     return true;

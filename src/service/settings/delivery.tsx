@@ -3,7 +3,11 @@ import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
-import { DeliverySetting, deliverySettingStore, deliverySettingTemplateStore } from '../api';
+import {
+  deliverySettingStore,
+  DeliverySettingTemplate,
+  deliverySettingTemplateStore,
+} from '../api';
 
 const columns: StoreTableProps['columns'] = [
   {
@@ -49,8 +53,8 @@ const columns: StoreTableProps['columns'] = [
   },
 ];
 
-const defaultStoreTable: StoreTableProps = {
-  toolbarTitle: '数据列表',
+const defaultStoreTable1: StoreTableProps = {
+  toolbarTitle: '商家配送',
   store: deliverySettingStore,
   rowKey: 'uid',
   search: false,
@@ -66,25 +70,25 @@ const defaultStoreTable: StoreTableProps = {
       }),
     table: {
       options: false,
-      tableMenu: (record: DeliverySetting, action: any) => [
+      tableMenu: (record: DeliverySettingTemplate, action: any) => [
         {
           kind: 'confirm',
           title: '删除',
           onClick: () => {
-            // categoryStore2
-            //   .remove(record.uid)
-            //   .then(() => {
-            //     notification.success({ message: '删除成功' });
-            //     history.push(`/product/category`);
-            //   })
-            //   .catch((e) => notification.error(e));
+            deliverySettingTemplateStore
+              .remove(record.uid)
+              .then(() => {
+                notification.success({ message: '删除成功' });
+                history.push(`/setting/delivery`);
+              })
+              .catch((e) => notification.error(e));
           },
-          text: `确认删除类型名称` + "'" + record.uid + "'",
+          text: `确认删除类型名称` + "'" + record.region + "'",
         },
         {
           kind: 'link',
           title: '编辑',
-          link: '/setting/delivery/edit?id=' + record.uid,
+          link: '/setting/delivery/tempedit?id=' + record.uid,
         },
       ],
       rowKey: 'uid',
@@ -101,6 +105,7 @@ const defaultStoreTable: StoreTableProps = {
           title: '可配送区域',
           hideInSearch: true,
           editable: false,
+          fixed: 'left',
         },
         {
           dataIndex: 'first',
@@ -150,6 +155,107 @@ const defaultStoreTable: StoreTableProps = {
       link: '/setting/delivery/edit?id=' + record.uid,
     },
     {
+      kind: 'link',
+      title: '新增',
+      link: '/setting/delivery/tempadd?id=' + record.uid,
+    },
+    {
+      kind: 'confirm',
+      title: '删除',
+      onClick: () => {
+        deliverySettingStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+            history.push(`/setting/delivery`);
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
+      },
+      text: `确认删除` + record.name,
+    },
+  ],
+  onRowEvent: [
+    {
+      mouseEvent: 'onDoubleClick',
+      title: '详情',
+    },
+  ],
+  onRequest: (params) => {
+    deliverySettingStore.next(merge(params, { sort: { version: 1 } }));
+  },
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+};
+
+const defaultStoreTable2: StoreTableProps = {
+  toolbarTitle: '门店自提',
+  store: deliverySettingStore,
+  rowKey: 'uid',
+  search: false,
+  defaultPageSize: 10,
+  columns: [
+    {
+      dataIndex: 'uid',
+      title: 'uid',
+      hideInSearch: true,
+      editable: false,
+      hideInTable: true,
+    },
+    {
+      dataIndex: 'pick_up_name',
+      title: '自提点名称',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'pick_up_address',
+      title: '自提点地址',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'owner_store_name',
+      title: '所属门店',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'contact',
+      title: '联系方式',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'business_hours',
+      title: '营业时间',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'state',
+      title: '状态',
+      hideInSearch: true,
+      editable: false,
+    },
+  ],
+  editableValuesChange: (record) => {
+    console.log(record);
+  },
+  toolBarMenu: (selectedRows) => [
+    {
+      kind: 'link',
+      title: '新增',
+      link: `/setting/delivery/add`,
+    },
+  ],
+  tableMenu: (record: any, action: any) => [
+    {
+      kind: 'link',
+      title: '编辑',
+      link: '/setting/delivery/edit?id=' + record.uid,
+    },
+    {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
@@ -180,7 +286,10 @@ const defaultStoreTable: StoreTableProps = {
 
 pageManager.register('setting.delivery', {
   page: {
-    view: [{ kind: 'storeTable', ...defaultStoreTable }],
+    view: [
+      { kind: 'storeTable', ...defaultStoreTable1 },
+      { kind: 'storeTable', ...defaultStoreTable2 },
+    ],
     container: {
       keepAlive: false,
     },

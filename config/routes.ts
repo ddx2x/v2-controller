@@ -294,7 +294,7 @@ export default [
         component: './dynamic-view',
         routes: [
           {
-            name: '配送设置新增',
+            name: '新增配送设置',
             path: '/setting/delivery/add',
             component: './dynamic-view',
             parentKeys: ['/setting/delivery'],
@@ -303,6 +303,20 @@ export default [
           {
             name: '配送设置编辑',
             path: '/setting/delivery/edit',
+            component: './dynamic-view',
+            parentKeys: ['/setting/delivery'],
+            hideInMenu: true,
+          },
+          {
+            name: '新增配送模板',
+            path: '/setting/delivery/tempadd',
+            component: './dynamic-view',
+            parentKeys: ['/setting/delivery'],
+            hideInMenu: true,
+          },
+          {
+            name: '配送模板编辑',
+            path: '/setting/delivery/tempedit',
             component: './dynamic-view',
             parentKeys: ['/setting/delivery'],
             hideInMenu: true,
