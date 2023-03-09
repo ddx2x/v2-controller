@@ -189,6 +189,7 @@ export class StorePickup extends IObject {
   owner_store_name: string | undefined;
   contact: string | undefined;
   business_days: string[] | undefined;
+  coordinates: string[] | number[] | string | undefined;
   state: boolean | undefined;
   constructor(data: StorePickup) {
     super(data);

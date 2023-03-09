@@ -2,52 +2,60 @@ import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export interface BusinessDay {
-    days: number[] | string[]
-    hours: string[]
+  days: number[] | string[];
+  hours: string[];
 }
 
 export class CmsDoor extends IObject {
-    first_name: string | undefined
-    second_name: string | undefined
-    address: string | undefined
-    region_name: string | undefined
-    business_days: BusinessDay[] | undefined
-    contact: string | undefined
-    admin_name: string | undefined
-    admin_account: string | undefined
-    logo: string | object | undefined
-    roles: string[] | undefined
-    online_store_status: boolean | undefined
-    store_status: boolean | undefined
-    lables: string[] | undefined
-    sort: number | undefined
+  first_name: string | undefined;
+  second_name: string | undefined;
+  address: string | undefined;
+  region_name: string | undefined;
+  business_days: BusinessDay[] | undefined;
+  contact: string | undefined;
+  admin_name: string | undefined;
+  admin_account: string | undefined;
+  logo: string | object | undefined;
+  roles: string[] | undefined;
+  online_store_status: boolean | undefined;
+  store_status: boolean | undefined;
+  lables: string[] | undefined;
+  sort: number | undefined;
+  coordinates: string[] | number[] | string | undefined;
 
-    constructor(data: CmsDoor) {
-        super(data);
-        Object.assign(this, data);
-        if (!this.business_days || this.business_days.length === 0) return;
-        this.business_days =
-            this.business_days.map(item => {
-                item.days = item.days.map((day) => String(day));
-                return item;
-            });
-    }
+  constructor(data: CmsDoor) {
+    super(data);
+    Object.assign(this, data);
+    this.logo = {
+      fileList: [
+        {
+          url: '/media-t/file/' + this.logo,
+          name: this.logo,
+        },
+      ],
+    };
+    if (!this.business_days || this.business_days.length === 0) return;
+    this.business_days = this.business_days.map((item) => {
+      item.days = item.days.map((day) => String(day));
+      return item;
+    });
+  }
 }
 
 const cmsDoorApi = new ObjectApi<CmsDoor>({
-    url: '/api/v1/door',
-    objectConstructor: CmsDoor,
-    service: 'cms-t',
+  url: '/api/v1/door',
+  objectConstructor: CmsDoor,
+  service: 'cms-t',
 });
 
 class DoorStore extends ObjectStore<CmsDoor> {
-    api: ObjectApi<CmsDoor>;
-    watchApi: WatchApi<CmsDoor>;
-    constructor(api: ObjectApi<CmsDoor>, watchApi: WatchApi<CmsDoor>) {
-        super();
-        this.api = api;
-        this.watchApi = watchApi;
-    }
+  api: ObjectApi<CmsDoor>;
+  watchApi: WatchApi<CmsDoor>;
+  constructor(api: ObjectApi<CmsDoor>, watchApi: WatchApi<CmsDoor>) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
 }
 
 export const cmsDoorStore = new DoorStore(cmsDoorApi, new DefaultWatchApi());

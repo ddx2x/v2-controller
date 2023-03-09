@@ -1,13 +1,6 @@
 import { FormColumnsType } from '@/dynamic-components';
 import { cmsDoorStore } from '../api';
 
-interface TreeSelect {
-  title: string;
-  value: string;
-  uid: string;
-  children: TreeSelect[];
-}
-
 export const pick_up_name: FormColumnsType = {
   title: '自提点名称',
   dataIndex: 'pick_up_name',
@@ -43,7 +36,11 @@ export const bmap: FormColumnsType = {
   valueType: 'map',
   dependencies: ['pick_up_address'],
   fieldProps: (form) => {
-    form.setFieldValue('map', form.getFieldValue('pick_up_address'));
+    let point = form.getFieldValue('map')?.point;
+    form.setFieldValue('map', {
+      address: form.getFieldValue('pick_up_address'),
+      point: point
+    });
   },
 };
 
@@ -92,59 +89,58 @@ export const contact: FormColumnsType = {
   },
 };
 
-
 export const business_days: FormColumnsType = {
-	dataIndex: 'business_days',
-	title: '营业时间',
-	valueType: 'formList',
-	hideInSearch: true,
-	columns: [
-		{
-			valueType: 'group',
-			
-			fieldProps: {
-				style: {
-					margin: '0rem 1rem 0 1rem',
-				},
-			},
-			columns: [
-				{
-					dataIndex: 'days',
-					valueType: 'checkbox',
-					title: '营业日',
-					valueEnum: {
-						1: '周一',
-						2: '周二',
-						3: '周三',
-						4: '周四',
-						5: '周五',
-						6: '周六',
-						7: '周日'
-					}
-				},
-				{
-					dataIndex: 'hours',
-					valueType: 'timeRange',
-					title: '时间段',
-					fieldProps: {
-						// bordered: false,
-					},
-				}
-			]
-		}
-	],
-	fieldProps: {
-		alwaysShowItemLabel: true,
-		max: 2,
-	},
-	formItemProps: {
-		rules: [
-			{
-				required: true,
-				message: '此项为必填项',
-			}
-		],
-	},
+  dataIndex: 'business_days',
+  title: '营业时间',
+  valueType: 'formList',
+  hideInSearch: true,
+  columns: [
+    {
+      valueType: 'group',
+
+      fieldProps: {
+        style: {
+          margin: '0rem 1rem 0 1rem',
+        },
+      },
+      columns: [
+        {
+          dataIndex: 'days',
+          valueType: 'checkbox',
+          title: '营业日',
+          valueEnum: {
+            1: '周一',
+            2: '周二',
+            3: '周三',
+            4: '周四',
+            5: '周五',
+            6: '周六',
+            7: '周日',
+          },
+        },
+        {
+          dataIndex: 'hours',
+          valueType: 'timeRange',
+          title: '时间段',
+          fieldProps: {
+            // bordered: false,
+          },
+        },
+      ],
+    },
+  ],
+  fieldProps: {
+    alwaysShowItemLabel: true,
+    max: 2,
+  },
+  formItemProps: {
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+    ],
+  },
 };
 
 export const state: FormColumnsType = {

@@ -40,10 +40,11 @@ const editForm: FormProps = {
 
     const target: Partial<StorePickup> = {
       pick_up_name: values.pick_up_name,
-      pick_up_address: values.pick_up_address,
+      pick_up_address: values.map.address,
       owner_store_name: values.owner_store_name,
       contact: values.contact,
       business_days: values.business_days,
+      coordinates: [values.map.point.lng, values.map.point.lat],
       state: false,
     };
 
@@ -54,6 +55,7 @@ const editForm: FormProps = {
         'owner_store_name',
         'contact',
         'business_days',
+        'coordinates',
       ])
       .then(() => {
         notification.success({ message: '保存成功' });

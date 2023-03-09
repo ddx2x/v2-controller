@@ -71,7 +71,7 @@ const storeTable: StoreTableProps = {
       kind: 'descriptions',
       title: '详情',
       dataSource: record,
-      collapse: true,
+      // collapse: true,
       ...detail,
     },
     {
@@ -94,15 +94,15 @@ const storeTable: StoreTableProps = {
           });
       },
       text: `确认删除` + record.first_name + '-' + record.second_name,
-      collapse: true,
+      // collapse: true,
     },
   ],
-  onRowEvent: [
-    {
-      mouseEvent: 'onDoubleClick',
-      title: '详情',
-    },
-  ],
+  // onRowEvent: [
+  //   {
+  //     mouseEvent: 'onDoubleClick',
+  //     title: '详情',
+  //   },
+  // ],
   onRequest: (params) => {
     cmsDoorStore.next(merge(params, { sort: { version: 1 } }));
   },

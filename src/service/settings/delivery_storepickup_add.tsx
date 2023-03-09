@@ -35,6 +35,7 @@ const addForm: FormProps = {
       owner_store_name: values.owner_store_name,
       contact: values.contact,
       business_days: values.business_days,
+      coordinates: [values.map.point.lng, values.map.point.lat],
       state: false,
     };
 
