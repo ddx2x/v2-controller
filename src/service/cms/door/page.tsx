@@ -55,29 +55,10 @@ const storeTable: StoreTableProps = {
       valueEnum: {
         true: false,
         false: true,
-      }
+      },
     },
   ],
-  editableValuesChange: (record: CmsDoor) => {
-    // const src = productStore.items.find((item) => item.getUid() === record.uid);
-    // const update: Partial<Product> = record;
-
-    // if (!src) return;
-    // if (src?.publish_status !== update.publish_status) {
-    //   if (update.publish_status) {
-    //     update.publish_status = 1
-    //   } else {
-    //     update.publish_status = 0
-    //   }
-    //   // console.log("update", update.publish_status, "src", src.publish_status)
-    //   productStore.update_one(src, update, ["publish_status"]).then(() => {
-    //     notification.success({ message: "更新成功" });
-    //   }
-    //   ).catch((e) => {
-    //     notification.error({ message: "更新失败:" + e });
-    //   })
-    // }
-  },
+  editableValuesChange: (record: CmsDoor) => {},
   toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
@@ -91,23 +72,26 @@ const storeTable: StoreTableProps = {
       title: '详情',
       dataSource: record,
       collapse: true,
-      ...detail
+      ...detail,
     },
     {
       kind: 'link',
       title: '编辑',
       // collapse: true,
-      link: '/cms/door/edit?id=' + record.uid
+      link: '/cms/door/edit?id=' + record.uid,
     },
     {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        cmsDoorStore.remove(record.uid).then(() => {
-          notification.info({ message: "删除成功" })
-        }).catch(e => {
-          notification.error(e)
-        })
+        cmsDoorStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
       },
       text: `确认删除` + record.first_name + '-' + record.second_name,
       collapse: true,
@@ -122,7 +106,7 @@ const storeTable: StoreTableProps = {
   onRequest: (params) => {
     cmsDoorStore.next(merge(params, { sort: { version: 1 } }));
   },
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 
 pageManager.register('cms.door', {
@@ -135,7 +119,7 @@ pageManager.register('cms.door', {
   stores: [
     {
       store: cmsDoorStore,
-      exit: cmsDoorStore.reset
-    }
+      exit: cmsDoorStore.reset,
+    },
   ],
 });

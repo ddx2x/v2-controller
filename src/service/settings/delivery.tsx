@@ -7,6 +7,8 @@ import {
   deliverySettingStore,
   DeliverySettingTemplate,
   deliverySettingTemplateStore,
+  StorePickup,
+  storePickupStore,
 } from '../api';
 
 const columns: StoreTableProps['columns'] = [
@@ -188,9 +190,9 @@ const defaultStoreTable1: StoreTableProps = {
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 
-const defaultStoreTable2: StoreTableProps = {
+const storePickupStoreTable: StoreTableProps = {
   toolbarTitle: '门店自提',
-  store: deliverySettingStore,
+  store: storePickupStore,
   rowKey: 'uid',
   search: false,
   defaultPageSize: 10,
@@ -207,6 +209,18 @@ const defaultStoreTable2: StoreTableProps = {
       title: '自提点名称',
       hideInSearch: true,
       editable: false,
+      fixed: 'left',
+    },
+    {
+      dataIndex: 'state',
+      title: '开启状态',
+      valueType: 'switch',
+      valueEnum: {
+        true: true,
+        false: false,
+      },
+      fixed: 'left',
+      hideInSearch: true,
     },
     {
       dataIndex: 'pick_up_address',
@@ -227,39 +241,52 @@ const defaultStoreTable2: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'business_hours',
+      dataIndex: 'business_days',
       title: '营业时间',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'state',
-      title: '状态',
       hideInSearch: true,
       editable: false,
     },
   ],
   editableValuesChange: (record) => {
-    console.log(record);
+    const src = storePickupStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<StorePickup> = record;
+
+    if (!src) return;
+    if (src?.state !== update.state) {
+      if (update.state) {
+        update.state = true;
+      } else {
+        update.state = false;
+      }
+      storePickupStore
+        .update_one(src, update, ['state'])
+        .then(() => {
+          notification.success({ message: '更新成功' });
+          history.push(`/setting/delivery`);
+        })
+        .catch((e) => {
+          notification.error({ message: '更新失败:' + e });
+        });
+    }
   },
   toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
       title: '新增',
-      link: `/setting/delivery/add`,
+      link: `/setting/delivery/storepickupadd`,
     },
   ],
   tableMenu: (record: any, action: any) => [
     {
       kind: 'link',
       title: '编辑',
-      link: '/setting/delivery/edit?id=' + record.uid,
+      link: '/setting/delivery/storepickupedit?id=' + record.uid,
     },
     {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        deliverySettingStore
+        storePickupStore
           .remove(record.uid)
           .then(() => {
             notification.info({ message: '删除成功' });
@@ -279,7 +306,7 @@ const defaultStoreTable2: StoreTableProps = {
     },
   ],
   onRequest: (params) => {
-    deliverySettingStore.next(merge(params, { sort: { version: 1 } }));
+    storePickupStore.next(merge(params, { sort: { version: 1 } }));
   },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
@@ -288,7 +315,7 @@ pageManager.register('setting.delivery', {
   page: {
     view: [
       { kind: 'storeTable', ...defaultStoreTable1 },
-      { kind: 'storeTable', ...defaultStoreTable2 },
+      { kind: 'storeTable', ...storePickupStoreTable },
     ],
     container: {
       keepAlive: false,
@@ -298,6 +325,10 @@ pageManager.register('setting.delivery', {
     {
       store: deliverySettingStore,
       exit: deliverySettingStore.reset,
+    },
+    {
+      store: storePickupStore,
+      exit: storePickupStore.reset,
     },
   ],
 });

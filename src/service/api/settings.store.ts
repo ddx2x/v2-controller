@@ -181,3 +181,35 @@ export const deliverySettingTemplateStore = new DeliverySettingTemplateStore(
   deliverySettingTemplateApi,
   new DefaultWatchApi(),
 );
+
+//
+export class StorePickup extends IObject {
+  pick_up_name: string | undefined;
+  pick_up_address: string | undefined;
+  owner_store_name: string | undefined;
+  contact: string | undefined;
+  business_days: string[] | undefined;
+  state: boolean | undefined;
+  constructor(data: StorePickup) {
+    super(data);
+    Object.assign(this, data);
+  }
+}
+
+class StorePickupStore extends ObjectStore<StorePickup> {
+  api: ObjectApi<StorePickup>;
+  watchApi: WatchApi<StorePickup>;
+  constructor(api: ObjectApi<StorePickup>, watchApi: WatchApi<StorePickup>) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
+}
+
+export const storePickupApi = new ObjectApi<StorePickup>({
+  url: '/api/v1/store_pickup',
+  objectConstructor: StorePickup,
+  service: 'settings',
+});
+
+export const storePickupStore = new StorePickupStore(storePickupApi, new DefaultWatchApi());
