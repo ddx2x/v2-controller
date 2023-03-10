@@ -31,7 +31,7 @@ export default [
     name: '首页',
     href: null,
     path: '/',
-    icon: 'home',
+    icon: 'HomeTwoTone',
     routes: [],
   },
   {
@@ -44,6 +44,7 @@ export default [
         name: '商品列表',
         path: '/product/product',
         component: './dynamic-view',
+        icon: 'containerTwoTone',
         routes: [
           {
             name: '商品新增',
@@ -81,6 +82,7 @@ export default [
         name: '商品分类',
         path: '/product/category',
         component: './dynamic-view',
+        icon: 'folderOpenTwoTone',
         routes: [
           {
             name: '商品分类属性',
@@ -125,6 +127,7 @@ export default [
         name: '商品品牌',
         path: '/product/brand',
         component: './dynamic-view',
+        icon: 'TagsTwoTone',
         routes: [
           {
             name: '商品品牌编辑',

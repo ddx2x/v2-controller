@@ -13,6 +13,7 @@ import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
 import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
 import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
+import {AutoCompleteProps, AutoCompleteRender, AutoCompleteRenderFormItem} from './autoComplete'
 
 declare module '@ant-design/pro-utils' {
   interface ProFieldValueTypeWithFieldProps {
@@ -30,6 +31,7 @@ declare module '@ant-design/pro-utils' {
     descriptionsCard: DescriptionsCardProps;
     descriptionsCardList: DescriptionsCardListProps;
     editableTable: EditableTableProps;
+    autoComplete: AutoCompleteProps;
   }
 }
 
@@ -48,7 +50,8 @@ const valueTypeMap = {
   descriptions: [FDescriptionsRender, FDescriptionsRenderFormItem],
   descriptionsCard: [DescriptionsCardRender, DescriptionsCardRenderFormItem],
   descriptionsCardList: [DescriptionsCardListRender, DescriptionsCardListRenderFormItem],
-  editableTable: [EditableTableRender, EditableTableRenderFormItem]
+  editableTable: [EditableTableRender, EditableTableRenderFormItem],
+  autoComplete: [AutoCompleteRender, AutoCompleteRenderFormItem]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);

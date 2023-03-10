@@ -1,6 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { history } from '@umijs/max';
+import { brandApi } from '@/service/api';
+import { history, request } from '@umijs/max';
 import { message, notification } from 'antd';
 import { merge } from 'lodash';
 import { Product, productApi, productStore } from '../../api/productProduct.store';
@@ -43,10 +44,19 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'name',
       title: '商品名称',
-      // hideInSearch: true,
       editable: false,
-      fieldProps: {
-        autoComplete: true,
+      valueType: 'autoComplete',
+      fieldProps:  (form) => {
+        async function onSearch (text: string) {
+          return await request(
+            `/search-t/api/v1/product_name?limit={"page":0,"size":100}&filter={"text":"${form.getFieldValue(
+              'name',
+            )}"}`,
+          ).then((res) => res.map((value: any) => ({ value: value })))
+        }        
+        return {
+          onSearch,
+        };
       },
     },
     {
@@ -59,8 +69,23 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'brand_name',
       title: '品牌名称',
-      // hideInSearch: true,
+      valueType: 'select',
       editable: false,
+      request: async () => {
+        try {
+          const rs = await brandApi.list(undefined, {
+            limit: { page: 0, size: 500 },
+            sort: { version: 1 },
+          });
+          let select: any = [];
+          rs.map((value) => {
+            select.push({ label: value.uid, value: value.uid });
+          });
+          return select;
+        } catch (e) {
+          return [];
+        }
+      },
     },
     {
       dataIndex: 'product_category_name',
@@ -68,7 +93,6 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
-
     {
       dataIndex: 'publish_status',
       title: '上架状态',
@@ -117,6 +141,7 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'sale',
       title: '销量',
+      hideInSearch: true,
       valueType: 'digit',
       editable: false,
     },
