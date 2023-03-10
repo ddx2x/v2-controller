@@ -1,14 +1,14 @@
 import Footer from '@/pages/layout/footer';
 import RightContent from '@/pages/layout/right-content';
-import { ClearOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined,RollbackOutlined,SearchOutlined } from '@ant-design/icons';
 import {
-  MenuDataItem,
-  PageLoading,
-  SettingDrawer,
-  Settings as LayoutSettings
+MenuDataItem,
+PageLoading,
+SettingDrawer,
+Settings as LayoutSettings
 } from '@ant-design/pro-components';
-import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
-import { Button, ConfigProvider, FloatButton, Input, Popconfirm, Space } from 'antd';
+import { history,Link,RunTimeLayoutConfig,useAliveController,useLocation } from '@umijs/max';
+import { Button,ConfigProvider,FloatButton,Input,Popconfirm,Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { isCachingNode } from './dynamic-components/container';
@@ -156,38 +156,38 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ],
     links: isDev
       ? [
-        // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-        //   <LinkOutlined />
-        //   <span>OpenAPI 文档</span>
-        // </Link>,
-      ]
+          // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+          //   <LinkOutlined />
+          //   <span>OpenAPI 文档</span>
+          // </Link>,
+        ]
       : [],
     // 自定义菜单
     collapsed: collapsed,
     onCollapse: (collapsed) => setCollapsed(collapsed),
     // 去掉搜索菜单
-    // menuExtraRender: ({ collapsed }) =>
-    //   !collapsed && (
-    //     <Input
-    //       style={{
-    //         borderRadius: 4,
-    //         marginBottom: 10,
-    //         backgroundColor: 'rgba(0,0,0,0.03)',
-    //       }}
-    //       prefix={
-    //         <SearchOutlined
-    //           style={{
-    //             color: 'rgba(0, 0, 0, 0.15)',
-    //           }}
-    //         />
-    //       }
-    //       placeholder="搜索菜单"
-    //       bordered={false}
-    //       onChange={(e) => {
-    //         setKeyWord((e.target as HTMLInputElement).value);
-    //       }}
-    //     />
-    //   ),
+    menuExtraRender: ({ collapsed }) =>
+      !collapsed && (
+        <Input
+          style={{
+            borderRadius: 4,
+            marginBottom: 10,
+            backgroundColor: 'rgba(0,0,0,0.03)',
+          }}
+          prefix={
+            <SearchOutlined
+              style={{
+                color: 'rgba(0, 0, 0, 0.15)',
+              }}
+            />
+          }
+          placeholder="搜索菜单"
+          bordered={false}
+          onChange={(e) => {
+            setKeyWord((e.target as HTMLInputElement).value);
+          }}
+        />
+      ),
     postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
     subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
@@ -201,9 +201,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         <ConfigProvider
           theme={{
             token: {
-              "sizeStep": 4,
-              "borderRadius": 2,
-              "fontSize": 13.5
+              sizeStep: 4,
+              borderRadius: 2,
+              fontSize: 13.5,
             },
           }}
         >

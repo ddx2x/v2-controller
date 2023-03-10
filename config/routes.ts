@@ -36,9 +36,9 @@ export default [
   },
   {
     name: '商品',
-    href: null,
     path: '/product',
-    icon: 'compass',
+    href: null,
+    icon: 'shoppingTwoTone',
     routes: [
       {
         name: '商品列表',
@@ -156,6 +156,7 @@ export default [
       {
         name: '订单列表',
         path: '/order/order',
+        icon: 'fileTextTwoTone',
         component: './dynamic-view',
         routes: [
           {
@@ -170,6 +171,7 @@ export default [
       {
         name: '售后管理',
         path: '/order/after-sale-order',
+        icon: 'profileTwoTone',
         component: './dynamic-view',
         parentKeys: ['/after-sale-order'],
         routes: [
@@ -194,12 +196,14 @@ export default [
         name: '客户列表',
         path: '/ums/customer',
         component: './dynamic-view',
+        icon: 'mehTwoTone',
         routes: [],
       },
 
       {
         name: '会员权益',
         path: '/ums/member',
+        icon: 'propertySafetyTwoTone',
         component: './dynamic-view',
         parentKeys: ['/customer'],
       },
@@ -215,17 +219,20 @@ export default [
         name: '个性装修',
         path: '/cms/furnish',
         component: './dynamic-view',
+        icon: 'layoutTwoTone',
         routes: [],
       },
       {
         name: '系统页面',
         path: '/cms/main',
+        icon: 'toolTwoTone',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '门店列表',
         path: '/cms/door',
+        icon: 'shopTwoTone',
         component: './dynamic-view',
         routes: [
           {
@@ -246,15 +253,15 @@ export default [
       },
     ],
   },
-
   {
     name: '权限管理',
     path: '/privilege',
-    icon: 'setting',
+    icon: 'safety',
     routes: [
       {
         name: '用户',
         path: '/privilege/user',
+        icon: 'contactsTwoTone',
         component: './dynamic-view',
         routes: [],
       },
@@ -262,12 +269,14 @@ export default [
         name: '角色',
         path: '/privilege/role',
         component: './dynamic-view',
+        icon: 'safetyCertificateTwoTone',
         routes: [],
       },
       {
         name: '资源',
         path: '/privilege/resource',
         component: './dynamic-view',
+        icon: 'apiTwoTone',
         routes: [],
       },
     ],
@@ -281,13 +290,14 @@ export default [
       {
         name: '商户设置',
         path: '/setting/shop',
+        icon: 'bankTwoTone',
         component: './dynamic-view',
         routes: [],
       },
       {
         name: '商品设置',
         path: '/setting/product',
-
+        icon: 'appstoreTwoTone',
         component: './dynamic-view',
         routes: [],
       },
@@ -295,6 +305,7 @@ export default [
         name: '配送设置',
         path: '/setting/delivery',
         component: './dynamic-view',
+        icon: 'carTwoTone',
         routes: [
           {
             name: '新增配送设置',
@@ -345,6 +356,7 @@ export default [
         name: '订单配置',
         path: '/setting/order',
         component: './dynamic-view',
+        icon: 'fileTwoTone',
         routes: [],
       },
     ],
