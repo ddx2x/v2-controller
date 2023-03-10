@@ -3,6 +3,7 @@ import {
   album_pics,
   brand_name,
   delete_status, details,
+  feight_template_id,
   keywords, name, new_status, note, preview_status, product_category_name,
   product_sn, recommand_status,
   service_ids,
@@ -23,7 +24,7 @@ export const detail: DescriptionsProps = {
     new_status,
     recommand_status,
     sub_title,
-
+    feight_template_id,
     weight,
     preview_status,
     service_ids,

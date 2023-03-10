@@ -16,6 +16,8 @@ export class Product extends IObject {
   verify_status: number | boolean | string | undefined;
   sort: number | string | undefined;
 
+  feight_template_id: string | undefined;
+
   price: number | string | undefined;
   promotion_price: number | string | undefined;
   gift_growth: number | string | undefined;

@@ -9,6 +9,7 @@ import {
   album_pics,
   brand_name,
   details,
+  feight_template_id,
   keywords,
   low_stock,
   name,
@@ -20,7 +21,6 @@ import {
   promotion_per_limit,
   promotion_start_time,
   promotion_type,
-  publish_status,
   recommand_status,
   service_ids,
   sort,
@@ -54,13 +54,14 @@ const editForm: FormProps = {
     merge(name, { fieldProps: { disabled: true } }),
     merge(brand_name, { fieldProps: { disabled: true } }),
     merge(product_category_name, { fieldProps: { disabled: false } }),
-    publish_status,
     price,
-    merge(product_sn, { fieldProps: { disabled: true } }),
+    merge(product_sn, { fieldProps: { disabled: false } }),
     service_ids,
     keywords,
     new_status,
     recommand_status,
+
+    feight_template_id,
 
     promotion_type,
     promotion_start_time,
@@ -93,6 +94,8 @@ const editForm: FormProps = {
       new_status: values.new_status ? 1 : 0,
       recommand_status: values.recommand_status ? 1 : 0,
 
+      feight_template_id: values.feight_template_id,
+
       details: values.details,
       keywords: values.keywords,
       unit: values.unit,
@@ -114,6 +117,7 @@ const editForm: FormProps = {
         'price',
         'new_status',
         'recommand_status',
+        'feight_template_id',
       ])
       .then(() => {
         notification.success({ message: '保存成功' });

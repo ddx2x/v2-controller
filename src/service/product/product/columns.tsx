@@ -1,5 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
-import { brandApi } from '../../api';
+import { brandApi, DeliverySetting, deliverySettingApi } from '../../api';
 import { Category, categoryApi } from '../category';
 
 export const name: FormColumnsType = {
@@ -406,4 +406,26 @@ export const unit: FormColumnsType = {
   dataIndex: 'unit',
   title: '单位',
   valueType: 'text',
+};
+
+export const feight_template_id: FormColumnsType = {
+  dataIndex: 'feight_template_id',
+  title: '运费模板',
+  valueType: 'select',
+  request: async (params: any, props: any) => {
+    try {
+      const rs = await deliverySettingApi.list(undefined, {
+        limit: { page: 0, size: 500 },
+        sort: { version: 1 },
+        filter: {},
+      });
+      let select: any = [];
+      rs.map((value: DeliverySetting) => {
+        select.push({ label: value.name, value: value.uid });
+      });
+      return select;
+    } catch (e) {
+      return [];
+    }
+  },
 };

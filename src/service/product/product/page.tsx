@@ -68,6 +68,7 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
+
     {
       dataIndex: 'publish_status',
       title: '上架状态',
@@ -78,7 +79,6 @@ const productStoreTable: StoreTableProps = {
         1: true,
       },
     },
-
     {
       dataIndex: 'new_status',
       title: '新品状态',
@@ -122,6 +122,20 @@ const productStoreTable: StoreTableProps = {
     },
   ],
   editableValuesChange: (record: Product) => {
+    // check
+    if (record.publish_status == 1) {
+      if (record.delete_status == 1) {
+        message.error('商品已被删除中，无法上架');
+        history.push(`/product/product`);
+        return;
+      }
+
+      if (Object.keys(record.album_pics).length == 0) {
+        message.error('商品无主图册，无法上架');
+        history.push(`/product/product`);
+        return;
+      }
+    }
     const src = productStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<Product> = record;
 

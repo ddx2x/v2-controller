@@ -104,7 +104,8 @@ const defaultStoreTable1: StoreTableProps = {
         },
         {
           dataIndex: 'region',
-          title: '可配送区域',
+          title: '配送区域',
+          tooltip: '如果是卖家包邮，那么这里配置的是这些区域里是需要运费的',
           hideInSearch: true,
           editable: false,
           fixed: 'left',

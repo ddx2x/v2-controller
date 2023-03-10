@@ -93,10 +93,23 @@ const table: StoreTableProps = {
     },
   ],
   editableValuesChange: (record: StockKeepingUnit) => {
+    // 当价格没有设置时，不更新
+    if (record.publish_status) {
+      if (!record.price) {
+        message.error('请设置价格');
+        history.push(`/product/product/sku?product_id=${record.product_id}`);
+        return;
+      }
+
+      if (!record.stock) {
+        message.error('请设置库存');
+        history.push(`/product/product/sku?product_id=${record.product_id}`);
+        return;
+      }
+    }
+
     const src = stockKeepingUnitStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<StockKeepingUnit> = record;
-
-    // TODO: 当价格没有设置时，不更新,当前不支持reject editedtable
 
     if (!src) return;
     if (src?.publish_status !== update.publish_status) {

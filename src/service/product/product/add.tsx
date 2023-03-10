@@ -64,6 +64,8 @@ const addForm: FormProps = {
     target.publish_status = Number(target.publish_status || 0);
     target.verify_status = Number(target.verify_status || 0);
     target.delete_status = Number(target.delete_status || 0);
+    target.feight_template_id = values.feight_template_id;
+    
     (target.album_pics =
       values.album_pics?.fileList?.map((file: { name: any }) => file.name) || []),
       productStore
