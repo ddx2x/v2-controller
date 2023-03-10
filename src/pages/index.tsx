@@ -123,7 +123,7 @@ export default () => {
               </StatisticCard>
             </ProCard>
             <ProCard split="vertical">
-              <StatisticCard title='销售统计' extra={<Segmented options={['今日', '本周', '本月', '今年']} />}>
+              <StatisticCard title='销售统计' extra={<Segmented options={['今日', '本周', '本月', '今年']} onResize={undefined} onResizeCapture={undefined} />}>
                 <StatisticCard
                   statistic={{
                     title: '交易总额（元）',
@@ -149,7 +149,7 @@ export default () => {
           </ProCard>
           <StatisticCard
             title="订单统计"
-            extra={<Segmented options={['今日', '本周', '本月']} />}
+            extra={<Segmented options={['今日', '本周', '本月']} onResize={undefined} onResizeCapture={undefined} />}
           >
             <Line {...LineConfig} />
           </StatisticCard>
@@ -169,7 +169,7 @@ export default () => {
               </StatisticCard>
             </ProCard>
           </ProCard>
-          <ProCard split="vertical" extra={<Segmented options={['今日', '本周', '本月']} />}>
+          <ProCard split="vertical" extra={<Segmented options={['今日', '本周', '本月']} onResize={undefined} onResizeCapture={undefined} />}>
             <StatisticCard
               title="商品排名"
             >

@@ -7,6 +7,7 @@ import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umi
 import type { BreadcrumbProps } from 'antd';
 import { useContext } from 'react';
 import type { CachingNode } from 'react-activation';
+import './container.scss'
 
 export declare type KeepAliveProps = {
   path?: string | null;
@@ -66,8 +67,10 @@ export const Container: React.FC<ContainerProps> = (props) => {
 
   return (
     <ProPageContainer
+      className='page-container'
       header={{ breadcrumb: headerBreadcrumb(), ...header }}
       affixProps={{ offsetTop: 56 }}
+
       {...rest}
     >
       {props.children}

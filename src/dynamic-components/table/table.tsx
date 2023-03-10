@@ -16,6 +16,7 @@ import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 
+
 const defaulScrollHeight = '100%';
 
 export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar' | 'onRow'> & {
@@ -266,6 +267,7 @@ export const Table: React.FC<TableProps> = (props) => {
       }}
     >
       <EditableProTable
+        style={{padding: 0}}
         columns={newColumns}
         value={value}
         editable={{

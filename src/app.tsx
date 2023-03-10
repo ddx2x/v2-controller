@@ -1,14 +1,14 @@
 import Footer from '@/pages/layout/footer';
 import RightContent from '@/pages/layout/right-content';
-import { ClearOutlined,RollbackOutlined,SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons';
 import {
-MenuDataItem,
-PageLoading,
-SettingDrawer,
-Settings as LayoutSettings
+  MenuDataItem,
+  PageLoading,
+  SettingDrawer,
+  Settings as LayoutSettings,
 } from '@ant-design/pro-components';
-import { history,Link,RunTimeLayoutConfig,useAliveController,useLocation } from '@umijs/max';
-import { Button,ConfigProvider,FloatButton,Input,Popconfirm,Space } from 'antd';
+import { history, Link, RunTimeLayoutConfig, useAliveController, useLocation } from '@umijs/max';
+import { Button, ConfigProvider, FloatButton, Input, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { isCachingNode } from './dynamic-components/container';
@@ -51,13 +51,17 @@ const menuRender = (
 ) => {
   const { dropScope } = useAliveController();
   const location = useLocation();
-
   let canClear = false;
+
   canClear = isCachingNode(item.path);
 
   return (
     <Space align="baseline" size={80}>
-      <Link to={item.path as string}>{dom}</Link>
+      {item.children && item.children.length > 0 ? (
+        dom
+      ) : (
+        <Link to={item.path as string}>{dom}</Link>
+      )}
       {!collapsed && canClear && (
         <Popconfirm
           title="是否清除缓存"
@@ -188,7 +192,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           }}
         />
       ),
-    postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
+    // postMenuData: (menus) => filterByMenuDate(menus || [], keyWord),
     menuItemRender: (item, dom) => menuRender(item, dom, collapsed),
     subMenuItemRender: (item, dom, menuProps) => menuRender(item, dom, collapsed),
     menuHeaderRender: undefined,

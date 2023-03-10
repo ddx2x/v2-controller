@@ -32,12 +32,19 @@ export default [
     href: null,
     path: '/',
     icon: 'HomeTwoTone',
-    routes: [],
+    routes: [
+      {
+        name: '数据概览',
+        path: '/',
+        icon: 'dashboardTwoTone',
+        component: './dynamic-view',
+        parentKeys: ['/'],
+      },
+    ],
   },
   {
     name: '商品',
     path: '/product',
-    href: null,
     icon: 'shoppingTwoTone',
     routes: [
       {
@@ -190,7 +197,7 @@ export default [
   {
     name: '客户',
     path: '/ums',
-    icon: 'flag',
+    icon: 'user',
     routes: [
       {
         name: '客户列表',
@@ -213,7 +220,7 @@ export default [
   {
     name: '店铺',
     path: '/cms',
-    icon: 'team',
+    icon: 'shop',
     routes: [
       {
         name: '个性装修',
