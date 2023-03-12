@@ -78,8 +78,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
       })
       .finally(() => {
         // disposer()
-      }
-      );
+      });
   };
 
   @action load = async (query?: Query) => {

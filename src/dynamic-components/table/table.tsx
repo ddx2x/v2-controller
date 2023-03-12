@@ -91,7 +91,9 @@ export const Table: React.FC<TableProps> = (props) => {
     //   }
     //   document.body.style.overflow = 'visible';
     // });
-  });
+  }, [])
+
+
 
   // 多选
   const [selectedRows, setSelectedRows] = useState([]);
@@ -267,7 +269,7 @@ export const Table: React.FC<TableProps> = (props) => {
       }}
     >
       <EditableProTable
-        style={{padding: 0}}
+        style={{ padding: 0 }}
         columns={newColumns}
         value={value}
         editable={{

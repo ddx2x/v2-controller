@@ -297,9 +297,8 @@ const productStoreTable: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
-  onRequest: ({ query }) => {
+  onRequest: ({ query }) =>
     productStore.next(merge(query, { sort: { version: 1 } }))
-  }
 };
 
 pageManager.register('product.product', {
@@ -309,10 +308,6 @@ pageManager.register('product.product', {
       keepAlive: false,
     },
   },
-  // stores: [
-  //   {
-  //     store: productStore,
-  //     exit: productStore.reset,
-  //   },
-  // ],
+  stores: [
+  ],
 });
