@@ -15,7 +15,7 @@ const defaultStoreTable: StoreTableProps = {
     {
       dataIndex: 'uid',
       hideInSearch: true,
-      hideInTable: true,  
+      hideInTable: true,
     },
     {
       dataIndex: 'name',
@@ -174,10 +174,9 @@ const defaultStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params: any) => {
-    customerStore.next(merge(params, { filter: { level: 1 }, sort: { version: 1 } }));
-  },
-  batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) =>
+    customerStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } }))
 };
 
 

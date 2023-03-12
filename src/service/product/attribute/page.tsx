@@ -105,16 +105,10 @@ const attributeStoretable: StoreTableProps = {
   //     title: '详情',
   //   },
   // ],
-  onRequest: (params: any, sort, filter, location) => {
-
-    productAttributeStore.next(
-      merge(params,
-        { sort: { type: 1 } },
-        { filter: parse(location?.search.split('?')[1] || '') },
-      ));
-  },
   useBatchDelete: true,
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query, location }) =>
+    productAttributeStore.next(merge(query, { sort: { type: 1 } }, { filter: parse(location?.search.split('?')[1] || '') }))
 };
 
 pageManager.register('product.category.attribute', {

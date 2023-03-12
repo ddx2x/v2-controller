@@ -80,11 +80,11 @@ const table: View = {
       title: '详情',
     },
   ],
-  // onRequest: (params: any) =>
+  // onRequest: ({ query }) =>
   //   privilegeStore.next({
   //     limit: { page: 0, size: 10 },
   //     sort: { version: 1 },
-  //     ...params,
+  //     ...query,
   //   }),
 };
 

@@ -1,7 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { Order, OrderStateValueEnum, orderApi, orderStore } from '@/service/api';
+import { Order, orderApi, OrderStateValueEnum, orderStore } from '@/service/api';
 import { merge } from 'lodash';
 import { shipForm } from './form';
 
@@ -117,10 +117,8 @@ const orderStoreTable: StoreTableProps = {
     }
     return columns
   },
-  onRequest: (params) => {
-    const query = merge(params, { sort: { version: 1 } });
-    orderStore.next(query)
-  },
+  onRequest: ({ query }) =>
+    orderStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 pageManager.register('order.order', {

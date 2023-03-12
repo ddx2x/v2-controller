@@ -19,8 +19,8 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       hideInTable: true,
       editable: false,
-    },
 
+    },
     {
       dataIndex: 'album_pics',
       title: '商品图',
@@ -66,6 +66,7 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       valueType: 'money',
+      sorter: true,
     },
     {
       dataIndex: 'brand_name',
@@ -283,11 +284,10 @@ const productStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params) => {
-    const query = merge(params, { sort: { version: 1 } });
-    productStore.next(query);
-  },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) => {
+    productStore.next(merge(query, { sort: { version: 1 } }))
+  }
 };
 
 pageManager.register('product.product', {
@@ -297,10 +297,10 @@ pageManager.register('product.product', {
       keepAlive: false,
     },
   },
-  stores: [
-    {
-      store: productStore,
-      exit: productStore.reset,
-    },
-  ],
+  // stores: [
+  //   {
+  //     store: productStore,
+  //     exit: productStore.reset,
+  //   },
+  // ],
 });

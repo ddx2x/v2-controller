@@ -58,7 +58,7 @@ const storeTable: StoreTableProps = {
       },
     },
   ],
-  editableValuesChange: (record: CmsDoor) => {},
+  editableValuesChange: (record: CmsDoor) => { },
   toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
@@ -103,9 +103,9 @@ const storeTable: StoreTableProps = {
   //     title: '详情',
   //   },
   // ],
-  onRequest: (params) => {
-    cmsDoorStore.next(merge(params, { sort: { version: 1 } }));
-  },
+  onRequest: ({ query }) =>
+    cmsDoorStore.next(merge(query, { sort: { version: 1 } }))
+  ,
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 

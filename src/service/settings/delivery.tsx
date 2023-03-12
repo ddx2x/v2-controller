@@ -8,7 +8,7 @@ import {
   DeliverySettingTemplate,
   deliverySettingTemplateStore,
   StorePickup,
-  storePickupStore,
+  storePickupStore
 } from '../api';
 
 const columns: StoreTableProps['columns'] = [
@@ -185,10 +185,9 @@ const defaultStoreTable1: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params) => {
-    deliverySettingStore.next(merge(params, { sort: { version: 1 } }));
-  },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) =>
+    deliverySettingStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 const storePickupStoreTable: StoreTableProps = {
@@ -300,10 +299,9 @@ const storePickupStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params) => {
-    storePickupStore.next(merge(params, { sort: { version: 1 } }));
-  },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) =>
+    storePickupStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 pageManager.register('setting.delivery', {

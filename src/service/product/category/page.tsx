@@ -153,10 +153,9 @@ const categoryStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params) => {
-    categoryStore.next(merge(params, { filter: { level: 1 }, sort: { version: 1 } }));
-  },
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows)
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) =>
+    categoryStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } }))
 };
 
 pageManager.register('product.category', {

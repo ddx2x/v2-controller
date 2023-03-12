@@ -1,6 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
+import { merge } from 'lodash';
 import { Role, roleStore } from '../../api/privilegeRole.store';
 
 const roleStoreTable: StoreTableProps = {
@@ -64,13 +65,8 @@ const roleStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params: any) =>
-    roleStore.next({
-      limit: { page: 0, size: 10 },
-      sort: { version: 1 },
-      ...params,
-    }),
-  defaultPageSize: 10,
+  onRequest: ({ query }) =>
+    roleStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 pageManager.register('privilege.role', {

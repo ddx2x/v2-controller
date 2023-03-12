@@ -155,9 +155,8 @@ const table: StoreTableProps = {
               return {
                 dataIndex: r.name,
                 title: r.name,
-                tooltip: `${r.category_id}-${r.name}-${
-                  r.input_type === 1 ? '只能从列表选择' : '支持手工添加'
-                }`,
+                tooltip: `${r.category_id}-${r.name}-${r.input_type === 1 ? '只能从列表选择' : '支持手工添加'
+                  }`,
                 valueType: 'select',
                 hideInSearch: true,
                 fieldProps: {
@@ -217,16 +216,13 @@ const table: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: (params) => {
-    const query = merge(
-      params,
-      { filter: parse(location?.search.split('?')[1] || '') },
-      { sort: { spec_name: 1 } },
-    );
-    stockKeepingUnitStore.next(query);
-  },
   defaultPageSize: 10,
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query, location }) =>
+    stockKeepingUnitStore.next(
+      merge(query,
+        { filter: parse(location?.search.split('?')[1] || '') },
+        { sort: { spec_name: 1 } }
+      ))
 };
 
 pageManager.register('product.product.sku', {

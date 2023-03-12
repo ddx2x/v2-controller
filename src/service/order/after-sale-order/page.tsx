@@ -1,7 +1,7 @@
 import { FormOnSumbit, StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { AfterSaleOrder, AfterSaleOrderStateValueEnum, AfterSaleOrderTypeValueEnum, afterSaleOrderStore, afterSaleorderApi } from '@/service/api';
+import { AfterSaleOrder, afterSaleorderApi, AfterSaleOrderStateValueEnum, afterSaleOrderStore, AfterSaleOrderTypeValueEnum } from '@/service/api';
 import { merge } from 'lodash';
 import { rejectForm } from './form';
 
@@ -108,10 +108,8 @@ const afterSaleOrderStoreTable: StoreTableProps = {
     }
     return columns
   },
-  onRequest: (params) => {
-    const query = merge(params, { sort: { version: 1 } });
-    afterSaleOrderStore.next(query)
-  },
+  onRequest: ({ query }) =>
+    afterSaleOrderStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 pageManager.register('order.after-sale-order', {

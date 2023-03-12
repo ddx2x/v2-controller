@@ -2,6 +2,7 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { unixtime2dateformat } from '@/service';
 import { message, notification } from 'antd';
+import { merge } from 'lodash';
 import { ReactNode } from 'react';
 import { User, userStore } from '../../api/privilegeUser.store';
 
@@ -15,7 +16,7 @@ const userStoreTable: StoreTableProps = {
       title: '帐户',
       hideInSearch: true,
       fixed: 'left',
-      width:120,
+      width: 120,
       editable: false,
     },
     {
@@ -115,14 +116,9 @@ const userStoreTable: StoreTableProps = {
     // }
 
   },
-  onRequest: (params: any) =>
-    userStore.next({
-      limit: { page: 0, size: 1 },
-      sort: {},
-      ...params,
-    }),
-
   defaultPageSize: 10,
+  onRequest: ({ query }) =>
+    userStore.next(merge(query, { sort: { version: 1 } }))
 };
 
 pageManager.register('privilege.user', {
