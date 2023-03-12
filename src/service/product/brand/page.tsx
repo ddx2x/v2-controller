@@ -147,10 +147,8 @@ const brandStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: ({ query }) => {
-    // let q = merge(query, { sort: { _id: 1, sort: 1 } })
-    brandStore.next(query)
-  }
+  onRequest: ({ query }) =>
+    brandStore.next(merge(query, { sort: { _id: 1, sort: 1 } }))
 };
 
 pageManager.register('product.brand', {

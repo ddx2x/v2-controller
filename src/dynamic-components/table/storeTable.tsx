@@ -15,7 +15,7 @@ export declare type RequestParams = {
 }
 
 export declare type StoreTableProps = TableProps & {
-  store?: ObjectStore<any>
+  store?: ObjectStore<any>;
   defaultPageSize?: number;
   onRequest?: (params: RequestParams) => void
 }
@@ -33,11 +33,18 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
         showLessItems: true,
         showPrevNextJumpers: true,
         showSizeChanger: true,
-        pageSizeOptions: [5, 10, 20, 50, 80]
+        pageSizeOptions: [5, 10, 20, 50, 80],
       }}
       request={async (params: any, sort: {}, filter: {}) => {
-        console.log('request.......');
+        
         const { pageSize: size, current, ...more } = params;
+        // 删除空值
+        Object.keys(more).forEach((key) => {
+          if (more[key] === undefined || more[key] === null || more[key] === '') {
+            delete more[key];
+          }
+        });
+
         onRequest && onRequest({
           query: {
             limit: { page: current - 1, size: size },
@@ -49,5 +56,5 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
       }}
       {...rest}
     />
-  )
-})
+  );
+});
