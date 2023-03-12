@@ -1,10 +1,10 @@
-import { ObjectStore } from '@/client'
-import { ActionType } from '@ant-design/pro-components'
-import { observer } from 'mobx-react'
-import { Table, TableProps } from './table'
+import { ObjectStore } from '@/client';
+import { ActionType } from '@ant-design/pro-components';
+import { observer } from 'mobx-react';
+import { Table, TableProps } from './table';
 
 export declare type StoreTableProps = TableProps & {
-  store?: ObjectStore<any>
+  store?: ObjectStore<any>;
   defaultPageSize?: number;
   onRequest?: (
     params?: any,
@@ -13,7 +13,7 @@ export declare type StoreTableProps = TableProps & {
     location?: Location | null | undefined,
     actionRef?: React.MutableRefObject<ActionType | undefined>,
   ) => void;
-}
+};
 
 export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
   const { store, defaultPageSize, onRequest, value, ...rest } = props;
@@ -28,16 +28,30 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
         showLessItems: true,
         showPrevNextJumpers: true,
         showSizeChanger: true,
-        pageSizeOptions: [5, 10, 20, 50, 80]
+        pageSizeOptions: [5, 10, 20, 50, 80],
       }}
-      request={async (params: any, sort: {}, filter: {}) => {
+      request={async (params: any, sort: {}, filter: any) => {
         const { pageSize: size, current, ...more } = params;
         const order = sort;
         const page = current - 1;
-        onRequest && onRequest({ limit: { page: page, size: size, }, filter: { ...more } }, order, filter, location);
+
+        // 删除空值
+        Object.keys(more).forEach((key) => {
+          if (more[key] === undefined || more[key] === null || more[key] === '') {
+            delete more[key];
+          }
+        });
+
+        onRequest &&
+          onRequest(
+            { limit: { page: page, size: size }, filter: { ...more } },
+            order,
+            filter,
+            location,
+          );
         return { success: true };
       }}
       {...rest}
     />
-  )
-})
+  );
+});

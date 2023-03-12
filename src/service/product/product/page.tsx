@@ -92,8 +92,21 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'product_category_name',
       title: '产品分类',
-      hideInSearch: true,
+      tooltip: '支持全文索引',
       editable: false,
+      valueType: 'autoComplete',
+      fieldProps: (form) => {
+        async function onSearch(text: string) {
+          return await request(
+            `/search-t/api/v1/category_name?limit={"page":0,"size":500}&filter={"text":"${form.getFieldValue(
+              'product_category_name',
+            )}"}`,
+          ).then((res) => res.map((value: any) => ({ value: value })));
+        }
+        return {
+          onSearch,
+        };
+      },
     },
     {
       dataIndex: 'publish_status',
