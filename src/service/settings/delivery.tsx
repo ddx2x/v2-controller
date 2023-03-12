@@ -241,12 +241,6 @@ const storePickupStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
-    {
-      dataIndex: 'business_days',
-      title: '营业时间',
-      hideInSearch: true,
-      editable: false,
-    },
   ],
   editableValuesChange: (record) => {
     const src = storePickupStore.items.find((item) => item.getUid() === record.uid);

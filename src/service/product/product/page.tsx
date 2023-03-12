@@ -44,16 +44,17 @@ const productStoreTable: StoreTableProps = {
     {
       dataIndex: 'name',
       title: '商品名称',
+      tooltip: '支持全文索引',
       editable: false,
       valueType: 'autoComplete',
-      fieldProps:  (form) => {
-        async function onSearch (text: string) {
+      fieldProps: (form) => {
+        async function onSearch(text: string) {
           return await request(
             `/search-t/api/v1/product_name?limit={"page":0,"size":100}&filter={"text":"${form.getFieldValue(
               'name',
             )}"}`,
-          ).then((res) => res.map((value: any) => ({ value: value })))
-        }        
+          ).then((res) => res.map((value: any) => ({ value: value })));
+        }
         return {
           onSearch,
         };
@@ -70,6 +71,7 @@ const productStoreTable: StoreTableProps = {
       dataIndex: 'brand_name',
       title: '品牌名称',
       valueType: 'select',
+      fieldProps: {},
       editable: false,
       request: async () => {
         try {
