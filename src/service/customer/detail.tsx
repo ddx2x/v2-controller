@@ -1,12 +1,12 @@
 import { DescriptionsProps } from '@/dynamic-components';
-import { name } from './columns';
+import { customerAddresses, name } from './columns';
 
 export const detail: DescriptionsProps = {
   modal: 'Drawer',
   bordered: true,
   columns: [
     name,
-
-  ] as DescriptionsProps['columns'],
+    customerAddresses,
+  ] as DescriptionsProps['columns'],  
   layout: 'horizontal'
 }

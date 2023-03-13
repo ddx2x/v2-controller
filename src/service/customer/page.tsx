@@ -2,7 +2,12 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { Modal, notification } from 'antd';
 import { merge } from 'lodash';
-import { Customer, customerStore } from '../api/customer.store';
+import {
+  Customer,
+  CustomerAddress,
+  customerAddressStore,
+  customerStore,
+} from '../api/customer.store';
 import { detail } from './detail';
 
 const defaultStoreTable: StoreTableProps = {
@@ -31,7 +36,7 @@ const defaultStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       fixed: 'left',
-      width: 120
+      width: 120,
     },
     {
       dataIndex: 'icon',
@@ -126,9 +131,11 @@ const defaultStoreTable: StoreTableProps = {
       },
       hideInSearch: true,
       editable: false,
-    }
+    },
   ],
-  editableValuesChange: (record: any) => { console.log(record) },
+  editableValuesChange: (record: any) => {
+    console.log(record);
+  },
   toolBarMenu: (selectedRows: any) => [
     // {
     //   kind: 'link',
@@ -145,27 +152,28 @@ const defaultStoreTable: StoreTableProps = {
           title: record.freeze ? '解冻结' : '冻结',
           content: record.freeze ? '解冻结后可以使用积分、余额' : '冻结后将无法使用积分、余额',
           onOk: () => {
-            customerStore.
-              update_one(record, { freeze: !record.freeze }, ["freeze"]).
-              then((r) => {
-                notification.info({ message: r.freeze ? "冻结成功" : "解冻结成功" });
-              }).
-              catch((e) => {
+            customerStore
+              .update_one(record, { freeze: !record.freeze }, ['freeze'])
+              .then((r) => {
+                notification.info({ message: r.freeze ? '冻结成功' : '解冻结成功' });
+              })
+              .catch((e) => {
                 notification.error(e);
               });
           },
-          onCancel: () => { }
+          onCancel: () => {},
         });
       },
     },
     {
       kind: 'descriptions',
       title: '详情',
-      collapse: true,
-      request: async (params) => {
-        return await customerStore.api.get(record.uid).then(rs => { return { data: rs, success: true } })
+      request: async () => {
+        return await customerAddressStore.api.list(record.uid).then((rs: CustomerAddress[]) => {
+          return { data: { name: record.name, customerAddresses: rs }, success: true };
+        });
       },
-      ...detail
+      ...detail,
     },
   ],
   onRowEvent: [
@@ -176,16 +184,15 @@ const defaultStoreTable: StoreTableProps = {
   ],
   batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows),
   onRequest: ({ query }) =>
-    customerStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } }))
+    customerStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } })),
 };
-
 
 pageManager.register('ums.customer', {
   page: {
     view: [{ kind: 'storeTable', ...defaultStoreTable }],
     container: {
-      keepAlive: false
-    }
+      keepAlive: false,
+    },
   },
   stores: [
     {

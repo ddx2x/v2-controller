@@ -29,7 +29,7 @@ export const shipForm: FormProps = {
         }
       })
     }
-    console.log('onSubmit.....', data);
+    // console.log('onSubmit.....', data);
 
 
     // @ts-ignore
