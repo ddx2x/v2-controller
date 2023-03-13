@@ -113,6 +113,7 @@ const productStoreTable: StoreTableProps = {
       title: '上架状态',
       hideInSearch: true,
       valueType: 'switch',
+      sorter: true,
       valueEnum: {
         0: false,
         1: true,
