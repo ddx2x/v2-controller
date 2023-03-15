@@ -1,11 +1,11 @@
 import {
-  ActionType, EditableProTable, ProCard, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableProTable, ProCard, ProCardProps, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
 import { useLocation } from '@umijs/max';
-import { Pagination, Space, Tree } from 'antd';
-import { DataNode } from 'antd/lib/tree';
+import { Pagination, Space } from 'antd';
+import { DataNode, EventDataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
 import { observable } from 'mobx';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,6 +15,7 @@ import { FooterToolbar } from '../footer';
 import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
+import { Tree } from './tree';
 
 
 const defaulScrollHeight = '100%';
@@ -24,7 +25,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
   editableValuesChange?: (record: any) => void
-  treeData?: DataNode[];
+
   tableMenu?: (record?: any, action?: ProCoreActionType) => MenuButtonType[]; // 更多操作
   toolbarTitle?: string;
   toolBarMenu?: (selectedRows?: any, location?: Location | undefined) => MenuButtonType[];
@@ -42,12 +43,14 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
     mouseEvent: 'onClick' | 'onDoubleClick';
     title: string; // 按钮
   }[];
+  // Tree
+  treeCard?: ProCardProps;
+  treeData?: DataNode[];
 };
 
 export const Table: React.FC<TableProps> = (props) => {
   let {
     columns,
-    treeData,
     value,
     pagination,
     // 批量删除
@@ -73,6 +76,9 @@ export const Table: React.FC<TableProps> = (props) => {
     // hook
     intl,
     routeContext,
+    // Tree
+    treeCard,
+    treeData,
     ...rest
   } = props;
 
@@ -97,6 +103,7 @@ export const Table: React.FC<TableProps> = (props) => {
 
   // 多选
   const [selectedRows, setSelectedRows] = useState([]);
+  const [selectTreeNode, setSelectTreeNode] = useState<EventDataNode<DataNode>>();
   const rowSelection = {
     preserveSelectedRowKeys: true,
     onChange: (_: any, selectedRows: any) => { setSelectedRows(selectedRows) },
@@ -177,8 +184,11 @@ export const Table: React.FC<TableProps> = (props) => {
       return (
         <>
           <div style={{ display: 'flex' }}>
-            <ProCard bordered style={{ width: 249, marginRight: 7 }}>
-              <Tree treeData={treeData || []} />
+            <ProCard {...treeCard} style={{ width: 249, marginRight: 7 }}>
+              <Tree
+                treeData={treeData || []}
+                onTreeSelect={(node) => { setSelectTreeNode(node); actionRef.current?.reload() }}
+              />
             </ProCard>
             <div ref={setContainer} style={{ width: withTreeWidth }}>
               {defaultDom}
@@ -272,6 +282,7 @@ export const Table: React.FC<TableProps> = (props) => {
         style={{ padding: 0 }}
         columns={newColumns}
         value={value}
+        params={{ treeNode: selectTreeNode }}
         editable={{
           type: 'multiple',
           editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],

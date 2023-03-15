@@ -1,6 +1,7 @@
 import { Input, Tree as ATree } from 'antd';
 import { DataNode, EventDataNode } from 'antd/lib/tree';
 import { useState } from 'react';
+
 // 🌲树父节点
 const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
   let parentKey: React.Key;
@@ -18,8 +19,13 @@ const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
 };
 
 
-export const Tree = (props: { treeData: DataNode[] }) => {
-  const { treeData } = props;
+export declare type TreeProps = {
+  treeData: DataNode[]
+  onTreeSelect: (node: EventDataNode<DataNode>) => void
+}
+
+export const Tree = (props: TreeProps) => {
+  const { treeData, onTreeSelect } = props;
 
   const [treeSelectedNode, setTreeSelectedNode] = useState<EventDataNode<DataNode>>()
   const [treeExpandedKeys, setTreeExpandedKeys] = useState<React.Key[]>([]);
@@ -71,7 +77,10 @@ export const Tree = (props: { treeData: DataNode[] }) => {
         onExpand={onTreeExpand}
         expandedKeys={treeExpandedKeys}
         autoExpandParent={autoExpandParent}
-        onSelect={(_: any, { node }) => { setTreeSelectedNode(node);  }}
+        onSelect={(_: any, { node }) => {
+          setTreeSelectedNode(node);
+          onTreeSelect(node);
+        }}
       />
     </>
   )
