@@ -134,7 +134,7 @@ const defaultStoreTable: StoreTableProps = {
     },
   ],
   editableValuesChange: (record: any) => {
-    console.log(record);
+    // console.log(record);
   },
   toolBarMenu: (selectedRows: any) => [
     // {

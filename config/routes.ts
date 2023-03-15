@@ -270,7 +270,22 @@ export default [
         path: '/privilege/user',
         icon: 'contactsTwoTone',
         component: './dynamic-view',
-        routes: [],
+        routes: [
+          {
+            name: '用户新增',
+            path: '/privilege/user/add',
+            component: './dynamic-view',
+            parentKeys: ['/privilege/user'],
+            hideInMenu: true,
+          },
+          {
+            name: '用户编辑',
+            path: '/privilege/user/edit',
+            component: './dynamic-view',
+            parentKeys: ['/privilege/user'],
+            hideInMenu: true,
+          },
+        ],
       },
       {
         name: '角色',

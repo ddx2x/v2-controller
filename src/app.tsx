@@ -105,7 +105,6 @@ export async function getInitialState(): Promise<{
   };
   // 如果不是登录页面，执行
   if (window.location.pathname !== loginPath) {
-    // const currentUser = await fetchUserInfo();
     const currentUser = { name: 'admin' };
     return {
       fetchUserInfo,

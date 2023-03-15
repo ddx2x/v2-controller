@@ -7,6 +7,7 @@ export class User extends IObject {
   login_type: number | string | undefined
   last_login_time: number | undefined
   is_lock: boolean | undefined
+  roles : string[] | undefined
 
   constructor(data: User) {
     super(data);

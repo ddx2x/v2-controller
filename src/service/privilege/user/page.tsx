@@ -1,15 +1,18 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { unixtime2dateformat } from '@/service';
-import { message, notification } from 'antd';
+import { unixtime2dateformat } from '@/service/common';
+import { notification } from 'antd';
 import { merge } from 'lodash';
 import { ReactNode } from 'react';
 import { User, userStore } from '../../api/privilegeUser.store';
 
-const userStoreTable: StoreTableProps = {
-  store: userStore,
+const table: StoreTableProps = {
+  toolbarTitle: '数据列表',
   rowKey: 'uid',
+  store: userStore,
   search: false,
+  size: 'small',
+
   columns: [
     {
       dataIndex: 'uid',
@@ -26,17 +29,40 @@ const userStoreTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'login_type',
-      title: '登陆类型',
-      valueType: "select",
+      dataIndex: 'is_lock',
+      title: '锁定',
+      hideInSearch: true,
+      valueType: 'switch',
+      valueEnum: {
+        0: '停用',
+        1: '启用',
+      },
+    },
+    {
+      dataIndex: 'phone_number',
+      title: '手机号',
       editable: false,
       hideInSearch: true,
-      initialValue: "4",
+    },
+    {
+      dataIndex: 'login_type',
+      title: '登陆类型',
+      valueType: 'select',
+      editable: false,
+      hideInSearch: true,
+      initialValue: '3',
       valueEnum: {
-        1: { text: "手机", icon: "processing" },
-        2: { text: "帐号", icon: "processing" },
-        4: { text: "手机+帐号", icon: "processing" }
-      }
+        1: { text: '手机', icon: 'processing' },
+        2: { text: '帐号', icon: 'processing' },
+        3: { text: '手机+帐号', icon: 'processing' },
+      },
+    },
+    {
+      dataIndex: 'roles',
+      title: '角色组',
+      hideInSearch: true,
+      editable: false,
+      valueType: 'text',
     },
     {
       dataIndex: 'last_login_time',
@@ -45,55 +71,45 @@ const userStoreTable: StoreTableProps = {
       editable: false,
       valueType: 'date',
       render: (text: ReactNode, record: User, index: number, action: any) => {
-        return [<>{record.last_login_time === 0 ? "-" : unixtime2dateformat(record.last_login_time || 0)}</>]
-      },
-    },
-    {
-      dataIndex: 'is_lock',
-      title: '锁定',
-      hideInSearch: true,
-      valueType: "switch",
-      valueEnum: {
-        0: '停用',
-        1: '启用'
+        return [
+          <>
+            {record.last_login_time === 0 ? '-' : unixtime2dateformat(record.last_login_time || 0)}
+          </>,
+        ];
       },
     },
   ],
-  editableValuesChange: (record) => {
+  editableValuesChange: (record: User) => {
     const src = userStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<User> = record;
 
     if (!src) return;
     if (src?.is_lock !== update.is_lock) {
-      userStore.update_one(src, update, ["is_lock"]).then(() =>
-        notification.success({ message: "更新成功" })).catch((e) => {
-          notification.error({ message: "更新失败:" + e });
-        })
+      userStore
+        .update_one(src, update, ['is_lock'])
+        .then(() => notification.success({ message: '更新成功' }))
+        .catch((e) => {
+          notification.error({ message: '更新失败:' + e });
+        });
     }
   },
-  toolbar: {
-    title: '数据列表',
-  },
-  toolBarMenu: () => [
+  toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
       title: '新增',
-      link: `/product/brand/add`,
-
+      link: `/privilege/user/add`,
     },
   ],
-  tableMenu: (record: any, action: any) => [
+  tableMenu: (record: User, action: any) => [
     {
-      kind: 'descriptions',
-      dataSource: record,
-      title: '详情',
-      collapse: "true",
+      kind: 'link',
+      title: '编辑  ',
+      link: `/privilege/user/edit?id=${record.uid}`,
     },
     {
-      kind: 'confirm',
-      title: '删除',
-      onClick: () => message.info('删除成功'),
-      text: `确认删除` + record.name,
+      kind: 'link',
+      title: '授权',
+      link: `/privilege/user/grant`,
     },
   ],
   onRowEvent: [
@@ -102,35 +118,22 @@ const userStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onSubmit: () => {
-
-    // const src = userStore.items.find((item) => item.getUid() === record.uid);
-    // const update: Partial<User> = record;
-
-    // if (!src) return;
-    // if (src?.is_lock !== update.is_lock) {
-    //   userStore.update_one(src, update, ["is_lock"]).then(() =>
-    //     notification.success({ message: "更新成功" })).catch((e) => {
-    //       notification.error({ message: "更新失败:" + e });
-    //     })
-    // }
-
-  },
-  defaultPageSize: 10,
-  onRequest: ({ query }) =>
-    userStore.next(merge(query, { sort: { version: 1 } }))
+  useBatchDelete: true,
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) => userStore.next(merge(query, { sort: { version: 1 } })),
 };
 
 pageManager.register('privilege.user', {
   page: {
-    view: [{ kind: 'storeTable', ...userStoreTable }],
+    view: [{ kind: 'storeTable', ...table }],
+    container: {
+      keepAlive: false,
+    },
   },
   stores: [
-    // {
-    //   store: userStore,
-    //   query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-    //   load: userStore.next,
-    //   exit: userStore.reset,
-    // }
+    {
+      store: userStore,
+      exit: userStore.reset,
+    },
   ],
 });

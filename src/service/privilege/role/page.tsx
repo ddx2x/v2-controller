@@ -23,8 +23,8 @@ const roleStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       render: (text: any, record: Role, index: number, action: any) => {
-        return [<>{record.is_super_admin ? "是" : "否"}</>]
-      }
+        return [<>{record.is_super_admin ? '是' : '否'}</>];
+      },
     },
     // {
     //   dataIndex: 'privilege_ids',
@@ -41,7 +41,6 @@ const roleStoreTable: StoreTableProps = {
       kind: 'link',
       title: '新增',
       link: `/product/brand/add`,
-
     },
   ],
   tableMenu: (record: any, action: any) => [
@@ -49,7 +48,7 @@ const roleStoreTable: StoreTableProps = {
       kind: 'descriptions',
       dataSource: record,
       title: '新增',
-      collapse: "true",
+      collapse: 'true',
     },
     {
       kind: 'confirm',
@@ -57,7 +56,6 @@ const roleStoreTable: StoreTableProps = {
       title: '删除',
       text: `确认删除` + record.uid,
     },
-
   ],
   onRowEvent: [
     {
@@ -65,20 +63,20 @@ const roleStoreTable: StoreTableProps = {
       title: '详情',
     },
   ],
-  onRequest: ({ query }) =>
-    roleStore.next(merge(query, { sort: { version: 1 } }))
+  onRequest: ({ query }) => roleStore.next(merge(query, { sort: { version: 1 } })),
 };
 
 pageManager.register('privilege.role', {
   page: {
     view: [{ kind: 'storeTable', ...roleStoreTable }],
+    container: {
+      keepAlive: false,
+    },
   },
   stores: [
     {
       store: roleStore,
-      query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      load: roleStore.next,
       exit: roleStore.reset,
-    }
+    },
   ],
 });
