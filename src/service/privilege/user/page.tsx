@@ -12,7 +12,6 @@ const table: StoreTableProps = {
   store: userStore,
   search: false,
   size: 'small',
-
   columns: [
     {
       dataIndex: 'uid',

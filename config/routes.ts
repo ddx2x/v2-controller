@@ -261,25 +261,25 @@ export default [
     ],
   },
   {
-    name: '权限管理',
+    name: '帐号管理',
     path: '/privilege',
     icon: 'safety',
     routes: [
       {
-        name: '用户',
+        name: '用户帐号',
         path: '/privilege/user',
         icon: 'contactsTwoTone',
         component: './dynamic-view',
         routes: [
           {
-            name: '用户新增',
+            name: '用户帐号新增',
             path: '/privilege/user/add',
             component: './dynamic-view',
             parentKeys: ['/privilege/user'],
             hideInMenu: true,
           },
           {
-            name: '用户编辑',
+            name: '用户帐号编辑',
             path: '/privilege/user/edit',
             component: './dynamic-view',
             parentKeys: ['/privilege/user'],
@@ -288,14 +288,14 @@ export default [
         ],
       },
       {
-        name: '角色',
+        name: '岗位角色',
         path: '/privilege/role',
         component: './dynamic-view',
         icon: 'safetyCertificateTwoTone',
         routes: [],
       },
       {
-        name: '资源',
+        name: '资源权限',
         path: '/privilege/resource',
         component: './dynamic-view',
         icon: 'apiTwoTone',

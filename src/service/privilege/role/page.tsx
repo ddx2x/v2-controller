@@ -2,29 +2,42 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { merge } from 'lodash';
-import { Role, roleStore } from '../../api/privilegeRole.store';
+import { roleStore } from '../../api/privilegeRole.store';
 
-const roleStoreTable: StoreTableProps = {
-  store: roleStore,
+const table: StoreTableProps = {
+  toolbarTitle: '数据列表',
   rowKey: 'uid',
+  store: roleStore,
   search: false,
+  size: 'small',
   columns: [
     {
       dataIndex: 'uid',
-      title: '角色',
+      hideInTable: true,
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'name',
+      title: '岗位角色',
       fixed: 'left',
       width: 120,
       hideInSearch: true,
       editable: false,
     },
     {
-      dataIndex: 'is_super_admin',
-      title: '是否超级管理员',
+      dataIndex: 'type',
+      title: '岗位类型',
       hideInSearch: true,
       editable: false,
-      render: (text: any, record: Role, index: number, action: any) => {
-        return [<>{record.is_super_admin ? '是' : '否'}</>];
+      valueType: 'select',
+      valueEnum: {
+        0: '平台岗位',
+        1: '门店岗位',
       },
+      // render: (text: any, record: Role, index: number, action: any) => {
+      //   return [<>{record.is_super_admin ? '是' : '否'}</>];
+      // },
     },
     // {
     //   dataIndex: 'privilege_ids',
@@ -33,14 +46,11 @@ const roleStoreTable: StoreTableProps = {
     //   editable: false,
     // }
   ],
-  toolbar: {
-    title: '数据列表',
-  },
-  toolBarMenu: () => [
+  toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
       title: '新增',
-      link: `/product/brand/add`,
+      link: `/privilege/user/add`,
     },
   ],
   tableMenu: (record: any, action: any) => [
@@ -68,7 +78,7 @@ const roleStoreTable: StoreTableProps = {
 
 pageManager.register('privilege.role', {
   page: {
-    view: [{ kind: 'storeTable', ...roleStoreTable }],
+    view: [{ kind: 'storeTable', ...table }],
     container: {
       keepAlive: false,
     },

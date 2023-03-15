@@ -49,14 +49,10 @@ const table: StoreTableProps = {
       valueEnum: {
         1: '查看',
         2: '修改',
-        4: '查看+修改',
+        3: '查看+修改',
       },
     },
   ],
-
-  toolbar: {
-    title: '数据列表',
-  },
   toolBarMenu: () => [
     // {
     //   kind: 'link',
