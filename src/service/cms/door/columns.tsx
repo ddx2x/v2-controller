@@ -1,7 +1,6 @@
 import type { FormColumnsType } from '@/dynamic-components';
-import { cmsDoorStore } from '@/service/api';
+import { cmsDoorStore, userStore } from '@/service/api';
 import { Region, regionStore } from '@/service/api/region.store';
-import { userStore } from '@/service/privilege';
 
 export const first_name: FormColumnsType = {
   dataIndex: 'first_name',

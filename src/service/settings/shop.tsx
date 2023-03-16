@@ -8,6 +8,7 @@ import { Shop, shopStore } from '../api/settings.store';
 const name: FormColumnsType = {
   title: '名称',
   dataIndex: 'name',
+  tooltip: '店铺名称改动将会影响整个系统的显示及权限结构',
   valueType: 'text',
   fieldProps: {
     disabled: true,

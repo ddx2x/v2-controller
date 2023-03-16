@@ -23,6 +23,7 @@ export class CmsDoor extends IObject {
   lables: string[] | undefined;
   sort: number | undefined;
   coordinates: string[] | number[] | string | undefined;
+  head_quarters: string | undefined;
 
   constructor(data: CmsDoor) {
     super(data);
@@ -43,11 +44,18 @@ export class CmsDoor extends IObject {
   }
 }
 
-const cmsDoorApi = new ObjectApi<CmsDoor>({
+export const cmsDoorApi = new ObjectApi<CmsDoor>({
   url: '/api/v1/door',
   objectConstructor: CmsDoor,
   service: 'cms-t',
 });
+
+interface TreeNode {
+  title: string;
+  key: string;
+  value: string;
+  children: TreeNode[];
+}
 
 class DoorStore extends ObjectStore<CmsDoor> {
   api: ObjectApi<CmsDoor>;
@@ -58,16 +66,53 @@ class DoorStore extends ObjectStore<CmsDoor> {
     this.watchApi = watchApi;
   }
 
-  @computed get tree() {
-    return Array.from(new Set(this.items.map((item) => item.first_name))).map((item) => {
-      return {
-        title: item,
-        key: item,
-        children: [],
-      };
+  createTree() {
+    const tree: TreeNode[] = [];
+
+    let headquarters = '';
+    // Create a map of first names to arrays of second names
+    const map = new Map();
+    for (const item of this.items) {
+      const { head_quarters, first_name, second_name } = item;
+      headquarters = head_quarters || '总部';
+      if (!map.has(first_name)) {
+        map.set(first_name, []);
+      }
+      map.get(first_name).push(second_name);
+    }
+
+    let sub_tree = [];
+
+    // Convert the map to an array of objects with nested children
+
+    for (const [first_name, second_names] of map) {
+      const children = second_names.map((second_name: any) => ({
+        title: second_name,
+        value: second_name,
+        key: second_name,
+      }));
+      sub_tree.push({
+        title: first_name,
+        value: first_name,
+        key: first_name,
+        children,
+      });
+    }
+
+    tree.push({
+      title: headquarters,
+      value: '',
+      key: '',
+      children: sub_tree,
     });
+
+    return tree;
+  }
+
+  @computed get tree() {
+    return this.createTree();
   }
 }
 
 export const cmsDoorStore = new DoorStore(cmsDoorApi, new DefaultWatchApi());
-export const cmsDoorStore2= new DoorStore(cmsDoorApi, new DefaultWatchApi());
+export const cmsDoorStore2 = new DoorStore(cmsDoorApi, new DefaultWatchApi());

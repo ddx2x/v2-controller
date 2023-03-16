@@ -1,3 +1,3 @@
-export * from '../../api/privilegeUser.store';
-export * from './page';
 export * from './add';
+export * from './edit';
+export * from './page';

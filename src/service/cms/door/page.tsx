@@ -8,12 +8,12 @@ import { detail } from './detail';
 const storeTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
-  search: false,
+  // search: false,
   store: cmsDoorStore,
   size: 'small',
   treeStore: cmsDoorStore2,
   useSiderTree: true,
-  treeCard: { title: '企业主体' },
+  treeCard: { title: '组织架构' },
   columns: [
     {
       dataIndex: 'uid',
@@ -22,8 +22,8 @@ const storeTable: StoreTableProps = {
       editable: false,
     },
     {
-      dataIndex: 'first_name',
-      title: '企业主体',
+      dataIndex: 'second_name',
+      title: '门店名称',
       hideInSearch: true,
       editable: false,
       width: 200,
@@ -31,24 +31,6 @@ const storeTable: StoreTableProps = {
       fieldProps: {
         width: 55,
       },
-    },
-    {
-      dataIndex: 'second_name',
-      title: '门店名称',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'region_name',
-      title: '地区',
-      hideInSearch: true,
-      editable: false,
-    },
-    {
-      dataIndex: 'address',
-      title: '地址',
-      hideInSearch: true,
-      editable: false,
     },
     {
       dataIndex: 'online_store_status',
@@ -59,9 +41,49 @@ const storeTable: StoreTableProps = {
         true: false,
         false: true,
       },
+      sorter: true,
+    },
+    {
+      dataIndex: 'region_name',
+      title: '地区',
+      // hideInSearch: true,
+      editable: false,
+      sorter: true,
+    },
+    {
+      dataIndex: 'address',
+      title: '地址',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'first_name',
+      title: '企业主体',
+      hideInSearch: true,
+      editable: false,
     },
   ],
-  editableValuesChange: (record: CmsDoor) => {},
+  editableValuesChange: (record: CmsDoor) => {
+    const src = cmsDoorStore.items.find((item) => item.getUid() === record.uid);
+    const update: Partial<CmsDoor> = record;
+
+    if (!src) return;
+    if (src?.online_store_status !== update.online_store_status) {
+      if (update.online_store_status) {
+        update.online_store_status = true;
+      } else {
+        update.online_store_status = false;
+      }
+      cmsDoorStore
+        .update_one(src, update, ['online_store_status'])
+        .then(() => {
+          notification.success({ message: '更新成功' });
+        })
+        .catch((e) => {
+          notification.error({ message: '更新失败:' + e });
+        });
+    }
+  },
   toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
@@ -112,7 +134,13 @@ const storeTable: StoreTableProps = {
 
     if (treeNode) {
       delete query['filter']['treeNode'];
-      query = merge(query, { filter: { first_name: treeNode.title } });
+
+      if (treeNode.key === '') {
+      } else if (treeNode.children && treeNode.children.length > 0) {
+        query = merge(query, { filter: { first_name: treeNode.title } });
+      } else {
+        query = merge(query, { filter: { second_name: treeNode.title } });
+      }
     }
 
     cmsDoorStore.next(merge(query, { sort: { version: 1 } }));

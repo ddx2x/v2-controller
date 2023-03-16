@@ -1,6 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { regionStore } from '@/service/api/region.store';
+import { cmsDoorStore2 } from '@/service/api';
 import { unixtime2dateformat } from '@/service/common';
 import { notification } from 'antd';
 import { merge } from 'lodash';
@@ -11,11 +11,11 @@ const table: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: userStore,
-  treeStore: regionStore,
   search: false,
   size: 'small',
+  treeStore: cmsDoorStore2,
   useSiderTree: true,
-  treeCard: {},
+  treeCard: { title: '组织架构' },
   columns: [
     {
       dataIndex: 'uid',
@@ -114,6 +114,21 @@ const table: StoreTableProps = {
       title: '授权',
       link: `/privilege/user/grant`,
     },
+    {
+      kind: 'confirm',
+      title: '删除',
+      onClick: () => {
+        userStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
+      },
+      text: `确认删除` + record.name,
+    },
   ],
   onRowEvent: [
     {
@@ -129,7 +144,7 @@ const table: StoreTableProps = {
 
     if (treeNode) {
       delete query['filter']['treeNode'];
-      query = merge(query, { filter: { region_id: treeNode.title } });
+      query = merge(query, { filter: { org_name: treeNode.title } });
     }
 
     userStore.next(merge(query, { sort: { version: 1 } }));
@@ -149,9 +164,9 @@ pageManager.register('privilege.user', {
       exit: userStore.reset,
     },
     {
-      store: regionStore,
-      load: regionStore.load,
-      exit: regionStore.reset,
+      store: cmsDoorStore2,
+      load: cmsDoorStore2.next,
+      exit: cmsDoorStore2.reset,
     },
   ],
 });
