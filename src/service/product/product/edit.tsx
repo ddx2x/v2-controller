@@ -1,4 +1,4 @@
-import { FormProps } from '@/dynamic-components';
+import { StepFormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { Product, productApi, productStore } from '@/service/api/productProduct.store';
 import { history } from '@umijs/max';
@@ -24,55 +24,64 @@ import {
   recommand_status,
   service_ids,
   sort,
-  sub_title,
+  sub_title
 } from './columns';
 
+
 // kind: form
-const editForm: FormProps = {
-  submitter: {
-    resetButtonProps: false,
-  },
-  onMount: ({ location, form, setDataObject }) => {
-    form?.resetFields();
+const editForm: StepFormProps = {
+  onMount: ({ location, formMapRef, setDataObject }) => {
     if (location === undefined) return;
     const query: any = parse(location?.search.split('?')[1] || '');
     productApi
       .get(query.id)
       .then((rs: Product) => {
         setDataObject(rs);
-        form?.setFieldsValue(rs);
+        formMapRef.map(item => item.current && item.current.setFieldsValue(rs))
       })
       .catch((e) => notification.error({ message: e }));
   },
-  layoutType: 'Form',
-  shouldUpdate: false,
-  grid: true,
-  layout: 'horizontal',
-  // colProps: { flex: 'auto' },
+  steps: [
+    {
+      title: '基本信息',
+    },
+    {
+      title: '扩展配置',
+    },
+    {
+      title: '商品详情',
+    }
+  ],
   columns: [
-    merge(sub_title, { fieldProps: { disabled: true } }),
-    merge(name, { fieldProps: { disabled: true } }),
-    merge(brand_name, { fieldProps: { disabled: true } }),
-    merge(product_category_name, { fieldProps: { disabled: false } }),
-    price,
-    merge(product_sn, { fieldProps: { disabled: false } }),
-    service_ids,
-    keywords,
-    new_status,
-    recommand_status,
+    [
+      merge(sub_title, { fieldProps: { disabled: true } }),
+      merge(name, { fieldProps: { disabled: true } }),
+      merge(brand_name, { fieldProps: { disabled: true } }),
+      merge(product_category_name, { fieldProps: { disabled: false } }),
+      price,
+      merge(product_sn, { fieldProps: { disabled: false } }),
+      service_ids,
+      keywords,
+      new_status,
+      recommand_status,
 
-    feight_template_id,
+      feight_template_id,
 
-    promotion_type,
-    promotion_start_time,
-    promotion_end_time,
-    promotion_per_limit,
+      low_stock,
+      sort,
 
-    low_stock,
-    sort,
+      album_pics,
 
-    album_pics,
-    details,
+    ],
+    [
+      promotion_type,
+      promotion_start_time,
+      promotion_end_time,
+      promotion_per_limit,
+    ],
+    [
+      details
+    ]
   ],
   onSubmit: ({ values, dataObject, handleClose }) => {
     let target: Partial<Product> = {
@@ -132,7 +141,7 @@ const editForm: FormProps = {
 
 pageManager.register('product.product.edit', {
   page: {
-    view: [{ kind: 'form', ...editForm }],
+    view: [{ kind: 'stepForm', ...editForm }],
     container: {
       keepAlive: false,
     },

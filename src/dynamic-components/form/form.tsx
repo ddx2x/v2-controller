@@ -9,7 +9,6 @@ import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { merge } from 'lodash';
-import { observer } from 'mobx-react';
 import { Dispatch, forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
@@ -46,7 +45,7 @@ export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   routeContext?: RouteContextType;
 }
 
-export const Form = observer(forwardRef((props: FormProps, forwardRef) => {
+export const Form = forwardRef((props: FormProps, forwardRef) => {
   const {
     onMount,
     columns,
@@ -118,7 +117,9 @@ export const Form = observer(forwardRef((props: FormProps, forwardRef) => {
         }}
       >
         <BetaSchemaForm
-          onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
+          onInit={(values, form) => {
+            onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })
+          }}
           // @ts-ignore
           columns={_columns}
           // @ts-ignore
@@ -138,7 +139,6 @@ export const Form = observer(forwardRef((props: FormProps, forwardRef) => {
             return b;
           }}
           isKeyPressSubmit={true}
-          // omitNil={true}
           {...rest}
         />
 
@@ -146,7 +146,7 @@ export const Form = observer(forwardRef((props: FormProps, forwardRef) => {
 
     </>
   );
-}));
+});
 
 Form.defaultProps = {
   title: '新建表单',

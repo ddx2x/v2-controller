@@ -13,7 +13,7 @@ import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
 import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
 import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
-import {AutoCompleteProps, AutoCompleteRender, AutoCompleteRenderFormItem} from './autoComplete'
+import { AutoCompleteProps, AutoCompleteRender, AutoCompleteRenderFormItem } from './autoComplete'
 
 declare module '@ant-design/pro-utils' {
   interface ProFieldValueTypeWithFieldProps {
