@@ -1,5 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { regionStore } from '@/service/api/region.store';
 import { unixtime2dateformat } from '@/service/common';
 import { notification } from 'antd';
 import { merge } from 'lodash';
@@ -10,8 +11,11 @@ const table: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: userStore,
+  treeStore: regionStore,
   search: false,
   size: 'small',
+  useSiderTree: true,
+  treeCard: {},
   columns: [
     {
       dataIndex: 'uid',
@@ -119,7 +123,17 @@ const table: StoreTableProps = {
   ],
   useBatchDelete: true,
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
-  onRequest: ({ query }) => userStore.next(merge(query, { sort: { version: 1 } })),
+  onRequest: ({ query }) => {
+    const { filter } = query; // treeNode,
+    const { treeNode } = filter;
+
+    if (treeNode) {
+      delete query['filter']['treeNode'];
+      query = merge(query, { filter: { region_id: treeNode.title } });
+    }
+
+    userStore.next(merge(query, { sort: { version: 1 } }));
+  },
 };
 
 pageManager.register('privilege.user', {
@@ -133,6 +147,11 @@ pageManager.register('privilege.user', {
     {
       store: userStore,
       exit: userStore.reset,
+    },
+    {
+      store: regionStore,
+      load: regionStore.load,
+      exit: regionStore.reset,
     },
   ],
 });

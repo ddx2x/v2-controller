@@ -1,6 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { CmsDoor, cmsDoorStore } from '@/service/api/cmsDoor.store';
+import { CmsDoor, cmsDoorStore, cmsDoorStore2 } from '@/service/api/cmsDoor.store';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { detail } from './detail';
@@ -11,6 +11,9 @@ const storeTable: StoreTableProps = {
   search: false,
   store: cmsDoorStore,
   size: 'small',
+  treeStore: cmsDoorStore2,
+  useSiderTree: true,
+  treeCard: { title: '企业主体' },
   columns: [
     {
       dataIndex: 'uid',
@@ -20,7 +23,7 @@ const storeTable: StoreTableProps = {
     },
     {
       dataIndex: 'first_name',
-      title: '主体',
+      title: '企业主体',
       hideInSearch: true,
       editable: false,
       width: 200,
@@ -31,7 +34,7 @@ const storeTable: StoreTableProps = {
     },
     {
       dataIndex: 'second_name',
-      title: '门店',
+      title: '门店名称',
       hideInSearch: true,
       editable: false,
     },
@@ -58,7 +61,7 @@ const storeTable: StoreTableProps = {
       },
     },
   ],
-  editableValuesChange: (record: CmsDoor) => { },
+  editableValuesChange: (record: CmsDoor) => {},
   toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
@@ -103,9 +106,17 @@ const storeTable: StoreTableProps = {
   //     title: '详情',
   //   },
   // ],
-  onRequest: ({ query }) =>
-    cmsDoorStore.next(merge(query, { sort: { version: 1 } }))
-  ,
+  onRequest: ({ query }) => {
+    const { filter } = query; // treeNode,
+    const { treeNode } = filter;
+
+    if (treeNode) {
+      delete query['filter']['treeNode'];
+      query = merge(query, { filter: { first_name: treeNode.title } });
+    }
+
+    cmsDoorStore.next(merge(query, { sort: { version: 1 } }));
+  },
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
 };
 
@@ -120,6 +131,12 @@ pageManager.register('cms.door', {
     {
       store: cmsDoorStore,
       exit: cmsDoorStore.reset,
+    },
+
+    {
+      store: cmsDoorStore2,
+      load: cmsDoorStore2.next,
+      exit: cmsDoorStore2.reset,
     },
   ],
 });

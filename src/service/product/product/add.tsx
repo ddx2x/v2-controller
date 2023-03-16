@@ -56,16 +56,16 @@ const addForm: FormProps = {
     };
     target.promotion_type = values.promotion_type?.map((item: any) => Number(item));
     target.product_category_name = values.product_category_name;
-    target.delete_status = Number(values.delete_status);
+    target.delete_status = Number(values.delete_status || 0);
     target.price = Number(values.price);
-    target.new_status = Number(values.new_status);
-    target.recommand_status = Number(values.recommand_status);
+    target.new_status = Number(values.new_status || 0);
+    target.recommand_status = Number(values.recommand_status || 0);
     target.sort = Number(values.sort);
     target.publish_status = Number(target.publish_status || 0);
     target.verify_status = Number(target.verify_status || 0);
     target.delete_status = Number(target.delete_status || 0);
     target.feight_template_id = values.feight_template_id;
-    
+
     (target.album_pics =
       values.album_pics?.fileList?.map((file: { name: any }) => file.name) || []),
       productStore

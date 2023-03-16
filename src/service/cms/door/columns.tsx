@@ -1,12 +1,21 @@
 import type { FormColumnsType } from '@/dynamic-components';
+import { cmsDoorStore } from '@/service/api';
 import { Region, regionStore } from '@/service/api/region.store';
 import { userStore } from '@/service/privilege';
 
 export const first_name: FormColumnsType = {
   dataIndex: 'first_name',
-  title: '门店',
-  hideInSearch: true,
-  editable: false,
+  title: '企业主体',
+  valueType: 'autoComplete',
+  fieldProps: {
+    onSearch: async (text: string) => {
+      return Array.from(
+        new Set((await cmsDoorStore.api.list(text, {}, 'first_name')).map((rs) => rs.first_name)),
+      ).map((v) => {
+        return { value: v };
+      });
+    },
+  },
   formItemProps: {
     rules: [
       {
@@ -18,7 +27,7 @@ export const first_name: FormColumnsType = {
 };
 export const second_name: FormColumnsType = {
   dataIndex: 'second_name',
-  title: '名称',
+  title: '门店名称',
   hideInSearch: true,
   editable: false,
   formItemProps: {

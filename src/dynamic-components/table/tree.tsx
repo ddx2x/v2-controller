@@ -20,12 +20,13 @@ const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
 
 
 export declare type TreeProps = {
+  useTreeSearch?: boolean
   treeData: DataNode[]
   onTreeSelect: (node: EventDataNode<DataNode>) => void
 }
 
 export const Tree = (props: TreeProps) => {
-  const { treeData, onTreeSelect } = props;
+  const { treeData, onTreeSelect, useTreeSearch } = props;
 
   const [treeSelectedNode, setTreeSelectedNode] = useState<EventDataNode<DataNode>>()
   const [treeExpandedKeys, setTreeExpandedKeys] = useState<React.Key[]>([]);
@@ -69,7 +70,7 @@ export const Tree = (props: TreeProps) => {
 
   return (
     <>
-      <Input style={{ marginBottom: 8 }} placeholder="搜索" onChange={onTreeSearchChange} />
+      {useTreeSearch && <Input style={{ marginBottom: 8 }} placeholder="搜索" onChange={onTreeSearchChange} /> }
       <ATree
         blockNode
         showLine

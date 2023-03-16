@@ -16,25 +16,14 @@ export declare type RequestParams = {
 
 export declare type StoreTableProps = TableProps & {
   store?: ObjectStore<any>;
-  treeStore?: ObjectStore<any>;
+  treeStore?: ObjectStore<any> | any;
   defaultPageSize?: number;
   onRequest?: (params: RequestParams) => void;
 };
 
 export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
-
-  const {
-    store,
-    defaultPageSize,
-    onRequest,
-    value,
-    useSiderTree,
-    treeStore,
-    treeData,
-    ...rest
-  } = props;
-
-
+  const { store, defaultPageSize, onRequest, value, useSiderTree, treeStore, treeData, ...rest } =
+    props;
   return (
     <Table
       useSiderTree={useSiderTree}
@@ -49,9 +38,9 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
         showSizeChanger: true,
         pageSizeOptions: [5, 10, 20, 50, 80],
       }}
-      {...useSiderTree && {
-        treeData: treeData || treeStore?.items || [],
-      }}
+      {...(useSiderTree && {
+        treeData: treeData || treeStore?.tree || [],
+      })}
       request={async (
         params: { [key: string]: any },
         sort: { [key: string]: any },

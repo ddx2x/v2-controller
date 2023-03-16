@@ -13,7 +13,8 @@ export class AutoComplete extends Component<AutoCompleteProps> {
   };
 
   render() {
-    const { value, onChange, onSearch, ...rest } = this.props;
+    const { value, onChange, onSearch, fieldProps, ...rest } = this.props;
+
     return (
       <AntdAutoComplete
         value={value}

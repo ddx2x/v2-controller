@@ -7,7 +7,6 @@ import { IObject } from './object';
 import { ObjectStore } from './store';
 import { autobind } from './utils';
 
-
 export interface JsonApiError {
   code?: number;
   message?: string;
@@ -172,37 +171,31 @@ export class ObjectApi<T extends IObject = any> {
     let resourcePath = ObjectApi.createLink({ service, apiPrefix, apiVersion, apiResource });
     let queryObject: any = {};
 
-    let { limit, sort, filter, ...restQuery } = (query ? query : { limit: {}, sort: {}, filter: {} })
+    let { limit, sort, filter, ...restQuery } = query ? query : { limit: {}, sort: {}, filter: {} };
 
     if (limit) queryObject['limit'] = JSON.stringify(limit);
     if (sort) queryObject['sort'] = JSON.stringify(sort);
     if (filter) queryObject['filter'] = JSON.stringify(filter);
 
-    if (restQuery) merge(queryObject, restQuery)
+    if (restQuery) merge(queryObject, restQuery);
 
     if (parameter) resourcePath = resourcePath + '/' + parameter;
-    if (op) return resourcePath + '/op/' + op + (query ? `?` + stringify(queryObject) : '');
+    if (op) resourcePath = resourcePath + '/op/' + op;
 
     return '/' + resourcePath + (query ? `?` + stringify(queryObject) : '');
   };
 
   list = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
-    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
-      this.parseResponse
-    );
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
   page = async (parameter?: Parameter, query?: Query, op?: string): Promise<T[]> => {
-    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
-      this.parseResponse
-    );
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
   get = async (parameter?: Parameter, query?: Query, op?: string): Promise<T> => {
     // const url = this.getUrl(parameter, query, op);
-    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(
-      this.parseResponse
-    );
+    return request(this.getUrl(parameter, query, op), { method: 'GET' }).then(this.parseResponse);
   };
 
   create = async (
@@ -212,7 +205,7 @@ export class ObjectApi<T extends IObject = any> {
     op?: string,
   ): Promise<T> => {
     return request(this.getUrl(parameter, query, op), { method: 'POST', data: partial }).then(
-      this.parseResponse
+      this.parseResponse,
     );
   };
 
@@ -223,19 +216,17 @@ export class ObjectApi<T extends IObject = any> {
     op?: string,
   ): Promise<T> => {
     return request(this.getUrl(parameter, query, op), { method: 'PUT', data: partial }).then(
-      this.parseResponse
+      this.parseResponse,
     );
   };
 
   delete = async (parameter?: Parameter, query?: Query): Promise<T> => {
-    return request(this.getUrl(parameter, query), { method: 'DELETE' }).then(
-      this.parseResponse
-    );
+    return request(this.getUrl(parameter, query), { method: 'DELETE' }).then(this.parseResponse);
   };
 
   upload = async <D = string | ArrayBuffer>(data: D) => {
     return request(this.getUrl(undefined, {}, 'upload'), { method: 'POST', data }).then(
-      this.parseResponse
+      this.parseResponse,
     );
   };
 

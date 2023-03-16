@@ -74,7 +74,11 @@ const table: StoreTableProps = {
     //   title: '详情',
     // },
   ],
-  onRequest: ({ query }) => privilegeStore.next(merge(query, { sort: { version: 1 } })),
+  onRequest: ({ query }) => {
+    
+    
+    privilegeStore.next(merge(query, { sort: { version: 1 } }))
+  },
 };
 
 pageManager.register('privilege.resource', {

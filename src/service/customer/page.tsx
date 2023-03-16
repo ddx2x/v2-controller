@@ -1,56 +1,21 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { Modal, notification } from 'antd';
-import { DataNode } from 'antd/es/tree';
 import { merge } from 'lodash';
 import {
   Customer,
   CustomerAddress,
   customerAddressStore,
-  customerStore
+  customerStore,
 } from '../api/customer.store';
 import { detail } from './detail';
-
-const treeData: DataNode[] = [
-  {
-    title: 'parent 1',
-    key: '0-0',
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        disabled: true,
-        children: [
-          {
-            title: 'leaf',
-            key: '0-0-0-0',
-            disableCheckbox: true,
-          },
-          {
-            title: 'leaf',
-            key: '0-0-0-1',
-          },
-        ],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [{ title: 'sss', key: '0-0-1-0' }],
-      },
-    ],
-  },
-];
-
 
 const defaultStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: customerStore,
   rowKey: 'uid',
-  // search: false,
+  search: false,
   defaultPageSize: 10,
-  useSiderTree: true,
-  treeCard: { title: '组织架构' },
-  treeData: treeData,
   columns: [
     {
       dataIndex: 'uid',
@@ -196,7 +161,7 @@ const defaultStoreTable: StoreTableProps = {
                 notification.error(e);
               });
           },
-          onCancel: () => { },
+          onCancel: () => {},
         });
       },
     },
@@ -218,8 +183,9 @@ const defaultStoreTable: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows),
-  onRequest: ({ query }) =>
-    customerStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } })),
+  onRequest: ({ query }) => {
+    customerStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } }));
+  },
 };
 
 pageManager.register('ums.customer', {

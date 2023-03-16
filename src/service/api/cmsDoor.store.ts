@@ -1,5 +1,6 @@
 import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
+import { computed } from 'mobx';
 
 export interface BusinessDay {
   days: number[] | string[];
@@ -56,6 +57,17 @@ class DoorStore extends ObjectStore<CmsDoor> {
     this.api = api;
     this.watchApi = watchApi;
   }
+
+  @computed get tree() {
+    return Array.from(new Set(this.items.map((item) => item.first_name))).map((item) => {
+      return {
+        title: item,
+        key: item,
+        children: [],
+      };
+    });
+  }
 }
 
 export const cmsDoorStore = new DoorStore(cmsDoorApi, new DefaultWatchApi());
+export const cmsDoorStore2= new DoorStore(cmsDoorApi, new DefaultWatchApi());

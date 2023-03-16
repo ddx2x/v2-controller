@@ -190,7 +190,7 @@ export const Table: React.FC<TableProps> = (props) => {
                 onTreeSelect={(node) => { setSelectTreeNode(node); actionRef.current?.reload() }}
               />
             </ProCard>
-            <div ref={setContainer} style={{ width: withTreeWidth }}>
+            <div  style={{ width: withTreeWidth }}>
               {defaultDom}
             </div>
           </div>
