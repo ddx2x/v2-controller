@@ -65,7 +65,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
 
   return (
     <>
-      <ImgCrop rotate>
+      <ImgCrop rotationSlider aspectSlider showGrid zoomSlider quality={1} modalTitle='图标编辑'>
         <Upload
           name={name || 'file'}
           listType={listType || 'picture-card'}

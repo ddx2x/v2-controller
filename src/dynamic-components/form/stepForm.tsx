@@ -6,7 +6,7 @@ import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import React, { Dispatch, useContext, useRef, useState } from 'react';
+import React, { Dispatch, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
@@ -15,7 +15,7 @@ import { valueTypeMapStore } from '../valueType/valueTypeMap';
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   onMount?: (params: {
     location: Location | undefined,
-    form: ProFormInstance | undefined,
+    formMapRef: React.MutableRefObject<ProFormInstance<any> | undefined>[],
     setDataObject: Dispatch<any>,
     columns: FormSchema['columns'],
     setColumns: Dispatch<FormSchema['columns']>
@@ -35,7 +35,8 @@ export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   routeContext?: RouteContextType;
 }
 
-export const StepForm: React.FC<StepFormProps> = (props) => {
+export const StepForm = forwardRef((props: StepFormProps, forwardRef) => {
+
   const {
     onMount,
     columns,
@@ -47,18 +48,48 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     onSubmit,
     width,
     routeContext,
+    request,
     ...rest
   } = props;
 
+
   const location = useLocation()
   const formRef = useRef<ProFormInstance>();
+  const formMapRef = useRef<ProFormInstance[]>();
   const [_columns, setColumns] = useState<FormSchema['columns']>(columns)
-  const [dataObject, setDataObject] = useState([])
+  const [dataObject, setDataObject] = useState({})
 
+
+  const [mounted, setMounted] = useState(false)
+  const [_init, setInit] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleShow = () => { setIsModalOpen(true) };
   const handleClose = () => { setIsModalOpen(false) };
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useImperativeHandle(forwardRef, () => {
+    return {
+      open: () => handleShow(),
+    };
+  });
+
+  if (mounted && !_init) {
+    console.log('formMapRef', formMapRef);
+
+    setTimeout(() =>
+      onMount && onMount({
+        location,
+        formMapRef: formMapRef.current as any,
+        setDataObject,
+        columns: _columns,
+        setColumns
+      }), 100)
+    setInit(true)
+  }
 
   const triggerDom = () => {
     return (
@@ -119,14 +150,15 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
         }}
       >
         <BetaSchemaForm
+          layoutType="StepsForm"
           // @ts-ignore
           formRef={formRef}
           // @ts-ignore
+          formMapRef={formMapRef}
+          // @ts-ignore
           columns={_columns}
-          onInit={(values, form) => onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })}
           stepsFormRender={stepsFormRender}
           autoFocusFirstInput
-          layoutType="StepsForm"
           onFinish={async (values) => {
             if (!onSubmit) return false;
             await waitTime(submitTimeout);
@@ -138,6 +170,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
       </ProProvider.Provider>
     );
   };
+
 
   switch (modal) {
     case 'Modal':
@@ -152,7 +185,7 @@ export const StepForm: React.FC<StepFormProps> = (props) => {
     default:
       return <>{stepsForm()}</>;
   }
-};
+});
 
 StepForm.defaultProps = {
   title: '新建',
@@ -168,8 +201,4 @@ StepForm.defaultProps = {
     },
   },
   submitTimeout: 2000,
-};
-
-export const useStepsForm = (props: StepFormProps): [React.ReactNode, {}] => {
-  return [<StepForm {...props} />, {}];
 };
