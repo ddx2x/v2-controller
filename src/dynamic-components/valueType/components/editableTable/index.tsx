@@ -3,7 +3,6 @@ import {
   EditableProTable, ProFieldFCRenderProps
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
-import { merge } from 'lodash';
 import { useState } from 'react';
 import './index.scss';
 
