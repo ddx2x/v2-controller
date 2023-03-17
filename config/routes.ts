@@ -292,7 +292,15 @@ export default [
         path: '/privilege/role',
         component: './dynamic-view',
         icon: 'safetyCertificateTwoTone',
-        routes: [],
+        routes: [
+          {
+            name: '新增岗位角色',
+            path: '/privilege/role/add',
+            component: './dynamic-view',
+            parentKeys: ['/privilege/role'],
+            hideInMenu: true,
+          },
+        ],
       },
       {
         name: '资源权限',

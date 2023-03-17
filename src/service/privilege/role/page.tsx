@@ -34,23 +34,16 @@ const table: StoreTableProps = {
       valueEnum: {
         0: '平台岗位',
         1: '门店岗位',
+        2: '供应商岗位',
+        3: '区域岗位',
       },
-      // render: (text: any, record: Role, index: number, action: any) => {
-      //   return [<>{record.is_super_admin ? '是' : '否'}</>];
-      // },
     },
-    // {
-    //   dataIndex: 'privilege_ids',
-    //   title: '权限ids',
-    //   hideInSearch: true,
-    //   editable: false,
-    // }
   ],
   toolBarMenu: (selectedRows: any) => [
     {
       kind: 'link',
       title: '新增',
-      link: `/privilege/user/add`,
+      link: `/privilege/role/add`,
     },
   ],
   tableMenu: (record: any, action: any) => [

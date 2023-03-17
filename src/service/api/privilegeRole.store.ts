@@ -2,10 +2,9 @@ import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export class Role extends IObject {
-
-  privilege_ids: string[] | undefined
-  is_super_admin: boolean | undefined
-
+  name: string | undefined;
+  type: number | string | undefined;
+  privileges: {} | undefined;
   constructor(data: Role) {
     super(data);
     Object.assign(this, data);

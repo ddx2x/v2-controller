@@ -40,6 +40,9 @@ const table: StoreTableProps = {
         0: '停用',
         1: '启用',
       },
+      formItemProps: {
+        rules: [],
+      },
     },
     {
       dataIndex: 'phone_number',
