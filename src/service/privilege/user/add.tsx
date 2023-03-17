@@ -1,6 +1,7 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
+import { cloneDeep, merge } from 'lodash';
 import { history } from 'umi';
 import { User, userStore } from '../../../service/api';
 import { login_type, name, org_name, phone_number } from './columns';
@@ -17,7 +18,12 @@ const addForm: FormProps = {
   layoutType: 'Form',
   shouldUpdate: false,
   grid: true,
-  columns: [name, login_type, phone_number, org_name],
+  columns: [
+    merge(cloneDeep(name), { fieldProps: { disabled: false } }),
+    login_type,
+    merge(cloneDeep(phone_number), { fieldProps: { disabled: false } }),
+    org_name,
+  ],
   onSubmit: ({ formRef, values, dataObject, handleClose }) => {
     const target: Partial<User> = {
       name: values.name,

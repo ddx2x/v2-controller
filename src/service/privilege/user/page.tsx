@@ -19,7 +19,7 @@ const table: StoreTableProps = {
   columns: [
     {
       dataIndex: 'uid',
-      title: '帐户',
+      title: '帐号',
       hideInSearch: true,
       fixed: 'left',
       width: 120,

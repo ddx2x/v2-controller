@@ -13,6 +13,7 @@ export class User extends IObject {
   constructor(data: User) {
     super(data);
     Object.assign(this, data);
+    this.login_type = String(this.login_type)
   }
 }
 

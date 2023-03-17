@@ -1,9 +1,10 @@
 import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
+import { User, userStore } from '@/service/api';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
+import { merge } from 'lodash';
 import { parse } from 'querystring';
-import { CmsDoor, cmsDoorStore } from '../../../service/api/cmsDoor.store';
 import { login_type, name, org_name, phone_number } from './columns';
 
 const editForm: FormProps = {
@@ -14,9 +15,9 @@ const editForm: FormProps = {
     form?.resetFields();
     if (location === undefined) return;
     const query: any = parse(location?.search.split('?')[1] || '');
-    cmsDoorStore.api
+    userStore.api
       .get(query.id)
-      .then((rs: CmsDoor) => {
+      .then((rs: User) => {
         setDataObject(rs);
         form?.setFieldsValue(rs);
       })
@@ -24,32 +25,25 @@ const editForm: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
-  columns: [name, login_type, phone_number, org_name],
+  columns: [
+    merge(name, { fieldProps: { disabled: true } }),
+    login_type,
+    merge(phone_number, { fieldProps: { disabled: true } }),
+    org_name,
+  ],
   onSubmit: ({ values, dataObject, handleClose }) => {
-    let target: Partial<CmsDoor> = {
+    let target: Partial<User> = {
       ...values,
     };
 
-    target.logo = (values.logo?.fileList && values.logo?.fileList[0].name) || '';
-    target.address = values.map.address;
-    target.coordinates = [values.map.point.lng, values.map.point.lat];
+    target.org_name = values.org_name;
+    target.login_type = values.login_type;
 
-    cmsDoorStore
-      .update_one(dataObject, target, [
-        'store_status',
-        'online_store_status',
-        'region_name',
-        'address',
-        'business_days',
-        'logo',
-        'admin_name',
-        'admin_account',
-        'contact',
-        'coordinates',
-      ])
+    userStore
+      .update_one(dataObject, target, ['org_name', 'login_type'])
       .then(() => {
         notification.success({ message: '保存成功' });
-        history.push(`/cms/door`);
+        history.push(`/privilege/user`);
       })
       .catch((e) => notification.error(e));
 
@@ -58,7 +52,7 @@ const editForm: FormProps = {
   },
 };
 
-pageManager.register('private.user.edit', {
+pageManager.register('privilege.user.edit', {
   page: {
     view: [{ kind: 'form', ...editForm }],
     container: {
