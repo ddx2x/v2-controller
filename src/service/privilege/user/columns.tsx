@@ -15,15 +15,13 @@ export const name: FormColumnsType = {
       },
       {
         validator: (rule, value, callback) => {
-          if (!value) {
-            // callback();
-            // return;
-          } else {
-            customerStore.api
-              .list(value, {}, 'name')
-              .then((res) => res.length > 0 && callback('用户已存在'))
-              .catch((e) => callback('error' + e));
-          }
+          if (!value) { callback(); return }
+          customerStore.api
+            .list(value, {}, 'name')
+            .then((res) => {
+              res.length > 0 ? callback('用户已存在') : callback()
+            })
+            .catch((e) => callback('error' + e));
         },
       },
     ],
@@ -56,15 +54,11 @@ export const phone_number: FormColumnsType = {
       },
       {
         validator: (rule, value, callback) => {
-          if (!value || value.length != 11) {
-            callback();
-            // return;
-          } else {
-            customerStore.api
-              .list(value, {}, 'phone')
-              .then((res) => res.length > 0 && callback('手机号已被注册'))
-              .catch((e) => callback('error' + e));
-          }
+          if (!value || value.length != 11) { callback(); return }
+          customerStore.api
+            .list(value, {}, 'phone')
+            .then((res) => res.length > 0 ? callback('手机号已被注册') : callback())
+            .catch((e) => callback('error' + e));
         },
       },
     ],

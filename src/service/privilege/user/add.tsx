@@ -26,7 +26,6 @@ const addForm: FormProps = {
     org_name,
   ],
   onSubmit: ({ formRef, values, dataObject, handleClose }) => {
-    console.log('values', values);
     const target: Partial<User> = {
       name: values.name,
       login_type: Number(values.login_type),
