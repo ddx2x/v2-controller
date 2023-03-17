@@ -8,7 +8,6 @@ export const name: FormColumnsType = {
   tooltip: '可以选择选择来自客户',
   editable: false,
   formItemProps: {
-
     rules: [
       {
         required: true,
@@ -16,9 +15,15 @@ export const name: FormColumnsType = {
       },
       {
         validator: (rule, value, callback) => {
-          customerStore.api.list(value, {}, 'name').then(
-            res => res.length > 0 && callback('用户已存在')
-          ).catch(e => callback('接口炸了'));
+          if (!value) {
+            // callback();
+            // return;
+          } else {
+            customerStore.api
+              .list(value, {}, 'name')
+              .then((res) => res.length > 0 && callback('用户已存在'))
+              .catch((e) => callback('error' + e));
+          }
         },
       },
     ],
@@ -43,6 +48,24 @@ export const phone_number: FormColumnsType = {
       {
         required: true,
         message: '此项为必填项',
+      },
+      {
+        type: 'string',
+        pattern: /^1[3456789]\d{9}$/,
+        message: '请输入正确的手机号码',
+      },
+      {
+        validator: (rule, value, callback) => {
+          if (!value || value.length != 11) {
+            callback();
+            // return;
+          } else {
+            customerStore.api
+              .list(value, {}, 'phone')
+              .then((res) => res.length > 0 && callback('手机号已被注册'))
+              .catch((e) => callback('error' + e));
+          }
+        },
       },
     ],
   },
