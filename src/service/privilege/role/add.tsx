@@ -23,6 +23,7 @@ const addForm: FormProps = {
     const target: Partial<Role> = {
       name: values.name,
       type: Number(values.type),
+      privileges: values.privileges,
     };
 
     roleStore

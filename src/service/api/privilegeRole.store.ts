@@ -4,10 +4,13 @@ import { DefaultWatchApi, WatchApi } from '@/client/event';
 export class Role extends IObject {
   name: string | undefined;
   type: number | string | undefined;
-  privileges: {} | undefined;
+  privileges: string[] | string | undefined;
   constructor(data: Role) {
     super(data);
     Object.assign(this, data);
+    if (this.privileges && Object.keys(this.privileges).length > 0) {
+      this.privileges = String(this.privileges);
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { message } from 'antd';
+import { notification } from 'antd';
 import { merge } from 'lodash';
 import { roleStore } from '../../api/privilegeRole.store';
 
@@ -21,7 +21,6 @@ const table: StoreTableProps = {
       dataIndex: 'name',
       title: '岗位角色',
       fixed: 'left',
-      width: 120,
       hideInSearch: true,
       editable: false,
     },
@@ -37,6 +36,12 @@ const table: StoreTableProps = {
         2: '供应商岗位',
         3: '区域岗位',
       },
+    },
+    {
+      dataIndex: 'privileges',
+      title: '权限列表',
+      hideInSearch: true,
+      editable: false,
     },
   ],
   toolBarMenu: (selectedRows: any) => [
@@ -55,9 +60,18 @@ const table: StoreTableProps = {
     },
     {
       kind: 'confirm',
-      onClick: () => message.info('删除成功'),
+      onClick: () => {
+        roleStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
+      },
       title: '删除',
-      text: `确认删除` + record.uid,
+      text: `确认删除` + record.name,
     },
   ],
   onRowEvent: [
