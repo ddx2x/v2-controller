@@ -11,7 +11,7 @@ const table: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: userStore,
-  search: false,
+  // search: false,
   size: 'small',
   treeStore: cmsDoorStore2,
   useSiderTree: true,
@@ -48,7 +48,6 @@ const table: StoreTableProps = {
       dataIndex: 'phone_number',
       title: '手机号',
       editable: false,
-      hideInSearch: true,
     },
     {
       dataIndex: 'login_type',

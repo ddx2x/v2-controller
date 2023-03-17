@@ -1,6 +1,6 @@
 import { FormColumnsType } from '@/dynamic-components';
-import { Category, Role, categoryApi, roleStore } from '@/service/api';
-import {TreeSelect} from 'antd'
+import { Privilege, privilegeStore, Role, roleStore } from '@/service/api';
+import { TreeSelect } from 'antd';
 
 export const name: FormColumnsType = {
   title: '角色岗位',
@@ -55,8 +55,6 @@ export const type: FormColumnsType = {
   },
 };
 
-
-
 export interface TreeSelect {
   title: string;
   value: string;
@@ -71,7 +69,7 @@ export const privileges: FormColumnsType = {
   hideInSearch: true,
   fieldProps: {
     treeCheckable: true,
-    showCheckedStrategy: TreeSelect.SHOW_ALL,
+    showCheckedStrategy: TreeSelect.SHOW_CHILD,
     mode: 'tags',
     multiple: true,
   },
@@ -85,27 +83,27 @@ export const privileges: FormColumnsType = {
   },
   request: async () => {
     try {
-      const rs = await categoryApi.list(undefined, {
-        limit: { page: 0, size: 500 },
-        sort: { version: 1 },
+      const rs = await privilegeStore.api.list(undefined, {
+        // limit: { },
+        sort: { name: 1 },
       });
       let select: TreeSelect[] = [];
       // level 1
-      rs.map((value: Category) => {
+      rs.map((value: Privilege) => {
         if (value.level == 1) {
           select.push({ title: value.uid, value: value.uid, children: [] });
         }
       });
       // level 2
-      rs.map((value: Category) => {
+      rs.map((value: Privilege) => {
         if (value.level == 2) {
-          if (!value.parent_id) {
-            return;
-          }
+          // if (!value.full_id) {
+          //   return;
+          // }
           select.map((treeSelect) => {
-            if (treeSelect.title === value.parent_id) {
-              treeSelect.children.push({ title: value.uid, value: value.uid, children: [] });
-            }
+            // if (treeSelect.title === value.full_id) {
+            treeSelect.children.push({ title: value.uid, value: value.uid, children: [] });
+            // }
           });
         }
       });
