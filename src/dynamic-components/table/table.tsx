@@ -1,5 +1,5 @@
 import {
-  ActionType, EditableProTable, ProCard, ProCardProps, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableFormInstance, EditableProTable, ProCard, ProCardProps, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -24,8 +24,7 @@ export declare type TableProps = Omit<EditableProTableProps<any, any>, 'toolBar'
   useBatchDelete?: boolean; // 开启批量删除
   useTableMoreOption?: boolean // 开启表单操作菜单
   useSiderTree?: boolean; // 侧边树
-  editableValuesChange?: (record: any) => void
-
+  editableValuesChange?: (record: any, errors: string[], editorFormRef?: EditableFormInstance) => void
   tableMenu?: (record?: any, action?: ProCoreActionType) => MenuButtonType[]; // 更多操作
   toolbarTitle?: string;
   toolBarMenu?: (selectedRows?: any, location?: Location | undefined) => MenuButtonType[];
@@ -82,8 +81,10 @@ export const Table: React.FC<TableProps> = (props) => {
     ...rest
   } = props;
 
-  const actionRef = useRef<ActionType>();
+  const editorFormRef = useRef<EditableFormInstance>();
   const formRef = useRef<ProFormInstance>();
+  const actionRef = useRef<ActionType>();
+
   const location = useLocation();
 
   // 挂载 鼠标事件
@@ -190,7 +191,7 @@ export const Table: React.FC<TableProps> = (props) => {
                 onTreeSelect={(node) => { setSelectTreeNode(node); actionRef.current?.reload() }}
               />
             </ProCard>
-            <div  style={{ width: withTreeWidth }}>
+            <div style={{ width: withTreeWidth }}>
               {defaultDom}
             </div>
           </div>
@@ -235,6 +236,7 @@ export const Table: React.FC<TableProps> = (props) => {
     // 更多操作 按钮
     newColumns.push({
       dataIndex: 'menuButton',
+      valueType: 'option',
       title: '操作',
       hideInSearch: true,
       editable: false,
@@ -268,7 +270,6 @@ export const Table: React.FC<TableProps> = (props) => {
     }
   }
 
-  const recordCreatorPosition = 'hidden'
   const proProviderValues = useContext(ProProvider);
 
   return (
@@ -283,24 +284,27 @@ export const Table: React.FC<TableProps> = (props) => {
         columns={newColumns}
         value={value}
         params={{ treeNode: selectTreeNode }}
+        controlled
         editable={{
           type: 'multiple',
-          editableKeys: value?.map(item => item[props['rowKey'] as string || 'id']) || [],
+          editableKeys: value?.map(
+            item => item[props['rowKey'] as string || 'id']) || [],
           actionRender: () => [],
-          onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
+          onValuesChange: (record, dataSource) => {
+            // 获取数据索引
+            let _id = record[props['rowKey'] as any]
+            let _index = dataSource.map(item => item[props['rowKey'] as any]).indexOf(_id)
+            // 检查数据是否不通过校验
+            let _errors = editorFormRef.current?.getFieldsError()[_index].errors || []
+            editableValuesChange && editableValuesChange(record, _errors, editorFormRef.current)
+          },
         }}
-        recordCreatorProps={
-          recordCreatorPosition !== 'hidden'
-            ? {
-              position: recordCreatorPosition as 'top',
-              record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
-            }
-            : false
-        }
+        recordCreatorProps={false}
         sticky
         // components={vComponents}
         actionRef={actionRef}
         formRef={formRef}
+        editableFormRef={editorFormRef}
         rowSelection={rowSelection}
         scroll={{ x: 1500 }}
         search={{ labelWidth: 80 }}

@@ -21,6 +21,7 @@ const table: StoreTableProps = {
       dataIndex: 'uid',
       title: '帐号',
       hideInSearch: true,
+
       fixed: 'left',
       width: 120,
       editable: false,
@@ -40,9 +41,19 @@ const table: StoreTableProps = {
         0: '停用',
         1: '启用',
       },
-      formItemProps: {
-        rules: [],
-      },
+      formItemProps: (form, config) => {
+        // console.log('form, config', form, config);
+        return {
+          rules: [
+            {
+              validator(rule, value, callback) {
+                callback('xxxx')
+                form.resetFields()
+              },
+            }
+          ]
+        }
+      }
     },
     {
       dataIndex: 'phone_number',
@@ -85,10 +96,14 @@ const table: StoreTableProps = {
       },
     },
   ],
-  editableValuesChange: (record: User) => {
+  editableValuesChange: (record: User, errors, editorFormRef) => {
+    if (errors) {
+      // editorFormRef?.resetFields()
+      return
+    }
+
     const src = userStore.items.find((item) => item.getUid() === record.uid);
     const update: Partial<User> = record;
-
     if (!src) return;
     if (src?.is_lock !== update.is_lock) {
       userStore
