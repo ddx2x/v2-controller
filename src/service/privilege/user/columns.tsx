@@ -8,19 +8,18 @@ export const name: FormColumnsType = {
   tooltip: '可以选择选择来自客户',
   editable: false,
   formItemProps: {
+
     rules: [
       {
         required: true,
         message: '此项为必填项',
       },
       {
-        transform: (value) => {
-          // console.log('transform', value);
-          // if (!value) return false;  
-          // const res = await  customerStore.api.list(value, {}, 'name');  
-          return  false;
+        validator: (rule, value, callback) => {
+          customerStore.api.list(value, {}, 'name').then(
+            res => res.length > 0 && callback('用户已存在')
+          ).catch(e => callback('接口炸了'));
         },
-        message: '用户已存在',
       },
     ],
   },
