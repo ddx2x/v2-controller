@@ -1,3 +1,4 @@
+import { DownOutlined } from '@ant-design/icons';
 import { Input, Tree as ATree } from 'antd';
 import { DataNode, EventDataNode } from 'antd/lib/tree';
 import { useState } from 'react';
@@ -74,6 +75,8 @@ export const Tree = (props: TreeProps) => {
       <ATree
         blockNode
         showLine
+        showIcon
+        switcherIcon={<DownOutlined />}
         treeData={treeData}
         onExpand={onTreeExpand}
         expandedKeys={treeExpandedKeys}

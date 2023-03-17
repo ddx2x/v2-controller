@@ -1,5 +1,6 @@
 import { FormColumnsType } from '@/dynamic-components';
 import { Category, Role, categoryApi, roleStore } from '@/service/api';
+import {TreeSelect} from 'antd'
 
 export const name: FormColumnsType = {
   title: '角色岗位',
@@ -69,6 +70,8 @@ export const privileges: FormColumnsType = {
   editable: false,
   hideInSearch: true,
   fieldProps: {
+    treeCheckable: true,
+    showCheckedStrategy: TreeSelect.SHOW_ALL,
     mode: 'tags',
     multiple: true,
   },
