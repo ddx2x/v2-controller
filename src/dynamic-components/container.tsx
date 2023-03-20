@@ -1,13 +1,14 @@
-import type {
-  PageContainerProps as ProPageContainerProps,
-  RouteContextType
+import {
+  PageContainer as ProPageContainer, PageContainerProps as ProPageContainerProps,
+  ProCard, RouteContext, RouteContextType
 } from '@ant-design/pro-components';
-import { PageContainer as ProPageContainer, RouteContext } from '@ant-design/pro-components';
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
 import type { BreadcrumbProps } from 'antd';
-import { useContext } from 'react';
+import classNames from 'classnames';
+import { Children, useContext, useState } from 'react';
 import type { CachingNode } from 'react-activation';
-import './container.scss'
+import './container.scss';
+
 
 export declare type KeepAliveProps = {
   path?: string | null;
@@ -36,12 +37,16 @@ export const isCachingNode = (path: string | undefined): boolean => {
 };
 
 export declare type ContainerProps = ProPageContainerProps & {
+
+  defaultTabActiveKey?: string
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
 };
 
 export const Container: React.FC<ContainerProps> = (props) => {
   const { useBreadcrumb, context, breadcrumb, header, ...rest } = props;
+
+  const [tabActiveKey, setTabActiveKey] = useState(props.defaultTabActiveKey)
 
   const headerBreadcrumb = (): BreadcrumbProps | undefined => {
     // 面包屑🍞
@@ -65,15 +70,34 @@ export const Container: React.FC<ContainerProps> = (props) => {
     return context.breadcrumb;
   };
 
+  let children = props.children?.props.children as any
+
+  const content = () => {
+    if (Children.count(children) <= 1) return children
+    if (rest['tabList']) {
+      let _index = rest['tabList'].findIndex(item => item.key === tabActiveKey) || 0
+      return children.map((item, index) =>
+        <ProCard ghost
+          className={classNames({ 'hidden_children': _index === index })}>
+          {item}
+        </ProCard>)
+    }
+    return (
+      <ProCard direction="column" ghost gutter={[0, 16]}>
+        {children.map(item => <ProCard ghost>{item}</ProCard>)}
+      </ProCard>)
+  }
+
   return (
     <ProPageContainer
       className='page-container'
       header={{ breadcrumb: headerBreadcrumb(), ...header }}
       affixProps={{ offsetTop: 56 }}
-
+      tabActiveKey={tabActiveKey}
+      onTabChange={(k) => setTabActiveKey(k)}
       {...rest}
     >
-      {props.children}
+      {content()}
     </ProPageContainer>
   );
 };

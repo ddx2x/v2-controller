@@ -1,7 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
-import { notification } from 'antd';
+import { Button, notification } from 'antd';
 import { merge } from 'lodash';
 import {
   deliverySettingStore,
@@ -311,7 +311,21 @@ pageManager.register('setting.delivery', {
       { kind: 'storeTable', ...storePickupStoreTable },
     ],
     container: {
-      keepAlive: false,
+      keepAlive: true,
+      header: {
+        title: '配送设置',
+      },
+      defaultTabActiveKey: '1',
+      tabList: [
+        {
+          tab: '商家配送',
+          key: '1',
+        },
+        {
+          tab: '门店自提',
+          key: '2',
+        },
+      ],
     },
   },
   stores: [

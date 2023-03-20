@@ -78,8 +78,6 @@ export const StepForm = forwardRef((props: StepFormProps, forwardRef) => {
   });
 
   if (mounted && !_init) {
-    console.log('formMapRef', formMapRef);
-
     setTimeout(() =>
       onMount && onMount({
         location,

@@ -52,7 +52,7 @@ const addForm: StepFormProps = {
     promotion_per_limit,
   ], [
     details,
-  ]],
+    ]],
   onSubmit: ({ values, handleClose }) => {
     let target: Partial<Product> = {
       ...values,

@@ -156,8 +156,7 @@ pageManager.register('setting.product', {
 		view: [{ kind: 'form', ...defaultFrom }],
 		container: {
 			keepAlive: false,
-			header: {
-			},
+			header: {},
 		},
 	},
 	stores: [],
