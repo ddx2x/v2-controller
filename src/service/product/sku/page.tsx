@@ -135,6 +135,11 @@ const table: StoreTableProps = {
       columns: [],
       triggerText: '生成单品存量',
       title: '生成单品存量',
+      submitter: {
+        searchConfig: {
+          resetText: '取消',
+        },
+      },
       onMount({ form, setColumns, setDataObject }) {
         const query: any = parse(location?.search.split('?')[1] || '');
         const product_id = query['product_id'];
@@ -155,12 +160,21 @@ const table: StoreTableProps = {
               return {
                 dataIndex: r.name,
                 title: r.name,
-                tooltip: `${r.category_id}-${r.name}-${r.input_type === 1 ? '只能从列表选择' : '支持手工添加'
-                  }`,
+                tooltip: `${r.category_id}-${r.name}-${
+                  r.input_type === 1 ? '支持手工添加+从列表选择' : '支持手工添加'
+                }`,
                 valueType: 'select',
                 hideInSearch: true,
                 fieldProps: {
-                  mode: r.input_type === 1 ? 'multiple' : 'tags',
+                  mode: 'tags',
+                },
+                formItemProps: {
+                  rules: [
+                    {
+                      pattern: /^[^\u007c]+$/u,
+                      message: '规格值中不可以包含“|”字符',
+                    },
+                  ],
                 },
                 editable: false,
                 valueEnum: valueEnum,
@@ -219,10 +233,12 @@ const table: StoreTableProps = {
   defaultPageSize: 10,
   onRequest: ({ query, location }) =>
     stockKeepingUnitStore.next(
-      merge(query,
+      merge(
+        query,
         { filter: parse(location?.search.split('?')[1] || '') },
-        { sort: { spec_name: 1 } }
-      ))
+        { sort: { spec_name: 1 } },
+      ),
+    ),
 };
 
 pageManager.register('product.product.sku', {

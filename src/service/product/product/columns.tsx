@@ -396,10 +396,7 @@ export const details: FormColumnsType = {
   dataIndex: 'details',
   title: '商品详情',
   valueType: 'quill',
-  formItemProps: {
-    style: { margin: '0 15%' }
-  }
-
+  formItemProps: {},
 };
 
 export const default_test: FormColumnsType = {

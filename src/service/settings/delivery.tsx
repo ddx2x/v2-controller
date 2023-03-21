@@ -1,14 +1,14 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { notification } from 'antd';
 import { merge } from 'lodash';
 import {
   deliverySettingStore,
   DeliverySettingTemplate,
   deliverySettingTemplateStore,
   StorePickup,
-  storePickupStore
+  storePickupStore,
 } from '../api';
 
 const columns: StoreTableProps['columns'] = [
@@ -55,7 +55,7 @@ const columns: StoreTableProps['columns'] = [
   },
 ];
 
-const defaultStoreTable1: StoreTableProps = {
+const deliveryStoreTable: StoreTableProps = {
   toolbarTitle: '商家配送',
   store: deliverySettingStore,
   rowKey: 'uid',
@@ -186,8 +186,7 @@ const defaultStoreTable1: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
-  onRequest: ({ query }) =>
-    deliverySettingStore.next(merge(query, { sort: { version: 1 } }))
+  onRequest: ({ query }) => deliverySettingStore.next(merge(query, { sort: { version: 1 } })),
 };
 
 const storePickupStoreTable: StoreTableProps = {
@@ -300,18 +299,17 @@ const storePickupStoreTable: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
-  onRequest: ({ query }) =>
-    storePickupStore.next(merge(query, { sort: { version: 1 } }))
+  onRequest: ({ query }) => storePickupStore.next(merge(query, { sort: { version: 1 } })),
 };
 
 pageManager.register('setting.delivery', {
   page: {
     view: [
-      { kind: 'storeTable', ...defaultStoreTable1 },
       { kind: 'storeTable', ...storePickupStoreTable },
+      { kind: 'storeTable', ...deliveryStoreTable }, //两个table用反序
     ],
     container: {
-      keepAlive: true,
+      keepAlive: false,
       header: {
         title: '配送设置',
       },

@@ -1,6 +1,9 @@
 import {
-  PageContainer as ProPageContainer, PageContainerProps as ProPageContainerProps,
-  ProCard, RouteContext, RouteContextType
+  PageContainer as ProPageContainer,
+  PageContainerProps as ProPageContainerProps,
+  ProCard,
+  RouteContext,
+  RouteContextType,
 } from '@ant-design/pro-components';
 import { KeepAlive as UmiKeepAlive, useAliveController, useLocation } from '@umijs/max';
 import type { BreadcrumbProps } from 'antd';
@@ -8,7 +11,6 @@ import classNames from 'classnames';
 import { Children, useContext, useState } from 'react';
 import type { CachingNode } from 'react-activation';
 import './container.scss';
-
 
 export declare type KeepAliveProps = {
   path?: string | null;
@@ -37,16 +39,15 @@ export const isCachingNode = (path: string | undefined): boolean => {
 };
 
 export declare type ContainerProps = ProPageContainerProps & {
-
-  defaultTabActiveKey?: string
+  defaultTabActiveKey?: string;
   useBreadcrumb?: boolean;
   context?: RouteContextType | null;
 };
 
-export const Container: React.FC<ContainerProps> = (props) => {
+export const Container: React.FC<ContainerProps> = (props: any) => {
   const { useBreadcrumb, context, breadcrumb, header, ...rest } = props;
 
-  const [tabActiveKey, setTabActiveKey] = useState(props.defaultTabActiveKey)
+  const [tabActiveKey, setTabActiveKey] = useState(props.defaultTabActiveKey);
 
   const headerBreadcrumb = (): BreadcrumbProps | undefined => {
     // 面包屑🍞
@@ -61,36 +62,40 @@ export const Container: React.FC<ContainerProps> = (props) => {
     }
     if (breadcrumb) return breadcrumb;
     // 面包屑第一项为当前页
-    (context.breadcrumb?.routes || []).
-      map((item, index) => {
-        if (index == 0) { item.path = '#' }
-        return item
-      })
+    (context.breadcrumb?.routes || []).map((item: any, index: any) => {
+      if (index == 0) {
+        item.path = '#';
+      }
+      return item;
+    });
 
     return context.breadcrumb;
   };
 
-  let children = props.children?.props.children as any
+  let children = props.children?.props.children as any;
 
   const content = () => {
-    if (Children.count(children) <= 1) return children
+    if (Children.count(children) <= 1) return children;
     if (rest['tabList']) {
-      let _index = rest['tabList'].findIndex(item => item.key === tabActiveKey) || 0
-      return children.map((item, index) =>
-        <ProCard ghost
-          className={classNames({ 'hidden_children': _index === index })}>
+      let _index = rest['tabList'].findIndex((item: any) => item.key === tabActiveKey) || 0;
+      return children.map((item: any, index: any) => (
+        <ProCard ghost className={classNames({ hidden_children: _index === index })}>
           {item}
-        </ProCard>)
+        </ProCard>
+      ));
     }
     return (
       <ProCard direction="column" ghost gutter={[0, 16]}>
-        {children.map(item => <ProCard ghost>{item}</ProCard>)}
-      </ProCard>)
-  }
+        {children.map((item: any) => (
+          <ProCard ghost>{item}</ProCard>
+        ))}
+      </ProCard>
+    );
+  };
 
   return (
     <ProPageContainer
-      className='page-container'
+      className="page-container"
       header={{ breadcrumb: headerBreadcrumb(), ...header }}
       affixProps={{ offsetTop: 56 }}
       tabActiveKey={tabActiveKey}
@@ -131,5 +136,5 @@ export const PageContainer: React.FC<PageContainerProps> = (props) => {
 };
 
 PageContainer.defaultProps = {
-  keepAlive: true,
+  keepAlive: false,
 };

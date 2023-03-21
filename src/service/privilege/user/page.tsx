@@ -5,7 +5,7 @@ import { unixtime2dateformat } from '@/service/common';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { ReactNode } from 'react';
-import { User, userStore } from '../../api/privilegeUser.store';
+import { User,userStore } from '../../api/privilegeUser.store';
 
 const table: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -41,19 +41,19 @@ const table: StoreTableProps = {
         0: '停用',
         1: '启用',
       },
-      formItemProps: (form, config) => {
-        // console.log('form, config', form, config);
-        return {
-          rules: [
-            {
-              validator(rule, value, callback) {
-                callback('xxxx')
-                form.resetFields()
-              },
-            }
-          ]
-        }
-      }
+      // formItemProps: (form, config) => {
+      //   // console.log('form, config', form, config);
+      //   return {
+      //     rules: [
+      //       {
+      //         validator(rule, value, callback) {
+      //           callback('xxxx')
+      //           form.resetFields()
+      //         },
+      //       }
+      //     ]
+      //   }
+      // }
     },
     {
       dataIndex: 'phone_number',
@@ -98,7 +98,7 @@ const table: StoreTableProps = {
   editableValuesChange: (record: User, errors, editorFormRef) => {
     if (errors) {
       // editorFormRef?.resetFields()
-      return
+      return;
     }
 
     const src = userStore.items.find((item) => item.getUid() === record.uid);
