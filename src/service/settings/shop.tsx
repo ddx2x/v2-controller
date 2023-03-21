@@ -29,22 +29,22 @@ const mode_dependency: FormColumnsType = {
   columns: ({ mode }) => {
     return mode === '1'
       ? [
-          merge(cloneDeep(mode_columns), {
-            valueEnum: {
-              2: '多店模式',
-            },
-          }),
-        ]
+        merge(cloneDeep(mode_columns), {
+          valueEnum: {
+            2: '多店模式',
+          },
+        }),
+      ]
       : [
-          merge(cloneDeep(mode_columns), {
-            valueEnum: {
-              1: '单店模式',
-            },
-            fieldProps: {
-              disabled: true,
-            },
-          }),
-        ];
+        merge(cloneDeep(mode_columns), {
+          valueEnum: {
+            1: '单店模式',
+          },
+          fieldProps: {
+            disabled: true,
+          },
+        }),
+      ];
   },
 };
 
@@ -65,7 +65,7 @@ const mode_columns: FormColumnsType = {
           Modal.confirm({
             title: '门店模式',
             content: '多门店模式一旦确认将不能变更',
-            onOk: () => {},
+            onOk: () => { },
             onCancel: () => {
               form.setFieldValue('mode', '1');
             },
@@ -178,6 +178,7 @@ const logo: FormColumnsType = {
   fieldProps: {
     maxNumber: 1,
     name: 'upload',
+    prefix: '/media-t/file/',
     action: '/media-t/upload',
   },
   formItemProps: {

@@ -257,8 +257,9 @@ export const logo: FormColumnsType = {
   fieldProps: {
     maxNumber: 1,
     name: 'upload',
+    prefix: '/media-t/file',
     action: '/media-t/upload',
-  },
+  }
 };
 
 export const admin_name: FormColumnsType = {

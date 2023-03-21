@@ -4,6 +4,7 @@ import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Image, Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { getFileItem, updateFileList } from 'antd/es/upload/utils';
 import { useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../../helper/utils';
 
@@ -14,11 +15,26 @@ export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
-  const { name, listType, prefix, maxNumber, buttonText, mode, value, onChange, ...rest } = props;
+
+  const {
+    name,
+    listType,
+    prefix,
+    maxNumber,
+    buttonText,
+    mode,
+    value,
+    onChange,
+    ...rest
+  } = props;
+
   let fileList: any = []
   if (value?.fileList && Array.isArray(value.fileList)) {
     fileList = value.fileList
   }
+
+  console.log('fileList', fileList);
+
 
   // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -40,8 +56,22 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     let fileList = info.fileList;
     fileList
       .filter((item) => item.uid === info.file.uid)
-      .map((item) => (item.url = prefix + item.name));
+      .map((item) => {
+        item.url = prefix + item.name;
+      });
     onChange && onChange({ fileList: fileList });
+  };
+
+  const onSuccess: UploadProps['onSuccess'] = (response, file, xhr) => {
+    let _file = getFileItem(file, fileList)
+    let _name = response ? response[0] : _file.name
+    let _ = {
+      uid: _file.uid,
+      name: _name,
+      url: prefix ? prefix + _name : _name
+    }
+    let _fileList = updateFileList(_, fileList)
+    onChange && onChange({ fileList: _fileList });
   };
 
   // 按钮
@@ -63,6 +93,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     )
   }
 
+  console.log('customRequest', rest, rest['customRequest']);
+
   return (
     <>
       <ImgCrop rotationSlider aspectSlider showGrid zoomSlider quality={1} modalTitle='图标编辑'>
@@ -72,6 +104,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           fileList={fileList}
           onPreview={onImagePreview}
           beforeUpload={handleBeforeUpload}
+          onSuccess={onSuccess}
           onChange={handleChange}
           {...rest}
         >
