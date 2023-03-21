@@ -1,4 +1,4 @@
-import { StepFormProps } from '@/dynamic-components';
+import { FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { Product, productStore } from '@/service/api/productProduct.store';
 import { history } from '@umijs/max';
@@ -21,14 +21,14 @@ import {
   recommand_status,
   service_ids,
   sort,
-  sub_title
+  sub_title,
 } from './columns';
 
 // kind: form
-const addForm: StepFormProps = {
-  modal: 'Form',
-  steps: [{ title: '基本信息' }, { title: '扩展配置' }, { title: '商品详情' }],
-  columns: [[
+const addForm: FormProps = {
+  layoutType: 'Form',
+  shouldUpdate: false,
+  columns: [
     cloneDeep(product_category_name),
 
     cloneDeep(sub_title),
@@ -45,14 +45,13 @@ const addForm: StepFormProps = {
 
     album_pics,
 
-  ], [
     promotion_type,
     promotion_start_time,
     promotion_end_time,
     promotion_per_limit,
-  ], [
+
     details,
-    ]],
+  ],
   onSubmit: ({ values, handleClose }) => {
     let target: Partial<Product> = {
       ...values,
@@ -86,7 +85,7 @@ const addForm: StepFormProps = {
 
 pageManager.register('product.product.add', {
   page: {
-    view: [{ kind: 'stepForm', ...addForm }],
+    view: [{ kind: 'form', ...addForm }],
     container: {
       keepAlive: false,
       header: {

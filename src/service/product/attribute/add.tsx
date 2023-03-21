@@ -7,11 +7,12 @@ import { ProductAttribute, productAttributeStore } from '../../api/productAttrib
 import { input_select_list_dependency, input_type } from './columns';
 
 const name: FormColumnsType = {
-  title: '名称',
+  title: '规格名称',
   dataIndex: 'name',
+  tooltip: '规格名称，例如、颜色、尺寸、等，或者就叫规格',
   valueType: 'text',
   fieldProps: {
-    placeholder: '请输入分类名称',
+    placeholder: '请输入规格名称',
   },
   formItemProps: {
     rules: [
@@ -212,9 +213,9 @@ const addForm: FormProps = {
   shouldUpdate: false,
   columns: [
     category_id,
-    type,
+    // type,
     name,
-    select_type,
+    // select_type,
     input_type,
     input_select_list_dependency,
     // sort,

@@ -1,7 +1,8 @@
 import {
-  BetaSchemaForm, ProFormInstance,
+  BetaSchemaForm,
+  ProFormInstance,
   ProProvider,
-  RouteContextType
+  RouteContextType,
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { useLocation } from '@umijs/max';
@@ -20,30 +21,30 @@ export declare type FormRef = {
 };
 
 export declare type FormOnSumbit = {
-  formRef: React.MutableRefObject<ProFormInstance<any> | undefined>,
-  values: any,
-  dataObject: any,
-  handleClose: () => void
-}
+  formRef: React.MutableRefObject<ProFormInstance<any> | undefined>;
+  values: any;
+  dataObject: any;
+  handleClose: () => void;
+};
 
 export declare type FormProps = Omit<FormSchema, 'layoutType'> & {
   onMount?: (params: {
-    location: Location | undefined,
-    form: ProFormInstance<any>,
-    setDataObject: Dispatch<any>,
-    columns: FormSchema['columns'],
-    setColumns: Dispatch<FormSchema['columns']>
+    location: Location | undefined;
+    form: ProFormInstance<any>;
+    setDataObject: Dispatch<any>;
+    columns: FormSchema['columns'];
+    setColumns: Dispatch<FormSchema['columns']>;
   }) => void;
   trigger?: () => void;
   layoutType?: FormSchema['layoutType'];
   triggerText?: string;
-  buttonType?: ButtonType
+  buttonType?: ButtonType;
   buttonSize?: ButtonSize;
   submitTimeout?: number; // 提交数据时，禁用取消按钮的超时时间（毫秒）。
   onSubmit?: (params: FormOnSumbit) => boolean;
   intl?: IntlShape; // 国际化
   routeContext?: RouteContextType;
-}
+};
 
 export const Form = forwardRef((props: FormProps, forwardRef) => {
   const {
@@ -59,12 +60,12 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
     ...rest
   } = props;
 
-  const location = useLocation()
+  const location = useLocation();
   const formRef = useRef<ProFormInstance>();
-  const [dataObject, setDataObject] = useState({})
+  const [dataObject, setDataObject] = useState({});
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [_columns, setColumns] = useState<FormSchema['columns']>(columns)
+  const [_columns, setColumns] = useState<FormSchema['columns']>(columns);
   const handleShow = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
 
@@ -77,33 +78,33 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
   switch (props.layoutType) {
     case 'ModalForm':
       // @ts-ignore
-      rest['onOpenChange'] = setIsModalOpen
+      rest['onOpenChange'] = setIsModalOpen;
       // @ts-ignore
       rest['modalprops'] = { destroyOnClose: true };
     case 'DrawerForm':
       // @ts-ignore
-      rest['onOpenChange'] = setIsModalOpen
+      rest['onOpenChange'] = setIsModalOpen;
       // @ts-ignore
       rest['drawerprops'] = { destroyOnClose: true };
     case 'Form':
     default:
-      rest['submitter'] = merge(
-        rest['submitter'] || {}, {
-        searchConfig: { resetText: '重置' }
-      })
+      // @ts-ignore
+      if (!rest['submitter'].searchConfig?.resetText) {
+        rest['submitter'] = merge(rest['submitter'] || {}, {
+          searchConfig: { resetText: '重置' },
+        });
+      }
       // @ts-ignore
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            <>
-              {dom}
-            </>
+            <>{dom}</>
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
           </>
-        )
-      }
+        );
+      };
   }
 
   const proProviderValues = useContext(ProProvider);
@@ -118,7 +119,7 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       >
         <BetaSchemaForm
           onInit={(values, form) => {
-            onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns })
+            onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns });
           }}
           // @ts-ignore
           columns={_columns}
@@ -141,9 +142,7 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
           isKeyPressSubmit={true}
           {...rest}
         />
-
       </ProProvider.Provider>
-
     </>
   );
 });
@@ -157,12 +156,11 @@ Form.defaultProps = {
   submitter: {
     searchConfig: {
       submitText: '确认',
-      resetText: '取消',
     },
   },
   submitTimeout: 1000,
   columns: [],
-  style: { padding: '0 14%' }
+  style: { padding: '0 14%' },
 };
 
 export const useForm = (props: FormProps): React.ReactNode => {
