@@ -2,10 +2,12 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { cmsDoorStore2 } from '@/service/api';
 import { unixtime2dateformat } from '@/service/common';
+import { ProFormInstance } from '@ant-design/pro-components';
 import { notification } from 'antd';
 import { merge } from 'lodash';
-import { ReactNode } from 'react';
-import { User,userStore } from '../../api/privilegeUser.store';
+import { Dispatch, ReactNode } from 'react';
+import { User, userStore } from '../../api/privilegeUser.store';
+import { grantForm } from './grant';
 
 const table: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -127,9 +129,9 @@ const table: StoreTableProps = {
       link: `/privilege/user/edit?id=${record.uid}`,
     },
     {
-      kind: 'link',
+      kind: 'form',
       title: '授权',
-      link: `/privilege/user/grant`,
+      ...grantForm,
     },
     {
       kind: 'confirm',
@@ -187,3 +189,10 @@ pageManager.register('privilege.user', {
     },
   ],
 });
+function grantFormOnMount(
+  record: User,
+  form: ProFormInstance<any>,
+  setDataObject: Dispatch<any>,
+): void | PromiseLike<void> {
+  throw new Error('Function not implemented.');
+}

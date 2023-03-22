@@ -31,6 +31,9 @@ import {
 const editForm: FormProps = {
   submitter: {
     resetButtonProps: false,
+    searchConfig: {
+      submitText: '保存',
+    },
   },
   onMount: ({ location, form, setDataObject }) => {
     if (location === undefined) return;
@@ -81,7 +84,7 @@ const editForm: FormProps = {
       // brand_story: values.brand_story,
 
       low_stock: values.low_stock,
-      promotion_type: values.promotion_type?.map((item: any) => String(item)),
+      promotion_type: values.promotion_type?.map((item: any) => String(item)) || [],
       promotion_per_limit: values.promotion_per_limit,
       promotion_start_time: values.promotion_start_time,
       promotion_end_time: values.promotion_end_time,

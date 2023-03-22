@@ -32,7 +32,7 @@ export class Product extends IObject {
   weight: string | undefined | number;
   preview_status: string | undefined | number;
   service_ids: string | undefined | number;
-  keywords: string | undefined | number;
+  keywords: string[] | undefined;
   note: string | undefined | number;
   album_pics: string[] | any | undefined;
   album_pic: object | undefined;
