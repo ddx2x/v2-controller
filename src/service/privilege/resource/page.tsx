@@ -1,7 +1,7 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { merge } from 'lodash';
-import { Privilege, privilegeStore } from '../../api/privilegeResource.store';
+import { privilegeStore } from '../../api/privilegeResource.store';
 
 const table: StoreTableProps = {
   store: privilegeStore,
@@ -10,10 +10,22 @@ const table: StoreTableProps = {
   columns: [
     {
       dataIndex: 'uid',
-      title: '资源名',
+      title: '权限名称',
       hideInSearch: true,
       fixed: 'left',
       width: 120,
+      editable: false,
+    },
+    {
+      dataIndex: 'route',
+      title: '路由',
+      hideInSearch: true,
+      editable: false,
+    },
+    {
+      dataIndex: 'full_id',
+      title: '全路径',
+      hideInSearch: true,
       editable: false,
     },
     {
@@ -21,63 +33,69 @@ const table: StoreTableProps = {
       title: '类型',
       hideInSearch: true,
       editable: false,
-      render: (text: any, record: Privilege, index: number, action: any) => {
-        return [<>{record.type == 0 ? '页面' : '数据'}</>];
+      valueType: 'select',
+      valueEnum: {
+        1: '菜单',
+        2: '数据',
+        3: '菜单+数据',
       },
     },
     {
-      dataIndex: 'url',
-      title: '路由模式',
-      hideInSearch: true,
-      width: 300,
-      editable: false,
-    },
-    {
-      dataIndex: 'is_view',
-      title: '是否显示',
+      dataIndex: 'hide_in_menu',
+      title: '是否隐藏',
       hideInSearch: true,
       editable: false,
-      render: (text: any, record: Privilege, index: number, action: any) => {
-        return [<>{record.is_view ? '是' : '否'}</>];
+      valueType: 'switch',
+      valueEnum: {
+        false: '否',
+        true: '是',
       },
     },
+    {
+      dataIndex: 'level',
+      title: '层级',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'resource',
+      title: '资源',
+      hideInSearch: true,
+      editable: false,
+    },
+
+    {
+      dataIndex: 'field',
+      title: '字段',
+      hideInSearch: true,
+      editable: false,
+    },
+
     {
       dataIndex: 'op',
       title: '操作类型',
       hideInSearch: true,
       editable: false,
+      fixed: 'right',
       valueEnum: {
+        0: '无',
         1: '查看',
         2: '修改',
         3: '查看+修改',
+        4: '删除',
+        5: '查看+删除',
+        6: '修改+删除',
+        7: '查看+修改+删除',
       },
     },
   ],
-  toolBarMenu: () => [
-    // {
-    //   kind: 'link',
-    //   title: '新增',
-    //   link: `/product/brand/add`,
-    // },
-  ],
-  tableMenu: (record: any, action: any) => [
-    // {
-    //   kind: 'confirm',
-    //   onClick: () => message.info('删除成功'),
-    //   title: '删除',
-    //   text: `确认删除` + record.uid,
-    // },
-  ],
-  onRowEvent: [
-    // {
-    //   mouseEvent: 'onDoubleClick',
-    //   title: '详情',
-    // },
-  ],
+  useTableMoreOption: false, // 关闭更多操作
+  toolBarMenu: () => [],
+  tableMenu: (record: any, action: any) => [],
+  onRowEvent: [],
   onRequest: ({ query }) => {
-    
-    
-    privilegeStore.next(merge(query, { sort: { version: 1 } }))
+    privilegeStore.next(merge(query, { sort: { _id: 1, route: 1, level: 1 } }));
   },
 };
 
@@ -91,8 +109,6 @@ pageManager.register('privilege.resource', {
   stores: [
     {
       store: privilegeStore,
-      // query: { limit: { page: 0, size: 10 }, sort: { version: 1 } },
-      // load: privilegeStore.load,
       exit: privilegeStore.reset,
     },
   ],

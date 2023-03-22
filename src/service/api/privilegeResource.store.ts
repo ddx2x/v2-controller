@@ -2,16 +2,17 @@ import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export class Privilege extends IObject {
-  type: number | undefined
-  url: string | undefined
-  full_id: string | undefined
-  is_view: boolean | undefined
-  level: number | undefined
-  op: number | undefined
+  type: number | string | undefined;
+  url: string | undefined;
+  full_id: string | undefined;
+  route: boolean | undefined;
+  level: number | undefined;
+  op: number | undefined;
 
   constructor(data: Privilege) {
     super(data);
     Object.assign(this, data);
+    this.type = String(this.type);
   }
 }
 

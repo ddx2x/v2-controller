@@ -3,6 +3,7 @@ import { pageManager } from '@/dynamic-view';
 import { cmsDoorStore2 } from '@/service/api';
 import { unixtime2dateformat } from '@/service/common';
 import { ProFormInstance } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Dispatch, ReactNode } from 'react';
@@ -31,8 +32,18 @@ const table: StoreTableProps = {
     {
       dataIndex: 'name',
       title: '名称',
-      hideInSearch: true,
+      tooltip: '支持全文索引',
+      valueType: 'autoComplete',
       editable: false,
+      fieldProps: {
+        onSearch: async (text: string) => {
+          return Array.from(
+            new Set((await userStore.api.list(text, {}, 'name')).map((rs) => rs.name)),
+          ).map((v) => {
+            return { value: v };
+          });
+        },
+      },
     },
     {
       dataIndex: 'is_lock',
@@ -60,7 +71,20 @@ const table: StoreTableProps = {
     {
       dataIndex: 'phone_number',
       title: '手机号',
+      tooltip: '支持全文索引',
+      valueType: 'autoComplete',
       editable: false,
+      fieldProps: {
+        onSearch: async (text: string) => {
+          return Array.from(
+            new Set(
+              (await userStore.api.list(text, {}, 'phone_number')).map((rs) => rs.phone_number),
+            ),
+          ).map((v) => {
+            return { value: v };
+          });
+        },
+      },
     },
     {
       dataIndex: 'login_type',
@@ -77,7 +101,7 @@ const table: StoreTableProps = {
     },
     {
       dataIndex: 'roles',
-      title: '角色组',
+      title: '角色',
       hideInSearch: true,
       editable: false,
       valueType: 'text',
@@ -99,7 +123,26 @@ const table: StoreTableProps = {
   ],
   editableValuesChange: (record: User, errors, editorFormRef) => {
     if (errors) {
-      // editorFormRef?.resetFields()
+      const src = userStore.items.find((item) => item.getUid() === record.uid);
+      const update: Partial<User> = record;
+
+      if (!src) return;
+      if (src?.is_lock !== update.is_lock) {
+        if (update.is_lock) {
+          update.is_lock = true;
+        } else {
+          update.is_lock = false;
+        }
+        userStore
+          .update_one(src, update, ['is_lock'])
+          .then(() => {
+            notification.success({ message: '更新成功' });
+            history.push(`/privilege/user`);
+          })
+          .catch((e) => {
+            notification.error({ message: '更新失败:' + e });
+          });
+      }
       return;
     }
 
