@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 const { Panel } = Collapse;
 const CheckboxGroup = Checkbox.Group;
 
-import './index.scss'
+import './index.scss';
 
 // 折叠面板
 export const collapsePanel = (
@@ -186,37 +186,39 @@ export const CheckboxsTabs: React.FC<CheckboxsTabsProps> = (props) => {
 
 
   return (
-    <Tabs
-      tabPosition='left'
-      // centered
-      defaultActiveKey="1"
-      type="card"
-      tabBarGutter={4}
-      {...rest}
-      items={_node.map((item, i) => {
-        const id = String(i + 1);
-        let defaultCheckedList = _value[i] || []
-        return {
-          label: item.tabTitle,
-          key: id,
-          children: (
-            <Card title={item.tabTitle} style={{ borderRadius: 6 }}>
-              {item.valueType == 'collapse' ?
-                <SelectCollapse
-                  treeData={item.dataNode}
-                  defaultCheckedList={defaultCheckedList}
-                  onChange={(checkedList) => onSelected(i, checkedList)}
-                /> :
-                <SelectTree
-                  treeData={item.dataNode}
-                  defaultCheckedList={defaultCheckedList}
-                  onChange={(checkedList) => onSelected(i, checkedList)}
-                />}
-            </Card>
-          ),
-        };
-      })}
-    />
+    <Card>
+      <Tabs
+        tabPosition='left'
+        // centered
+        defaultActiveKey="1"
+        type="card"
+        tabBarGutter={4}
+        {...rest}
+        items={_node.map((item, i) => {
+          const id = String(i + 1);
+          let defaultCheckedList = _value[i] || []
+          return {
+            label: item.tabTitle,
+            key: id,
+            children: (
+              <Card title={item.tabTitle} style={{ borderRadius: 6 }}>
+                {item.valueType == 'collapse' ?
+                  <SelectCollapse
+                    treeData={item.dataNode}
+                    defaultCheckedList={defaultCheckedList}
+                    onChange={(checkedList) => onSelected(i, checkedList)}
+                  /> :
+                  <SelectTree
+                    treeData={item.dataNode}
+                    defaultCheckedList={defaultCheckedList}
+                    onChange={(checkedList) => onSelected(i, checkedList)}
+                  />}
+              </Card>
+            ),
+          };
+        })}
+      />
+    </Card>
   )
 }
 

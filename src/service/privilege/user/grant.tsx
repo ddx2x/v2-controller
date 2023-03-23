@@ -70,12 +70,33 @@ const roleTree: FormColumnsType = {
   },
 };
 
+
+const mockData = Array.from({ length: 20 }).map((_, i) => ({
+  key: i.toString(),
+  title: `content${i + 1}`,
+  description: `description of content${i + 1}`,
+}));
+
+
+const transfer: FormColumnsType = {
+  title: 'transfer',
+  dataIndex: 'transfer',
+  valueType: 'transfer',
+  editable: false,
+  hideInSearch: true,
+  fieldProps: () => {
+    return {
+      dataSource: mockData
+    }
+  },
+};
+
 export const grantForm: FormProps = {
   layoutType: 'ModalForm',
   triggerText: '授权',
   title: '授权',
   style: { width: '100%' },
-  columns: [roleTree],
+  columns: [roleTree, transfer],
   onMount: async ({ form, setDataObject, location }) => { },
   onSubmit({ formRef, values, dataObject, handleClose }) {
     console.log('grantForm values', values);

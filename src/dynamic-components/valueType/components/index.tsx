@@ -14,6 +14,7 @@ import { MonacoEditorProps, MonacoEditorRender, MonacoEditorRenderFormItem } fro
 import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
 import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
+import { TransferProps, TransferRender, TransferRenderFormItem } from './transfer';
 import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
 
 declare module '@ant-design/pro-utils' {
@@ -33,7 +34,8 @@ declare module '@ant-design/pro-utils' {
     descriptionsCardList: DescriptionsCardListProps;
     editableTable: EditableTableProps;
     autoComplete: AutoCompleteProps;
-    checkboxsTabs: CheckboxsTabsProps
+    checkboxsTabs: CheckboxsTabsProps;
+    transfer: TransferProps
   }
 }
 
@@ -54,7 +56,8 @@ const valueTypeMap = {
   descriptionsCardList: [DescriptionsCardListRender, DescriptionsCardListRenderFormItem],
   editableTable: [EditableTableRender, EditableTableRenderFormItem],
   autoComplete: [AutoCompleteRender, AutoCompleteRenderFormItem],
-  checkboxsTabs: [CheckboxsTabsRender, CheckboxsTabsRenderFormItem]
+  checkboxsTabs: [CheckboxsTabsRender, CheckboxsTabsRenderFormItem],
+  transfer: [TransferRender, TransferRenderFormItem]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);
