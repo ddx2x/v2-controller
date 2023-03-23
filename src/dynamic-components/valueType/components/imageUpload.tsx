@@ -62,7 +62,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     onChange && onChange({ fileList: fileList });
   };
 
-  const onSuccess: UploadProps['onSuccess'] = (response, file, xhr) => {
+  const onSuccess = (response, file, xhr) => {
     let _file = getFileItem(file, fileList)
     let _name = response ? response[0] : _file.name
     let _ = {
@@ -104,6 +104,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           fileList={fileList}
           onPreview={onImagePreview}
           beforeUpload={handleBeforeUpload}
+          // @ts-ignore
           onSuccess={onSuccess}
           onChange={handleChange}
           {...rest}

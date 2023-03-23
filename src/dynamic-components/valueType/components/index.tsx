@@ -1,7 +1,9 @@
 
 import { valueTypeMapStore } from '../valueTypeMap';
+import { AutoCompleteProps, AutoCompleteRender, AutoCompleteRenderFormItem } from './autoComplete';
 import { BaiduMapInputProps, BaiduMapInputRender, BaiduMapInputRenderFormItem, BaiduMapProps, BMapRender, BMapRenderFormItem } from './baiduMap';
-import { DescriptionsCardProps, DescriptionsCardRender, DescriptionsCardRenderFormItem, DescriptionsCardListProps, DescriptionsCardListRender, DescriptionsCardListRenderFormItem, FDescriptionsRender, FDescriptionsRenderFormItem, FDescriptionsProps } from './descriptionsCard';
+import { CheckboxsTabsProps, CheckboxsTabsRender, CheckboxsTabsRenderFormItem } from './checkboxsTabs';
+import { DescriptionsCardListProps, DescriptionsCardListRender, DescriptionsCardListRenderFormItem, DescriptionsCardProps, DescriptionsCardRender, DescriptionsCardRenderFormItem, FDescriptionsProps, FDescriptionsRender, FDescriptionsRenderFormItem } from './descriptionsCard';
 import { EditableTableProps, EditableTableRender, EditableTableRenderFormItem } from './editableTable';
 import { ImageUploadProps, ImageUploadRender, ImageUploadRenderFormItem } from './imageUpload';
 import {
@@ -13,7 +15,6 @@ import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
 import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
 import { VideoUploadProps, VideoUploadRender, VideoUploadRenderFormItem } from './videoUpload';
-import { AutoCompleteProps, AutoCompleteRender, AutoCompleteRenderFormItem } from './autoComplete'
 
 declare module '@ant-design/pro-utils' {
   interface ProFieldValueTypeWithFieldProps {
@@ -32,6 +33,7 @@ declare module '@ant-design/pro-utils' {
     descriptionsCardList: DescriptionsCardListProps;
     editableTable: EditableTableProps;
     autoComplete: AutoCompleteProps;
+    checkboxsTabs: CheckboxsTabsProps
   }
 }
 
@@ -51,7 +53,8 @@ const valueTypeMap = {
   descriptionsCard: [DescriptionsCardRender, DescriptionsCardRenderFormItem],
   descriptionsCardList: [DescriptionsCardListRender, DescriptionsCardListRenderFormItem],
   editableTable: [EditableTableRender, EditableTableRenderFormItem],
-  autoComplete: [AutoCompleteRender, AutoCompleteRenderFormItem]
+  autoComplete: [AutoCompleteRender, AutoCompleteRenderFormItem],
+  checkboxsTabs: [CheckboxsTabsRender, CheckboxsTabsRenderFormItem]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);

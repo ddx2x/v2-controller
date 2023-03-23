@@ -1,38 +1,71 @@
 import { FormColumnsType, FormProps } from '@/dynamic-components';
+import { DataNode } from 'antd/es/tree';
+
+const treeData: DataNode[] = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          { title: '0-0-0-0', key: '0-0-0-0' },
+          { title: '0-0-0-1', key: '0-0-0-1' },
+          { title: '0-0-0-2', key: '0-0-0-2' },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          { title: '0-0-1-0', key: '0-0-1-0' },
+          { title: '0-0-1-1', key: '0-0-1-1' },
+          { title: '0-0-1-2', key: '0-0-1-2' },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      { title: '0-1-0-0', key: '0-1-0-0' },
+      { title: '0-1-0-1', key: '0-1-0-1' },
+      { title: '0-1-0-2', key: '0-1-0-2' },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+];
 
 const roleTree: FormColumnsType = {
-  title: '权限',
+  title: '',
   dataIndex: 'roleTree',
-  valueType: 'treeSelect',
+  valueType: 'checkboxsTabs',
   editable: false,
   hideInSearch: true,
+  // initialValue: [['0-0-0', '0-0-1'], []],
+  fieldProps: {
+    initNode: async () => {
+      return await [
+        { tabTitle: '新建商家权限 1', valueType: 'collapse', dataNode: treeData },
+        { tabTitle: '新建商家权限 2', valueType: 'tree', dataNode: treeData }
+      ]
+    }
+  },
   formItemProps: {
     rules: [
       {
         required: true,
         message: '此项为必填项',
       },
-      //   {
-      //     type: 'string',
-      //     pattern: /^1[3456789]\d{9}$/,
-      //     message: '请输入正确的手机号码',
-      //   },
-      //   {
-      //     validator: (rule, value, callback) => {
-      //       if (!value || value.length != 11) {
-      //         callback();
-      //         return;
-      //       }
-      //       userStore.api
-      //         .list(value, {}, 'phone_number')
-      //         .then((res: User[]) =>
-      //           res.length > 0 && res.find((item) => item.phone_number === value)
-      //             ? callback('手机号已被注册')
-      //             : callback(),
-      //         )
-      //         .catch((e) => callback('error' + e));
-      //     },
-      //   },
     ],
   },
 };
@@ -43,9 +76,10 @@ export const grantForm: FormProps = {
   title: '授权',
   style: { width: '100%' },
   columns: [roleTree],
-
-  onMount: async ({ form, setDataObject, location }) => {},
+  onMount: async ({ form, setDataObject, location }) => { },
   onSubmit({ formRef, values, dataObject, handleClose }) {
+    console.log('grantForm values', values);
+
     //   let query = {
     //     update_type:
     //       2
@@ -68,6 +102,6 @@ export const grantForm: FormProps = {
     //   orderApi.update({ data: data, delivery_type: values.delivery_type }, dataObject.uid, query).then((res) => {
     //     console.log(res);
     //   })
-    return true;
+    return false;
   },
 };
