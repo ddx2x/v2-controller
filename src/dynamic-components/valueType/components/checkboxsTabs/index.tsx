@@ -131,6 +131,7 @@ export const SelectTree = (props: SelectTreeProps) => {
 
   return (
     <Tree
+      blockNode
       checkable
       onExpand={onExpand}
       expandedKeys={expandedKeys}
