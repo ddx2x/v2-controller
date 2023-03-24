@@ -29,6 +29,8 @@ const treeData: DataNode[] = [
         key: '0-0-2',
       },
     ],
+
+    disabled: true,
   },
   {
     title: '0-1',
@@ -56,9 +58,9 @@ const roleTree: FormColumnsType = {
     initNode: async () => {
       return await [
         { tabTitle: '新建商家权限 1', valueType: 'collapse', dataNode: treeData },
-        { tabTitle: '新建商家权限 2', valueType: 'tree', dataNode: treeData }
-      ]
-    }
+        { tabTitle: '新建商家权限 2', valueType: 'tree', dataNode: treeData },
+      ];
+    },
   },
   formItemProps: {
     rules: [
@@ -70,13 +72,17 @@ const roleTree: FormColumnsType = {
   },
 };
 
-
 const mockData = Array.from({ length: 20 }).map((_, i) => ({
   key: i.toString(),
   title: `content${i + 1}`,
   description: `description of content${i + 1}`,
 }));
 
+interface TransferItem {
+  key: string;
+  title: string;
+  description: string;
+}
 
 const transfer: FormColumnsType = {
   title: 'transfer',
@@ -84,10 +90,10 @@ const transfer: FormColumnsType = {
   valueType: 'transfer',
   editable: false,
   hideInSearch: true,
-  fieldProps: () => {
+  fieldProps: (form) => {
     return {
-      dataSource: mockData
-    }
+      dataSource: mockData,
+    };
   },
 };
 
@@ -97,7 +103,7 @@ export const grantForm: FormProps = {
   title: '授权',
   style: { width: '100%' },
   columns: [roleTree, transfer],
-  onMount: async ({ form, setDataObject, location }) => { },
+  onMount: async ({ form, setDataObject, location }) => {},
   onSubmit({ formRef, values, dataObject, handleClose }) {
     console.log('grantForm values', values);
 

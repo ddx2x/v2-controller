@@ -1,8 +1,43 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
+import { DataNode } from 'antd/es/tree';
 import { merge } from 'lodash';
 import { roleStore } from '../../api/privilegeRole.store';
+import { roleTree } from './grant';
+
+const treeData: DataNode[] = [
+  {
+    title: '商品',
+    key: 'shangping',
+    children: [
+      {
+        title: '列表',
+        key: 'list',
+      },
+    ],
+  },
+  {
+    title: '订单',
+    key: 'order',
+    children: [
+      {
+        title: '发货',
+        key: 'ship',
+      },
+      {
+        title: '关闭',
+        key: 'close',
+      },
+    ],
+  },
+];
+
+interface TableTreeNode {
+  tabTitle: string;
+  valueType: string;
+  dataNode: DataNode[];
+}
 
 const table: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -56,7 +91,43 @@ const table: StoreTableProps = {
       kind: 'descriptions',
       dataSource: record,
       title: '新增',
-      collapse: 'true',
+    },
+    {
+      kind: 'form',
+      title: '授权',
+      layoutType: 'ModalForm',
+      triggerText: '授权',
+      style: { width: '100%' },
+      columns: [roleTree],
+      submitter: {
+        // resetButtonProps: false,
+        searchConfig: {
+          submitText: '保存',
+          resetText: '取消',
+        },
+      },
+      fieldProps: {
+        initNode: async () => {
+          return await [
+            { tabTitle: '平台权限', valueType: 'collapse', dataNode: treeData, disabled: true },
+            { tabTitle: '区域权限', valueType: 'collapse', dataNode: treeData, disabled: true },
+            { tabTitle: '门店权限', valueType: 'collapse', dataNode: treeData },
+          ];
+        },
+        defaultActiveKey: '3',
+      },
+      onMount: ({ form }) => {
+        form.setFieldsValue({
+          roleTree: {
+            平台权限: ['close'],
+          },
+        });
+      },
+      onSubmit({ formRef, values, dataObject, handleClose }) {
+        console.log('grantForm values', values);
+
+        return false;
+      },
     },
     {
       kind: 'confirm',
