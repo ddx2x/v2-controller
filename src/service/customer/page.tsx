@@ -28,7 +28,7 @@ const defaultStoreTable: StoreTableProps = {
       hideInSearch: true,
       editable: false,
       fixed: 'left',
-      width: 100,
+      width: 200,
     },
     {
       dataIndex: 'phone',

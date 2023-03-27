@@ -7,7 +7,7 @@ import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Dispatch, ReactNode } from 'react';
-import { User, userStore } from '../../api/privilegeUser.store';
+import { User, userRoleApi, userStore } from '../../api/privilegeUser.store';
 import { transfer } from './grant';
 
 interface TransferItem {
@@ -217,13 +217,24 @@ const table: StoreTableProps = {
         onRender: (item: any) => `${item.title} - ${item.description}`,
       },
       onMount: ({ form }) => {
-        form.setFieldsValue({
-          transfer: [],
+        userRoleApi.list(record.uid).then((rs) => {
+          form.setFieldsValue({
+            transfer: rs.map((r) => r.role_id),
+          });
         });
       },
       onSubmit({ formRef, values, dataObject, handleClose }) {
-        console.log('grantForm values', values);
+        let target: Partial<User> = record;
+        target.roles = values.transfer;
 
+        userStore
+          .update_one(record, target, ['roles'])
+          .then((_) => {
+            notification.success({ message: '更新成功' });
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
         return false;
       },
     },

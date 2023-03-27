@@ -13,7 +13,7 @@ export class User extends IObject {
   constructor(data: User) {
     super(data);
     Object.assign(this, data);
-    this.login_type = String(this.login_type)
+    this.login_type = String(this.login_type);
   }
 }
 
@@ -34,3 +34,17 @@ class UserStore extends ObjectStore<User> {
 }
 
 export const userStore = new UserStore(userApi, new DefaultWatchApi());
+
+export class UserRole extends IObject {
+  user_id: string | undefined;
+  role_id: string | undefined;
+
+  constructor(data: User) {
+    super(data);
+    Object.assign(this, data);
+  }
+}
+export const userRoleApi = new ObjectApi<UserRole>({
+  url: '/api/v1/user_role',
+  service: 'base',
+});
