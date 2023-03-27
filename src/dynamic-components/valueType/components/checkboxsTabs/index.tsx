@@ -22,24 +22,18 @@ export const collapsePanel = (
       return { label: item.title, value: item.key };
     }) || [];
 
-  const [indeterminate, setIndeterminate] = useState(
-    !!defaultCheckedList.length && defaultCheckedList.length < plainOptions.length,
-  );
-  const [checkAll, setCheckAll] = useState(defaultCheckedList.length === plainOptions.length);
-
   const onChange = (list: CheckboxValueType[]) => {
-    setIndeterminate(!!list.length && list.length < plainOptions.length);
-    setCheckAll(list.length === plainOptions.length);
     onSelect && onSelect(list);
   };
 
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     let list = e.target.checked ? plainOptions?.map((item) => item.value) : [];
     e.stopPropagation();
-    setIndeterminate(false);
-    setCheckAll(e.target.checked);
     onSelect && onSelect(list);
   };
+
+  let checkAll = defaultCheckedList.length >= plainOptions.length
+  let indeterminate = !checkAll && !!defaultCheckedList.length && defaultCheckedList.length <= plainOptions.length
 
   return (
     <Panel
