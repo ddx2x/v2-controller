@@ -3,36 +3,16 @@ import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { DataNode } from 'antd/es/tree';
 import { merge } from 'lodash';
-import { Role, roleStore } from '../../api/privilegeRole.store';
+import { Role, rolePrivilegeApi, roleStore } from '../../api/privilegeRole.store';
 import { privilegeStore } from '../resource';
 import { roleTree } from './grant';
 
-const treeData: DataNode[] = [
-  {
-    title: '商品',
-    key: 'shangping',
-    children: [
-      {
-        title: '列表',
-        key: 'list',
-      },
-    ],
-  },
-  {
-    title: '订单',
-    key: 'order',
-    children: [
-      {
-        title: '发货',
-        key: 'ship',
-      },
-      {
-        title: '关闭',
-        key: 'close',
-      },
-    ],
-  },
-];
+const roleTypeDict = {
+  0: '平台权限',
+  1: '区域权限',
+  2: '门店权限',
+  3: '供应商权限',
+};
 
 interface TableTreeNode {
   tabTitle: string;
@@ -79,12 +59,6 @@ const table: StoreTableProps = {
       hideInSearch: true,
       editable: false,
     },
-    {
-      dataIndex: 'privileges',
-      title: '权限列表',
-      hideInSearch: true,
-      editable: false,
-    },
   ],
   toolBarMenu: (selectedRows: any) => [
     {
@@ -101,9 +75,9 @@ const table: StoreTableProps = {
     },
     {
       kind: 'form',
-      title: '授权',
+      title: '授权管理',
       layoutType: 'ModalForm',
-      triggerText: '授权',
+      triggerText: '授权管理',
       style: { width: '100%' },
       columns: [roleTree],
       submitter: {
@@ -115,29 +89,29 @@ const table: StoreTableProps = {
       },
       fieldProps: {
         initTreeNode: async () => {
-          const data = await privilegeStore.privilegeTree();
-
+          if (record.type === undefined) return [];
+          const data = privilegeStore.privilegeTree();
           const data_set = [
             {
-              tabTitle: '平台权限',
+              tabTitle: roleTypeDict[0],
               valueType: 'collapse',
               dataNode: data,
               disabled: record.type !== 0,
             },
             {
-              tabTitle: '区域权限',
+              tabTitle: roleTypeDict[1],
               valueType: 'collapse',
               dataNode: data,
               disabled: record.type !== 1,
             },
             {
-              tabTitle: '供应商权限',
+              tabTitle: roleTypeDict[2],
               valueType: 'collapse',
               dataNode: data,
               disabled: record.type !== 2,
             },
             {
-              tabTitle: '门店权限',
+              tabTitle: roleTypeDict[3],
               valueType: 'collapse',
               dataNode: data,
               disabled: record.type !== 3,
@@ -148,16 +122,30 @@ const table: StoreTableProps = {
         defaultActiveKey: String(record.type && Number(record.type) + 1),
       },
       onMount: ({ form }) => {
-        form.setFieldsValue({
-          roleTree: {
-            平台权限: ['close'],
-          },
+        form.resetFields();
+
+        if (record.type === undefined) return;
+        rolePrivilegeApi.list(record.uid).then((rs) => {
+          form.setFieldsValue({
+            roleTree: {
+              平台权限: ['分类编辑'],
+            },
+          });
         });
+
+        console.log('record.type', record.type);
+
+        // form.setFieldsValue({
+        //   roleTree: {
+        //     平台权限: ['分类编辑'],
+        //   },
+        // });
       },
       onSubmit({ formRef, values, dataObject, handleClose }) {
         console.log('grantForm values', values);
 
-        return false;
+        formRef.current?.resetFields();
+        return true;
       },
     },
     {

@@ -1,5 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
-import { Privilege, privilegeStore, Role, roleStore } from '@/service/api';
+import { privilegeStore, Role, roleStore } from '@/service/api';
 import { TreeSelect } from 'antd';
 
 export const name: FormColumnsType = {
@@ -84,30 +84,34 @@ export const privileges: FormColumnsType = {
   request: async () => {
     try {
       const rs = await privilegeStore.api.list(undefined, {
-        // limit: { },
         sort: { name: 1 },
       });
-      let select: TreeSelect[] = [];
-      // level 1
-      rs.map((value: Privilege) => {
-        if (value.level == 1) {
-          select.push({ title: value.uid, value: value.uid, children: [] });
-        }
+      let tree: TreeSelect[] = [];
+      rs.filter((item) => item.level === 1).forEach((item) => {
+        tree.push({
+          title: item._id,
+          value: item._id,
+          children: [],
+        });
       });
-      // level 2
-      rs.map((value: Privilege) => {
-        if (value.level == 2) {
-          // if (!value.full_id) {
-          //   return;
-          // }
-          select.map((treeSelect) => {
-            // if (treeSelect.title === value.full_id) {
-            treeSelect.children.push({ title: value.uid, value: value.uid, children: [] });
-            // }
+
+      rs.filter((item) => item.level === 2)
+        .sort((a, b) => {
+          return a._id.localeCompare(b._id);
+        })
+        .forEach((item) => {
+          tree.forEach((t) => {
+            if (!item.full_id) return;
+            if (t.title === item.full_id.split('.')[0]) {
+              t.children.push({
+                title: item._id,
+                value: item._id,
+                children: [],
+              });
+            }
           });
-        }
-      });
-      return select;
+        });
+      return tree;
     } catch (e) {
       return [];
     }
