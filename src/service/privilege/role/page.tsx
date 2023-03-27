@@ -126,18 +126,30 @@ const table: StoreTableProps = {
 
         if (record.type === undefined) return;
         rolePrivilegeApi.list(record.uid).then((rs) => {
-
+          const privileges = rs.map((item) => item.privilege_id);
           form.setFieldsValue({
             roleTree: {
-              平台权限: ['分类编辑'],
+              平台权限: record.type === 0 ? privileges : [],
+              区域权限: record.type === 1 ? privileges : [],
+              门店权限: record.type === 2 ? privileges : [],
+              供应商权限: record.type === 3 ? privileges : [],
             },
           });
-        })
-
+        });
       },
       onSubmit({ formRef, values, dataObject, handleClose }) {
-        console.log('grantForm values', values);
-
+        let target: Partial<Role> = record;
+        // @ts-ignore
+        const key = roleTypeDict[record.type];
+        target.privileges = values.roleTree[key];
+        roleStore
+          .update_one(record, target, ['privileges'])
+          .then((rs) => {
+            notification.success({ message: '保存成功' });
+          })
+          .catch((e) => {
+            notification.error({ message: '保存失败' });
+          });
         formRef.current?.resetFields();
         return true;
       },

@@ -33,8 +33,8 @@ export const roleStore = new RoleStore(roleApi, new DefaultWatchApi());
 
 export class RolePrivilege extends IObject {
   role_id: string | undefined;
-  private_id: string | undefined;
-  private_name: string | undefined;
+  privilege_id: string | undefined;
+  privilege_name: string | undefined;
   constructor(data: Role) {
     super(data);
     Object.assign(this, data);
