@@ -1,6 +1,6 @@
 import { FormColumnsType } from '@/dynamic-components';
 
-  export const transfer: FormColumnsType = {
+export const transfer: FormColumnsType = {
   title: '',
   dataIndex: 'transfer',
   valueType: 'transfer',
