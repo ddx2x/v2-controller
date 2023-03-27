@@ -126,20 +126,14 @@ const table: StoreTableProps = {
 
         if (record.type === undefined) return;
         rolePrivilegeApi.list(record.uid).then((rs) => {
+
           form.setFieldsValue({
             roleTree: {
               平台权限: ['分类编辑'],
             },
           });
-        });
+        })
 
-        console.log('record.type', record.type);
-
-        // form.setFieldsValue({
-        //   roleTree: {
-        //     平台权限: ['分类编辑'],
-        //   },
-        // });
       },
       onSubmit({ formRef, values, dataObject, handleClose }) {
         console.log('grantForm values', values);

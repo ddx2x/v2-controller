@@ -22,14 +22,12 @@ export const collapsePanel = (
       return { label: item.title, value: item.key };
     }) || [];
 
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(defaultCheckedList || []);
   const [indeterminate, setIndeterminate] = useState(
     !!defaultCheckedList.length && defaultCheckedList.length < plainOptions.length,
   );
   const [checkAll, setCheckAll] = useState(defaultCheckedList.length === plainOptions.length);
 
   const onChange = (list: CheckboxValueType[]) => {
-    setCheckedList(list);
     setIndeterminate(!!list.length && list.length < plainOptions.length);
     setCheckAll(list.length === plainOptions.length);
     onSelect && onSelect(list);
@@ -38,7 +36,6 @@ export const collapsePanel = (
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     let list = e.target.checked ? plainOptions?.map((item) => item.value) : [];
     e.stopPropagation();
-    setCheckedList(list);
     setIndeterminate(false);
     setCheckAll(e.target.checked);
     onSelect && onSelect(list);
@@ -60,7 +57,7 @@ export const collapsePanel = (
       }
       key={index}
     >
-      <CheckboxGroup className='checkbox-group-wrapper' options={plainOptions} value={checkedList} onChange={onChange} />
+      <CheckboxGroup className='checkbox-group-wrapper' options={plainOptions} value={defaultCheckedList} onChange={onChange} />
     </Panel>
   );
 };
@@ -112,7 +109,6 @@ export declare type SelectTreeProps = TreeProps & {
 export const SelectTree = (props: SelectTreeProps) => {
   const { defaultCheckedList, onChange } = props;
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(defaultCheckedList || []);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
@@ -122,7 +118,6 @@ export const SelectTree = (props: SelectTreeProps) => {
   };
 
   const onCheck = (checkedKeysValue: React.Key[]) => {
-    setCheckedKeys(checkedKeysValue);
     onChange && onChange(checkedKeysValue);
   };
 
@@ -139,7 +134,7 @@ export const SelectTree = (props: SelectTreeProps) => {
       autoExpandParent={autoExpandParent}
       // @ts-ignore
       onCheck={onCheck}
-      checkedKeys={checkedKeys}
+      checkedKeys={defaultCheckedList}
       onSelect={onSelect}
       selectedKeys={selectedKeys}
       {...props}
@@ -207,6 +202,7 @@ export const CheckboxsTabs: React.FC<CheckboxsTabsProps> = (props) => {
         items={_treeNode.map((item, i) => {
           const id = String(i + 1);
           let defaultCheckedList = _value[item.tabTitle] || [];
+
           return {
             label: item.tabTitle,
             key: id,
