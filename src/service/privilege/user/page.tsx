@@ -39,7 +39,9 @@ const table: StoreTableProps = {
       dataIndex: 'name',
       title: '名称',
       tooltip: '支持全文索引',
+      // @ts-ignore
       valueType: 'autoComplete',
+      width: 200,
       editable: false,
       fieldProps: {
         onSearch: async (text: string) => {
@@ -78,6 +80,7 @@ const table: StoreTableProps = {
       dataIndex: 'phone_number',
       title: '手机号',
       tooltip: '支持全文索引',
+      // @ts-ignore
       valueType: 'autoComplete',
       editable: false,
       fieldProps: {
@@ -125,6 +128,13 @@ const table: StoreTableProps = {
           </>,
         ];
       },
+    },
+    {
+      dataIndex: 'org_name',
+      title: '主体',
+      editable: false,
+      hideInSearch: true,
+      width: 200,
     },
   ],
   editableValuesChange: (record: User, errors, editorFormRef) => {
@@ -199,6 +209,7 @@ const table: StoreTableProps = {
             return {
               key: item.uid,
               title: item.name,
+              // @ts-ignore
               description: item.type ? roleDesc[item.type] : '未知岗位',
             };
           });
