@@ -60,7 +60,7 @@ export const collapsePanel = (
       }
       key={index}
     >
-      <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
+      <CheckboxGroup className='checkbox-group-wrapper' options={plainOptions} value={checkedList} onChange={onChange} />
     </Panel>
   );
 };
@@ -202,7 +202,7 @@ export const CheckboxsTabs: React.FC<CheckboxsTabsProps> = (props) => {
         defaultActiveKey={props.defaultActiveKey || '1'}
         type="card"
         tabBarGutter={4}
-        
+
         {...rest}
         items={_treeNode.map((item, i) => {
           const id = String(i + 1);
