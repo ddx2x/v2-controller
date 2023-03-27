@@ -22,7 +22,7 @@ export const privilegeApi = new ObjectApi<Privilege>({
   service: 'base',
 });
 
-class UserStore extends ObjectStore<Privilege> {
+class PrivilegeStore extends ObjectStore<Privilege> {
   api: ObjectApi<Privilege>;
   watchApi: WatchApi<Privilege>;
   constructor(api: ObjectApi<Privilege>, watchApi: WatchApi<Privilege>) {
@@ -30,6 +30,56 @@ class UserStore extends ObjectStore<Privilege> {
     this.api = api;
     this.watchApi = watchApi;
   }
+
+  // {
+  //   title: '商品',
+  //   key: 'shangping',
+  //   children: [
+  //     {
+  //       title: '列表',
+  //       key: 'list',
+  //     },
+  //   ],
+  // },
+
+  privilegeTree() {
+    let tree: TreeData[] = [];
+
+    this.items
+      .filter((item) => item.level === 1)
+      .forEach((item) => {
+        tree.push({
+          title: item._id,
+          key: item._id,
+          children: [],
+        });
+      });
+
+    this.items
+      .filter((item) => item.level === 2)
+      .sort((a, b) => {
+        return a._id.localeCompare(b._id);
+      })
+      .forEach((item) => {
+        tree.forEach((t) => {
+          if (!item.full_id) return;
+          if (t.key === item.full_id.split('.')[0]) {
+            t.children.push({
+              title: item._id,
+              key: item._id,
+              children: [],
+            });
+          }
+        });
+      });
+    return tree;
+  }
 }
 
-export const privilegeStore = new UserStore(privilegeApi, new DefaultWatchApi());
+interface TreeData {
+  title: string;
+  key: string;
+  children: TreeData[];
+}
+
+export const privilegeStore = new PrivilegeStore(privilegeApi, new DefaultWatchApi());

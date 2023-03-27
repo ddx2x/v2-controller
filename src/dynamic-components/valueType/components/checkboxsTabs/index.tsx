@@ -156,28 +156,28 @@ export declare type NodeProps = {
 
 export declare type CheckboxsTabsProps = ProFieldFCRenderProps &
   TabsProps & {
-    initNode?: () => Promise<NodeProps>;
+    initTreeNode?: () => Promise<NodeProps>;
     defaultActiveKey?: Number;
   };
 
 //
 export const CheckboxsTabs: React.FC<CheckboxsTabsProps> = (props) => {
-  const [_node, setNode] = useState<NodeProps>([]);
+  const [_treeNode, setTreeNode] = useState<NodeProps>([]);
   const [loading, setLoading] = useState(true);
 
-  const { initNode, value, onChange, fieldProps, ...rest } = props;
+  const { initTreeNode, value, onChange, fieldProps, ...rest } = props;
 
   let _value = value ? value : {};
 
   useEffect(() => {
-    if (!initNode) return;
-    initNode()
+    if (!initTreeNode) return;
+    initTreeNode()
       .then((res) => {
-        setNode(res);
+        setTreeNode(res);
         setLoading(false);
       })
       .catch(() => {
-        setNode([]);
+        setTreeNode([]);
         setLoading(false);
       });
   }, []);
@@ -202,8 +202,9 @@ export const CheckboxsTabs: React.FC<CheckboxsTabsProps> = (props) => {
         defaultActiveKey={props.defaultActiveKey || '1'}
         type="card"
         tabBarGutter={4}
+        
         {...rest}
-        items={_node.map((item, i) => {
+        items={_treeNode.map((item, i) => {
           const id = String(i + 1);
           let defaultCheckedList = _value[item.tabTitle] || [];
           return {

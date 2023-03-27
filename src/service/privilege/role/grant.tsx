@@ -6,7 +6,6 @@ export const roleTree: FormColumnsType = {
   valueType: 'checkboxsTabs',
   editable: false,
   hideInSearch: true,
-  dependencies: ['role'],
   formItemProps: {
     rules: [
       {

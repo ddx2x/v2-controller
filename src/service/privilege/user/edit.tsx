@@ -10,6 +10,10 @@ import { login_type, name, org_name, phone_number } from './columns';
 const editForm: FormProps = {
   submitter: {
     resetButtonProps: false,
+    searchConfig: {
+      submitText: '保存',
+      // resetText: '取消',
+    },
   },
   onMount: ({ location, form, setDataObject }) => {
     form?.resetFields();

@@ -1,6 +1,6 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
-import { cmsDoorStore2 } from '@/service/api';
+import { cmsDoorStore2, Role, roleStore } from '@/service/api';
 import { unixtime2dateformat } from '@/service/common';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -8,7 +8,13 @@ import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Dispatch, ReactNode } from 'react';
 import { User, userStore } from '../../api/privilegeUser.store';
-import { grantForm } from './grant';
+import { transfer } from './grant';
+
+interface TransferItem {
+  key: string;
+  title: string;
+  description: string;
+}
 
 const table: StoreTableProps = {
   toolbarTitle: '数据列表',
@@ -173,8 +179,42 @@ const table: StoreTableProps = {
     },
     {
       kind: 'form',
-      title: '授权',
-      ...grantForm,
+      title: '关联角色',
+      layoutType: 'ModalForm',
+      triggerText: '关联角色',
+      style: { width: '100%' },
+      columns: [transfer],
+      submitter: {
+        // resetButtonProps: false,
+        searchConfig: {
+          submitText: '保存',
+          resetText: '取消',
+        },
+      },
+      fieldProps: {
+        initDataSource: async () => {
+          const data = await roleStore.api.list(undefined);
+          const roleDesc = { '0': '平台岗位', '1': '门店岗位', '2': '供应商岗位', '3': '区域岗位' };
+          return data.map((item: Role) => {
+            return {
+              key: item.uid,
+              title: item.name,
+              description: item.type ? roleDesc[item.type] : '未知岗位',
+            };
+          });
+        },
+        onRender: (item: any) => `${item.title} - ${item.description}`,
+      },
+      onMount: ({ form }) => {
+        form.setFieldsValue({
+          transfer: [],
+        });
+      },
+      onSubmit({ formRef, values, dataObject, handleClose }) {
+        console.log('grantForm values', values);
+
+        return false;
+      },
     },
     {
       kind: 'confirm',

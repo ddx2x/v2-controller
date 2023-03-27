@@ -3,7 +3,8 @@ import { pageManager } from '@/dynamic-view';
 import { notification } from 'antd';
 import { DataNode } from 'antd/es/tree';
 import { merge } from 'lodash';
-import { roleStore } from '../../api/privilegeRole.store';
+import { Role, roleStore } from '../../api/privilegeRole.store';
+import { privilegeStore } from '../resource';
 import { roleTree } from './grant';
 
 const treeData: DataNode[] = [
@@ -66,11 +67,17 @@ const table: StoreTableProps = {
       editable: false,
       valueType: 'select',
       valueEnum: {
-        0: '平台岗位',
-        1: '门店岗位',
-        2: '供应商岗位',
-        3: '区域岗位',
+        0: '平台',
+        1: '区域',
+        2: '门店',
+        3: '供应商',
       },
+    },
+    {
+      dataIndex: 'use_count',
+      title: '使用账号数量',
+      hideInSearch: true,
+      editable: false,
     },
     {
       dataIndex: 'privileges',
@@ -86,7 +93,7 @@ const table: StoreTableProps = {
       link: `/privilege/role/add`,
     },
   ],
-  tableMenu: (record: any, action: any) => [
+  tableMenu: (record: Role, action: any) => [
     {
       kind: 'descriptions',
       dataSource: record,
@@ -107,14 +114,38 @@ const table: StoreTableProps = {
         },
       },
       fieldProps: {
-        initNode: async () => {
-          return await [
-            { tabTitle: '平台权限', valueType: 'collapse', dataNode: treeData, disabled: true },
-            { tabTitle: '区域权限', valueType: 'collapse', dataNode: treeData, disabled: true },
-            { tabTitle: '门店权限', valueType: 'collapse', dataNode: treeData },
+        initTreeNode: async () => {
+          const data = await privilegeStore.privilegeTree();
+
+          const data_set = [
+            {
+              tabTitle: '平台权限',
+              valueType: 'collapse',
+              dataNode: data,
+              disabled: record.type !== 0,
+            },
+            {
+              tabTitle: '区域权限',
+              valueType: 'collapse',
+              dataNode: data,
+              disabled: record.type !== 1,
+            },
+            {
+              tabTitle: '供应商权限',
+              valueType: 'collapse',
+              dataNode: data,
+              disabled: record.type !== 2,
+            },
+            {
+              tabTitle: '门店权限',
+              valueType: 'collapse',
+              dataNode: data,
+              disabled: record.type !== 3,
+            },
           ];
+          return data_set;
         },
-        defaultActiveKey: '3',
+        defaultActiveKey: String(record.type && Number(record.type) + 1),
       },
       onMount: ({ form }) => {
         form.setFieldsValue({
@@ -165,6 +196,13 @@ pageManager.register('privilege.role', {
     {
       store: roleStore,
       exit: roleStore.reset,
+    },
+
+    {
+      store: privilegeStore,
+      load: privilegeStore.load,
+      // watch: privilegeStore.watch,
+      exit: privilegeStore.reset,
     },
   ],
 });
