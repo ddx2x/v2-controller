@@ -109,13 +109,6 @@ const table: StoreTableProps = {
       },
     },
     {
-      dataIndex: 'roles',
-      title: '角色',
-      hideInSearch: true,
-      editable: false,
-      valueType: 'text',
-    },
-    {
       dataIndex: 'last_login_time',
       title: '最后登陆',
       hideInSearch: true,
