@@ -5,15 +5,14 @@ export const merchandiseList: FormColumnsType = {
   title: '商品名称',
   hideInSearch: true,
   valueType: 'merchandiseList',
-}
+};
 
 export const uid: FormColumnsType = {
   dataIndex: 'uid',
   title: '订单编号',
   hideInSearch: true,
-  valueType: "money",
+  valueType: 'money',
 };
-
 
 export const merchandiseTable: FormColumnsType = {
   dataIndex: 'merchandiseTable',
@@ -65,56 +64,70 @@ export const merchandiseTable: FormColumnsType = {
         //     ]
         //   }
         // }
-      }
+      },
     ],
     editableValuesChange: (record) => {
       console.log(record);
     },
   },
-}
+};
 
 export const orderId: FormColumnsType = {
   dataIndex: 'orderId',
   title: '订单id',
   fieldProps: {
-    disabled: true
-  }
-}
-
+    disabled: true,
+  },
+};
 
 export const orderTime: FormColumnsType = {
   dataIndex: 'orderTime',
   title: '下单时间',
   fieldProps: {
-    disabled: true
-  }
-}
-
-
+    disabled: true,
+  },
+};
 
 export const deliveryType: FormColumnsType = {
   dataIndex: 'delivery_type',
   title: '发货类型',
   valueType: 'select',
-  initialValue: '1',
-
-  // transform: value => String(value),
+  editable: false,
   valueEnum: {
-    1: '快递',
-    2: '自提',
+    '1': '快递',
+    '2': '自提',
+    '3': '无需发货',
   },
-}
+};
 
-export const deliveryInfo: FormColumnsType = {
-  dataIndex: 'delivery_id',
-  title: '发货单',
-}
+export const expressNo: FormColumnsType = {
+  dataIndex: 'express_no',
+  title: '快递单号',
+};
 
+export const expressCompany: FormColumnsType = {
+  dataIndex: 'express_company',
+  title: '快递公司',
+};
+
+export const pickup_code: FormColumnsType = {
+  dataIndex: 'pickup_code',
+  title: '自提码',
+  fieldProps: {
+    disabled: true,
+  },
+};
 
 export const deliveryInfoDependency: FormColumnsType = {
   valueType: 'dependency',
   name: ['delivery_type'],
   columns: ({ delivery_type }) => {
-    return delivery_type == 1 ? [deliveryInfo] : []
+    if (delivery_type == 1) {
+      return [expressCompany, expressNo];
+    } else if (delivery_type == 2) {
+      return [pickup_code];
+    } else {
+      return [];
+    }
   },
-}
+};

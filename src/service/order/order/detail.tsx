@@ -6,8 +6,8 @@ import { ProDescriptionsItemProps } from '@ant-design/pro-components';
 const orderSteps: ProDescriptionsItemProps = {
   dataIndex: 'steps',
   valueType: 'steps',
-  plain: true
-}
+  plain: true,
+};
 
 const deliveryInfo: ProDescriptionsItemProps = {
   dataIndex: 'delivery',
@@ -18,6 +18,11 @@ const deliveryInfo: ProDescriptionsItemProps = {
       {
         dataIndex: 'delivery_type',
         title: '配送方式',
+        valueEnum: {
+          1: '快递',
+          2: '自提',
+          3: '无需发货',
+        },
       },
       {
         dataIndex: 'delivery_time',
@@ -47,11 +52,9 @@ const deliveryInfo: ProDescriptionsItemProps = {
       //     ]
       //   }
       // }
-    ]
-  }
-}
-
-
+    ],
+  },
+};
 
 const orderInfo: ProDescriptionsItemProps = {
   dataIndex: 'orderInfo',
@@ -72,30 +75,24 @@ const orderInfo: ProDescriptionsItemProps = {
         dataIndex: 'customer',
         title: '买家昵称',
       },
-    ]
+    ],
   },
-}
-
+};
 
 const orderDescription: DescriptionsProps = {
   modal: 'Page',
   bordered: false,
-  columns: [
-    orderSteps,
-    deliveryInfo,
-    orderInfo,
-  ] as DescriptionsProps['columns'],
+  columns: [orderSteps, deliveryInfo, orderInfo] as DescriptionsProps['columns'],
   request: async (params) => {
     return await orderApi.get(params.uid).then((res) => {
-
       let delivery: any[] = [];
       res.deliveries.map((item: any) => {
         delivery.push({
           delivery_type: item.delivery_type == 1 ? '快递配送' : '自提',
           delivery_id: item.express_id,
           customer: res.customer,
-        })
-      })
+        });
+      });
 
       return {
         success: true,
@@ -119,14 +116,13 @@ const orderDescription: DescriptionsProps = {
                 title: 'Waiting',
                 description: 'This is a description.',
               },
-            ]
+            ],
           },
-        }
-      }
-    })
+        },
+      };
+    });
   },
-}
-
+};
 
 pageManager.register('order.order.detail', {
   page: {
@@ -135,4 +131,4 @@ pageManager.register('order.order.detail', {
       keepAlive: false,
     },
   },
-})
+});

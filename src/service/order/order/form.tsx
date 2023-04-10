@@ -1,5 +1,6 @@
 import { FormProps } from '@/dynamic-components';
 import { orderApi } from '@/service/api';
+import { cloneDeep, merge } from 'lodash';
 import { deliveryInfoDependency, deliveryType, merchandiseTable } from './columns';
 
 export const shipForm: FormProps = {
@@ -7,7 +8,22 @@ export const shipForm: FormProps = {
   triggerText: '发货',
   title: '发货',
   style: { width: '100%' },
-  columns: [merchandiseTable, deliveryType, deliveryInfoDependency],
+  submitter: {
+    searchConfig: {
+      submitText: '发货',
+      resetText: '取消',
+    },
+  },
+  columns: [
+    merchandiseTable,
+    merge(cloneDeep(deliveryType), {
+      fieldProps: {
+        disabled: true,
+      },
+    }),
+    deliveryInfoDependency,
+  ],
+
   onSubmit({ formRef, values, dataObject, handleClose }) {
     let query = { update_type: 2 };
 
@@ -22,8 +38,6 @@ export const shipForm: FormProps = {
         };
       }),
     };
-    // console.log('onSubmit.....', data);
-
     // @ts-ignore
     orderApi
       .update({ data: data, delivery_type: values.delivery_type }, dataObject.uid, query)

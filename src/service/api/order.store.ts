@@ -1,12 +1,11 @@
 import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
-
 export interface MerchandiseList {
-  image: string,
-  title: string,
-  uid: string,
-  attrs: object
+  image: string;
+  title: string;
+  uid: string;
+  attrs: object;
 }
 
 export const OrderStateValueEnum = {
@@ -34,26 +33,27 @@ export const OrderStateValueEnum = {
   200: { text: '已完成', status: 'Success' },
   201: { text: '已取消', status: 'Success' },
   202: { text: '售后', status: 'Error' },
-}
-
+  255: { text: '错误', status: 'Error' },
+};
 
 export class Order extends IObject {
-  customer: string | undefined
-  typ: number | undefined
-  url: string | undefined
-  full_id: string | undefined
-  is_view: boolean | undefined
-  level: number | undefined
-  op: number | undefined
-  total: number | undefined
-  order_sku_list: any | undefined
-  deliveries: any | undefined
-  state: number | undefined
-  // 
-  merchandise_list: MerchandiseList[] | undefined
-  total_render: number | undefined
-  delivery_map: Map<string, number> | undefined
-
+  customer: string | undefined;
+  typ: number | undefined;
+  url: string | undefined;
+  full_id: string | undefined;
+  is_view: boolean | undefined;
+  level: number | undefined;
+  op: number | undefined;
+  total: number | undefined;
+  order_sku_list: any | undefined;
+  deliveries: any | undefined;
+  state: number | undefined;
+  //
+  merchandise_list: MerchandiseList[] | undefined;
+  total_render: number | undefined;
+  delivery_map: Map<string, number> | undefined;
+  delivery_type: number | string | undefined;
+  error_info: string | undefined;
 
   constructor(data: Order) {
     super(data);
@@ -61,38 +61,33 @@ export class Order extends IObject {
 
     let delivery_map = new Map();
 
-    this.total_render = this.total ? this.total / 100 : 0
-    this.merchandise_list = this.order_sku_list?.map(
-      (item: any) => {
-        delivery_map.set(item.sku._id, item.quantity)
-        let attrs: any = {}
-        attrs['数量'] = item.quantity
-        attrs['价格'] = item.amount
+    this.total_render = this.total ? this.total / 100 : 0;
+    this.merchandise_list = this.order_sku_list?.map((item: any) => {
+      delivery_map.set(item.sku._id, item.quantity);
+      let attrs: any = {};
+      attrs['数量'] = item.quantity;
+      attrs['价格'] = item.amount;
 
-        if (item.sku.spec_name) {
-          attrs['规格'] = item.sku.spec_name
-        }
-        return {
-          image: '/media-t/file/' + item.sku?.pic || '',
-          title: item.sku?.product_name,
-          uid: item.sku?._id,
-          attrs: attrs
-        }
+      if (item.sku.spec_name) {
+        attrs['规格'] = item.sku.spec_name;
       }
-    )
+      return {
+        image: '/media-t/file/' + item.sku?.pic || '',
+        title: item.sku?.product_name,
+        uid: item.sku?._id,
+        attrs: attrs,
+      };
+    });
 
+    this.delivery_type = String(this.delivery_type);
 
-    this.deliveries?.map(
-      (item: any) => {
-        item.sku_list?.map((sku: any) => {
-          let quantity = delivery_map.get(sku.sku_id) - sku.quantity
-          delivery_map.set(sku.sku_id, quantity)
-        })
-
-
-      }
-    )
-    this.delivery_map = delivery_map
+    this.deliveries?.map((item: any) => {
+      item.sku_list?.map((sku: any) => {
+        let quantity = delivery_map.get(sku.sku_id) - sku.quantity;
+        delivery_map.set(sku.sku_id, quantity);
+      });
+    });
+    this.delivery_map = delivery_map;
   }
 }
 
@@ -111,7 +106,5 @@ class OrderStore extends ObjectStore<Order> {
     this.watchApi = watchApi;
   }
 }
-
-
 
 export const orderStore = new OrderStore(orderApi, new DefaultWatchApi());
