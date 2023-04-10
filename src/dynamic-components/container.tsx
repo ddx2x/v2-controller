@@ -77,20 +77,20 @@ export const Container: React.FC<ContainerProps> = (props: any) => {
   const content = () => {
     if (Children.count(children) <= 1) return children;
     if (rest['tabList']) {
-      let _index = rest['tabList'].findIndex((item: any) => item.key === tabActiveKey) || 0;
       return children.map((item: any, index: any) => (
-        <ProCard ghost className={classNames({ hidden_children: _index === index })}>
+        <ProCard ghost className={classNames({ hidden_children: tabActiveKey !== item.key })}>
           {item}
         </ProCard>
       ));
+    } else {
+      return (
+        <ProCard direction="column" ghost gutter={[0, 16]}>
+          {children.map((item: any) => (
+            <ProCard ghost>{item}</ProCard>
+          ))}
+        </ProCard>
+      );
     }
-    return (
-      <ProCard direction="column" ghost gutter={[0, 16]}>
-        {children.map((item: any) => (
-          <ProCard ghost>{item}</ProCard>
-        ))}
-      </ProCard>
-    );
   };
 
   return (

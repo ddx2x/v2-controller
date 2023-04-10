@@ -1,4 +1,5 @@
 import { FormColumnsType } from '@/dynamic-components';
+import { ExpressCompany, expressCompanyStore } from '@/service/api';
 
 export const merchandiseList: FormColumnsType = {
   dataIndex: 'merchandiseList',
@@ -108,6 +109,23 @@ export const expressNo: FormColumnsType = {
 export const expressCompany: FormColumnsType = {
   dataIndex: 'express_company',
   title: '快递公司',
+  valueType: 'select',
+  request: async (params: any, props: any) => {
+    try {
+      const rs = await expressCompanyStore.api.list(undefined, {
+        limit: { page: 0, size: 500 },
+        sort: { version: 1 },
+        filter: {},
+      });
+      let select: any = [];
+      rs.map((value: ExpressCompany) => {
+        select.push({ label: value.uid, value: value.uid });
+      });
+      return select;
+    } catch (e) {
+      return [];
+    }
+  },
 };
 
 export const pickup_code: FormColumnsType = {

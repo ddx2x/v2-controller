@@ -7,6 +7,7 @@ import {
   deliverySettingStore,
   DeliverySettingTemplate,
   deliverySettingTemplateStore,
+  expressCompanyStore,
   StorePickup,
   storePickupStore,
 } from '../api';
@@ -302,26 +303,127 @@ const storePickupStoreTable: StoreTableProps = {
   onRequest: ({ query }) => storePickupStore.next(merge(query, { sort: { version: 1 } })),
 };
 
+const expressCompanyStoreTable: StoreTableProps = {
+  toolbarTitle: '快递配置',
+  store: expressCompanyStore,
+  rowKey: 'uid',
+  search: false,
+  defaultPageSize: 10,
+  columns: [
+    {
+      dataIndex: 'uid',
+      title: '名称',
+      hideInSearch: true,
+      editable: false,
+      // width: 200,
+      // hideInTable: true,
+    },
+
+    {
+      dataIndex: 'ename',
+      title: '简写',
+      hideInSearch: true,
+      editable: false,
+      // width: 200,
+      // hideInTable: true,
+    },
+
+    {
+      dataIndex: 'service_number',
+      title: '服务电话',
+      hideInSearch: true,
+      editable: false,
+      // width: 100,
+      // hideInTable: true,
+    },
+  ],
+  editableValuesChange: (record) => {
+    // const src = storePickupStore.items.find((item) => item.getUid() === record.uid);
+    // const update: Partial<StorePickup> = record;
+
+    // if (!src) return;
+    // if (src?.state !== update.state) {
+    //   if (update.state) {
+    //     update.state = true;
+    //   } else {
+    //     update.state = false;
+    //   }
+    //   storePickupStore
+    //     .update_one(src, update, ['state'])
+    //     .then(() => {
+    //       notification.success({ message: '更新成功' });
+    //       history.push(`/setting/delivery`);
+    //     })
+    //     .catch((e) => {
+    //       notification.error({ message: '更新失败:' + e });
+    //     });
+    // }
+  },
+  toolBarMenu: (selectedRows) => [
+    {
+      kind: 'link',
+      title: '新增',
+      link: `/setting/delivery/expresscompanyadd`,
+    },
+  ],
+  tableMenu: (record: any, action: any) => [
+    {
+      kind: 'link',
+      title: '编辑',
+      link: '/setting/delivery/expresscompanyedit?id=' + record.uid,
+    },
+    {
+      kind: 'confirm',
+      title: '删除',
+      onClick: () => {
+        storePickupStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+            history.push(`/setting/delivery`);
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
+      },
+      text: `确认删除` + record.name,
+    },
+  ],
+  onRowEvent: [
+    {
+      mouseEvent: 'onDoubleClick',
+      title: '详情',
+    },
+  ],
+  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  onRequest: ({ query }) => expressCompanyStore.next(merge(query, { sort: { version: 1 } })),
+};
+
 pageManager.register('setting.delivery', {
   page: {
     view: [
+      { kind: 'storeTable', ...deliveryStoreTable },
       { kind: 'storeTable', ...storePickupStoreTable },
-      { kind: 'storeTable', ...deliveryStoreTable }, //两个table用反序
+      { kind: 'storeTable', ...expressCompanyStoreTable }, //两个table用反序
     ],
     container: {
       keepAlive: false,
       header: {
         title: '配送设置',
       },
-      defaultTabActiveKey: '1',
+      defaultTabActiveKey: 'storeTable-0',
       tabList: [
         {
           tab: '商家配送',
-          key: '1',
+          key: 'storeTable-0',
         },
         {
           tab: '门店自提',
-          key: '2',
+          key: 'storeTable-1',
+        },
+        {
+          tab: '快递公司',
+          key: 'storeTable-2',
         },
       ],
     },

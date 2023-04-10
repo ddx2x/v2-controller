@@ -214,3 +214,32 @@ export const storePickupApi = new ObjectApi<StorePickup>({
 });
 
 export const storePickupStore = new StorePickupStore(storePickupApi, new DefaultWatchApi());
+
+export class ExpressCompany extends IObject {
+  name: string | undefined;
+  constructor(data: ExpressCompany) {
+    super(data);
+    Object.assign(this, data);
+  }
+}
+
+class ExpressCompanyStore extends ObjectStore<ExpressCompany> {
+  api: ObjectApi<ExpressCompany>;
+  watchApi: WatchApi<ExpressCompany>;
+  constructor(api: ObjectApi<ExpressCompany>, watchApi: WatchApi<ExpressCompany>) {
+    super();
+    this.api = api;
+    this.watchApi = watchApi;
+  }
+}
+
+export const expressCompanyApi = new ObjectApi<ExpressCompany>({
+  url: '/api/v1/express_company',
+  objectConstructor: ExpressCompany,
+  service: 'settings',
+});
+
+export const expressCompanyStore = new ExpressCompanyStore(
+  expressCompanyApi,
+  new DefaultWatchApi(),
+);
