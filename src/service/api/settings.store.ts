@@ -217,6 +217,8 @@ export const storePickupStore = new StorePickupStore(storePickupApi, new Default
 
 export class ExpressCompany extends IObject {
   name: string | undefined;
+  ename: string | undefined;
+  service_number: string | undefined;
   constructor(data: ExpressCompany) {
     super(data);
     Object.assign(this, data);

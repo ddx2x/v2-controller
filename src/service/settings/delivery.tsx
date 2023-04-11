@@ -312,10 +312,18 @@ const expressCompanyStoreTable: StoreTableProps = {
   columns: [
     {
       dataIndex: 'uid',
-      title: '名称',
+      title: 'uid',
       hideInSearch: true,
       editable: false,
       // width: 200,
+      hideInTable: true,
+    },
+    {
+      dataIndex: 'name',
+      title: '快递公司名称',
+      hideInSearch: true,
+      editable: false,
+      width: 200,
       // hideInTable: true,
     },
 
@@ -327,7 +335,6 @@ const expressCompanyStoreTable: StoreTableProps = {
       // width: 200,
       // hideInTable: true,
     },
-
     {
       dataIndex: 'service_number',
       title: '服务电话',
@@ -340,7 +347,6 @@ const expressCompanyStoreTable: StoreTableProps = {
   editableValuesChange: (record) => {
     // const src = storePickupStore.items.find((item) => item.getUid() === record.uid);
     // const update: Partial<StorePickup> = record;
-
     // if (!src) return;
     // if (src?.state !== update.state) {
     //   if (update.state) {
@@ -368,15 +374,10 @@ const expressCompanyStoreTable: StoreTableProps = {
   ],
   tableMenu: (record: any, action: any) => [
     {
-      kind: 'link',
-      title: '编辑',
-      link: '/setting/delivery/expresscompanyedit?id=' + record.uid,
-    },
-    {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        storePickupStore
+        expressCompanyStore
           .remove(record.uid)
           .then(() => {
             notification.info({ message: '删除成功' });
@@ -386,7 +387,7 @@ const expressCompanyStoreTable: StoreTableProps = {
             notification.error(e);
           });
       },
-      text: `确认删除` + record.name,
+      text: `确认删除` + record.uid,
     },
   ],
   onRowEvent: [
@@ -404,7 +405,7 @@ pageManager.register('setting.delivery', {
     view: [
       { kind: 'storeTable', ...deliveryStoreTable },
       { kind: 'storeTable', ...storePickupStoreTable },
-      { kind: 'storeTable', ...expressCompanyStoreTable }, //两个table用反序
+      { kind: 'storeTable', ...expressCompanyStoreTable },
     ],
     container: {
       keepAlive: false,

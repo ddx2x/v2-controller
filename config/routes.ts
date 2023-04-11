@@ -365,7 +365,7 @@ export default [
             parentKeys: ['/setting/delivery'],
             hideInMenu: true,
           },
-
+          
           {
             name: '新增自提点',
             path: '/setting/delivery/storepickupadd',
@@ -376,6 +376,13 @@ export default [
           {
             name: '自提点编辑',
             path: '/setting/delivery/storepickupedit',
+            component: './dynamic-view',
+            parentKeys: ['/setting/delivery'],
+            hideInMenu: true,
+          },
+          {
+            name: '新增快递公司',
+            path: '/setting/delivery/expresscompanyadd',
             component: './dynamic-view',
             parentKeys: ['/setting/delivery'],
             hideInMenu: true,

@@ -8,3 +8,4 @@ export * from './delivery_template_edit';
 export * from './order';
 export * from './product';
 export * from './shop';
+export * from './express_add';

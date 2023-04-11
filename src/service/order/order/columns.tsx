@@ -119,7 +119,7 @@ export const expressCompany: FormColumnsType = {
       });
       let select: any = [];
       rs.map((value: ExpressCompany) => {
-        select.push({ label: value.uid, value: value.uid });
+        select.push({ label: value.name, value: value.uid });
       });
       return select;
     } catch (e) {

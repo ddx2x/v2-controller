@@ -3,7 +3,9 @@ import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
 import { Order, orderApi, OrderStateValueEnum, orderStore } from '@/service/api';
 import { Delivery, deliveryApi } from '@/service/api/delivery.store';
+import { unixtime2dateformat } from '@/service/common';
 import { merge } from 'lodash';
+import { ReactNode } from 'react';
 import { shipForm } from './form';
 
 const shipFormOnMount = async (record: any, form: any, setDataObject: any) => {
@@ -72,6 +74,16 @@ const orderStoreTable: StoreTableProps = {
       title: '订单编号',
       fixed: 'left',
       editable: false,
+    },
+    {
+      dataIndex: 'crate_at',
+      title: '创建时间',
+      valueType: 'date',
+      editable: false,
+      width: 150,
+      render: (text: ReactNode, record: Order, index: number, action: any) => {
+        return [<>{record.version === 0 ? '-' : unixtime2dateformat(record.version || 0)}</>];
+      },
     },
     {
       dataIndex: 'total_render',
