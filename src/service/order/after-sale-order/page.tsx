@@ -38,6 +38,7 @@ const afterSaleOrderStoreTable: StoreTableProps = {
       title: '订单编号',
       fixed: 'left',
       editable: false,
+      width: 205,
     },
     {
       dataIndex: 'total_render',

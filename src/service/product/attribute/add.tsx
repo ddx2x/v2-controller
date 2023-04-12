@@ -231,11 +231,6 @@ const addForm: FormProps = {
       select_type: Number(values.select_type),
       input_type: Number(values.input_type),
       input_select_list: values.input_select_list,
-      // sort: Number(values.sort),
-      // filter_type: Number(values.filter_type),
-      // search_type: Number(values.search_type),
-      // related_status: Number(values.related_status),
-      // hand_add_status: Number(values.hand_add_status),
       type: Number(values.type),
     };
 

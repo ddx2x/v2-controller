@@ -79,13 +79,19 @@ export class OrderSetting extends IObject {
   after_sale_coupon_setting: number | string | undefined;
   predelivery_and_aftersales_application_settings: boolean | undefined;
   after_sale_prompts: string | undefined;
-  buyer_initiates_refund_request_day: number | string | undefined;
-  auto_confirm_buyer_has_returned_day: number | string | undefined;
+  buyer_initiates_refund_request_day: number | undefined;
+  auto_confirm_buyer_has_returned_day: number | undefined;
   buyer_return_method_setting: number[] | string[] | undefined;
 
   constructor(data: OrderSetting) {
     super(data);
     Object.assign(this, data);
+    this.types_of_aftermarket_support_after_shipment =
+      this.types_of_aftermarket_support_after_shipment?.map((item) => String(item));
+    this.after_sale_coupon_setting = String(this.after_sale_coupon_setting);
+    this.buyer_return_method_setting = this.buyer_return_method_setting?.map((item) =>
+      String(item),
+    );
   }
 }
 

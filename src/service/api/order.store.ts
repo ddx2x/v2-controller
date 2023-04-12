@@ -38,7 +38,7 @@ export const OrderStateValueEnum = {
 
 export class Order extends IObject {
   customer: string | undefined;
-  typ: number | undefined;
+  type: number | undefined;
   url: string | undefined;
   full_id: string | undefined;
   is_view: boolean | undefined;
@@ -54,6 +54,9 @@ export class Order extends IObject {
   delivery_map: Map<string, number> | undefined;
   delivery_type: number | string | undefined;
   error_info: string | undefined;
+
+  express_company: string | undefined;
+  express_no: string | undefined;
 
   constructor(data: Order) {
     super(data);

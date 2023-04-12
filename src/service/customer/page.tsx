@@ -50,18 +50,21 @@ const defaultStoreTable: StoreTableProps = {
       title: '成为客户时间',
       hideInSearch: true,
       editable: false,
+      width: 250,
     },
     {
       dataIndex: 'become_member_time',
       title: '成为会员时间',
       hideInSearch: true,
       editable: false,
+      width: 250,
     },
     {
       dataIndex: 'bind_up_level',
       title: '绑定的推荐人',
       hideInSearch: true,
       editable: false,
+      width: 250,
     },
 
     {
@@ -69,6 +72,7 @@ const defaultStoreTable: StoreTableProps = {
       title: '绑定推荐人时间',
       hideInSearch: true,
       editable: false,
+      width: 250,
     },
     {
       dataIndex: 'is_member',
@@ -108,12 +112,14 @@ const defaultStoreTable: StoreTableProps = {
       title: '最后消费时间',
       hideInSearch: true,
       editable: false,
+      width: 250,
     },
     {
       dataIndex: 'after_sales_amount',
       title: '售后金额',
       hideInSearch: true,
       editable: false,
+      width: 150,
     },
     {
       dataIndex: 'after_sales_times',

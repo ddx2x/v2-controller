@@ -18,6 +18,7 @@ export const uid: FormColumnsType = {
 export const merchandiseTable: FormColumnsType = {
   dataIndex: 'merchandiseTable',
   valueType: 'editableTable',
+  editable: false,
   fieldProps: {
     rowKey: 'uid',
     columns: [
@@ -30,7 +31,9 @@ export const merchandiseTable: FormColumnsType = {
         dataIndex: 'merchandise',
         title: '商品信息',
         hideInSearch: true,
+        editable: false,
         valueType: 'merchandise',
+        width: 300,
       },
       {
         dataIndex: 'number1',
@@ -43,33 +46,13 @@ export const merchandiseTable: FormColumnsType = {
         dataIndex: 'number2',
         title: '发货数量',
         valueType: 'digit',
+        editable: false,
         dependencies: ['number1'],
         fieldProps: {
           style: { width: '100%' },
         },
-        // formItemProps: (form: any) => {
-        //   let max = form.getFieldValue('number1') || 0
-        //   console.log('max', max);
-        //   return {
-        //     rules: [
-        //       {
-        //         max: max,
-        //         whitespace: true,
-        //         message: `最长为 ${max} 位`,
-        //       },
-        //       {
-        //         min: 0,
-        //         whitespace: true,
-        //         message: '最小为 0 位',
-        //       },
-        //     ]
-        //   }
-        // }
       },
     ],
-    editableValuesChange: (record) => {
-      console.log(record);
-    },
   },
 };
 
