@@ -216,6 +216,20 @@ export default [
       },
     ],
   },
+  {
+    name: '营销',
+    path: '/marketing',
+    icon: 'shop',
+    routes: [
+      {
+        name: '折扣活动',
+        path: '/marketing/activity',
+        component: './dynamic-view',
+        icon: 'mehTwoTone',
+        routes: [],
+      },
+    ],
+  },
 
   {
     name: '店铺',
@@ -365,7 +379,7 @@ export default [
             parentKeys: ['/setting/delivery'],
             hideInMenu: true,
           },
-          
+
           {
             name: '新增自提点',
             path: '/setting/delivery/storepickupadd',
