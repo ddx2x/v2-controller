@@ -44,8 +44,15 @@ export const requestConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
+      config.headers = {
+        ...config.headers,
+        'Cache-Control': 'no-transform',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODE4NzAzMDcsImV4cCI6MTY4MTg5MTkwN30._4HM456beULOZAMyGeHOjggI1DlqWr8PVYOLIw_43co'
+      };
       return config
     },
+    
   ],
   // 响应拦截器
   responseInterceptors: [

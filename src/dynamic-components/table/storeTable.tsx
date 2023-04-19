@@ -1,5 +1,6 @@
 import { ObjectStore } from '@/client';
 import { observer } from 'mobx-react';
+import { useCallback } from 'react';
 import { Table, TableProps } from './table';
 
 export declare type RequestParams = {
@@ -24,6 +25,45 @@ export declare type StoreTableProps = TableProps & {
 export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
   const { store, defaultPageSize, onRequest, value, useSiderTree, treeStore, treeData, ...rest } =
     props;
+
+  const handleRequest = useCallback(
+    async (
+      params: { [key: string]: any },
+      sort: { [key: string]: any },
+      filter: { [key: string]: any },
+    ) => {
+      const { pageSize: size, current, ...more } = params;
+      // 删除空值
+      Object.keys(more).forEach((key) => {
+        if (more[key] === undefined || more[key] === null || more[key] === '') {
+          delete more[key];
+        }
+      });
+
+      Object.keys(sort).map((k: string) => {
+        if (sort[k] == 'ascend') {
+          sort[k] = 1;
+        }
+        if (sort[k] == 'descend') {
+          sort[k] = 2;
+        }
+      });
+
+      onRequest &&
+        onRequest({
+          query: {
+            limit: { page: current - 1, size: size },
+            sort: sort || {},
+            filter: { ...more, ...filter },
+          },
+          location,
+        });
+
+      return { success: true };
+    },
+    [onRequest, store?.items],
+  );
+
   return (
     <Table
       useSiderTree={useSiderTree}
@@ -41,41 +81,7 @@ export const StoreTable: React.FC<StoreTableProps> = observer((props) => {
       {...(useSiderTree && {
         treeData: treeData || treeStore?.tree || [],
       })}
-      request={async (
-        params: { [key: string]: any },
-        sort: { [key: string]: any },
-        filter: { [key: string]: any },
-      ) => {
-        const { pageSize: size, current, ...more } = params;
-
-        // 删除空值
-        Object.keys(more).forEach((key) => {
-          if (more[key] === undefined || more[key] === null || more[key] === '') {
-            delete more[key];
-          }
-        });
-
-        Object.keys(sort).map((k: string) => {
-          if (sort[k] == 'ascend') {
-            sort[k] = 1;
-          }
-          if (sort[k] == 'descend') {
-            sort[k] = 2;
-          }
-        });
-
-        onRequest &&
-          onRequest({
-            query: {
-              limit: { page: current - 1, size: size },
-              sort: sort || {},
-              filter: { ...more, ...filter },
-            },
-            location,
-          });
-
-        return { success: true };
-      }}
+      request={handleRequest}
       {...rest}
     />
   );
