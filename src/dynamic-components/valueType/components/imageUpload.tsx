@@ -119,7 +119,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           onSuccess={onSuccess}
           onChange={handleChange}
           itemRender={(originNode, file) => {
-            return <Img src={file.url} width={'100%'} />
+            return <div className='ant-upload-list-item ant-upload-list-item-done'><Img src={file.url} width={'100%'} /></div>
           }}
           {...rest}
         >
