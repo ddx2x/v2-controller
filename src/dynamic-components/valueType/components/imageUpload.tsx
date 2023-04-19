@@ -1,12 +1,31 @@
 import { randomKey } from '@/helper';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
-import { Image, Modal, Upload } from 'antd';
+import { Image, Modal, Spin, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { getFileItem, updateFileList } from 'antd/es/upload/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../../helper/utils';
+
+const Img = (props: { src: any; }) => {
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    fetch(props.src, { headers: { 'Headerrrrrrrrr': 'Value' } })
+      .then(response => response.blob())
+      .then(blob => URL.createObjectURL(blob))
+      // @ts-ignore
+      .then(url => setImageUrl(url))
+      .catch(error => console.error(error));
+  }, []);
+
+  return (
+    <div>
+      {imageUrl ? <Image src={imageUrl} width={60} /> : <Spin tip="Loading" size="small" />}
+    </div>
+  );
+};
 
 export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
   prefix?: string
@@ -85,7 +104,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   if (mode == 'read') {
     return (
       <Image.PreviewGroup>
-        {fileList?.map((item: any) => <Image key={randomKey(5)} width={60} src={item.url} />)}
+        {fileList?.map((item: any) => {
+          let _id = randomKey(5)
+          return <Img key={_id} src={item.url} />
+        })}
       </Image.PreviewGroup>
     )
   }
