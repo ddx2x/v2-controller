@@ -33,9 +33,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     fileList = value.fileList
   }
 
-  console.log('fileList', fileList);
-
-
   // 图片预览
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -62,7 +59,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     onChange && onChange({ fileList: fileList });
   };
 
-  const onSuccess = (response, file, xhr) => {
+  const onSuccess = (response: any[], file: RcFile, xhr: any) => {
     let _file = getFileItem(file, fileList)
     let _name = response ? response[0] : _file.name
     let _ = {
@@ -92,8 +89,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
       </Image.PreviewGroup>
     )
   }
-
-  console.log('customRequest', rest, rest['customRequest']);
 
   return (
     <>

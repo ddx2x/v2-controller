@@ -54,7 +54,6 @@ const end_time: FormColumnsType = {
 
 
 
-
 const keywords: FormColumnsType = {
 	dataIndex: 'keywords',
 	title: '关键字',
@@ -81,6 +80,26 @@ const description: FormColumnsType = {
 	},
 };
 
+const predicate: FormColumnsType = {
+	dataIndex: 'predicate',
+	title: '判定',
+};
+
+const action: FormColumnsType = {
+	dataIndex: 'action',
+	title: '操作',
+};
+
+const rule: FormColumnsType = {
+	title: '规则',
+	dataIndex: 'rule',
+	valueType: 'group',
+	columns: [
+		predicate,
+		action
+	],
+}
+
 declare type Query = {
 	id?: string;
 };
@@ -102,6 +121,7 @@ const addForm: FormProps = {
 		end_time,
 		keywords,
 		description,
+		rule
 	],
 	onSubmit: ({ formRef, values, handleClose }) => {
 		let item: Partial<Category> = {
