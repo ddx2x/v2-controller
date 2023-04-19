@@ -19,7 +19,7 @@ export const SearchLabel = (props: SearchLabelProps) => {
         {searchObject.name}
       </Divider>
       <Space style={{ display: 'flex' }} size="small">
-        <Image width={40} src={searchObject.image || defaultImage} />
+        <Image src={searchObject.image || defaultImage} width={40} />
         <Space direction="vertical" size="small" style={{ display: 'flex' }}>
           {searchObject.brand_name && <Tag color="magenta">品牌：{searchObject.brand_name}</Tag>}
           {searchObject.title && <Tag color="cyan">标题：{searchObject.title}</Tag>}

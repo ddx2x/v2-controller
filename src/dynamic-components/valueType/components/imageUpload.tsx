@@ -8,7 +8,7 @@ import { getFileItem, updateFileList } from 'antd/es/upload/utils';
 import { useEffect, useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../../helper/utils';
 
-const Img = (props: { src: any; }) => {
+export const Img = (props: any) => {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Img = (props: { src: any; }) => {
 
   return (
     <div>
-      {imageUrl ? <Image src={imageUrl} width={60} /> : <Spin tip="Loading" size="small" />}
+      {imageUrl ? <Image src={imageUrl} width={props.width || 60} /> : <Spin tip="Loading" size="small" />}
     </div>
   );
 };
@@ -124,6 +124,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           // @ts-ignore
           onSuccess={onSuccess}
           onChange={handleChange}
+          itemRender={(originNode, file) => {
+            return <Img src={file.url} width={'100%'} />
+          }}
           {...rest}
         >
           {(typeof maxNumber == 'number' && fileList?.length >= maxNumber) ? null : button}

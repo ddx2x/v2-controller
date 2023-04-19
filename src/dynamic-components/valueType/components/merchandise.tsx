@@ -1,5 +1,6 @@
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
 import { Card, Col, Descriptions, Divider, Image, Row } from 'antd';
+import { Img } from './imageUpload';
 
 export declare type MerchandiseProps = ProFieldFCRenderProps & {
 }
@@ -11,7 +12,7 @@ export const Merchandise: React.FC<MerchandiseListProps> = (props) => {
   return (
     <Row justify="space-around" align="top">
       <Col span={8} style={{ paddingTop: '3%' }} >
-        <Image src={image} width={'100%'} />
+        <Img src={image} width={'100%'} />
       </Col>
       <Col span={13}>
         <Descriptions column={1} title={title} size={'small'} style={{ marginBottom: 0 }}>
