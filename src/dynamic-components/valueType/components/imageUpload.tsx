@@ -8,16 +8,21 @@ import { getFileItem, updateFileList } from 'antd/es/upload/utils';
 import { useEffect, useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../../helper/utils';
 
-const Img = (props: { src: any; }) => {
+const Img = (props: { src: any }) => {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-    fetch(props.src, { headers: { 'Headerrrrrrrrr': 'Value' } })
-      .then(response => response.blob())
-      .then(blob => URL.createObjectURL(blob))
+    fetch(props.src, {
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODE4NzAzMDcsImV4cCI6MTY4MTg5MTkwN30._4HM456beULOZAMyGeHOjggI1DlqWr8PVYOLIw_43co',
+      },
+    })
+      .then((response) => response.blob())
+      .then((blob) => URL.createObjectURL(blob))
       // @ts-ignore
-      .then(url => setImageUrl(url))
-      .catch(error => console.error(error));
+      .then((url) => setImageUrl(url))
+      .catch((error) => console.error(error));
   }, []);
 
   return (
@@ -27,29 +32,19 @@ const Img = (props: { src: any; }) => {
   );
 };
 
-export declare type ImageUploadProps = UploadProps & ProFieldFCRenderProps & {
-  prefix?: string
-  maxNumber?: number;
-  buttonText?: string;
-};
+export declare type ImageUploadProps = UploadProps &
+  ProFieldFCRenderProps & {
+    prefix?: string;
+    maxNumber?: number;
+    buttonText?: string;
+  };
 
 export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
+  const { name, listType, prefix, maxNumber, buttonText, mode, value, onChange, ...rest } = props;
 
-  const {
-    name,
-    listType,
-    prefix,
-    maxNumber,
-    buttonText,
-    mode,
-    value,
-    onChange,
-    ...rest
-  } = props;
-
-  let fileList: any = []
+  let fileList: any = [];
   if (value?.fileList && Array.isArray(value.fileList)) {
-    fileList = value.fileList
+    fileList = value.fileList;
   }
 
   // 图片预览
@@ -79,14 +74,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
   };
 
   const onSuccess = (response: any[], file: RcFile, xhr: any) => {
-    let _file = getFileItem(file, fileList)
-    let _name = response ? response[0] : _file.name
+    let _file = getFileItem(file, fileList);
+    let _name = response ? response[0] : _file.name;
     let _ = {
       uid: _file.uid,
       name: _name,
-      url: prefix ? prefix + _name : _name
-    }
-    let _fileList = updateFileList(_, fileList)
+      url: prefix ? prefix + _name : _name,
+    };
+    let _fileList = updateFileList(_, fileList);
     onChange && onChange({ fileList: _fileList });
   };
 
@@ -100,21 +95,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     </div>
   );
 
-
   if (mode == 'read') {
     return (
       <Image.PreviewGroup>
         {fileList?.map((item: any) => {
-          let _id = randomKey(5)
-          return <Img key={_id} src={item.url} />
+          let _id = randomKey(5);
+          return <Img key={_id} src={item.url} />;
         })}
       </Image.PreviewGroup>
-    )
+    );
   }
 
   return (
     <>
-      <ImgCrop rotationSlider aspectSlider showGrid zoomSlider quality={1} modalTitle='图标编辑'>
+      <ImgCrop rotationSlider aspectSlider showGrid zoomSlider quality={1} modalTitle="图标编辑">
         <Upload
           name={name || 'file'}
           listType={listType || 'picture-card'}
@@ -126,7 +120,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           onChange={handleChange}
           {...rest}
         >
-          {(typeof maxNumber == 'number' && fileList?.length >= maxNumber) ? null : button}
+          {typeof maxNumber == 'number' && fileList?.length >= maxNumber ? null : button}
         </Upload>
       </ImgCrop>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel}>
@@ -134,14 +128,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
       </Modal>
     </>
   );
-
 };
 
-
 export const ImageUploadRender: React.FC<ImageUploadProps> = (props) => {
-  return <ImageUpload {...props} />
-}
+  return <ImageUpload {...props} />;
+};
 
 export const ImageUploadRenderFormItem: React.FC<ImageUploadProps> = (props) => {
-  return <ImageUpload {...props} />
-}
+  return <ImageUpload {...props} />;
+};
