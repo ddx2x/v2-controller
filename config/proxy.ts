@@ -21,37 +21,37 @@ export default {
       logger: console,
     },
     '/product-t/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,
     },
     '/trade-t/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,
     },
     '/cms-t/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,
     },
     '/settings/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,
     },
     '/base/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       logger: console,
     },
     '/search/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       // changeOrigin: true,
       logger: console,
     },
     '/watch/**': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:3000',
       // changeOrigin: true,
       logger: console,
     },
@@ -60,13 +60,13 @@ export default {
       // changeOrigin: true,
     },
     '/media-t/**': {
-      target: 'http://0.0.0.0:8080',
+      target: 'http://0.0.0.0:3000',
     },
     '/ums-t/**': {
-      target: 'http://0.0.0.0:8080',
+      target: 'http://0.0.0.0:3000',
     },
     '/search-t/**': {
-      target: 'http://0.0.0.0:8080',
+      target: 'http://0.0.0.0:3000',
     },
   },
 };
