@@ -226,7 +226,15 @@ export default [
         path: '/marketing/activity',
         component: './dynamic-view',
         icon: 'mehTwoTone',
-        routes: [],
+        routes: [
+          {
+            name: '商品品牌新增',
+            path: '/marketing/activity/add',
+            component: './dynamic-view',
+            parentKeys: ['/marketing/activity'],
+            hideInMenu: true,
+          },
+        ],
       },
     ],
   },

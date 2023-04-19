@@ -77,7 +77,11 @@ const defaultStoreTable: StoreTableProps = {
     editableValuesChange: (record: any) => {
     },
     toolBarMenu: (selectedRows: any) => [
-
+        {
+            kind: 'link',
+            title: '新增',
+            link: `/marketing/activity/add`,
+        },
     ],
 
     onRowEvent: [
