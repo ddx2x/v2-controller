@@ -74,6 +74,7 @@ const editForm: FormProps = {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();
 				// 跳转至数据编辑页
+				history.push('/marketing/activity');
 			})
 			.catch((e) => notification.error(e))
 

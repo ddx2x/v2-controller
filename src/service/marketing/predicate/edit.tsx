@@ -6,10 +6,6 @@ import { history } from '@umijs/max';
 import { name_column, key, value } from './column';
 import { MarketingPredicate, marketingPredicateApi, marketingPredicateStore } from '@/service/api/marketingPredicate.store';
 
-let editName: any = name
-editName.fieldProps ? editName.fieldProps['disabled'] = true : null;
-
-
 // kind: form
 const editForm: FormProps = {
 	onMount: ({ location, form, setDataObject }) => {
@@ -19,7 +15,6 @@ const editForm: FormProps = {
 
 		marketingPredicateApi.get(query.id).then((rs) => {
 			setDataObject(rs);
-
 			let data = {
 				...rs,
 				key: rs?.key?.toString(),
@@ -49,9 +44,7 @@ const editForm: FormProps = {
 		marketingPredicateStore.update_one(dataObject, item, ["name", "key", "value"]).
 			then(() => {
 				notification.success({ message: "保存成功" });
-				formRef.current?.resetFields();
 				history.push(`/marketing/predicate`)
-				// 跳转至数据编辑页
 			})
 			.catch((e) => {
 				notification.error(e)
