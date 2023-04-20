@@ -55,7 +55,7 @@ const end_time: FormColumnsType = {
 const predicate: FormColumnsType = {
 	dataIndex: 'predicate',
 	title: '判定条件',
-	valueType: 'select',
+	valueType: 'objectSelect',
 	formItemProps: {
 		rules: [
 			{
@@ -75,7 +75,7 @@ const predicate: FormColumnsType = {
 			});
 			let select: any = [];
 			predicate.map((value) => {
-				select.push({ label: value.name, value: value.uid });
+				select.push({ label: value.name, value: value.uid, option: value });
 			});
 			return select;
 		} catch (e) {
