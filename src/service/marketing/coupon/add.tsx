@@ -3,7 +3,8 @@ import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { MarketingActivity, Rule, marketingActivityApi } from '@/service/api/marketingActivity.store';
-import { name_column, description, start_time, end_time, rule, merchant, global, state } from './column';
+import { name_column, description, expire, max_claimable, perpetual, rule, merchant, global, state } from './column';
+import { MarketingCoupon, marketingCouponApi } from '@/service/api/marketingCoupon.store';
 
 const addForm: FormProps = {
 	onMount: ({ location, form, setDataObject }) => {
@@ -14,10 +15,11 @@ const addForm: FormProps = {
 	columns: [
 		name_column,
 		description,
-		start_time,
-		end_time,
+		max_claimable,
+		expire,
 		rule,
 		merchant,
+		perpetual,
 		global,
 		state,
 	],
@@ -26,23 +28,24 @@ const addForm: FormProps = {
 			predicate: values.predicate.option,
 			action: values.action.option
 		}
-		let item: Partial<MarketingActivity> = {
+		let item: Partial<MarketingCoupon> = {
 			name: values.name,
 			description: values.description,
 			merchant: values.merchant,
-			start_time: Date.parse(values.start_time_format) / 1000,
-			end_time: Date.parse(values.end_time_format) / 1000,
+			expire: Date.parse(values.expire_format) / 1000,
+			perpetual: values.perpetual === 'true' ? true : false,
 			global: values.global === 'true' ? true : false,
 			rule: rule,
 			state: Number(values.state),
+			max_claimable: Number(values.max_claimable),
 		};
 
-		marketingActivityApi.create(undefined, item).
+		marketingCouponApi.create(undefined, item).
 			then(() => {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();
 				// 跳转至数据编辑页
-				history.push(`/marketing/activity`)
+				history.push(`/marketing/coupon`)
 			})
 			.catch((e) => notification.error(e))
 		handleClose();
@@ -50,7 +53,7 @@ const addForm: FormProps = {
 	}
 };
 
-pageManager.register('marketing.activity.add', {
+pageManager.register('marketing.coupon.add', {
 	page: {
 		view: [{ kind: 'form', ...addForm }],
 		container: {

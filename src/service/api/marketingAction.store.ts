@@ -2,8 +2,9 @@ import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
 export const MarketingActionOpValueEnum = {
-    2: { text: '减', status: 'subtraction' },
-    4: { text: '除', status: 'division' },
+    2: { text: '相减', status: 'subtraction' },
+    3: { text: '相乘', status: 'multiplication' },
+    4: { text: '相除', status: 'division' },
 };
 
 export class MarketingAction extends IObject {

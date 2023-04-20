@@ -1,7 +1,7 @@
 import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
 
-export const MarketingActivityStateValueEnum = {
+export const MarketingPredicateKeyValueEnum = {
     1: { text: '按价格满减', status: 'price' },
     2: { text: '按数量满减', status: 'quantity' },
 };

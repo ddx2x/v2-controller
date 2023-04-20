@@ -113,7 +113,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   @action async update_one(item: T, partial: Partial<T>, fields: string[], query?: Query): Promise<T> {
     const q = this.querys(query);
     const newItem = await item.update(this, { fields: fields, item: partial }, item.getUid(), q);
-    const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
+    const index = this.data.findIndex((old: T) => old.uid === newItem?.uid);
     this.data.splice(index, 1, newItem);
     return newItem;
   }

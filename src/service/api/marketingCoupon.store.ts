@@ -23,72 +23,57 @@ export interface Rule {
     action: Action | undefined;
 }
 
-
-export const MarketingActivityStateValueEnum = {
+export const MarketingCouponStateValueEnum = {
     1: { text: '可用', status: 'available' },
     2: { text: '不可用', status: 'unavailable' },
 };
 
-
-export class MarketingActivity extends IObject {
+export class MarketingCoupon extends IObject {
     name: string | undefined;
     description: string | undefined;
-    start_time: number | undefined;
-    end_time: number | undefined;
+    expire: number | undefined;
+    perpetual: boolean | undefined;
 
     rule: Rule | undefined;
     merchant: string | undefined;
     global: boolean | undefined;
     state: number | undefined;
-
+    max_claimable: number | undefined;
     //
-    start_time_format: String | undefined;
-    end_time_format: String | undefined;
+    expire_format: String | undefined;
     global_format: String | undefined;
 
-    constructor(data: MarketingActivity) {
+    constructor(data: MarketingCoupon) {
         super(data);
         Object.assign(this, data);
 
         this.global_format = this.global ? '是' : '否';
 
-        let date = new Date(this.start_time ? this.start_time * 1000 : 0);
+        let date = new Date(this.expire ? this.expire * 1000 : 0);
         let year = date.getFullYear();
         let month = date.getMonth() + 1; // 月份是从0开始计数的，所以要加1
         let day = date.getDate();
         let hours = date.getHours();
         let minutes = date.getMinutes();
 
-        this.start_time_format = `${year}-${month}-${day} ${hours}:${minutes}`;
-
-
-        date = new Date(this.end_time ? this.end_time * 1000 : 0);
-        year = date.getFullYear();
-        month = date.getMonth() + 1; // 月份是从0开始计数的，所以要加1
-        day = date.getDate();
-        hours = date.getHours();
-        minutes = date.getMinutes();
-
-        this.end_time_format = `${year}-${month}-${day} ${hours}:${minutes}`;
-
-
+        this.expire_format = `${year}-${month}-${day} ${hours}:${minutes}`;
     }
 }
 
-export const marketingActivityApi = new ObjectApi<MarketingActivity>({
-    url: '/api/v1/marketing_activity',
-    objectConstructor: MarketingActivity,
+export const marketingCouponApi = new ObjectApi<MarketingCoupon>({
+    url: '/api/v1/marketing_coupon',
+    objectConstructor: MarketingCoupon,
     service: 'trade-t',
 });
 
-class MarketingActivityStore extends ObjectStore<MarketingActivity> {
-    api: ObjectApi<MarketingActivity>;
-    watchApi: WatchApi<MarketingActivity>;
-    constructor(api: ObjectApi<MarketingActivity>, watchApi: WatchApi<MarketingActivity>) {
+class MarketingCouponStore extends ObjectStore<MarketingCoupon> {
+    api: ObjectApi<MarketingCoupon>;
+    watchApi: WatchApi<MarketingCoupon>;
+    constructor(api: ObjectApi<MarketingCoupon>, watchApi: WatchApi<MarketingCoupon>) {
         super();
         this.api = api;
         this.watchApi = watchApi;
     }
 }
 
-export const marketingActivityStore = new MarketingActivityStore(marketingActivityApi, new DefaultWatchApi());
+export const marketingCouponStore = new MarketingCouponStore(marketingCouponApi, new DefaultWatchApi());

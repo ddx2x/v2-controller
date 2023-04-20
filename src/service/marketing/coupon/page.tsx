@@ -1,14 +1,12 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { merge } from 'lodash';
-import {
-    MarketingActivityStateValueEnum,
-    marketingActivityStore,
-} from '../../api/marketingActivity.store';
+
+import { MarketingCouponStateValueEnum, marketingCouponStore } from '@/service/api/marketingCoupon.store';
 
 const defaultStoreTable: StoreTableProps = {
     // toolbarTitle: '折扣列表',
-    store: marketingActivityStore,
+    store: marketingCouponStore,
     rowKey: 'uid',
     search: false,
     defaultPageSize: 10,
@@ -20,7 +18,7 @@ const defaultStoreTable: StoreTableProps = {
         },
         {
             dataIndex: 'name',
-            title: '活动名称',
+            title: '优惠卷名称',
             hideInSearch: true,
             editable: false,
             fixed: 'left',
@@ -28,22 +26,15 @@ const defaultStoreTable: StoreTableProps = {
         },
         {
             dataIndex: 'description',
-            title: '活动描述',
+            title: '优惠卷描述',
             hideInSearch: true,
             editable: false,
             fixed: 'left',
             width: 120,
         },
         {
-            dataIndex: 'start_time_format',
-            title: '活动开始时间',
-            hideInSearch: true,
-            editable: false,
-            width: 250,
-        },
-        {
-            dataIndex: 'end_time_format',
-            title: '活动结束时间',
+            dataIndex: 'expire_format',
+            title: '过期时间',
             hideInSearch: true,
             editable: false,
             width: 250,
@@ -51,6 +42,13 @@ const defaultStoreTable: StoreTableProps = {
         {
             dataIndex: 'merchant',
             title: '创建商户',
+            hideInSearch: true,
+            editable: false,
+            width: 250,
+        },
+        {
+            dataIndex: 'max_claimable',
+            title: '最大领取数',
             hideInSearch: true,
             editable: false,
             width: 250,
@@ -68,7 +66,7 @@ const defaultStoreTable: StoreTableProps = {
             editable: false,
             valueType: 'select',
             hideInSearch: true,
-            valueEnum: MarketingActivityStateValueEnum,
+            valueEnum: MarketingCouponStateValueEnum,
             width: 250,
         },
 
@@ -79,14 +77,14 @@ const defaultStoreTable: StoreTableProps = {
         {
             kind: 'link',
             title: '新增',
-            link: `/marketing/activity/add`,
+            link: `/marketing/coupon/add`,
         },
     ],
     tableMenu: (record, action) => [
         {
             kind: 'link',
             title: '编辑',
-            link: '/marketing/activity/edit?id=' + record.uid
+            link: '/marketing/coupon/edit?id=' + record.uid
         },
     ],
     onRowEvent: [
@@ -97,11 +95,11 @@ const defaultStoreTable: StoreTableProps = {
     ],
     batchDelete: (selectedRows: any) => console.log('batchDelete', selectedRows),
     onRequest: ({ query }) => {
-        marketingActivityStore.next(merge(query, { filter: {}, sort: { version: 1 } }));
+        marketingCouponStore.next(merge(query, { filter: {}, sort: { version: 1 } }));
     },
 };
 
-pageManager.register('marketing.activity', {
+pageManager.register('marketing.coupon', {
     page: {
         view: [{ kind: 'storeTable', ...defaultStoreTable }],
         container: {
@@ -110,8 +108,8 @@ pageManager.register('marketing.activity', {
     },
     stores: [
         {
-            store: marketingActivityStore,
-            exit: marketingActivityStore.reset,
+            store: marketingCouponStore,
+            exit: marketingCouponStore.reset,
         },
     ],
 });
