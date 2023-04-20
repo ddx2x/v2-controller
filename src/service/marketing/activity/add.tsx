@@ -3,7 +3,9 @@ import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { parse } from 'querystring';
-import { Category, categoryApi } from '../../api/productCategory.store';
+import { marketingPredicateApi } from '@/service/api/marketingPredicate.store';
+import { marketingActionApi } from '@/service/api/marketingAction.store';
+import { MarketingActivity, marketingActivityApi } from '@/service/api/marketingActivity.store';
 
 const name: FormColumnsType = {
 	title: '活动名称',
@@ -50,16 +52,44 @@ const end_time: FormColumnsType = {
 	},
 };
 
+const predicate: FormColumnsType = {
+	dataIndex: 'predicate',
+	title: '判定条件',
+	valueType: 'select',
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
+	fieldProps: {
+		placeholder: '请选择判定条件',
+	},
+	request: async () => {
+		try {
+			const predicate = await marketingPredicateApi.list(undefined, {
+				limit: { page: 0, size: 500 },
+				sort: { version: 1 },
+			});
+			let select: any = [];
+			predicate.map((value) => {
+				select.push({ label: value.name, value: value.uid });
+			});
+			return select;
+		} catch (e) {
+			return [];
+		}
+	},
+};
 
-
-
-
-const keywords: FormColumnsType = {
-	dataIndex: 'keywords',
-	title: '关键字',
+const action: FormColumnsType = {
+	dataIndex: 'action',
+	title: '满减操作',
 	valueType: 'select',
 	fieldProps: {
-		mode: "tags",
+		placeholder: '请选择满减操作',
 	},
 	formItemProps: {
 		rules: [
@@ -69,25 +99,21 @@ const keywords: FormColumnsType = {
 			},
 		],
 	},
-};
-
-const description: FormColumnsType = {
-	dataIndex: 'description',
-	title: '描述',
-	valueType: 'textarea',
-	fieldProps: {
-		mode: "tags",
+	request: async () => {
+		try {
+			const predicate = await marketingActionApi.list(undefined, {
+				limit: { page: 0, size: 500 },
+				sort: { version: 1 },
+			});
+			let select: any = [];
+			predicate.map((value) => {
+				select.push({ label: value.name, value: value.uid });
+			});
+			return select;
+		} catch (e) {
+			return [];
+		}
 	},
-};
-
-const predicate: FormColumnsType = {
-	dataIndex: 'predicate',
-	title: '判定',
-};
-
-const action: FormColumnsType = {
-	dataIndex: 'action',
-	title: '操作',
 };
 
 const rule: FormColumnsType = {
@@ -100,6 +126,25 @@ const rule: FormColumnsType = {
 	],
 }
 
+const global: FormColumnsType = {
+	title: '是否全局应用到商城',
+	dataIndex: 'global',
+	valueType: 'select',
+	formItemProps: {
+		rules: [
+			{
+				required: true,
+				message: '此项为必填项',
+			},
+		],
+	},
+	valueEnum: {
+		true: '是',
+		false: '否',
+
+	},
+}
+
 declare type Query = {
 	id?: string;
 };
@@ -109,9 +154,6 @@ declare type Query = {
 const addForm: FormProps = {
 	onMount: ({ location, form, setDataObject }) => {
 		form?.resetFields();
-		if (location === undefined) return;
-		const query: Query = parse(location?.search.split('?')[1] || '');
-		form?.setFieldsValue({ "category_id": query.id });
 	},
 	layoutType: 'Form',
 	shouldUpdate: false,
@@ -119,27 +161,23 @@ const addForm: FormProps = {
 		name,
 		start_time,
 		end_time,
-		keywords,
-		description,
-		rule
+		rule,
+		global
+
 	],
 	onSubmit: ({ formRef, values, handleClose }) => {
-		let item: Partial<Category> = {
-			uid: values.uid,
-			level: Number(values.level),
-			parent_id: values.parent_id || "",
-			full_id: values.full_id || "",
-			nav_status: Number(values.nav_status),
-			keywords: values.keywords,
-			description: values.description || "",
+		let item: Partial<MarketingActivity> = {
+			...values,
+			start_time: Date.parse(values.start_time) / 1000,
+			end_time: Date.parse(values.end_time) / 1000,
 		};
 
-		categoryApi.create(undefined, item).
+		marketingActivityApi.create(undefined, item).
 			then(() => {
 				notification.success({ message: "保存成功" });
 				formRef.current?.resetFields();
 				// 跳转至数据编辑页
-				history.push(`/product/category`)
+				history.push(`/marketing/activity`)
 			})
 			.catch((e) => notification.error(e))
 		handleClose();
