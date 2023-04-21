@@ -1,9 +1,11 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { brandApi } from '@/service/api';
+import { unixtime2dateformat } from '@/service/common';
 import { history, request } from '@umijs/max';
 import { message, notification } from 'antd';
 import { merge } from 'lodash';
+import { ReactNode } from 'react';
 import { Product, productApi, productStore } from '../../api/productProduct.store';
 import { detail } from './detail';
 
@@ -73,6 +75,7 @@ const productStoreTable: StoreTableProps = {
       valueType: 'select',
       fieldProps: {},
       editable: false,
+      sorter: true,
       request: async () => {
         try {
           const rs = await brandApi.list(undefined, {
@@ -95,6 +98,7 @@ const productStoreTable: StoreTableProps = {
       tooltip: '支持全文索引',
       editable: false,
       valueType: 'autoComplete',
+      sorter: true,
       fieldProps: (form) => {
         async function onSearch(text: string) {
           return await request(
@@ -159,6 +163,19 @@ const productStoreTable: StoreTableProps = {
       hideInSearch: true,
       valueType: 'digit',
       editable: false,
+      sorter: true,
+    },
+    {
+      dataIndex: 'version',
+      title: '更新时间',
+      hideInSearch: true,
+      valueType: 'dateTime',
+      editable: false,
+      width: 200,
+      sorter: true,
+      render: (text: ReactNode, record: Product, index: number, action: any) => {
+        return [<>{record.version === 0 ? '-' : unixtime2dateformat(record.version || 0)}</>];
+      },
     },
   ],
   editableValuesChange: (record: Product) => {

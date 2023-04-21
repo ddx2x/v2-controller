@@ -1,6 +1,6 @@
 ﻿import type { AxiosResponse, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 
 export const writeLog = (log: AxiosResponse) => {
   const { config, ...params } = log;
@@ -21,7 +21,7 @@ export const writeLog = (log: AxiosResponse) => {
 export const requestConfig: RequestConfig = {
   headers: {
     'Cache-Control': 'no-transform',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   },
   transformResponse: (data) => {
     try {
@@ -38,7 +38,11 @@ export const requestConfig: RequestConfig = {
     },
     // 错误接收及处理
     errorHandler: (error: any, opts: any) => {
-      message.error(error.message);
+      if (error.response.status === 401) {
+        notification.warning({ message: '登录过期，请重新登录' });
+      } else if (error.response.status === 403) {
+        notification.warning({ message: '没有权限，请联系管理员' });
+      }
     },
   },
   // 请求拦截器
@@ -48,11 +52,13 @@ export const requestConfig: RequestConfig = {
         ...config.headers,
         'Cache-Control': 'no-transform',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODE4NzAzMDcsImV4cCI6MTY4MTg5MTkwN30._4HM456beULOZAMyGeHOjggI1DlqWr8PVYOLIw_43co'
+        // 13922313389
+        // 'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiMTM5MjIzMTMzODkiLCJpYXQiOjE2ODIwNDE2NjEsImV4cCI6MTY4MjA2MzI2MX0.Mj9-ho604KOROIDuLbMFlT_XlX7QML9K70HfcKLvE8A',
+        // admin
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODIwNDE2OTIsImV4cCI6MjA0MjA0MTY5Mn0.5MToBq8m1NI8y8QgzRw8fRfv3iCd6z2RcKVdOH8ERN0'
       };
-      return config
+      return config;
     },
-    
   ],
   // 响应拦截器
   responseInterceptors: [

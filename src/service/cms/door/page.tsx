@@ -134,7 +134,7 @@ const storeTable: StoreTableProps = {
 
     if (treeNode) {
       delete query['filter']['treeNode'];
-
+  
       if (treeNode.key === '') {
       } else if (treeNode.children && treeNode.children.length > 0) {
         query = merge(query, { filter: { first_name: treeNode.title } });

@@ -2,23 +2,30 @@ import { DescriptionsProps } from '@/dynamic-components';
 import {
   album_pics,
   brand_name,
-  delete_status, details,
+  delete_status,
+  details,
   feight_template_id,
-  keywords, name, new_status, note, preview_status, product_category_name,
-  product_sn, recommand_status,
+  keywords,
+  name,
+  new_status,
+  note,
+  preview_status,
+  product_category_name,
+  product_sn,
+  recommand_status,
   service_ids,
   sort,
   sub_title,
-  weight
+  weight,
 } from './columns';
 
 export const detail: DescriptionsProps = {
   modal: 'Drawer',
   bordered: true,
   columns: [
+    name,
     product_category_name,
     brand_name,
-    name,
     product_sn,
     delete_status,
     new_status,
@@ -34,5 +41,5 @@ export const detail: DescriptionsProps = {
     album_pics,
     details,
   ] as DescriptionsProps['columns'],
-  layout: 'horizontal'
-}
+  layout: 'horizontal',
+};

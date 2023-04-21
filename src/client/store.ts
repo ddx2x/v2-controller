@@ -15,7 +15,6 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   abstract watchApi: WatchApi<T>;
 
   public limit: number = -1;
-  public count: number = 0; //返回的数据行
 
   private defers: Noop[] = [];
   private modifyEvtListeners: ModifyIObject<T>[] = [];
@@ -55,7 +54,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
   protected bindDataBuffersUpdater = (delay = 200) => {
     return reaction(
       () => this.dataBuffers.slice()[0],
-      () => { },
+      () => {},
       {
         delay: delay,
       },
@@ -64,6 +63,7 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
 
   @action next = async (query?: Query) => {
     const { limit, sort, filter, ...rest } = !query ? this.ctx : query;
+
     if (limit === undefined || sort === undefined) return;
     this.reset();
 
@@ -96,12 +96,12 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     const newItem = await this.api.get(paramster, q);
     const index = this.data.findIndex((old: T) => old.uid === newItem.uid);
     if (index < 1) {
-      this.data.push(newItem)
+      this.data.push(newItem);
     } else {
       this.data.splice(index, 1, newItem);
     }
     return newItem;
-  }
+  };
 
   @action create = async (partial?: Partial<T>, query?: Query): Promise<T> => {
     const q = this.querys(query);
@@ -110,7 +110,12 @@ export abstract class ObjectStore<T extends IObject> extends ItemStore<T> {
     return newItem;
   };
 
-  @action async update_one(item: T, partial: Partial<T>, fields: string[], query?: Query): Promise<T> {
+  @action async update_one(
+    item: T,
+    partial: Partial<T>,
+    fields: string[],
+    query?: Query,
+  ): Promise<T> {
     const q = this.querys(query);
     const newItem = await item.update(this, { fields: fields, item: partial }, item.getUid(), q);
     const index = this.data.findIndex((old: T) => old.uid === newItem.uid);

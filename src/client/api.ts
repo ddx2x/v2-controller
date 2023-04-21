@@ -112,7 +112,7 @@ export class ObjectApi<T extends IObject = any> {
     if (IObject.isObjectDataList(data)) {
       const { version, count, items } = data;
       if (this.version < version) this.version = version;
-      if (this.store) this.store.count = count || 0;
+      if (this.store) this.store.count.set(count || 0);
       return items.map((item) => new this.objectConstructor({ ...item }));
     }
 

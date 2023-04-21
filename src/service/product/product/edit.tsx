@@ -9,9 +9,7 @@ import {
   album_pics,
   brand_name,
   details,
-  feight_template_id,
   keywords,
-  low_stock,
   name,
   new_status,
   price,
@@ -48,31 +46,68 @@ const editForm: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
+  layout: 'horizontal',
+  colProps: {},
   columns: [
-    merge(sub_title, { fieldProps: { disabled: true } }),
-    merge(name, { fieldProps: { disabled: true } }),
-    merge(brand_name, { fieldProps: { disabled: true } }),
-    merge(product_category_name, { fieldProps: { disabled: false } }),
-    price,
-    merge(product_sn, { fieldProps: { disabled: false } }),
-    service_ids,
-    keywords,
-    new_status,
-    recommand_status,
+    {
+      valueType: 'group',
+      title: '基本信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [
+        merge(product_category_name, { fieldProps: { disabled: true } }),
 
-    feight_template_id,
+        merge(sub_title, { fieldProps: { disabled: true } }),
+        merge(name, { fieldProps: { disabled: true } }),
+        ,
+        merge(brand_name, { fieldProps: { disabled: true } }),
+        price,
+      ],
+    },
 
-    low_stock,
-    sort,
+    {
+      valueType: 'group',
+      title: '其他信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [
+        merge(product_sn, { fieldProps: { disabled: false } }),
+        new_status,
+        recommand_status,
+        service_ids,
+        keywords,
+        sort,
+      ],
+    },
 
-    album_pics,
+    {
+      valueType: 'group',
+      title: '促销信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [promotion_type, promotion_start_time, promotion_end_time, promotion_per_limit],
+    },
 
-    promotion_type,
-    promotion_start_time,
-    promotion_end_time,
-    promotion_per_limit,
+    {
+      valueType: 'group',
+      title: '图片信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [album_pics],
+    },
 
-    details,
+    {
+      valueType: 'group',
+      title: '更多信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [details],
+    },
   ],
   onSubmit: ({ values, dataObject, handleClose }) => {
     let target: Partial<Product> = {
@@ -90,7 +125,7 @@ const editForm: FormProps = {
       promotion_end_time: values.promotion_end_time,
       price: Number(values.price),
 
-      publish_status: values.publish_status ? 1 : 0,
+      // publish_status: values.publish_status,
       new_status: values.new_status ? 1 : 0,
       recommand_status: values.recommand_status ? 1 : 0,
 
@@ -113,7 +148,6 @@ const editForm: FormProps = {
         'low_stock',
         'keywords',
         'unit',
-        'publish_status',
         'price',
         'new_status',
         'recommand_status',

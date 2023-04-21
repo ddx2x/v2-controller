@@ -32,6 +32,7 @@ export const brand_name: FormColumnsType = {
   valueType: 'select',
   fieldProps: {
     placeholder: '请输入品牌名称',
+    style: {},
   },
   formItemProps: {
     rules: [
@@ -193,6 +194,11 @@ export const new_status: FormColumnsType = {
   hideInSearch: true,
   editable: false,
   valueType: 'switch',
+  fieldProps: {
+    style: {
+      width: '40%',
+    },
+  },
   valueEnum: {
     false: false,
     true: true,

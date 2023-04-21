@@ -28,29 +28,62 @@ import {
 const addForm: FormProps = {
   layoutType: 'Form',
   shouldUpdate: false,
+  // grid: true,
+  layout: 'horizontal',
+  colProps: {},
   columns: [
-    cloneDeep(product_category_name),
+    {
+      valueType: 'group',
+      title: '基本信息',
 
-    cloneDeep(sub_title),
-    cloneDeep(name),
-    cloneDeep(brand_name),
-    cloneDeep(product_sn),
-    price,
-    new_status,
-    recommand_status,
+      fieldProps: {
+        style: {},
+      },
+      columns: [
+        cloneDeep(product_category_name),
 
-    service_ids,
-    keywords,
-    sort,
+        cloneDeep(sub_title),
+        cloneDeep(name),
+        cloneDeep(brand_name),
+        price,
+      ],
+    },
 
-    album_pics,
+    {
+      valueType: 'group',
+      title: '其他信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [cloneDeep(product_sn), new_status, recommand_status, service_ids, keywords, sort],
+    },
 
-    promotion_type,
-    promotion_start_time,
-    promotion_end_time,
-    promotion_per_limit,
+    {
+      valueType: 'group',
+      title: '促销信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [promotion_type, promotion_start_time, promotion_end_time, promotion_per_limit],
+    },
 
-    details,
+    {
+      valueType: 'group',
+      title: '图片信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [album_pics],
+    },
+
+    {
+      valueType: 'group',
+      title: '更多信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [details],
+    },
   ],
   onSubmit: ({ values, handleClose }) => {
     let target: Partial<Product> = {
