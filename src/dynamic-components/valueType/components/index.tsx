@@ -11,6 +11,7 @@ import {
   MerchandiseProps, MerchandiseRender, MerchandiseRenderFormItem
 } from './merchandise';
 import { MonacoEditorProps, MonacoEditorRender, MonacoEditorRenderFormItem } from './monacoEditor';
+import { ObjectSelectProps, ObjectSelectRender, ObjectSelectRenderFormItem } from './objectSelect';
 import { QuillProps, QuillRender, QuillRenderFormItem } from './quill';
 import { StepsFormItem, StepsProps, StepsRender } from './steps';
 import { TagProps, TagRender, TagRenderFormItem } from './tag';
@@ -35,7 +36,8 @@ declare module '@ant-design/pro-utils' {
     editableTable: EditableTableProps;
     autoComplete: AutoCompleteProps;
     checkboxsTabs: CheckboxsTabsProps;
-    transfer: TransferProps
+    transfer: TransferProps;
+    objectSelect: ObjectSelectProps
   }
 }
 
@@ -57,7 +59,8 @@ const valueTypeMap = {
   editableTable: [EditableTableRender, EditableTableRenderFormItem],
   autoComplete: [AutoCompleteRender, AutoCompleteRenderFormItem],
   checkboxsTabs: [CheckboxsTabsRender, CheckboxsTabsRenderFormItem],
-  transfer: [TransferRender, TransferRenderFormItem]
+  transfer: [TransferRender, TransferRenderFormItem],
+  objectSelect: [ObjectSelectRender, ObjectSelectRenderFormItem]
 };
 
 valueTypeMapStore.registerValueType(valueTypeMap);

@@ -1,14 +1,14 @@
 import { randomKey } from '@/helper';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ProFieldFCRenderProps } from '@ant-design/pro-components';
-import { Image, Modal, Spin, Upload } from 'antd';
+import { Badge, Button, Image, Modal, Popconfirm, Spin, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { getFileItem, updateFileList } from 'antd/es/upload/utils';
 import { useEffect, useState } from 'react';
 import { getBase64, handleBeforeUpload } from '../../../helper/utils';
 
-const Img = (props: { src: any }) => {
+export const Img = (props: any) => {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
@@ -27,7 +27,10 @@ const Img = (props: { src: any }) => {
 
   return (
     <div>
-      {imageUrl ? <Image src={imageUrl} width={60} /> : <Spin tip="Loading" size="small" />}
+      {imageUrl ?
+        <Image src={imageUrl} width={props.width || 60} />
+        :
+        <Spin tip="Loading" size="small" />}
     </div>
   );
 };
@@ -118,6 +121,27 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           // @ts-ignore
           onSuccess={onSuccess}
           onChange={handleChange}
+          itemRender={(originNode, file, fileList, { download, preview, remove }) => {
+            return (
+              <Badge count={
+                <Popconfirm
+                  title="确认删除"
+                  okText="确认"
+                  cancelText="取消"
+                  onConfirm={remove}
+                >
+                  <Button type="primary" shape="circle" icon={<DeleteOutlined />} size='small' />
+                </Popconfirm>
+              }>
+                <div style={{ padding: '8px', border: '1px solid #d9d9d9', borderRadius: '8px' }}>
+                  <Img
+                    src={file.url}
+                    width={'100%'}
+                  />
+                </div>
+              </Badge>
+            )
+          }}
           {...rest}
         >
           {typeof maxNumber == 'number' && fileList?.length >= maxNumber ? null : button}
