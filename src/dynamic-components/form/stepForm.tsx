@@ -1,5 +1,4 @@
-import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
-import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProConfigProvider, ProFormInstance, ProProvider, RouteContextType } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { useLocation } from '@umijs/max';
 import { Drawer, Modal, Space } from 'antd';
@@ -139,33 +138,40 @@ export const StepForm = forwardRef((props: StepFormProps, forwardRef) => {
     }
   };
 
+  const proProviderValues = useContext(ProProvider);
+
   const stepsForm = () => {
     return (
-      <ProProvider.Provider
-        value={{
-          ...useContext(ProProvider),
-          valueTypeMap: valueTypeMapStore.stores
-        }}
+      <ProConfigProvider
+        valueTypeMap={valueTypeMapStore.stores}
+        hashed={false}
       >
-        <BetaSchemaForm
-          layoutType="StepsForm"
-          // @ts-ignore
-          formRef={formRef}
-          // @ts-ignore
-          formMapRef={formMapRef}
-          // @ts-ignore
-          columns={_columns}
-          stepsFormRender={stepsFormRender}
-          autoFocusFirstInput
-          onFinish={async (values) => {
-            if (!onSubmit) return false;
-            await waitTime(submitTimeout);
-            return onSubmit({ formRef, values, dataObject, handleClose });
+        <ProProvider.Provider
+          value={{
+            ...proProviderValues,
+            valueTypeMap: valueTypeMapStore.stores,
           }}
-          isKeyPressSubmit={true}
-          {...rest}
-        />
-      </ProProvider.Provider>
+        >
+          <BetaSchemaForm
+            layoutType="StepsForm"
+            // @ts-ignore
+            formRef={formRef}
+            // @ts-ignore
+            formMapRef={formMapRef}
+            // @ts-ignore
+            columns={_columns}
+            stepsFormRender={stepsFormRender}
+            autoFocusFirstInput
+            onFinish={async (values) => {
+              if (!onSubmit) return false;
+              await waitTime(submitTimeout);
+              return onSubmit({ formRef, values, dataObject, handleClose });
+            }}
+            isKeyPressSubmit={true}
+            {...rest}
+          />
+        </ProProvider.Provider >
+      </ProConfigProvider>
     );
   };
 

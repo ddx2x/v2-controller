@@ -1,5 +1,6 @@
 import {
   BetaSchemaForm,
+  ProConfigProvider,
   ProFormInstance,
   ProProvider,
   RouteContextType,
@@ -15,6 +16,7 @@ import { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
 import { valueTypeMapStore } from '../valueType/valueTypeMap';
+import { Guide } from './guide';
 
 export declare type FormRef = {
   open: () => void;
@@ -98,7 +100,13 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            <>{dom}</>
+            {dom}
+            <Guide
+              columns={columns}
+              onSelected={
+                (item: any) => formRef.current?.scrollToField(item.dataIndex)
+              }
+            />
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
@@ -109,13 +117,14 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
 
   const proProviderValues = useContext(ProProvider);
 
+  console.log('valueTypeMapStore.stores', valueTypeMapStore.stores);
+  
+
   return (
     <>
-      <ProProvider.Provider
-        value={{
-          ...proProviderValues,
-          valueTypeMap: valueTypeMapStore.stores,
-        }}
+      <ProConfigProvider
+        valueTypeMap={valueTypeMapStore.stores}
+        hashed={false}
       >
         <BetaSchemaForm
           onInit={(values, form) => {
@@ -142,7 +151,7 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
           isKeyPressSubmit={true}
           {...rest}
         />
-      </ProProvider.Provider>
+      </ProConfigProvider>
     </>
   );
 });

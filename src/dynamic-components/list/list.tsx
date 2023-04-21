@@ -1,6 +1,7 @@
 import {
   ActionType,
   FormInstance,
+  ProConfigProvider,
   ProFormInstance,
   ProListProps,
   ProProvider,
@@ -119,12 +120,16 @@ export const List: React.FC<ListProps> = (props) => {
   const proProviderValues = useContext(ProProvider);
 
   return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
-      }}
+    <ProConfigProvider
+      valueTypeMap={valueTypeMapStore.stores}
+      hashed={false}
     >
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
+        }}
+      >
       <ProList
         metas={metas}
         dataSource={dataSource}
@@ -146,8 +151,9 @@ export const List: React.FC<ListProps> = (props) => {
           labelWidth: 80,
         }}
         {...rest}
-      />
-    </ProProvider.Provider>
+        />
+      </ProProvider.Provider>
+    </ProConfigProvider>
   );
 };
 

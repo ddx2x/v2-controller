@@ -1,5 +1,6 @@
 import {
   ActionType,
+  ProConfigProvider,
   ProDescriptions,
   ProDescriptionsItemProps,
   ProDescriptionsProps,
@@ -76,12 +77,17 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
   const Page = () => {
     if (!mounted) return null
     return (
-      <ProProvider.Provider
-        value={{
-          ...proProviderValues,
-          valueTypeMap: valueTypeMapStore.stores,
-        }}
+      <ProConfigProvider
+        valueTypeMap={valueTypeMapStore.stores}
+        hashed={false}
+
       >
+        <ProProvider.Provider
+          value={{
+            ...proProviderValues,
+            valueTypeMap: valueTypeMapStore.stores,
+          }}
+        >
         <ProDescriptions
           params={{ ...params, ...query }}
           actionRef={actionRef}
@@ -89,8 +95,9 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
           columns={columns}
           request={request}
           {...rest}
-        />
-      </ProProvider.Provider>
+          />
+        </ProProvider.Provider>
+      </ProConfigProvider>
     );
   };
 

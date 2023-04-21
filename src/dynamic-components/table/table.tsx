@@ -1,5 +1,5 @@
 import {
-  ActionType, EditableFormInstance, EditableProTable, ProCard, ProCardProps, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableFormInstance, EditableProTable, ProCard, ProCardProps, ProConfigProvider, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -16,7 +16,6 @@ import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 import { Tree } from './tree';
-
 
 const defaulScrollHeight = '100%';
 
@@ -273,12 +272,16 @@ export const Table: React.FC<TableProps> = (props) => {
   const proProviderValues = useContext(ProProvider);
 
   return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
-      }}
+    <ProConfigProvider
+      valueTypeMap={valueTypeMapStore.stores}
+      hashed={false}
     >
+      <ProProvider.Provider
+        value={{
+          ...proProviderValues,
+          valueTypeMap: valueTypeMapStore.stores,
+        }}
+      >
       <EditableProTable
         style={{ padding: 0 }}
         columns={newColumns}
@@ -329,8 +332,9 @@ export const Table: React.FC<TableProps> = (props) => {
         }}
         pagination={{ ...pagination, style: { display: 'none' } }}
         {...rest}
-      />
-    </ProProvider.Provider>
+        />
+      </ProProvider.Provider>
+    </ProConfigProvider>
   );
 };
 
