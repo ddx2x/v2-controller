@@ -31,7 +31,7 @@ export default [
     name: '首页',
     href: null,
     path: '/',
-    icon: 'HomeTwoTone',
+    icon: 'home',
     routes: [
       {
         name: '数据概览',
@@ -45,7 +45,7 @@ export default [
   {
     name: '商品',
     path: '/product',
-    icon: 'shoppingTwoTone',
+    icon: 'shoppingFilled',
     routes: [
       {
         name: '商品列表',

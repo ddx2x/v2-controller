@@ -1,7 +1,14 @@
 import { StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { Order, orderApi, OrderStateValueEnum, orderStore } from '@/service/api';
+import {
+  Customer,
+  customerStore,
+  Order,
+  orderApi,
+  OrderStateValueEnum,
+  orderStore,
+} from '@/service/api';
 import { Delivery, deliveryApi } from '@/service/api/delivery.store';
 import { unixtime2dateformat } from '@/service/common';
 import { merge } from 'lodash';
@@ -58,6 +65,9 @@ const orderStoreTable: StoreTableProps = {
   store: orderStore,
   size: 'small',
   options: { reload: true },
+  search: {
+    defaultCollapsed: false,
+  },
   columns: [
     {
       dataIndex: 'merchandise_list',
@@ -73,6 +83,7 @@ const orderStoreTable: StoreTableProps = {
       title: '订单编号',
       fixed: 'left',
       editable: false,
+      hideInSearch: true,
       width: 205,
     },
     {
@@ -82,7 +93,7 @@ const orderStoreTable: StoreTableProps = {
       editable: false,
       width: 150,
       render: (text: ReactNode, record: Order, index: number, action: any) => {
-        return [<>{record.version === 0 ? '-' : unixtime2dateformat(record.version || 0)}</>];
+        return [<>{record.crate_at === 0 ? '-' : unixtime2dateformat(record.crate_at || 0)}</>];
       },
     },
     {
@@ -90,17 +101,30 @@ const orderStoreTable: StoreTableProps = {
       title: '实收金额',
       valueType: 'money',
       editable: false,
+      hideInSearch: true,
+      width: 200,
     },
     {
       dataIndex: 'customer',
       title: '客户信息',
+      tooltip: '支持模糊搜索',
       editable: false,
+      width: 300,
+      valueType: 'autoComplete',
+      fieldProps: {
+        onSearch: async (text: string) => {
+          return await customerStore.api
+            .list(text, {}, 'name')
+            .then((res: Customer[]) => res.map((value: Customer) => ({ value: value.name })));
+        },
+      },
     },
     {
       dataIndex: 'delivery_type',
       title: '配送方式',
       hideInSearch: true,
       editable: false,
+      width: 100,
       valueEnum: {
         1: '快递',
         2: '自提',
@@ -111,6 +135,7 @@ const orderStoreTable: StoreTableProps = {
       dataIndex: 'payment_type',
       title: '支付方式',
       editable: false,
+      width: 100,
       valueEnum: {
         0: '未支付',
         1: '微信',
@@ -122,12 +147,14 @@ const orderStoreTable: StoreTableProps = {
       title: '订单状态',
       valueType: 'select',
       editable: false,
+      width: 100,
       valueEnum: OrderStateValueEnum,
     },
     {
       dataIndex: 'error_info',
       title: '错误信息',
       valueType: 'text',
+      width: 200,
       hideInSearch: true,
       editable: false,
     },

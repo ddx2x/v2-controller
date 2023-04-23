@@ -48,6 +48,8 @@ export class Order extends IObject {
   order_sku_list: any | undefined;
   deliveries: any | undefined;
   state: number | undefined;
+
+  crate_at: number | undefined;
   //
   merchandise_list: MerchandiseList[] | undefined;
   total_render: number | undefined;

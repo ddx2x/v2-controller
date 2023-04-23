@@ -80,9 +80,5 @@ export const customerAddresses: FormColumnsType = {
         },
       },
     ],
-    editableValuesChange: (record) => {
-      console.log(record);
-    },
-
   },
 };

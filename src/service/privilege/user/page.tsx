@@ -2,11 +2,10 @@ import { StoreTableProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { cmsDoorStore2, Role, roleStore } from '@/service/api';
 import { unixtime2dateformat } from '@/service/common';
-import { ProFormInstance } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
-import { Dispatch, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { User, userRoleApi, userStore } from '../../api/privilegeUser.store';
 import { transfer } from './grant';
 
@@ -24,7 +23,7 @@ const table: StoreTableProps = {
   size: 'small',
   treeStore: cmsDoorStore2,
   useSiderTree: true,
-  treeCard: { title: '组织架构' },
+  treeCard: { title: '组织架构', collapsible: false, defaultCollapsed: false },
   columns: [
     {
       dataIndex: 'uid',

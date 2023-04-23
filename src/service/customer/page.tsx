@@ -14,7 +14,7 @@ const defaultStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: customerStore,
   rowKey: 'uid',
-  
+
   defaultPageSize: 10,
   columns: [
     {
@@ -176,7 +176,10 @@ const defaultStoreTable: StoreTableProps = {
       title: '详情',
       request: async () => {
         return await customerAddressStore.api.list(record.uid).then((rs: CustomerAddress[]) => {
-          return { data: { name: record.name, customerAddresses: rs }, success: true };
+          return {
+            data: { name: record.name, customerAddresses: rs },
+            success: true,
+          };
         });
       },
       ...detail,
