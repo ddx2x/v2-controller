@@ -55,6 +55,7 @@ export class Product extends IObject {
     this.recommand_status = this.recommand_status === 1 ? true : false;
     this.verify_status = this.verify_status === 1 ? true : false;
     this.sort = String(this.sort);
+    this.keywords = this.keywords || [];
 
     this.album_pic =
       this.album_pics && this.album_pics?.length > 0

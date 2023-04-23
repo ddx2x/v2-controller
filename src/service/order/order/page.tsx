@@ -56,7 +56,6 @@ const shipFormOnMount = async (record: any, form: any, setDataObject: any) => {
 const orderStoreTable: StoreTableProps = {
   rowKey: 'uid',
   store: orderStore,
-  search: false,
   size: 'small',
   options: { reload: true },
   columns: [
@@ -129,6 +128,7 @@ const orderStoreTable: StoreTableProps = {
       dataIndex: 'error_info',
       title: '错误信息',
       valueType: 'text',
+      hideInSearch: true,
       editable: false,
     },
   ],

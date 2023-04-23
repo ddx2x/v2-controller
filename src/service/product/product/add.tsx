@@ -28,7 +28,6 @@ import {
 const addForm: FormProps = {
   layoutType: 'Form',
   shouldUpdate: false,
-  // grid: true,
   layout: 'horizontal',
   colProps: {},
   columns: [
@@ -55,7 +54,14 @@ const addForm: FormProps = {
       fieldProps: {
         style: {},
       },
-      columns: [cloneDeep(product_sn), new_status, recommand_status, service_ids, keywords, sort],
+      columns: [cloneDeep(product_sn), service_ids, keywords, sort],
+    },
+
+    {
+      valueType: 'group',
+      title: '新品推荐',
+      fieldProps: {},
+      columns: [new_status, recommand_status],
     },
 
     {

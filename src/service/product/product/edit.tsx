@@ -46,6 +46,7 @@ const editForm: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
+  // grid: true,
   layout: 'horizontal',
   colProps: {},
   columns: [
@@ -74,12 +75,17 @@ const editForm: FormProps = {
       },
       columns: [
         merge(product_sn, { fieldProps: { disabled: false } }),
-        new_status,
-        recommand_status,
         service_ids,
         keywords,
         sort,
       ],
+    },
+
+    {
+      valueType: 'group',
+      title: '新品推荐',
+      fieldProps: {},
+      columns: [new_status, recommand_status],
     },
 
     {

@@ -276,6 +276,7 @@ export const service_ids: FormColumnsType = {
   tooltip: '多选',
   hideInSearch: true,
   editable: false,
+  width:300,
   valueType: 'select',
   fieldProps: {
     mode: 'multiple',
@@ -333,6 +334,13 @@ export const album_pics: FormColumnsType = {
     name: 'upload',
     prefix: '/media-t/file/',
     action: '/media-t/upload',
+    rules: [
+      {
+        require: true,
+        min: 1,
+        max: 10,
+      },
+    ],
   },
 };
 

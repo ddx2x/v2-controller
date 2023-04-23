@@ -41,7 +41,9 @@ export const requestConfig: RequestConfig = {
       if (error.response.status === 401) {
         notification.warning({ message: '登录过期，请重新登录' });
       } else if (error.response.status === 403) {
-        notification.warning({ message: '没有权限，请联系管理员' });
+        notification.warning({ message: '没有权限，请联系系统管理员' });
+      } else if (error.response.status > 500) {
+        notification.error({ message: '服务器错误，请联系管理员' });
       }
     },
   },
@@ -55,7 +57,8 @@ export const requestConfig: RequestConfig = {
         // 13922313389
         // 'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiMTM5MjIzMTMzODkiLCJpYXQiOjE2ODIwNDE2NjEsImV4cCI6MTY4MjA2MzI2MX0.Mj9-ho604KOROIDuLbMFlT_XlX7QML9K70HfcKLvE8A',
         // admin
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODIwNDE2OTIsImV4cCI6MjA0MjA0MTY5Mn0.5MToBq8m1NI8y8QgzRw8fRfv3iCd6z2RcKVdOH8ERN0'
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODIwNDE2OTIsImV4cCI6MjA0MjA0MTY5Mn0.5MToBq8m1NI8y8QgzRw8fRfv3iCd6z2RcKVdOH8ERN0',
       };
       return config;
     },

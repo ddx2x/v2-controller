@@ -1,5 +1,6 @@
 import { IObject, ObjectApi, ObjectStore } from '@/client';
 import { DefaultWatchApi, WatchApi } from '@/client/event';
+import { computed } from 'mobx';
 
 export class Category extends IObject {
     level: number | string | undefined
@@ -15,6 +16,13 @@ export class Category extends IObject {
     }
 }
 
+interface TreeNode {
+    title: string;
+    key: string;
+    value: string;
+    children: TreeNode[];
+  }
+  
 export class CategoryStore extends ObjectStore<Category> {
     watchApi: WatchApi<Category>;
     api: ObjectApi<Category>;
@@ -23,6 +31,7 @@ export class CategoryStore extends ObjectStore<Category> {
         this.api = api;
         this.watchApi = watchApi;
     }
+
 }
 
 export const categoryApi = new ObjectApi<Category>(

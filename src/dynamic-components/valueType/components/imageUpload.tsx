@@ -18,19 +18,26 @@ export const Img = (props: any) => {
           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2ODE4NzAzMDcsImV4cCI6MTY4MTg5MTkwN30._4HM456beULOZAMyGeHOjggI1DlqWr8PVYOLIw_43co',
       },
     })
-      .then((response) => response.blob())
+      .then((response) => {
+        if (response.status == 500) {
+          throw new Error('500');
+        }
+
+        return response.blob();
+      })
       .then((blob) => URL.createObjectURL(blob))
       // @ts-ignore
-      .then((url) => setImageUrl(url))
+      .then((url) => setImageUrl(url as any))
       .catch((error) => console.error(error));
-  }, []);
+  }, [props.src]);
 
   return (
     <div>
-      {imageUrl ?
+      {imageUrl ? (
         <Image src={imageUrl} width={props.width || 60} />
-        :
-        <Spin tip="Loading" size="small" />}
+      ) : (
+        <Spin tip="Loading" size="small" />
+      )}
     </div>
   );
 };
@@ -122,25 +129,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = (props) => {
           onSuccess={onSuccess}
           onChange={handleChange}
           itemRender={(originNode, file, fileList, { download, preview, remove }) => {
+            console.log('file', file, fileList);
+
             return (
-              <Badge count={
-                <Popconfirm
-                  title="确认删除"
-                  okText="确认"
-                  cancelText="取消"
-                  onConfirm={remove}
-                >
-                  <Button type="primary" shape="circle" icon={<DeleteOutlined />} size='small' />
-                </Popconfirm>
-              }>
+              <Badge
+                count={
+                  <Popconfirm title="确认删除" okText="确认" cancelText="取消" onConfirm={remove}>
+                    <Button type="primary" shape="circle" icon={<DeleteOutlined />} size="small" />
+                  </Popconfirm>
+                }
+              >
                 <div style={{ padding: '8px', border: '1px solid #d9d9d9', borderRadius: '8px' }}>
-                  <Img
-                    src={file.url}
-                    width={'100%'}
-                  />
+                  <Img src={file.url} width={'100%'} />
                 </div>
               </Badge>
-            )
+            );
           }}
           {...rest}
         >

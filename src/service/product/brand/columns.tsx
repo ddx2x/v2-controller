@@ -6,6 +6,9 @@ export const name: FormColumnsType = {
   valueType: 'text',
   fieldProps: {
     placeholder: '输入品牌名称',
+    style: {
+      width: '50%',
+    },
   },
   formItemProps: {
     rules: [
@@ -21,6 +24,11 @@ export const first_letter: FormColumnsType = {
   title: '首字母',
   dataIndex: 'first_letter',
   valueType: 'text',
+  fieldProps: {
+    style: {
+      width: '50%',
+    },
+  },
   formItemProps: {
     rules: [
       {
@@ -31,7 +39,7 @@ export const first_letter: FormColumnsType = {
         message: '必须是1位大写字母',
         min: 1,
         max: 1,
-        type: "string",
+        type: 'string',
       },
     ],
   },
@@ -40,7 +48,7 @@ export const first_letter: FormColumnsType = {
 export const factory_status: FormColumnsType = {
   title: '显示品牌制造商',
   dataIndex: 'factory_status',
-  valueType: 'radio',
+  valueType: 'radioButton',
   initialValue: '0',
   formItemProps: {
     rules: [
@@ -51,17 +59,16 @@ export const factory_status: FormColumnsType = {
     ],
   },
   valueEnum: {
-    0: "否",
-    1: "是",
-  }
-
+    0: '否',
+    1: '是',
+  },
 };
 
 export const show_status: FormColumnsType = {
   dataIndex: 'show_status',
   title: '显示品牌',
   initialValue: '0',
-  valueType: 'radio',
+  valueType: 'radioButton',
   formItemProps: {
     rules: [
       {
@@ -71,11 +78,10 @@ export const show_status: FormColumnsType = {
     ],
   },
   valueEnum: {
-    0: "否",
-    1: "是",
-  }
+    0: '否',
+    1: '是',
+  },
 };
-
 
 export const sort: FormColumnsType = {
   dataIndex: 'sort',
@@ -109,7 +115,6 @@ export const big_pic: FormColumnsType = {
   },
 };
 
-
 export const logo: FormColumnsType = {
   dataIndex: 'logo',
   title: '品牌logo',
@@ -131,10 +136,8 @@ export const logo: FormColumnsType = {
   },
 };
 
-
 export const brand_story: FormColumnsType = {
   dataIndex: 'brand_story',
   title: '品牌故事',
   valueType: 'textarea',
 };
-

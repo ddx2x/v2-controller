@@ -51,7 +51,7 @@ const table: StoreTableProps = {
     {
       dataIndex: 'publish_status',
       title: '上架状态',
-      hideInSearch: true,
+      hideInSearch: true, 
       valueType: 'switch',
       valueEnum: {
         false: false,

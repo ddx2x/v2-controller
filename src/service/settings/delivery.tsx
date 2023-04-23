@@ -23,7 +23,7 @@ const columns: StoreTableProps['columns'] = [
   {
     dataIndex: 'name',
     title: '模板名称',
-    hideInSearch: true,
+    // hideInSearch: true,
     editable: false,
     fixed: 'left',
   },
@@ -60,7 +60,7 @@ const deliveryStoreTable: StoreTableProps = {
   toolbarTitle: '商家配送',
   store: deliverySettingStore,
   rowKey: 'uid',
-  search: false,
+  // search: false,
   defaultPageSize: 10,
   columns: columns,
   expand: {
@@ -194,7 +194,7 @@ const storePickupStoreTable: StoreTableProps = {
   toolbarTitle: '门店自提',
   store: storePickupStore,
   rowKey: 'uid',
-  search: false,
+  // search: false,
   defaultPageSize: 10,
   columns: [
     {
@@ -207,7 +207,7 @@ const storePickupStoreTable: StoreTableProps = {
     {
       dataIndex: 'pick_up_name',
       title: '自提点名称',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
       fixed: 'left',
     },
@@ -231,7 +231,7 @@ const storePickupStoreTable: StoreTableProps = {
     {
       dataIndex: 'owner_store_name',
       title: '所属门店',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
     },
     {
@@ -307,7 +307,7 @@ const expressCompanyStoreTable: StoreTableProps = {
   toolbarTitle: '快递配置',
   store: expressCompanyStore,
   rowKey: 'uid',
-  search: false,
+  // search: false,
   defaultPageSize: 10,
   columns: [
     {
@@ -320,8 +320,8 @@ const expressCompanyStoreTable: StoreTableProps = {
     },
     {
       dataIndex: 'name',
-      title: '快递公司名称',
-      hideInSearch: true,
+      title: '快递公司',
+      // hideInSearch: true,
       editable: false,
       width: 200,
       // hideInTable: true,
@@ -330,7 +330,7 @@ const expressCompanyStoreTable: StoreTableProps = {
     {
       dataIndex: 'ename',
       title: '简写',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
       // width: 200,
       // hideInTable: true,

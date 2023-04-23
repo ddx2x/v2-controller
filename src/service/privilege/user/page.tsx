@@ -62,19 +62,6 @@ const table: StoreTableProps = {
         0: '停用',
         1: '启用',
       },
-      // formItemProps: (form, config) => {
-      //   // console.log('form, config', form, config);
-      //   return {
-      //     rules: [
-      //       {
-      //         validator(rule, value, callback) {
-      //           callback('xxxx')
-      //           form.resetFields()
-      //         },
-      //       }
-      //     ]
-      //   }
-      // }
     },
     {
       dataIndex: 'phone_number',
@@ -287,10 +274,3 @@ pageManager.register('privilege.user', {
     },
   ],
 });
-function grantFormOnMount(
-  record: User,
-  form: ProFormInstance<any>,
-  setDataObject: Dispatch<any>,
-): void | PromiseLike<void> {
-  throw new Error('Function not implemented.');
-}

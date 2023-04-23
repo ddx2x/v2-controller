@@ -5,7 +5,6 @@ import { notification } from 'antd';
 import { merge } from 'lodash';
 import { Category, categoryStore, categoryStore2 } from '../../api/productCategory.store';
 
-
 const columns: StoreTableProps['columns'] = [
   {
     dataIndex: 'uid',
@@ -17,7 +16,7 @@ const columns: StoreTableProps['columns'] = [
   {
     dataIndex: 'nav_status',
     title: '导航栏显示',
-    hideInSearch: true,
+    // hideInSearch: true,
     editable: false,
     valueType: 'select',
     valueEnum: {
@@ -34,22 +33,28 @@ const columns: StoreTableProps['columns'] = [
   {
     dataIndex: 'keywords',
     title: '关键字',
-    hideInSearch: true,
+    // hideInSearch: true,
     editable: false,
     valueType: 'select',
   },
-]
+];
 
 const categoryStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
-  search: false,
+
   defaultPageSize: 10,
   columns: columns,
+
   expand: {
     kind: 'table',
-    onData: (record: any) => categoryStore2.api.list(undefined, { limit: { page: 0, size: 10 }, sort: { version: 1 }, filter: { level: 2, full_id: record.uid } }),
+    onData: (record: any) =>
+      categoryStore2.api.list(undefined, {
+        limit: { page: 0, size: 10 },
+        sort: { version: 1 },
+        filter: { level: 2, full_id: record.uid },
+      }),
     table: {
       options: false,
       tableMenu: (record: Category, action: any) => [
@@ -57,24 +62,25 @@ const categoryStoreTable: StoreTableProps = {
           kind: 'confirm',
           title: '删除',
           onClick: () => {
-            categoryStore2.remove(record.uid)
+            categoryStore2
+              .remove(record.uid)
               .then(() => {
-                notification.success({ message: "删除成功" });
+                notification.success({ message: '删除成功' });
                 history.push(`/product/category`);
               })
-              .catch(e => notification.error(e))
+              .catch((e) => notification.error(e));
           },
           text: `确认删除类型名称` + "'" + record.uid + "'",
         },
         {
           kind: 'link',
           title: '属性参数',
-          link: "/product/category/attribute?category_id=" + record.uid,
+          link: '/product/category/attribute?category_id=' + record.uid,
         },
         {
           kind: 'link',
           title: '编辑',
-          link: '/product/category/edit?id=' + record.uid
+          link: '/product/category/edit?id=' + record.uid,
         },
       ],
       rowKey: 'uid',
@@ -119,7 +125,9 @@ const categoryStoreTable: StoreTableProps = {
       ],
     },
   },
-  editableValuesChange: (record) => { console.log(record) },
+  editableValuesChange: (record) => {
+    console.log(record);
+  },
   toolBarMenu: (selectedRows) => [
     {
       kind: 'link',
@@ -131,18 +139,21 @@ const categoryStoreTable: StoreTableProps = {
     {
       kind: 'link',
       title: '编辑',
-      link: '/product/category/edit?id=' + record.uid
+      link: '/product/category/edit?id=' + record.uid,
     },
     {
       kind: 'confirm',
       title: '删除',
       onClick: () => {
-        categoryStore.remove(record.uid).then(() => {
-          notification.info({ message: "删除成功" });
-          history.push(`/product/category`);
-        }).catch(e => {
-          notification.error(e)
-        })
+        categoryStore
+          .remove(record.uid)
+          .then(() => {
+            notification.info({ message: '删除成功' });
+            history.push(`/product/category`);
+          })
+          .catch((e) => {
+            notification.error(e);
+          });
       },
       text: `确认删除` + record.uid,
     },
@@ -155,7 +166,7 @@ const categoryStoreTable: StoreTableProps = {
   ],
   batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
   onRequest: ({ query }) =>
-    categoryStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } }))
+    categoryStore.next(merge(query, { filter: { level: 1 }, sort: { version: 1 } })),
 };
 
 pageManager.register('product.category', {
@@ -168,7 +179,7 @@ pageManager.register('product.category', {
   stores: [
     {
       store: categoryStore,
-      exit: categoryStore.reset
-    }
+      exit: categoryStore.reset,
+    },
   ],
 });

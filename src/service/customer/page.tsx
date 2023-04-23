@@ -14,7 +14,7 @@ const defaultStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: customerStore,
   rowKey: 'uid',
-  search: false,
+  
   defaultPageSize: 10,
   columns: [
     {
@@ -25,7 +25,7 @@ const defaultStoreTable: StoreTableProps = {
     {
       dataIndex: 'name',
       title: '客户信息',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
       fixed: 'left',
       width: 200,

@@ -10,7 +10,7 @@ const brandStoreTable: StoreTableProps = {
   store: brandStore,
   rowKey: 'uid',
   defaultPageSize: 5,
-  search: false,
+  // search: false,
   size: 'small',
   columns: [
     {
@@ -28,7 +28,7 @@ const brandStoreTable: StoreTableProps = {
     {
       dataIndex: 'uid',
       title: '名称',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
     },
 

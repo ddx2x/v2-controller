@@ -6,12 +6,12 @@ import { cmsDoorStore } from '../api/cmsDoor.store';
 import { Shop, shopStore } from '../api/settings.store';
 
 const name: FormColumnsType = {
-  title: '名称',
+  title: '店铺名称',
   dataIndex: 'name',
   tooltip: '店铺名称改动将会影响整个系统的显示及权限结构',
   valueType: 'text',
   fieldProps: {
-    disabled: true,
+    // disabled: true,
   },
   formItemProps: {
     rules: [
@@ -29,22 +29,22 @@ const mode_dependency: FormColumnsType = {
   columns: ({ mode }) => {
     return mode === '1'
       ? [
-        merge(cloneDeep(mode_columns), {
-          valueEnum: {
-            2: '多店模式',
-          },
-        }),
-      ]
+          merge(cloneDeep(mode_columns), {
+            valueEnum: {
+              2: '多店模式',
+            },
+          }),
+        ]
       : [
-        merge(cloneDeep(mode_columns), {
-          valueEnum: {
-            1: '单店模式',
-          },
-          fieldProps: {
-            disabled: true,
-          },
-        }),
-      ];
+          merge(cloneDeep(mode_columns), {
+            valueEnum: {
+              1: '单店模式',
+            },
+            fieldProps: {
+              disabled: true,
+            },
+          }),
+        ];
   },
 };
 
@@ -65,7 +65,7 @@ const mode_columns: FormColumnsType = {
           Modal.confirm({
             title: '门店模式',
             content: '多门店模式一旦确认将不能变更',
-            onOk: () => { },
+            onOk: () => {},
             onCancel: () => {
               form.setFieldValue('mode', '1');
             },
@@ -230,19 +230,37 @@ const defaultFrom: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
+  grid: true,
+  layout: 'vertical',
   submitter: {
     resetButtonProps: false,
   },
   columns: [
-    name,
-    // mode_columns,
-    mode_dependency,
-    recommend_door_dependency,
-    recommend_door_name_dependency,
-    industry,
-    logo,
-    introduction,
-    address,
+    {
+      valueType: 'group',
+      title: '店铺信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [
+        name,
+
+        mode_dependency,
+        recommend_door_dependency,
+        recommend_door_name_dependency,
+        industry,
+        logo,
+      ],
+    },
+
+    {
+      valueType: 'group',
+      title: '其他信息',
+      fieldProps: {
+        style: {},
+      },
+      columns: [introduction, address],
+    },
   ],
   onSubmit: ({ formRef, values, dataObject, handleClose }) => {
     const target: Partial<Shop> = {
