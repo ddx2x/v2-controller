@@ -1,9 +1,10 @@
+import { valueTypeMapStore } from '@/dynamic-components';
 import { randomKey } from '@/helper';
 import NoFoundPage from '@/pages/404';
-import { RouteContext } from '@ant-design/pro-components';
+import { ProConfigProvider, RouteContext } from '@ant-design/pro-components';
 import { useIntl, useLocation } from '@umijs/max';
 import { useContext } from 'react';
-import { isCachingNode, PageContainer } from '../dynamic-components/container';
+import { PageContainer, isCachingNode } from '../dynamic-components/container';
 import type { DescriptionsProps } from '../dynamic-components/descriptions';
 import { Descriptions } from '../dynamic-components/descriptions';
 import type { FormProps, StepFormProps } from '../dynamic-components/form';
@@ -91,9 +92,11 @@ export default () => {
   })();
 
   return (
-    <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>
-      {page}
-    </PageContainer>
+    <ProConfigProvider valueTypeMap={valueTypeMapStore.stores} >
+      <PageContainer key={randomKey(5, { numbers: true })} {...schema?.container}>
+        {page}
+      </PageContainer>
+    </ProConfigProvider>
 
   );
 };

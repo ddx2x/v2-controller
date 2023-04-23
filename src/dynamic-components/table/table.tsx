@@ -1,5 +1,7 @@
 import {
-  ActionType, EditableFormInstance, EditableProTable, ProCard, ProCardProps, ProCoreActionType, ProFormInstance, ProProvider, ProTableProps,
+  ActionType, EditableFormInstance, EditableProTable, ProCard, ProCardProps,
+  ProCoreActionType, ProFormInstance,
+  ProTableProps,
   RouteContextType
 } from '@ant-design/pro-components';
 import { EditableProTableProps } from '@ant-design/pro-table/es/components/EditableTable';
@@ -8,15 +10,13 @@ import { Pagination, Space } from 'antd';
 import { DataNode, EventDataNode } from 'antd/lib/tree';
 import type { Location } from 'history';
 import { observable } from 'mobx';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { FooterToolbar } from '../footer';
-import { valueTypeMapStore } from '../valueType';
 import { ExpandedConfig, expandModule } from './expand';
 import { MenuButton, MenuButtonType } from './menuButton';
 import { Tree } from './tree';
-
 
 const defaulScrollHeight = '100%';
 
@@ -270,67 +270,58 @@ export const Table: React.FC<TableProps> = (props) => {
     }
   }
 
-  const proProviderValues = useContext(ProProvider);
-
   return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
+    <EditableProTable
+      style={{ padding: 0 }}
+      columns={newColumns}
+      value={value}
+      params={{ treeNode: selectTreeNode }}
+      controlled
+      editable={{
+        type: 'multiple',
+        editableKeys: value?.map(
+          item => item[props['rowKey'] as string || 'id']) || [],
+        actionRender: () => [],
+        onValuesChange: (record, dataSource) => {
+          // 获取数据索引
+          let _id = record[props['rowKey'] as any]
+          let _index = dataSource.map(item => item[props['rowKey'] as any]).indexOf(_id)
+          // 检查数据是否不通过校验
+          let _errors = editorFormRef.current?.getFieldsError()[_index].errors || []
+          editableValuesChange && editableValuesChange(record, _errors, editorFormRef.current)
+        },
       }}
-    >
-      <EditableProTable
-        style={{ padding: 0 }}
-        columns={newColumns}
-        value={value}
-        params={{ treeNode: selectTreeNode }}
-        controlled
-        editable={{
-          type: 'multiple',
-          editableKeys: value?.map(
-            item => item[props['rowKey'] as string || 'id']) || [],
-          actionRender: () => [],
-          onValuesChange: (record, dataSource) => {
-            // 获取数据索引
-            let _id = record[props['rowKey'] as any]
-            let _index = dataSource.map(item => item[props['rowKey'] as any]).indexOf(_id)
-            // 检查数据是否不通过校验
-            let _errors = editorFormRef.current?.getFieldsError()[_index].errors || []
-            editableValuesChange && editableValuesChange(record, _errors, editorFormRef.current)
-          },
-        }}
-        recordCreatorProps={false}
-        sticky
-        // components={vComponents}
-        actionRef={actionRef}
-        formRef={formRef}
-        editableFormRef={editorFormRef}
-        rowSelection={rowSelection}
-        scroll={{ x: 1500 }}
-        search={{ labelWidth: 80 }}
-        toolbar={{
-          multipleLine: true,
-          title: toolbarTitle,
-          actions: [
-            <MenuButton
-              dropDownTitle='更多操作'
-              menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []}
-              buttonType='primary'
-              buttonSize='middle'
-              dropDownButtonType='dashed'
-              dropDownButtonSize='middle'
-            />
-          ],
-        }}
-        tableAlertRender={false}
-        tableRender={tableRender}
-        expandable={{
-          ...expandModule(expand ? expand : null)
-        }}
-        pagination={{ ...pagination, style: { display: 'none' } }}
-        {...rest}
-      />
-    </ProProvider.Provider>
+      recordCreatorProps={false}
+      sticky
+      // components={vComponents}
+      actionRef={actionRef}
+      formRef={formRef}
+      editableFormRef={editorFormRef}
+      rowSelection={rowSelection}
+      scroll={{ x: 1500 }}
+      search={{ labelWidth: 80 }}
+      toolbar={{
+        multipleLine: true,
+        title: toolbarTitle,
+        actions: [
+          <MenuButton
+            dropDownTitle='更多操作'
+            menus={toolBarMenu ? toolBarMenu(selectedRows, location) : []}
+            buttonType='primary'
+            buttonSize='middle'
+            dropDownButtonType='dashed'
+            dropDownButtonSize='middle'
+          />
+        ],
+      }}
+      tableAlertRender={false}
+      tableRender={tableRender}
+      expandable={{
+        ...expandModule(expand ? expand : null)
+      }}
+      pagination={{ ...pagination, style: { display: 'none' } }}
+      {...rest}
+    />
   );
 };
 

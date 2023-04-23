@@ -1,8 +1,7 @@
 import {
   BetaSchemaForm,
   ProFormInstance,
-  ProProvider,
-  RouteContextType,
+  RouteContextType
 } from '@ant-design/pro-components';
 import { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { useLocation } from '@umijs/max';
@@ -10,11 +9,11 @@ import { Button, Space } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import type { Location } from 'history';
 import { merge } from 'lodash';
-import { Dispatch, forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
+import { Dispatch, forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
-import { valueTypeMapStore } from '../valueType/valueTypeMap';
+import { Guide } from './guide';
 
 export declare type FormRef = {
   open: () => void;
@@ -98,7 +97,13 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       rest['contentRender'] = (dom: React.ReactNode, submitter: React.ReactNode) => {
         return (
           <>
-            <>{dom}</>
+            {dom}
+            <Guide
+              columns={columns}
+              onSelected={
+                (item: any) => formRef.current?.scrollToField(item.dataIndex)
+              }
+            />
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
@@ -107,43 +112,32 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
       };
   }
 
-  const proProviderValues = useContext(ProProvider);
-
   return (
-    <>
-      <ProProvider.Provider
-        value={{
-          ...proProviderValues,
-          valueTypeMap: valueTypeMapStore.stores,
-        }}
-      >
-        <BetaSchemaForm
-          onInit={(values, form) => {
-            onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns });
-          }}
-          // @ts-ignore
-          columns={_columns}
-          // @ts-ignore
-          formRef={formRef}
-          // @ts-ignore
-          trigger={
-            <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
-              {triggerText}
-            </Button>
-          }
-          open={isModalOpen}
-          autoFocusFirstInput
-          onFinish={async (values) => {
-            if (!onSubmit) return false;
-            const b = onSubmit({ formRef, values, dataObject, handleClose });
-            await waitTime(submitTimeout);
-            return b;
-          }}
-          isKeyPressSubmit={true}
-          {...rest}
-        />
-      </ProProvider.Provider>
-    </>
+    <BetaSchemaForm
+      onInit={(values, form) => {
+        onMount && onMount({ location, form, setDataObject, columns: _columns, setColumns });
+      }}
+      // @ts-ignore
+      columns={_columns}
+      // @ts-ignore
+      formRef={formRef}
+      // @ts-ignore
+      trigger={
+        <Button size={buttonSize} type={buttonType} block onClick={handleShow}>
+          {triggerText}
+        </Button>
+      }
+      open={isModalOpen}
+      autoFocusFirstInput
+      onFinish={async (values) => {
+        if (!onSubmit) return false;
+        const b = onSubmit({ formRef, values, dataObject, handleClose });
+        await waitTime(submitTimeout);
+        return b;
+      }}
+      isKeyPressSubmit={true}
+      {...rest}
+    />
   );
 });
 

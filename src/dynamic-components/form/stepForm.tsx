@@ -1,16 +1,14 @@
-import type { ProFormInstance, RouteContextType } from '@ant-design/pro-components';
-import { BetaSchemaForm, ProProvider } from '@ant-design/pro-components';
+import { BetaSchemaForm, ProFormInstance, RouteContextType } from '@ant-design/pro-components';
 import type { FormSchema } from '@ant-design/pro-form/es/components/SchemaForm';
 import { useLocation } from '@umijs/max';
 import { Drawer, Modal, Space } from 'antd';
 import type { ButtonType } from 'antd/lib/button';
 import Button from 'antd/lib/button';
 import type { Location } from 'history';
-import React, { Dispatch, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { Dispatch, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { waitTime } from '../../helper/wait';
 import { FooterToolbar } from '../footer';
-import { valueTypeMapStore } from '../valueType/valueTypeMap';
 
 export declare type StepFormProps = Omit<FormSchema, 'layoutType'> & {
   onMount?: (params: {
@@ -141,31 +139,24 @@ export const StepForm = forwardRef((props: StepFormProps, forwardRef) => {
 
   const stepsForm = () => {
     return (
-      <ProProvider.Provider
-        value={{
-          ...useContext(ProProvider),
-          valueTypeMap: valueTypeMapStore.stores
+      <BetaSchemaForm
+        layoutType="StepsForm"
+        // @ts-ignore
+        formRef={formRef}
+        // @ts-ignore
+        formMapRef={formMapRef}
+        // @ts-ignore
+        columns={_columns}
+        stepsFormRender={stepsFormRender}
+        autoFocusFirstInput
+        onFinish={async (values) => {
+          if (!onSubmit) return false;
+          await waitTime(submitTimeout);
+          return onSubmit({ formRef, values, dataObject, handleClose });
         }}
-      >
-        <BetaSchemaForm
-          layoutType="StepsForm"
-          // @ts-ignore
-          formRef={formRef}
-          // @ts-ignore
-          formMapRef={formMapRef}
-          // @ts-ignore
-          columns={_columns}
-          stepsFormRender={stepsFormRender}
-          autoFocusFirstInput
-          onFinish={async (values) => {
-            if (!onSubmit) return false;
-            await waitTime(submitTimeout);
-            return onSubmit({ formRef, values, dataObject, handleClose });
-          }}
-          isKeyPressSubmit={true}
-          {...rest}
-        />
-      </ProProvider.Provider>
+        isKeyPressSubmit={true}
+        {...rest}
+      />
     );
   };
 

@@ -1,0 +1,40 @@
+
+.guide-card {
+  position: absolute;
+  z-index: 1000;
+  border-radius: 16px;
+  .ant-card-body {
+    padding-top: 0px !important;
+  }
+}
+
+.drag {
+    --radius: 25px;
+    --cursor: grab;
+    --color: rgba(0, 0, 0, 0.05);
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    height: 5px;
+    color: #333;
+    padding: 20px;
+    touch-action: none;
+    cursor: var(--cursor);
+
+  .before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    top: 10px;
+    border-radius: 10px;
+    background-color: var(--color);
+    transition: background-color 0.2s ease;
+  }
+}

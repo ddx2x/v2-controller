@@ -3,16 +3,14 @@ import {
   ProDescriptions,
   ProDescriptionsItemProps,
   ProDescriptionsProps,
-  ProProvider,
   RouteContextType
 } from '@ant-design/pro-components';
 import { useLocation } from '@umijs/max';
 import { Button, Drawer, Modal } from 'antd';
 import { ButtonSize, ButtonType } from 'antd/lib/button';
 import { parse } from 'querystring';
-import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { valueTypeMapStore } from '../valueType';
 
 export declare type DescriptionsRef = {
   open: () => void;
@@ -58,7 +56,7 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
 
   useImperativeHandle(forwardRef, () => { return { open: () => { showModal() } } });
 
-  const proProviderValues = useContext(ProProvider);
+
 
   const showModal = () => { setIsModalOpen(true) };
   const handleClose = () => { setIsModalOpen(false) };
@@ -75,22 +73,16 @@ export const Descriptions = forwardRef((props: DescriptionsProps, forwardRef) =>
 
   const Page = () => {
     if (!mounted) return null
+
     return (
-      <ProProvider.Provider
-        value={{
-          ...proProviderValues,
-          valueTypeMap: valueTypeMapStore.stores,
-        }}
-      >
-        <ProDescriptions
-          params={{ ...params, ...query }}
-          actionRef={actionRef}
-          // @ts-ignore
-          columns={columns}
-          request={request}
-          {...rest}
-        />
-      </ProProvider.Provider>
+      <ProDescriptions
+        params={{ ...params, ...query }}
+        actionRef={actionRef}
+        // @ts-ignore
+        columns={columns}
+        request={request}
+        {...rest}
+      />
     );
   };
 

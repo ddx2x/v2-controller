@@ -3,16 +3,14 @@ import {
   FormInstance,
   ProFormInstance,
   ProListProps,
-  ProProvider,
   RouteContextType
 } from '@ant-design/pro-components';
 import type { Location } from 'history';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { VList } from 'virtuallist-antd';
 import { RouterHistory } from '../router';
 import { MenuButtonType } from '../table/menuButton';
-import { valueTypeMapStore } from '../valueType';
 
 import { ProList } from './proList';
 
@@ -116,38 +114,29 @@ export const List: React.FC<ListProps> = (props) => {
     return { success: true };
   }
 
-  const proProviderValues = useContext(ProProvider);
-
   return (
-    <ProProvider.Provider
-      value={{
-        ...proProviderValues,
-        valueTypeMap: valueTypeMapStore.stores,
+    <ProList
+      metas={metas}
+      dataSource={dataSource}
+      split={true}
+      actionRef={actionRef}
+      formRef={formRef}
+      rowSelection={rowSelection}
+      editable={{
+        type: 'multiple',
+        editableKeys: dataSource?.map(item => item[props['rowKey'] as string || 'id']) || [],
+        actionRender: () => { return [] },
+        onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
       }}
-    >
-      <ProList
-        metas={metas}
-        dataSource={dataSource}
-        split={true}
-        actionRef={actionRef}
-        formRef={formRef}
-        rowSelection={rowSelection}
-        editable={{
-          type: 'multiple',
-          editableKeys: dataSource?.map(item => item[props['rowKey'] as string || 'id']) || [],
-          actionRender: () => { return [] },
-          onValuesChange: (record) => editableValuesChange && editableValuesChange(record),
-        }}
-        showActions="hover"
-        size='small'
-        request={request}
-        components={vComponents}
-        search={{
-          labelWidth: 80,
-        }}
-        {...rest}
-      />
-    </ProProvider.Provider>
+      showActions="hover"
+      size='small'
+      request={request}
+      components={vComponents}
+      search={{
+        labelWidth: 80,
+      }}
+      {...rest}
+    />
   );
 };
 
