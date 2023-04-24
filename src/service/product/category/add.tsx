@@ -48,6 +48,10 @@ const parent_id: FormColumnsType = {
   tooltip: '空表示一级分类',
   valueType: 'select',
   dependencies: ['level'],
+  fieldProps: {
+    placeholder: '请选择上级分类',
+    search: true,
+  },
   formItemProps: {
     rules: [
       {
