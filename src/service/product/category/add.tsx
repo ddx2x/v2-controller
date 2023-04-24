@@ -57,6 +57,7 @@ const parent_id: FormColumnsType = {
     ],
   },
   request: async (params, props) => {
+    console.log('params', params)
     try {
       const rs = await categoryApi.list(undefined, {
         limit: { page: 0, size: 500 },
