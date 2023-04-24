@@ -47,8 +47,8 @@ const parent_id: FormColumnsType = {
   dataIndex: 'parent_id',
   tooltip: '空表示一级分类',
   valueType: 'select',
+  dependencies: ['level'],
   formItemProps: {
-	
     rules: [
       {
         required: true,
@@ -57,9 +57,6 @@ const parent_id: FormColumnsType = {
     ],
   },
   request: async (params, props) => {
-    console.log('params', params, props, history.location.search);
-	history.location.search
-
     try {
       const rs = await categoryApi.list(undefined, {
         limit: { page: 0, size: 500 },
@@ -81,7 +78,7 @@ const parent_id_dependency: FormColumnsType = {
   valueType: 'dependency',
   name: ['level'],
   columns: ({ level }) => {
-	// history.push('', {level: 2})
+    // history.push('', {level: 2})
     return level === '2' || level === '3' ? [parent_id] : [];
   },
 };

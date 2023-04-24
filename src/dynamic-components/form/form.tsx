@@ -98,12 +98,12 @@ export const Form = forwardRef((props: FormProps, forwardRef) => {
         return (
           <>
             {dom}
-            <Guide
+            {/* <Guide
               columns={columns}
               onSelected={
                 (item: any) => formRef.current?.scrollToField(item.dataIndex)
               }
-            />
+            /> */}
             <FooterToolbar routeContext={routeContext || {}}>
               <Space>{submitter}</Space>
             </FooterToolbar>
