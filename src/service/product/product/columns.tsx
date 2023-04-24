@@ -74,7 +74,10 @@ export const product_category_name: FormColumnsType = {
     placeholder: '请输入产品分类',
     showSearch: true,
     showArrow: true,
+    mode: 'multiple',
+    treeCheckable: true,
   },
+  width: 400,
   formItemProps: {
     rules: [
       {

@@ -50,7 +50,8 @@ const parent_id: FormColumnsType = {
   dependencies: ['level'],
   fieldProps: {
     placeholder: '请选择上级分类',
-    search: true,
+    showSearch: true,
+    showArrow: true,
   },
   formItemProps: {
     rules: [
