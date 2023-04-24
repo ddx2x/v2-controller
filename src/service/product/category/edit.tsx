@@ -2,6 +2,7 @@ import { FormColumnsType, FormProps } from '@/dynamic-components';
 import { pageManager } from '@/dynamic-view';
 import { message } from 'antd';
 import { parse } from 'querystring';
+import { history } from 'umi';
 import { Category, categoryApi, categoryStore } from '../../api/productCategory.store';
 
 const name: FormColumnsType = {
@@ -131,6 +132,12 @@ const keywords: FormColumnsType = {
   },
   fieldProps: {
     mode: 'tags',
+    rules: [
+      {
+        required: true,
+        message: '此项为必填项',
+      },
+    ],
   },
 };
 
@@ -150,12 +157,13 @@ const editForm: FormProps = {
   submitter: {
     resetButtonProps: false,
   },
-  onMount: ({ location, form }) => {
+  onMount: ({ location, form, setDataObject }) => {
     form?.resetFields();
     if (location === undefined) return;
     const query: Query = parse(location?.search.split('?')[1] || '');
     categoryApi.get(query.id).then((rs) => {
       rs.nav_status = String(rs.nav_status);
+      setDataObject(rs);
       form?.setFieldsValue(rs);
     });
   },
@@ -177,17 +185,26 @@ const editForm: FormProps = {
     description,
   ],
   onSubmit: ({ formRef, values, dataObject, handleClose }) => {
-    const src: Category = dataObject;
-    const target: Partial<Category> = {
+    let target: Partial<Category> = {
       nav_status: Number(values.nav_status),
-      keywords: values.keywords,
-      description: String(values.description) || '',
+      level: Number(values.level),
+      keywords: values.keywords || [],
+      parent_id: values.parent_id || '',
+      description: String(values.description || ''),
     };
 
     categoryStore
-      .update_one(src, target, ['nav_status', 'show_status', 'sort', 'keywords', 'description'])
+      .update_one(dataObject, target, [
+        'level',
+        'nav_status',
+        'show_status',
+        'keywords',
+        'description',
+        'parent_id',
+      ])
       .then(() => {
         message.success('保存成功');
+        history.push(`/product/category`);
         formRef.current?.resetFields();
       })
       .catch((e) => message.error(e));
