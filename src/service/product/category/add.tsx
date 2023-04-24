@@ -56,13 +56,12 @@ const parent_id: FormColumnsType = {
       },
     ],
   },
-  request: async (params, props) => {
-    console.log('params', params)
+  request: async (params) => {
     try {
       const rs = await categoryApi.list(undefined, {
         limit: { page: 0, size: 500 },
         sort: { version: 1 },
-        filter: { level: 1 },
+        filter: { level: params.level > 1 ? params.level - 1 : params.level },
       });
       let select: any = [];
       rs.map((value) => {
@@ -79,7 +78,6 @@ const parent_id_dependency: FormColumnsType = {
   valueType: 'dependency',
   name: ['level'],
   columns: ({ level }) => {
-    // history.push('', {level: 2})
     return level === '2' || level === '3' ? [parent_id] : [];
   },
 };
@@ -181,6 +179,7 @@ const addForm: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
+
   columns: [name, level, parent_id_dependency, nav_status, keywords, description],
   onSubmit: ({ formRef, values, handleClose }) => {
     let item: Partial<Category> = {

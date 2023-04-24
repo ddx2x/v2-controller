@@ -25,32 +25,12 @@ const attributeStoretable: StoreTableProps = {
       fixed: 'left',
       width: 100,
     },
-    // {
-    //   dataIndex: 'type',
-    //   title: '类型',
-    //   hideInSearch: true,
-    //   editable: false,
-    //   valueEnum: {
-    //     0: '规格',
-    //     1: '参数',
-    //   },
-    // },
     {
       dataIndex: 'category_id',
       title: '商品类型',
       hideInSearch: true,
       editable: false,
     },
-    // {
-    //   dataIndex: 'select_type',
-    //   title: '是否多选',
-    //   hideInSearch: true,
-    //   editable: false,
-    //   valueEnum: {
-    //     1: '单选',
-    //     2: '多选',
-    //   },
-    // },
     {
       dataIndex: 'input_type',
       title: '录入方式',
@@ -101,14 +81,8 @@ const attributeStoretable: StoreTableProps = {
       text: `确认删除` + record.name,
     },
   ],
-  // onRowEvent: [
-  //   {
-  //     mouseEvent: 'onDoubleClick',
-  //     title: '详情',
-  //   },
-  // ],
   useBatchDelete: true,
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  batchDelete: (selectedRows) => {},
   onRequest: ({ query, location }) =>
     productAttributeStore.next(
       merge(query, { sort: { type: 1 } }, { filter: parse(location?.search.split('?')[1] || '') }),

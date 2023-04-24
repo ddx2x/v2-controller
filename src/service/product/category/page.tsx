@@ -3,12 +3,12 @@ import { pageManager } from '@/dynamic-view';
 import { history } from '@umijs/max';
 import { notification } from 'antd';
 import { merge } from 'lodash';
-import { categoryStore } from '../../api/productCategory.store';
+import { categoryStore, categoryStore2 } from '../../api/productCategory.store';
 
 const columns: StoreTableProps['columns'] = [
   {
     dataIndex: 'uid',
-    title: '类型',
+    title: '分类名称',
     hideInSearch: true,
     editable: false,
     fixed: 'left',
@@ -27,12 +27,23 @@ const columns: StoreTableProps['columns'] = [
     valueEnum: {
       0: {
         text: '未启用',
-        status: 'Processing',
+        // status: 'Processing',
       },
       1: {
         text: '已启用',
-        status: 'Processing',
+        // status: 'Processing',
       },
+    },
+  },
+  {
+    dataIndex: 'level',
+    title: '分类级别',
+    editable: false,
+    valueType: 'select',
+    valueEnum: {
+      1: 1,
+      2: 2,
+      3: 3,
     },
   },
   {
@@ -48,7 +59,14 @@ const categoryStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   store: categoryStore,
   rowKey: 'uid',
-
+  treeStore: categoryStore2,
+  useSiderTree: true,
+  // style: {
+  //   width: '100%',
+  //   height: '100%',
+  //   zoom: 0.9,
+  // },
+  treeCard: { title: '分类层级', collapsible: false, defaultCollapsed: false },
   search: {
     defaultCollapsed: false,
   },
@@ -68,6 +86,11 @@ const categoryStoreTable: StoreTableProps = {
       kind: 'link',
       title: '编辑',
       link: '/product/category/edit?id=' + record.uid,
+    },
+    {
+      kind: 'link',
+      title: '属性参数',
+      link: '/product/category/attribute?category_id=' + record.uid,
     },
     {
       kind: 'confirm',
@@ -93,7 +116,18 @@ const categoryStoreTable: StoreTableProps = {
     },
   ],
   batchDelete: (selectedRows) => {},
-  onRequest: ({ query }) => categoryStore.next(merge(query, { filter: {}, sort: { version: 1 } })),
+  onRequest: ({ query }) => {
+    const { filter } = query; // treeNode,
+    const { treeNode } = filter;
+
+    if (treeNode) {
+      const category = query['filter']['treeNode'].value;
+      delete query['filter']['treeNode'];
+      query = merge(query, { filter: { full_id: category.uid } });
+    }
+
+    categoryStore.next(merge(query, { filter: {}, sort: { level: 2, version: 1 } }));
+  },
 };
 
 pageManager.register('product.category', {
@@ -107,6 +141,12 @@ pageManager.register('product.category', {
     {
       store: categoryStore,
       exit: categoryStore.reset,
+    },
+
+    {
+      store: categoryStore2,
+      load: categoryStore2.load,
+      exit: categoryStore2.reset,
     },
   ],
 });

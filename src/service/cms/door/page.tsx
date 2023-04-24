@@ -122,22 +122,15 @@ const storeTable: StoreTableProps = {
           });
       },
       text: `确认删除` + record.first_name + '-' + record.second_name,
-      // collapse: true,
     },
   ],
-  // onRowEvent: [
-  //   {
-  //     mouseEvent: 'onDoubleClick',
-  //     title: '详情',
-  //   },
-  // ],
   onRequest: ({ query }) => {
     const { filter } = query; // treeNode,
     const { treeNode } = filter;
 
     if (treeNode) {
       delete query['filter']['treeNode'];
-  
+
       if (treeNode.key === '') {
       } else if (treeNode.children && treeNode.children.length > 0) {
         query = merge(query, { filter: { first_name: treeNode.title } });
@@ -148,7 +141,7 @@ const storeTable: StoreTableProps = {
 
     cmsDoorStore.next(merge(query, { sort: { version: 1 } }));
   },
-  batchDelete: (selectedRows) => console.log('batchDelete', selectedRows),
+  batchDelete: (selectedRows) => {},
 };
 
 pageManager.register('cms.door', {
