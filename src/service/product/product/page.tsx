@@ -13,7 +13,9 @@ const productStoreTable: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: productStore,
-  // search: false,
+  search: {
+    defaultCollapsed: false,
+  },
   size: 'small',
   columns: [
     {

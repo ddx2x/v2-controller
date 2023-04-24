@@ -1,27 +1,39 @@
 import { FormOnSumbit, StoreTableProps } from '@/dynamic-components';
 import { MenuButtonType } from '@/dynamic-components/table/menuButton';
 import { pageManager } from '@/dynamic-view';
-import { AfterSaleOrder, afterSaleorderApi, AfterSaleOrderStateValueEnum, afterSaleOrderStore, AfterSaleOrderTypeValueEnum } from '@/service/api';
+import {
+  AfterSaleOrder,
+  afterSaleorderApi,
+  AfterSaleOrderStateValueEnum,
+  afterSaleOrderStore,
+  AfterSaleOrderTypeValueEnum,
+} from '@/service/api';
 import { merge } from 'lodash';
 import { rejectForm } from './form';
 
-const rejectFormOnSubmit = (action: any, { formRef, values, dataObject, handleClose }: FormOnSumbit) => {
+const rejectFormOnSubmit = (
+  action: any,
+  { formRef, values, dataObject, handleClose }: FormOnSumbit,
+) => {
   let query = {
-    update_type:
-      1
-  }
+    update_type: 1,
+  };
   console.log(values);
   // @ts-ignore
-  afterSaleorderApi.update({ title: values.title, spec: values.spec }, dataObject.uid, query).then((res) => {
-    action?.reload()
-  })
-  return true
-}
+  afterSaleorderApi
+    .update({ title: values.title, spec: values.spec }, dataObject.uid, query)
+    .then((res) => {
+      action?.reload();
+    });
+  return true;
+};
 
 const afterSaleOrderStoreTable: StoreTableProps = {
   rowKey: 'uid',
   store: afterSaleOrderStore,
-  search: false,
+  search: {
+    defaultCollapsed: false,
+  },
   size: 'small',
   columns: [
     {
@@ -56,14 +68,14 @@ const afterSaleOrderStoreTable: StoreTableProps = {
       title: '售后类型',
       valueType: 'select',
       editable: false,
-      valueEnum: AfterSaleOrderTypeValueEnum
+      valueEnum: AfterSaleOrderTypeValueEnum,
     },
     {
       dataIndex: 'state',
       title: '售后状态',
       valueType: 'select',
       editable: false,
-      valueEnum: AfterSaleOrderStateValueEnum
+      valueEnum: AfterSaleOrderStateValueEnum,
     },
   ],
 
@@ -75,7 +87,7 @@ const afterSaleOrderStoreTable: StoreTableProps = {
         title: '详情',
         link: `/order/after-sale-order/detail?uid=${record.uid}`,
       },
-    ]
+    ];
     if (record.state == 1) {
       columns.push(
         {
@@ -85,32 +97,31 @@ const afterSaleOrderStoreTable: StoreTableProps = {
           title: '通过',
           onClick(e) {
             let query = {
-              update_type: 2
-            }
+              update_type: 2,
+            };
             // @ts-ignore
             afterSaleorderApi.update({}, record.uid, query).then(() => {
-              action?.reload()
-            })
+              action?.reload();
+            });
           },
         },
         {
           kind: 'form',
           title: '拒绝',
           collapse: true,
-          onMount: async ({ form, setDataObject, }) => {
-            setDataObject(record)
+          onMount: async ({ form, setDataObject }) => {
+            setDataObject(record);
           },
           onSubmit(params) {
-            return rejectFormOnSubmit(action, params)
+            return rejectFormOnSubmit(action, params);
           },
           ...rejectForm,
         },
-      )
+      );
     }
-    return columns
+    return columns;
   },
-  onRequest: ({ query }) =>
-    afterSaleOrderStore.next(merge(query, { sort: { version: 1 } }))
+  onRequest: ({ query }) => afterSaleOrderStore.next(merge(query, { sort: { version: 1 } })),
 };
 
 pageManager.register('order.after-sale-order', {
@@ -123,7 +134,7 @@ pageManager.register('order.after-sale-order', {
   stores: [
     {
       store: afterSaleOrderStore,
-      exit: afterSaleOrderStore.reset
-    }
+      exit: afterSaleOrderStore.reset,
+    },
   ],
 });

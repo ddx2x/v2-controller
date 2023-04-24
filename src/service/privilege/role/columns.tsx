@@ -38,7 +38,7 @@ export const type: FormColumnsType = {
   dataIndex: 'type',
   valueType: 'select',
   editable: false,
-  hideInSearch: true,
+  // hideInSearch: true,
   valueEnum: {
     0: '平台岗位',
     1: '门店岗位',

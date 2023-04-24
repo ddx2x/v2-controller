@@ -68,6 +68,7 @@ const orderStoreTable: StoreTableProps = {
   search: {
     defaultCollapsed: false,
   },
+  style: {},
   columns: [
     {
       dataIndex: 'merchandise_list',

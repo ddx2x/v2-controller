@@ -23,6 +23,11 @@ const table: StoreTableProps = {
   size: 'small',
   treeStore: cmsDoorStore2,
   useSiderTree: true,
+  style: {
+    width: '100%',
+    height: '100%',
+    zoom: 0.9,
+  },
   treeCard: { title: '组织架构', collapsible: false, defaultCollapsed: false },
   columns: [
     {

@@ -13,6 +13,9 @@ const storeTable: StoreTableProps = {
   size: 'small',
   treeStore: cmsDoorStore2,
   useSiderTree: true,
+  search: {
+    defaultCollapsed: false,
+  },
   treeCard: { title: '组织架构' },
   columns: [
     {

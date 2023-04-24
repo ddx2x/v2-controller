@@ -180,14 +180,38 @@ const defaultFrom: FormProps = {
   },
   layoutType: 'Form',
   shouldUpdate: false,
+
+  layout: 'horizontal',
+  style: {
+    width: '100%',
+  },
   columns: [
-    automatically_close_unpaid_orders_time,
-    automatic_receipt_of_shipped_orders_time,
-    types_of_aftermarket_support_after_shipment,
-    after_sale_coupon_setting,
-    predelivery_and_aftersales_application_settings,
+    {
+      valueType: 'group',
+      title: '订单期限',
+
+      fieldProps: {
+        style: {},
+      },
+      columns: [automatically_close_unpaid_orders_time, automatic_receipt_of_shipped_orders_time],
+    },
+
+    {
+      valueType: 'group',
+      title: '售后设置',
+
+      fieldProps: {
+        style: {},
+      },
+      columns: [
+        types_of_aftermarket_support_after_shipment,
+        after_sale_coupon_setting,
+        predelivery_and_aftersales_application_settings,
+        buyer_initiates_refund_request_day,
+      ],
+    },
     after_sale_prompts,
-    buyer_initiates_refund_request_day,
+
     auto_confirm_buyer_has_returned_day,
     buyer_return_method_setting,
   ],

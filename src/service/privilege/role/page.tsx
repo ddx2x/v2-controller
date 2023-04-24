@@ -24,7 +24,9 @@ const table: StoreTableProps = {
   toolbarTitle: '数据列表',
   rowKey: 'uid',
   store: roleStore,
-  search: false,
+  search: {
+    defaultCollapsed: false,
+  },
   size: 'small',
   columns: [
     {
@@ -43,7 +45,7 @@ const table: StoreTableProps = {
     {
       dataIndex: 'type',
       title: '岗位类型',
-      hideInSearch: true,
+      // hideInSearch: true,
       editable: false,
       valueType: 'select',
       valueEnum: {
